@@ -1,6 +1,8 @@
-import { useAppStore, type ChangeDetectionPrefill } from "@geoint/core";
+import { useAppStore } from "@geoint/core";
 import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
 import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
+import { buildChangeDetectionSection } from "./mosaic-change-detection";
+import { acquireMosaicLayer, releaseMosaicLayer } from "./mosaic-layer-cache";
 
 export const MOSAIC_TIMELINE_PLUGIN_ID = "geoint-mosaic-timeline";
 const PANEL_ID = MOSAIC_TIMELINE_PLUGIN_ID;
@@ -24,12 +26,21 @@ const EMPTY_GEOJSON = { type: "FeatureCollection" as const, features: [] };
 // Crossfade duration between one mosaic frame and the next.
 const CROSSFADE_MS = 350;
 const CROSSFADE_STEPS = 12;
-// Debounce for dragging the timeline slider, so a fast drag fires one
-// mosaic/bbox fetch instead of one per intermediate value.
+// Debounce for dragging across the timeline track, so a fast drag fires one
+// mosaic/bbox fetch instead of one per intermediate dot.
 const SCRUB_DEBOUNCE_MS = 150;
 
 const FPS_OPTIONS = [0.5, 1, 2, 4, 8] as const;
 const DEFAULT_FPS = 1;
+
+// Simplified eye / eye-off glyphs (not a literal icon-library import -- this
+// package is framework-agnostic and cannot use lucide-react). Duplicated
+// rather than shared with mosaic-change-detection.ts's own copy, consistent
+// with that sibling module's own small, fixed set of inline SVG strings.
+const EYE_ICON =
+  '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+const EYE_OFF_ICON =
+  '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.24A9.6 9.6 0 0 1 12 4c7 0 11 7 11 7a13 13 0 0 1-1.67 2.68M6.6 6.6A13.5 13.5 0 0 0 1 11s4 7 11 7a9.3 9.3 0 0 0 5.4-1.6"/><path d="M2 2l20 20"/><path d="M14.1 14.1a3 3 0 1 1-4.2-4.2"/></svg>';
 
 interface MosaicLocation {
   location_id: number;
@@ -40,7 +51,7 @@ interface MosaicLocation {
   mosaic_count: number;
 }
 
-interface MosaicDateEntry {
+export interface MosaicDateEntry {
   mosaic_id: number;
   mosaic_no: number;
   acquisition_date: string;
@@ -51,7 +62,7 @@ interface MosaicStatus {
   message: string;
 }
 
-interface MosaicBbox {
+export interface MosaicBbox {
   west: number;
   south: number;
   east: number;
@@ -87,8 +98,8 @@ interface MosaicTimelineLabels {
   addFailed: string;
   play: string;
   pause: string;
+  latest: string;
   fpsLabel: string;
-  changeDetection: string;
   sizeLabel: string;
   allSizes: (count: number) => string;
   sizeOption: (width: number, height: number, count: number) => string;
@@ -113,8 +124,8 @@ const labels: MosaicTimelineLabels = {
   addFailed: "Could not load the mosaic",
   play: "Play",
   pause: "Pause",
+  latest: "Latest",
   fpsLabel: "FPS",
-  changeDetection: "Detect Change",
   sizeLabel: "Image size",
   allSizes: (count) => `All sizes (${count})`,
   sizeOption: (width, height, count) => `${width}×${height} (${count})`,
@@ -136,7 +147,7 @@ const labels: MosaicTimelineLabels = {
  * desktop build of this feature would need the token threaded through
  * `GeoIntAppAPI`, which does not currently expose it to plugins.
  */
-function resolveSidecarBaseUrl(): string {
+export function resolveSidecarBaseUrl(): string {
   if (typeof window === "undefined" || !window.location) return "http://127.0.0.1:8765";
   const { protocol, hostname, port, origin } = window.location;
   const isTauri = protocol === "tauri:" || hostname === "tauri.localhost";
@@ -147,7 +158,7 @@ function resolveSidecarBaseUrl(): string {
   return "http://127.0.0.1:8765";
 }
 
-async function fetchMosaicJson<T>(path: string): Promise<T> {
+export async function fetchMosaicJson<T>(path: string): Promise<T> {
   const res = await fetch(`${resolveSidecarBaseUrl()}${path}`);
   if (!res.ok) {
     const body = (await res.json().catch(() => null)) as { detail?: unknown } | null;
@@ -156,7 +167,7 @@ async function fetchMosaicJson<T>(path: string): Promise<T> {
   return (await res.json()) as T;
 }
 
-function mosaicCogUrl(mosaicId: number): string {
+export function mosaicCogUrl(mosaicId: number): string {
   return `${resolveSidecarBaseUrl()}/mosaics/cog/${mosaicId}`;
 }
 
@@ -307,27 +318,46 @@ let unregisterPanel: (() => void) | null = null;
 // of recent frames remains inspectable during playback; the newest one fades
 // in on top of the stack instead of popping in abruptly.
 const MAX_ACTIVE_LAYERS = 5;
-let activeLayerIds: string[] = [];
+interface ActiveMosaicEntry {
+  layerId: string;
+  mosaicId: number;
+}
+let activeEntries: ActiveMosaicEntry[] = [];
 let currentSelection: MosaicSelection | null = null;
+// Master view toggle for the timeline's own mosaic layer(s), independent of
+// (and persisted across remounts the same way as) the layer stack itself.
+let timelineVisible = true;
 
-/** Track a newly added layer, evicting the oldest once more than MAX_ACTIVE_LAYERS are active. */
-function pushActiveLayer(layerId: string): void {
-  activeLayerIds.push(layerId);
-  while (activeLayerIds.length > MAX_ACTIVE_LAYERS) {
-    const oldest = activeLayerIds.shift();
-    if (oldest) useAppStore.getState().removeLayer(oldest);
+/** Track a newly acquired layer, evicting the oldest once more than MAX_ACTIVE_LAYERS are active. */
+function pushActiveLayer(layerId: string, mosaicId: number): void {
+  activeEntries.push({ layerId, mosaicId });
+  useAppStore.getState().setLayerVisibility(layerId, timelineVisible);
+  while (activeEntries.length > MAX_ACTIVE_LAYERS) {
+    const oldest = activeEntries.shift();
+    if (oldest) releaseMosaicLayer(oldest.mosaicId);
   }
 }
 
 function clearActiveLayers(): void {
-  for (const id of activeLayerIds) {
+  for (const entry of activeEntries) {
     try {
-      useAppStore.getState().removeLayer(id);
+      releaseMosaicLayer(entry.mosaicId);
     } catch {
       // Already gone; ignore.
     }
   }
-  activeLayerIds = [];
+  activeEntries = [];
+}
+
+/** Apply the current `timelineVisible` toggle to every layer in the active stack. */
+function applyTimelineVisibility(): void {
+  for (const entry of activeEntries) {
+    try {
+      useAppStore.getState().setLayerVisibility(entry.layerId, timelineVisible);
+    } catch {
+      // Already gone; ignore.
+    }
+  }
 }
 
 function el<K extends keyof HTMLElementTagNameMap>(
@@ -361,14 +391,18 @@ const style = {
   playButton:
     "padding:5px 10px;border-radius:5px;border:1px solid hsl(var(--primary));" +
     "background:hsl(var(--primary));color:hsl(var(--primary-foreground));cursor:pointer;font-size:11px;",
-  secondaryButton:
-    "padding:5px 10px;border-radius:5px;border:1px solid hsl(var(--border));" +
-    "background:hsl(var(--background));color:hsl(var(--foreground));cursor:pointer;font-size:11px;" +
-    "width:100%;",
-  slider: "flex:1 1 auto;accent-color:hsl(var(--primary));",
-  dateLabel: "font-size:11px;min-width:82px;text-align:right;color:hsl(var(--foreground));",
+  dateLabel: "font-size:11px;min-width:82px;text-align:center;color:hsl(var(--foreground));",
   select:
     "border-radius:5px;border:1px solid hsl(var(--border));background:hsl(var(--background));color:hsl(var(--foreground));padding:3px 5px;font-size:11px;",
+  trackWrap: "position:relative;height:20px;margin:8px 4px 4px;cursor:pointer;",
+  trackLine:
+    "position:absolute;left:0;right:0;top:50%;height:2px;background:hsl(var(--border));" +
+    "transform:translateY(-50%);pointer-events:none;",
+  stepButton:
+    "border:none;background:transparent;cursor:pointer;padding:0 2px;color:hsl(var(--muted-foreground));font-size:12px;",
+  latestButton:
+    "border:1px solid hsl(var(--border));border-radius:5px;background:hsl(var(--background));" +
+    "color:hsl(var(--foreground));cursor:pointer;font-size:10px;padding:2px 6px;",
 } as const;
 
 function buildPanel(container: HTMLElement): () => void {
@@ -402,24 +436,61 @@ function buildPanel(container: HTMLElement): () => void {
 
   const timelineSection = el("div");
   timelineSection.style.cssText = style.section;
-  const timelineCaption = el("span", labels.dateLabel);
-  timelineCaption.style.cssText = style.label;
+
+  const timelineHeader = el("div");
+  timelineHeader.style.cssText =
+    "display:flex;align-items:center;justify-content:space-between;cursor:pointer;";
+  const timelineHeaderLabel = el("span", `▾ ${labels.dateLabel}`);
+  timelineHeaderLabel.style.cssText = style.label;
+  timelineHeader.append(timelineHeaderLabel);
+
+  const timelineBody = el("div");
+  timelineBody.style.cssText = "display:flex;flex-direction:column;gap:8px;";
+
+  // Discrete-state track: one dot per mosaic date, not a continuous range --
+  // there is no image "between" two dates, so the control shouldn't imply one.
+  const trackWrap = el("div");
+  trackWrap.style.cssText = style.trackWrap;
+  const trackLine = el("div");
+  trackLine.style.cssText = style.trackLine;
+  const dotsLayer = el("div");
+  dotsLayer.style.cssText = "position:absolute;inset:0;pointer-events:none;";
+  trackWrap.append(trackLine, dotsLayer);
+
+  const navRow = el("div");
+  navRow.style.cssText = style.row;
+  const prevBtn = el("button", "‹");
+  prevBtn.type = "button";
+  prevBtn.style.cssText = style.stepButton;
+  const dateLabel = el("span", labels.selectLocationFirst);
+  dateLabel.style.cssText = style.dateLabel;
+  const nextBtn = el("button", "›");
+  nextBtn.type = "button";
+  nextBtn.style.cssText = style.stepButton;
+  const latestBtn = el("button", labels.latest);
+  latestBtn.type = "button";
+  latestBtn.style.cssText = style.latestButton;
+  const viewToggleButton = el("button");
+  viewToggleButton.type = "button";
+  viewToggleButton.title = "Toggle mosaic visibility";
+  viewToggleButton.style.cssText =
+    "display:flex;align-items:center;justify-content:center;border:none;background:transparent;" +
+    "cursor:pointer;color:hsl(var(--muted-foreground));padding:0 2px;";
+  viewToggleButton.innerHTML = timelineVisible ? EYE_ICON : EYE_OFF_ICON;
+  viewToggleButton.addEventListener("click", () => {
+    timelineVisible = !timelineVisible;
+    viewToggleButton.innerHTML = timelineVisible ? EYE_ICON : EYE_OFF_ICON;
+    applyTimelineVisibility();
+  });
+  navRow.append(prevBtn, dateLabel, nextBtn, latestBtn, viewToggleButton);
+
   const playRow = el("div");
   playRow.style.cssText = style.row;
   const playButton = el("button", labels.play);
   playButton.type = "button";
   playButton.style.cssText = style.playButton;
   playButton.disabled = true;
-  const slider = el("input");
-  slider.type = "range";
-  slider.min = "0";
-  slider.max = "0";
-  slider.step = "1";
-  slider.style.cssText = style.slider;
-  slider.disabled = true;
-  const dateLabel = el("span", labels.selectLocationFirst);
-  dateLabel.style.cssText = style.dateLabel;
-  playRow.append(playButton, slider);
+  playRow.append(playButton);
   const fpsRow = el("div");
   fpsRow.style.cssText = style.row;
   const fpsCaption = el("span", labels.fpsLabel);
@@ -433,13 +504,21 @@ function buildPanel(container: HTMLElement): () => void {
     fpsSelect.append(option);
   }
   fpsRow.append(fpsCaption, fpsSelect);
-  const changeDetectionButton = el("button", labels.changeDetection);
-  changeDetectionButton.type = "button";
-  changeDetectionButton.style.cssText = style.secondaryButton;
-  changeDetectionButton.disabled = true;
-  timelineSection.append(timelineCaption, playRow, fpsRow, dateLabel, changeDetectionButton);
 
-  root.append(status, locationSection, sizeSection, timelineSection);
+  timelineBody.append(trackWrap, navRow, playRow, fpsRow);
+  timelineSection.append(timelineHeader, timelineBody);
+
+  const changeDetection = buildChangeDetectionSection({
+    getMap: () => appRef?.getMap?.() ?? null,
+    addCogLayer: (name, url, options) => {
+      if (!appRef?.addCogLayer) return Promise.reject(new Error("addCogLayer is unavailable"));
+      return appRef.addCogLayer(name, url, options);
+    },
+    addGeoJsonLayer: (name, data, sourcePath) =>
+      appRef?.addGeoJsonLayer(name, data, sourcePath) ?? "",
+  });
+
+  root.append(status, locationSection, sizeSection, timelineSection, changeDetection.element);
   container.append(root);
 
   let allLocations: MosaicLocation[] = [];
@@ -451,6 +530,14 @@ function buildPanel(container: HTMLElement): () => void {
   let playTimer: ReturnType<typeof setInterval> | null = null;
   let scrubTimer: ReturnType<typeof setTimeout> | null = null;
   let fps = DEFAULT_FPS;
+  // The selected index into `activeDates`; the track's one movable dot.
+  let currentIndex = 0;
+  let timelineCollapsed = false;
+  // Mosaic ids whose COG failed to load this session -- rendered as grayed-out
+  // dots so a scrub past them reads as "this used to work, now it doesn't"
+  // without a separate error banner. Keyed by mosaic_id (stable across the
+  // size-group filter) rather than index.
+  const failedMosaicIds = new Set<number>();
   // Selection token: bumped on every new load so an in-flight crossfade from a
   // superseded request can tell it is stale and bail out instead of finishing
   // into the wrong frame.
@@ -481,10 +568,7 @@ function buildPanel(container: HTMLElement): () => void {
 
   function advancePlayback(): void {
     if (!activeDates.length) return;
-    const next = (Number(slider.value) + 1) % activeDates.length;
-    slider.value = String(next);
-    dateLabel.textContent = activeDates[next]?.acquisition_date ?? "";
-    loadMosaicAt(next);
+    goToIndex((currentIndex + 1) % activeDates.length, { immediate: true });
   }
 
   fpsSelect.addEventListener("change", () => {
@@ -499,15 +583,119 @@ function buildPanel(container: HTMLElement): () => void {
     void addMosaicLayer(locationId, entry.mosaic_id, entry.acquisition_date);
   };
 
-  const scheduleLoadMosaicAt = (index: number): void => {
-    dateLabel.textContent = activeDates[index]?.acquisition_date ?? "";
-    if (scrubTimer !== null) clearTimeout(scrubTimer);
-    scrubTimer = setTimeout(() => loadMosaicAt(index), SCRUB_DEBOUNCE_MS);
-  };
+  // --- Discrete-state track: dots, not a continuous range --------------------
 
-  slider.addEventListener("input", () => {
+  function updateTimelineHeaderLabel(): void {
+    const current = activeDates[currentIndex]?.acquisition_date;
+    timelineHeaderLabel.textContent = `${timelineCollapsed ? "▸" : "▾"} ${labels.dateLabel}${
+      current ? ` — ${current}` : ""
+    }`;
+  }
+
+  function updateNavButtons(): void {
+    prevBtn.disabled = currentIndex <= 0;
+    nextBtn.disabled = !activeDates.length || currentIndex >= activeDates.length - 1;
+    latestBtn.disabled = !activeDates.length || currentIndex === activeDates.length - 1;
+  }
+
+  function renderTimelineTrack(): void {
+    dotsLayer.innerHTML = "";
+    const n = activeDates.length;
+    if (n === 0) return;
+    const denom = Math.max(1, n - 1);
+    let lastYear: string | null = null;
+    for (let i = 0; i < n; i++) {
+      const entry = activeDates[i];
+      const year = entry.acquisition_date.slice(0, 4);
+      // Size carries hierarchy: a bigger dot marks the first reading of a
+      // calendar year, a smaller one a sub-reading within it -- one variable
+      // standing in for a year/date two-level structure instead of labels.
+      const isYearStart = i === 0 || year !== lastYear;
+      lastYear = year;
+      const isCurrent = i === currentIndex;
+      const failed = failedMosaicIds.has(entry.mosaic_id);
+      const baseSize = isYearStart ? 9 : 5;
+      const size = isCurrent ? baseSize + 4 : baseSize;
+      const color = failed
+        ? "hsl(var(--muted-foreground)/0.35)"
+        : isCurrent
+          ? "hsl(var(--primary))"
+          : "hsl(var(--border))";
+      const dot = el("div");
+      dot.style.cssText =
+        `position:absolute;top:50%;left:${(i / denom) * 100}%;width:${size}px;height:${size}px;` +
+        `border-radius:50%;background:${color};transform:translate(-50%,-50%);` +
+        `z-index:${isCurrent ? 2 : 1};`;
+      dotsLayer.append(dot);
+    }
+  }
+
+  function indexFromClientX(clientX: number): number | null {
+    const rect = trackWrap.getBoundingClientRect();
+    if (rect.width === 0 || activeDates.length === 0) return null;
+    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    return Math.round(ratio * (activeDates.length - 1));
+  }
+
+  /**
+   * Move the track's one dot to `index`: click a dot (exploration), the
+   * prev/next steppers (precision), or Latest (escape hatch) all land here.
+   * `immediate` skips the drag debounce for single, deliberate jumps.
+   */
+  function goToIndex(index: number, options: { immediate?: boolean } = {}): void {
+    if (index < 0 || index >= activeDates.length) return;
+    currentIndex = index;
+    renderTimelineTrack();
+    updateTimelineHeaderLabel();
+    updateNavButtons();
+    const entry = activeDates[index];
+    dateLabel.textContent = entry?.acquisition_date ?? "";
+    if (scrubTimer !== null) {
+      clearTimeout(scrubTimer);
+      scrubTimer = null;
+    }
+    if (options.immediate) {
+      loadMosaicAt(index);
+    } else {
+      scrubTimer = setTimeout(() => loadMosaicAt(index), SCRUB_DEBOUNCE_MS);
+    }
+  }
+
+  trackWrap.addEventListener("pointerdown", (event) => {
+    const index = indexFromClientX(event.clientX);
+    if (index === null) return;
+    event.preventDefault();
     stopPlaying();
-    scheduleLoadMosaicAt(Number(slider.value));
+    goToIndex(index, { immediate: true });
+    const onMove = (moveEvent: PointerEvent) => {
+      const idx = indexFromClientX(moveEvent.clientX);
+      if (idx !== null) goToIndex(idx);
+    };
+    const onUp = () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  });
+
+  prevBtn.addEventListener("click", () => {
+    stopPlaying();
+    goToIndex(currentIndex - 1, { immediate: true });
+  });
+  nextBtn.addEventListener("click", () => {
+    stopPlaying();
+    goToIndex(currentIndex + 1, { immediate: true });
+  });
+  latestBtn.addEventListener("click", () => {
+    stopPlaying();
+    goToIndex(activeDates.length - 1, { immediate: true });
+  });
+
+  timelineHeader.addEventListener("click", () => {
+    timelineCollapsed = !timelineCollapsed;
+    timelineBody.style.display = timelineCollapsed ? "none" : "flex";
+    updateTimelineHeaderLabel();
   });
 
   playButton.addEventListener("click", () => {
@@ -518,24 +706,6 @@ function buildPanel(container: HTMLElement): () => void {
     if (!activeDates.length) return;
     playButton.textContent = labels.pause;
     playTimer = setInterval(advancePlayback, 1000 / fps);
-  });
-
-  // Compares the frame currently shown (the slider's position) against the
-  // one right before it, so clicking needs no extra picking -- the dialog's
-  // own Mosaic Timeline mode still lets the user change either date.
-  changeDetectionButton.addEventListener("click", () => {
-    const locationId = activeLocationId;
-    if (locationId === null || activeDates.length < 2) return;
-    const currentIndex = Number(slider.value);
-    const post = activeDates[currentIndex];
-    const pre = activeDates[currentIndex - 1] ?? activeDates[0];
-    if (!post || !pre || pre.mosaic_id === post.mosaic_id) return;
-    const prefill: ChangeDetectionPrefill = {
-      locationId,
-      preMosaicId: pre.mosaic_id,
-      postMosaicId: post.mosaic_id,
-    };
-    useAppStore.getState().setChangeDetectionOpen(true, prefill);
   });
 
   const renderLocationRows = (filter: string): void => {
@@ -597,18 +767,16 @@ function buildPanel(container: HTMLElement): () => void {
       const idSet = new Set(ids.split(",").map(Number));
       activeDates = locationDates.filter((entry) => idSet.has(entry.mosaic_id));
     }
-    slider.max = String(Math.max(0, activeDates.length - 1));
-    slider.disabled = activeDates.length === 0;
     playButton.disabled = activeDates.length === 0;
-    changeDetectionButton.disabled = activeDates.length < 2;
+    changeDetection.setDates(activeDates);
     if (!activeDates.length) {
+      currentIndex = 0;
+      renderTimelineTrack();
+      updateNavButtons();
       dateLabel.textContent = labels.noDatesForLocation;
       return;
     }
-    const lastIndex = activeDates.length - 1;
-    slider.value = String(lastIndex);
-    dateLabel.textContent = activeDates[lastIndex]?.acquisition_date ?? "";
-    loadMosaicAt(lastIndex);
+    goToIndex(activeDates.length - 1, { immediate: true });
   };
 
   sizeSelect.addEventListener("change", () => {
@@ -621,16 +789,18 @@ function buildPanel(container: HTMLElement): () => void {
     clearActiveLayers();
     currentSelection = null;
     activeLocationId = loc.location_id;
+    changeDetection.setLocationId(loc.location_id);
+    changeDetection.setDates([]);
     renderLocationRows(searchInput.value);
     flyToLocation(loc);
 
     const token = ++locationToken;
-    slider.disabled = true;
     playButton.disabled = true;
-    changeDetectionButton.disabled = true;
     sizeSelect.disabled = true;
-    slider.value = "0";
-    slider.max = "0";
+    currentIndex = 0;
+    activeDates = [];
+    renderTimelineTrack();
+    updateNavButtons();
     dateLabel.textContent = labels.loadingDates;
     try {
       const datesResult = await fetchMosaicJson<{ mosaics: MosaicDateEntry[] }>(
@@ -652,14 +822,9 @@ function buildPanel(container: HTMLElement): () => void {
       const allOption = el("option", labels.allSizes(locationDates.length));
       allOption.value = "";
       sizeSelect.append(allOption);
-      slider.max = String(activeDates.length - 1);
-      slider.disabled = false;
       playButton.disabled = false;
-      changeDetectionButton.disabled = activeDates.length < 2;
-      const lastIndex = activeDates.length - 1;
-      slider.value = String(lastIndex);
-      dateLabel.textContent = activeDates[lastIndex]?.acquisition_date ?? "";
-      loadMosaicAt(lastIndex);
+      changeDetection.setDates(activeDates);
+      goToIndex(activeDates.length - 1, { immediate: true });
 
       fetchMosaicJson<{ sizes: MosaicSizeGroup[] }>(`/mosaics/sizes?location_id=${loc.location_id}`)
         .then((sizesResult) => {
@@ -718,16 +883,24 @@ function buildPanel(container: HTMLElement): () => void {
     const displayLabel = `${locationName} — ${dateText}`;
     setStatus(labels.adding(displayLabel));
     try {
-      const newLayerId = await appRef.addCogLayer(displayLabel, mosaicCogUrl(mosaicId));
+      const addCogLayer = appRef.addCogLayer;
+      const { layerId: newLayerId, created } = await acquireMosaicLayer(mosaicId, () =>
+        addCogLayer(displayLabel, mosaicCogUrl(mosaicId)),
+      );
       if (loadToken !== token) {
         // A newer selection started while this COG was loading; drop this one.
-        useAppStore.getState().removeLayer(newLayerId);
+        releaseMosaicLayer(mosaicId);
         return;
       }
-      pushActiveLayer(newLayerId);
+      pushActiveLayer(newLayerId, mosaicId);
       currentSelection = { locationId, mosaicId };
-      fadeIn(newLayerId, token);
+      // Only fade in a layer this call actually created -- one already
+      // loaded (e.g. shared with Change Detection) is already visible.
+      if (created) fadeIn(newLayerId, token);
       setStatus(labels.added(displayLabel));
+      // A retry after a prior failure succeeded; the dot goes from grayed-out
+      // back to normal.
+      if (failedMosaicIds.delete(mosaicId)) renderTimelineTrack();
       void fetchMosaicJson<MosaicBbox>(`/mosaics/bbox/${mosaicId}`)
         .then((bbox) => {
           if (currentSelection?.mosaicId === mosaicId) updateMask(appRef?.getMap?.(), bbox);
@@ -738,6 +911,10 @@ function buildPanel(container: HTMLElement): () => void {
     } catch (error) {
       if (loadToken === token) currentSelection = null;
       setStatus(error instanceof Error ? error.message : labels.addFailed, true);
+      // Mark this date's dot grayed-out on the track: availability lives in
+      // the control itself, not a separate error state or tooltip.
+      failedMosaicIds.add(mosaicId);
+      renderTimelineTrack();
     }
   };
 
@@ -761,11 +938,7 @@ function buildPanel(container: HTMLElement): () => void {
       if (restore && restoreLocation) {
         await selectLocation(restoreLocation);
         const restoreIndex = activeDates.findIndex((entry) => entry.mosaic_id === restore.mosaicId);
-        if (restoreIndex >= 0) {
-          slider.value = String(restoreIndex);
-          dateLabel.textContent = activeDates[restoreIndex]?.acquisition_date ?? "";
-          loadMosaicAt(restoreIndex);
-        }
+        if (restoreIndex >= 0) goToIndex(restoreIndex, { immediate: true });
       } else {
         setStatus(labels.chooseLocation);
       }
@@ -777,6 +950,7 @@ function buildPanel(container: HTMLElement): () => void {
   return () => {
     stopPlaying();
     if (scrubTimer !== null) clearTimeout(scrubTimer);
+    changeDetection.dispose();
   };
 }
 
@@ -796,7 +970,7 @@ export const mosaicTimelinePlugin: GeoIntPlugin = {
       app.registerRightPanel?.({
         id: PANEL_ID,
         title: () => labels.title,
-        dock: "left-of-layers",
+        dock: "left-dock",
         defaultWidth: 340,
         render(container) {
           mountPanel(container);

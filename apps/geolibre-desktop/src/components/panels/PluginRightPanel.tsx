@@ -66,14 +66,15 @@ interface PluginRightPanelProps {
  * Renders the active plugin-owned dockable panel when it is docked at this
  * instance's `dock` position.
  *
- * One instance is mounted per dock position (`left-of-layers`, `right-of-layers`,
- * `left-of-style`, `right-of-style`); each renders only when the active panel is
- * docked there, so a user can step the panel between positions with the header's
- * move buttons (issue #712). The built-in panel on the docked side (Layers or
- * Style) collapses while the plugin panel is expanded next to it (the shell
- * handles that). The panel content is owned by the plugin via `render(container)`
- * (plain DOM); the host provides the dock chrome (header, collapse rail, resize
- * handle, move/collapse/close buttons). Renders nothing when no plugin panel is
+ * One instance is mounted per dock position (`left-dock`, `left-of-layers`,
+ * `right-of-layers`, `left-of-style`, `right-of-style`); each renders only when
+ * the active panel is docked there, so a user can step the panel between
+ * positions with the header's move buttons (issue #712). The built-in panel on
+ * the docked side (Layers or Style; `left-dock` has none) collapses while the
+ * plugin panel is expanded next to it (the shell handles that). The panel
+ * content is owned by the plugin via `render(container)` (plain DOM); the host
+ * provides the dock chrome (header, collapse rail, resize handle,
+ * move/collapse/close buttons). Renders nothing when no plugin panel is
  * docked here.
  *
  * @param props.dock - The dock position this instance renders.
@@ -86,15 +87,23 @@ export function PluginRightPanel({ dock, contentEl, width, onWidthChange }: Plug
 
   const panel = activeId ? getRightPanel(activeId) : undefined;
   const matched = activeId !== null && panel != null && activeDock === dock;
-  // Layers-side docks sit to the left: their border and resize handle face right
-  // (toward the map). Style-side docks face left (toward the map). The
-  // `replace-layers` shared-rail mode is a layers-side dock too.
+  // Layers-side and Style-side docks both sit on the physical right now
+  // (Layers outboard of Style, after the team asked for it off the hamburger
+  // rail's edge): both border and resize handle face left (toward the map).
+  // `isLayersSide` is kept only to distinguish which rail a dock merges into
+  // (mergeIntoLayersRail vs mergeIntoStyleRail) and the move-button labels.
   const isLayersSide =
     dock === "left-of-layers" || dock === "right-of-layers" || dock === "replace-layers";
+  // `left-dock` is the standalone slot on the physical left, beside the
+  // hamburger rail -- there is no built-in panel there, so its border and
+  // resize handle face right (toward the map), the mirror image of the
+  // right-side docks.
+  const isLeftDock = dock === "left-dock";
   // The shared-rail modes: the panel shares the Style (replace-style) or Layers
   // (replace-layers) rail (rendered by the host's SharedSidebar), so it has no
   // move buttons and no rail of its own; its collapsed entry lives in that single
-  // shared rail instead.
+  // shared rail instead. `left-dock` has no shared-rail counterpart at all (no
+  // built-in panel to share with).
   const isSharedRail = dock === "replace-style" || dock === "replace-layers";
 
   // Adopt the shared content host (rendered once by the shell) into this slot
@@ -129,9 +138,10 @@ export function PluginRightPanel({ dock, contentEl, width, onWidthChange }: Plug
     const startWidth = width;
     const dirSign = getComputedStyle(el).direction === "rtl" ? -1 : 1;
     const handleMove = (move: PointerEvent) => {
-      // The resizable edge faces away from the dock side: dragging it widens the
-      // panel.
-      const delta = dirSign * (isLayersSide ? move.clientX - startX : startX - move.clientX);
+      // The right-side docks' resizable edge faces the map (left), so
+      // dragging it left widens the panel; `left-dock`'s edge faces the map
+      // on its right, so dragging right widens it instead.
+      const delta = dirSign * (isLeftDock ? move.clientX - startX : startX - move.clientX);
       onWidthChange(clamp(startWidth + delta, MIN_WIDTH, MAX_WIDTH));
     };
     const handleEnd = () => {
@@ -150,18 +160,19 @@ export function PluginRightPanel({ dock, contentEl, width, onWidthChange }: Plug
   const railIcon =
     panel.icon && isImageSource(panel.icon) ? (
       <img src={panel.icon} alt="" className="h-4 w-4 object-contain" />
-    ) : isLayersSide ? (
+    ) : isLeftDock ? (
       <PanelLeft className="h-4 w-4" />
     ) : (
       <PanelRight className="h-4 w-4" />
     );
 
-  const borderSide = isLayersSide ? "md:border-e" : "md:border-s";
-  // Dock names describe the LTR arrangement, so the visual move-left/right
-  // actions and their guards swap in a right-to-left layout.
+  const borderSide = isLeftDock ? "md:border-e" : "md:border-s";
+  // Dock names describe the LTR arrangement (left-dock, then Style innermost,
+  // then Layers outboard), so the visual move-left/right actions and their
+  // guards swap in a right-to-left layout.
   const isRtl = document.documentElement.dir === "rtl";
-  const canMoveLeft = activeDock !== (isRtl ? "right-of-style" : "left-of-layers");
-  const canMoveRight = activeDock !== (isRtl ? "left-of-layers" : "right-of-style");
+  const canMoveLeft = activeDock !== (isRtl ? "right-of-layers" : "left-dock");
+  const canMoveRight = activeDock !== (isRtl ? "left-dock" : "right-of-layers");
 
   return (
     <aside
@@ -178,7 +189,7 @@ export function PluginRightPanel({ dock, contentEl, width, onWidthChange }: Plug
           role="separator"
           aria-orientation="vertical"
           aria-label={t("pluginPanel.resize")}
-          className={`absolute ${isLayersSide ? "-end-1 border-e" : "-start-1 border-s"} top-0 z-20 hidden h-full w-2 cursor-col-resize touch-none select-none border-transparent hover:border-primary md:block`}
+          className={`absolute ${isLeftDock ? "-end-1 border-e" : "-start-1 border-s"} top-0 z-20 hidden h-full w-2 cursor-col-resize touch-none select-none border-transparent hover:border-primary md:block`}
           onPointerDown={handleResizeStart}
         />
       ) : null}
@@ -192,7 +203,7 @@ export function PluginRightPanel({ dock, contentEl, width, onWidthChange }: Plug
             aria-label={t("pluginPanel.expand")}
             onClick={() => openRightPanel(activeId)}
           >
-            {isLayersSide ? (
+            {isLeftDock ? (
               <PanelLeftOpen className="h-4 w-4" />
             ) : (
               <PanelRightOpen className="h-4 w-4" />
@@ -235,7 +246,7 @@ export function PluginRightPanel({ dock, contentEl, width, onWidthChange }: Plug
                 </Button>
               </>
             ) : null}
-            {isSharedRail ? (
+            {isLeftDock ? null : isSharedRail ? (
               // Pop the panel out of the shared rail back to a movable positional
               // panel on the same side (where the move buttons return).
               <Button
@@ -253,7 +264,7 @@ export function PluginRightPanel({ dock, contentEl, width, onWidthChange }: Plug
             ) : (
               // Merge the movable panel into the shared rail on its current side:
               // a layers-side panel joins the Layers rail, a style-side panel the
-              // Style rail.
+              // Style rail. (No shared-rail counterpart for `left-dock`.)
               <Button
                 variant="ghost"
                 size="icon"
@@ -283,7 +294,7 @@ export function PluginRightPanel({ dock, contentEl, width, onWidthChange }: Plug
               aria-label={t("pluginPanel.collapse")}
               onClick={() => collapseRightPanel(activeId)}
             >
-              {isLayersSide ? (
+              {isLeftDock ? (
                 <PanelLeftClose className="h-4 w-4" />
               ) : (
                 <PanelRightClose className="h-4 w-4" />

@@ -62,7 +62,6 @@ import {
   Link2,
   Map,
   MapPin,
-  Menu,
   MessageSquare,
   Moon,
   Palette,
@@ -73,7 +72,6 @@ import {
   Sun,
   Workflow,
   Wrench,
-  X,
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
@@ -150,7 +148,7 @@ import {
   WEBSITE_URL,
 } from "./toolbar/constants";
 
-interface TopToolbarProps {
+interface SideRailProps {
   compact?: boolean;
   diagnosticsErrorCount: number;
   mapControllerRef: React.RefObject<MapController | null>;
@@ -169,9 +167,12 @@ interface TopToolbarProps {
   // Opens the Offline Basemap Extract panel, mounted in DesktopShell over the
   // map so it can stay non-modal (the map is interactive for drawing a bbox).
   onOpenBasemapExtract: () => void;
+  // The hamburger toggle now lives in TopBar, above this rail; the collapsed
+  // state is lifted to DesktopShell so both components share it.
+  railCollapsed: boolean;
 }
 
-export function TopToolbar({
+export function SideRail({
   compact = false,
   diagnosticsErrorCount,
   mapControllerRef,
@@ -184,7 +185,8 @@ export function TopToolbar({
   onOpenDiagnostics,
   onToggleThemeMode,
   onOpenBasemapExtract,
-}: TopToolbarProps) {
+  railCollapsed,
+}: SideRailProps) {
   const { t, i18n } = useTranslation();
   // The reverse-geocode plugin lives in the framework-agnostic plugins package
   // and cannot call t() itself, so push the translated popup strings into it
@@ -1381,14 +1383,13 @@ export function TopToolbar({
     onOpenShortcuts: () => setShortcutsOpen(true),
   });
 
-  // The toolbar is a collapsible vertical sidebar rather than a horizontal
-  // bar: collapsed shows every menu's trigger as an icon-only rail (still
-  // fully functional, just narrow); expanded adds labels. This reuses the
-  // existing compact/showLabels chrome plumbing (originally meant for
-  // ?layout=compact and narrow-viewport wrapping) rather than duplicating it.
-  // A true hamburger menu: closed by default on every viewport, showing only
-  // the toggle button -- no menu is visible at all until the user opens it.
-  const [railCollapsed, setRailCollapsed] = useState(true);
+  // This is a collapsible vertical sidebar rather than a horizontal bar:
+  // collapsed shows every menu's trigger as an icon-only rail (still fully
+  // functional, just narrow); expanded adds labels. This reuses the existing
+  // compact/showLabels chrome plumbing (originally meant for ?layout=compact
+  // and narrow-viewport wrapping) rather than duplicating it. The collapsed
+  // state itself (a true hamburger menu: closed by default, no menu visible
+  // until opened) lives in TopBar's toggle button, above this rail.
   const effectiveCompact = compact || railCollapsed;
   const effectiveShowLabels = showLabels && !railCollapsed;
   const toolbarButtonSize = effectiveCompact ? "icon" : "sm";
@@ -1422,28 +1423,11 @@ export function TopToolbar({
         railCollapsed ? "w-11 items-center px-1" : "w-64 items-stretch px-2",
       )}
     >
-      <div
-        className={cn(
-          "flex shrink-0 items-center gap-1.5 py-1 text-sm font-semibold text-primary",
-          railCollapsed ? "flex-col" : "justify-between",
-        )}
-      >
+      <div className="flex shrink-0 items-center gap-1.5 py-1 text-sm font-semibold text-primary">
         <span className="flex items-center gap-1.5">
           <Map className="h-4 w-4" />
           {showProjectInfo && !railCollapsed ? <span>{appTitle}</span> : null}
         </span>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7 shrink-0"
-          // Not run through t() yet, matching the rest of this session's new UI text.
-          title={railCollapsed ? "Open menu" : "Close menu"}
-          aria-label={railCollapsed ? "Open menu" : "Close menu"}
-          aria-expanded={!railCollapsed}
-          onClick={() => setRailCollapsed((collapsed) => !collapsed)}
-        >
-          {railCollapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
-        </Button>
       </div>
       {!railCollapsed && isMenuVisible(uiProfile, "project") && (
         <ProjectMenu

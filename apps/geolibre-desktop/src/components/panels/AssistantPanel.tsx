@@ -1,7 +1,17 @@
 import { useAppStore } from "@geoint/core";
 import type { MapController } from "@geoint/map";
 import { Button, Textarea, cn } from "@geoint/ui";
-import { AlertCircle, Eraser, Loader2, Send, Sparkles, Square, X } from "lucide-react";
+import {
+  AlertCircle,
+  Eraser,
+  Loader2,
+  PanelRightClose,
+  PanelRightOpen,
+  Send,
+  Sparkles,
+  Square,
+  X,
+} from "lucide-react";
 import {
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
@@ -69,6 +79,9 @@ export function AssistantPanel({ mapControllerRef: _mapControllerRef }: Assistan
   const resizeCleanupRef = useRef<(() => void) | null>(null);
 
   const [width, setWidth] = useState(DEFAULT_PANEL_WIDTH);
+  // Collapsed to a thin rail, like Style/Layers -- distinct from `assistantOpen`
+  // (which unmounts the panel entirely and drops the session/transcript).
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState("");
@@ -267,6 +280,32 @@ export function AssistantPanel({ mapControllerRef: _mapControllerRef }: Assistan
     resizeCleanupRef.current = finish;
   };
 
+  if (isCollapsed) {
+    return (
+      <aside
+        aria-label={t("assistant.panelCollapsedLabel")}
+        className="flex h-11 w-full shrink-0 items-center gap-2 border-b bg-card px-2 md:h-auto md:w-11 md:flex-col md:border-b-0 md:border-s md:py-2"
+      >
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          title={t("assistant.expand")}
+          aria-label={t("assistant.expand")}
+          onClick={() => setIsCollapsed(false)}
+        >
+          <PanelRightOpen className="h-4 w-4" />
+        </Button>
+        <div className="flex items-center gap-2 text-muted-foreground md:mt-3 md:flex-col">
+          <Sparkles className="h-4 w-4" />
+          <span className="text-[10px] font-semibold uppercase tracking-wide md:[writing-mode:vertical-rl] md:rotate-180">
+            {t("assistant.title")}
+          </span>
+        </div>
+      </aside>
+    );
+  }
+
   return (
     <section
       ref={sectionRef}
@@ -299,6 +338,15 @@ export function AssistantPanel({ mapControllerRef: _mapControllerRef }: Assistan
             onClick={clearConversation}
           >
             <Eraser className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            title={t("assistant.collapse")}
+            onClick={() => setIsCollapsed(true)}
+          >
+            <PanelRightClose className="h-4 w-4" />
           </Button>
           <Button
             variant="ghost"

@@ -136,7 +136,7 @@ reclaimed after a TTL via a storage alarm.
   added to `partialize`).
 - `components/layout/RemoteCursorsOverlay.tsx` — renders remote cursors as
   MapLibre Markers and viewport rectangles as a dedicated GeoJSON line layer.
-- `components/layout/CollaborateDialog.tsx` + a flag-gated `TopToolbar` entry.
+- `components/layout/CollaborateDialog.tsx` + a flag-gated `SideRail` entry.
 - `components/layout/CollaborationStatusBadge.tsx` — the persistent on-canvas
   badge that hosts the participant roster (with the host's per-participant
   permission toggles) and the chat drawer (#754). `useCollaboration` is owned by

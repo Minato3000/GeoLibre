@@ -11,7 +11,7 @@ import { PluginRightPanel } from "./PluginRightPanel";
 type SharedSide = "layers" | "style";
 
 interface SharedSidebarProps {
-  /** Layers (left) or Style (right) sidebar surface. */
+  /** Layers or Style sidebar surface (both physically dock on the right; Layers outboard of Style). */
   side: SharedSide;
   /** Id of the active plugin panel docked with `replace-layers`/`replace-style`. */
   pluginId: string;
@@ -64,8 +64,8 @@ interface RailEntry {
  * modes.
  *
  * When a plugin panel docks with `dock: "replace-layers"` (or `"replace-style"`)
- * it shares the Layers (left) or Style (right) sidebar area instead of appearing
- * as a separate rail beside it. This renders a single rail on that edge listing
+ * it shares the Layers or Style sidebar area instead of appearing as a separate
+ * rail beside it. This renders a single rail on that edge listing
  * both the plugin panel and the built-in panel; selecting one expands it while
  * the other stays as a rail entry. The two are mutually exclusive, so the user
  * never sees two adjacent rails (issue #765).
@@ -168,14 +168,14 @@ export function SharedSidebar({
       })
     : null;
 
-  // The Layers rail sits on the far-left edge (border on its right); the Style
-  // rail on the far-right edge (border on its left).
+  // Both the Layers and Style rails now sit on the physical right (Layers
+  // outboard of Style), each on its own far edge with the border on its left.
   const rail = (
     <aside
       aria-label={t("sharedRail.label")}
       className={cn(
         "flex w-full shrink-0 items-center gap-1 border-t bg-card px-2 py-1 md:h-auto md:w-11 md:flex-col md:border-t-0 md:px-0 md:py-2",
-        side === "layers" ? "md:border-e" : "md:border-s",
+        "md:border-s",
       )}
     >
       {entries.map((entry) => (
@@ -210,15 +210,9 @@ export function SharedSidebar({
     </aside>
   );
 
-  // Layers side: rail on the far left, then the expanded panel toward the map.
-  // Style side: expanded panel, then the rail on the far right.
-  return side === "layers" ? (
-    <>
-      {rail}
-      {pluginPanel}
-      {builtinPanel}
-    </>
-  ) : (
+  // Both sides now render the same way: the expanded panel toward the map,
+  // then the rail on the surface's own far (outboard) edge.
+  return (
     <>
       {pluginPanel}
       {builtinPanel}

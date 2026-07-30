@@ -129,8 +129,8 @@ import {
   MousePointerClick,
   Orbit,
   Palette,
-  PanelLeftClose,
-  PanelLeftOpen,
+  PanelRightClose,
+  PanelRightOpen,
   Pencil,
   PencilRuler,
   PenTool,
@@ -2336,7 +2336,7 @@ export function LayerPanel({
     return (
       <aside
         aria-label={t("layers.panelCollapsedLabel")}
-        className="flex h-11 w-full shrink-0 items-center gap-2 border-b bg-card px-2 md:h-auto md:w-11 md:flex-col md:border-b-0 md:border-e md:py-2"
+        className="flex h-11 w-full shrink-0 items-center gap-2 border-b bg-card px-2 md:h-auto md:w-11 md:flex-col md:border-b-0 md:border-s md:py-2"
       >
         <Button
           variant="ghost"
@@ -2346,7 +2346,7 @@ export function LayerPanel({
           aria-label={t("layers.expand")}
           onClick={() => setIsCollapsed(false)}
         >
-          <PanelLeftOpen className="h-4 w-4" />
+          <PanelRightOpen className="h-4 w-4" />
         </Button>
         <div className="flex items-center gap-2 text-muted-foreground md:mt-3 md:flex-col">
           <Layers className="h-4 w-4" />
@@ -2361,13 +2361,13 @@ export function LayerPanel({
   return (
     <aside
       aria-label={t("sharedRail.layers")}
-      className="relative flex max-h-[min(24rem,42vh)] supports-[max-height:1dvh]:max-h-[min(24rem,42dvh)] w-full shrink-0 flex-col border-b bg-card max-md:absolute max-md:inset-x-0 max-md:top-0 max-md:z-30 max-md:shadow-xl md:max-h-none md:w-[var(--layer-panel-width)] md:border-b-0 md:border-e"
+      className="relative flex max-h-[min(24rem,42vh)] supports-[max-height:1dvh]:max-h-[min(24rem,42dvh)] w-full shrink-0 flex-col border-b bg-card max-md:absolute max-md:inset-x-0 max-md:top-0 max-md:z-30 max-md:shadow-xl md:max-h-none md:w-[var(--layer-panel-width)] md:border-b-0 md:border-s"
     >
       <div
         role="separator"
         aria-orientation="vertical"
         aria-label={t("layers.resizePanel")}
-        className="absolute -end-1 top-0 z-20 hidden h-full w-2 cursor-col-resize touch-none select-none border-e border-transparent hover:border-primary md:block"
+        className="absolute -start-1 top-0 z-20 hidden h-full w-2 cursor-col-resize touch-none select-none border-s border-transparent hover:border-primary md:block"
         onPointerDown={onResizeStart}
       />
       <div className="flex items-center justify-between border-b px-3 py-1.5">
@@ -2463,7 +2463,7 @@ export function LayerPanel({
             aria-label={t("layers.collapse")}
             onClick={() => setIsCollapsed(true)}
           >
-            <PanelLeftClose className="h-4 w-4" />
+            <PanelRightClose className="h-4 w-4" />
           </Button>
         </div>
       </div>

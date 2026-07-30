@@ -122,23 +122,27 @@ describe("right-panel registry", () => {
     openRightPanel("a");
     assert.equal(getActiveRightPanelDock(), "right-of-style");
 
-    setActiveRightPanelDock("left-of-style");
-    assert.equal(getActiveRightPanelDock(), "left-of-style");
-    assert.equal(getRightPanelSnapshot().dock, "left-of-style");
+    setActiveRightPanelDock("left-of-layers");
+    assert.equal(getActiveRightPanelDock(), "left-of-layers");
+    assert.equal(getRightPanelSnapshot().dock, "left-of-layers");
 
-    // Stepping left/right walks the four ordered positions, stopping at the ends.
+    // Stepping left/right walks the five ordered positions (left-dock, then
+    // Style innermost, then Layers outboard of it), stopping at the ends.
     moveActiveRightPanelDock("left");
+    assert.equal(getActiveRightPanelDock(), "right-of-style");
+    moveActiveRightPanelDock("left");
+    assert.equal(getActiveRightPanelDock(), "left-of-style");
+    moveActiveRightPanelDock("left");
+    assert.equal(getActiveRightPanelDock(), "left-dock");
+    moveActiveRightPanelDock("left");
+    assert.equal(getActiveRightPanelDock(), "left-dock");
+    moveActiveRightPanelDock("right");
+    moveActiveRightPanelDock("right");
+    moveActiveRightPanelDock("right");
+    moveActiveRightPanelDock("right");
     assert.equal(getActiveRightPanelDock(), "right-of-layers");
-    moveActiveRightPanelDock("left");
-    assert.equal(getActiveRightPanelDock(), "left-of-layers");
-    moveActiveRightPanelDock("left");
-    assert.equal(getActiveRightPanelDock(), "left-of-layers");
     moveActiveRightPanelDock("right");
-    moveActiveRightPanelDock("right");
-    moveActiveRightPanelDock("right");
-    assert.equal(getActiveRightPanelDock(), "right-of-style");
-    moveActiveRightPanelDock("right");
-    assert.equal(getActiveRightPanelDock(), "right-of-style");
+    assert.equal(getActiveRightPanelDock(), "right-of-layers");
 
     // Opening another panel resets to that panel's declared dock.
     openRightPanel("b");

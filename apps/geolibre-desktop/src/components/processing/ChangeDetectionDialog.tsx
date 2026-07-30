@@ -67,7 +67,6 @@ export function ChangeDetectionDialog({
   const { t } = useTranslation();
   const open = useAppStore((s) => s.ui.changeDetectionOpen);
   const setOpen = useAppStore((s) => s.setChangeDetectionOpen);
-  const prefill = useAppStore((s) => s.ui.changeDetectionPrefill);
   const addGeoJsonLayer = useAppStore((s) => s.addGeoJsonLayer);
 
   const [status, setStatus] = useState<ChangeDetectionStatus | null>(null);
@@ -147,21 +146,7 @@ export function ChangeDetectionDialog({
     void fetchMosaicLocations()
       .then(setLocations)
       .catch(() => setLocations([]));
-
-    // Opened from the Mosaic Timeline panel's "Detect Change" button: jump
-    // straight to its location and the current/previous frame instead of the
-    // usual empty picker.
-    if (prefill) {
-      setSourceMode("mosaic");
-      setLocationId(prefill.locationId);
-      setPreMosaicId(prefill.preMosaicId);
-      setPostMosaicId(prefill.postMosaicId);
-      setDates([]);
-      void fetchMosaicDates(prefill.locationId)
-        .then(setDates)
-        .catch(() => setDates([]));
-    }
-  }, [open, checkStatus, prefill]);
+  }, [open, checkStatus]);
 
   // Tear down the overlay when the dialog closes or the panel unmounts, so a
   // stale visualization doesn't linger after the user moves on.

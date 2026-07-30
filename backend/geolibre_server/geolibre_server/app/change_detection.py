@@ -19,7 +19,9 @@ Two ways to compare images, matching the external API's two endpoints:
   resolves each to its raw NAS/local path via the mosaics DB (server-side
   only, never the browser) and forwards those paths as form data. The
   external host has its own direct network/SMB access to the imagery NAS, so
-  no image bytes cross this sidecar for this path.
+  no image bytes cross this sidecar for this path. Identical requests (same
+  model/mosaic pair/threshold/window_overlap/img_size) are served from a
+  short-lived in-process cache instead of re-running GPU inference.
 
 Configuration (environment variables):
 
@@ -27,6 +29,9 @@ Configuration (environment variables):
   Detection API (e.g. ``http://10.10.116.215:8005``). Required; when unset,
   ``GET /changedetect/status`` reports ``available: false`` and the work
   endpoints return 503.
+- ``GEOINT_CHANGE_DETECTION_CACHE_TTL_SECS`` — how long a ``predict_paths``
+  result is cached for, in seconds (default 600). Set to ``0`` to disable
+  the cache entirely.
 
 All endpoints degrade gracefully, mirroring ``ml.py``: ``GET
 /changedetect/status`` never raises, and the work endpoints return 503 when
@@ -37,12 +42,14 @@ from __future__ import annotations
 
 import logging
 import os
+import time
 import urllib.parse
-from typing import Any, Optional
+from typing import Any, AsyncIterator, Optional
 
 from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import Response
-from pydantic import BaseModel
+from fastapi.concurrency import run_in_threadpool
+from fastapi.responses import Response, StreamingResponse
+from pydantic import BaseModel, Field
 
 from .mosaics import get_mosaic_path
 
@@ -51,8 +58,14 @@ logger = logging.getLogger("geoint.changedetect")
 
 _EXTERNAL_URL = os.environ.get("GEOINT_CHANGE_DETECTION_URL", "").strip()
 
-# Sliding-window GPU inference over a large mosaic can take a while.
+# Sliding-window GPU inference over a large mosaic can take a while, but a
+# genuinely unreachable host should fail fast rather than hang for the full
+# budget -- only the read phase (waiting on inference) gets the long timeout.
 _PROXY_TIMEOUT_SECS = 1800
+
+
+def _proxy_timeout(httpx: Any) -> Any:
+    return httpx.Timeout(connect=5.0, read=_PROXY_TIMEOUT_SECS, write=30.0, pool=5.0)
 
 
 def _require_httpx():
@@ -72,6 +85,18 @@ def _require_httpx():
             "pip install geoint-server[ml]"
         ) from exc
     return httpx
+
+
+def _backend_error_detail(exc: Exception) -> str:
+    """Build an error message that's never just a bare, empty colon.
+
+    `str()` of a timeout/connect error (`httpx.ConnectTimeout`,
+    `httpx.ReadTimeout`, ...) is often the empty string, which would
+    otherwise render to the user as "Change detection backend error: " with
+    nothing after it.
+    """
+    message = str(exc) or type(exc).__name__
+    return f"Change detection backend error: {message}"
 
 
 def _redact_url(url: str) -> str:
@@ -182,12 +207,59 @@ async def change_detection_models():
         async with httpx.AsyncClient(timeout=30) as client:
             resp = await client.get(f"{base}/models")
     except httpx.HTTPError as exc:
-        raise HTTPException(status_code=502, detail=f"Change detection backend error: {exc}")
+        raise HTTPException(status_code=502, detail=_backend_error_detail(exc))
     return Response(
         content=resp.content,
         status_code=resp.status_code,
         media_type=resp.headers.get("content-type"),
     )
+
+
+async def _forward_streaming(
+    httpx: Any,
+    method: str,
+    url: str,
+    *,
+    cache_key: Optional[tuple] = None,
+    **kwargs: Any,
+) -> Response:
+    """Issue the request and stream the response back instead of buffering
+    the whole body (which can be several MB of base64-encoded PNGs) fully in
+    memory before the first byte reaches the browser.
+
+    When `cache_key` is given, the streamed bytes are also accumulated and
+    written into the result cache as they pass through -- one buffer copy,
+    same as the old non-streaming behavior, but built as a side effect of
+    data that's already flowing rather than a dedicated buffering step.
+    Callers check the cache themselves before calling this (see
+    `predict_paths`), so this function only ever populates it, never serves
+    a cached response.
+    """
+    client = httpx.AsyncClient(timeout=_proxy_timeout(httpx))
+    try:
+        request = client.build_request(method, url, **kwargs)
+        upstream = await client.send(request, stream=True)
+    except httpx.HTTPError as exc:
+        await client.aclose()
+        raise HTTPException(status_code=502, detail=_backend_error_detail(exc))
+
+    status_code = upstream.status_code
+    media_type = upstream.headers.get("content-type")
+
+    async def body() -> AsyncIterator[bytes]:
+        buffer = bytearray() if cache_key is not None and status_code == 200 else None
+        try:
+            async for chunk in upstream.aiter_bytes():
+                if buffer is not None:
+                    buffer.extend(chunk)
+                yield chunk
+        finally:
+            await upstream.aclose()
+            await client.aclose()
+            if buffer is not None:
+                _cache_put(cache_key, bytes(buffer), status_code, media_type)
+
+    return StreamingResponse(body(), status_code=status_code, media_type=media_type)
 
 
 @router.post("/predict/{model_name}")
@@ -197,7 +269,9 @@ async def predict(request: Request, model_name: str) -> Response:
     Streams the raw request body and content-type through unchanged so the
     "pre"/"post" files and tuning params (threshold, img_size, window_overlap,
     generate_outputs) all forward exactly as the browser sent them, and a
-    large upload is never buffered whole in the sidecar's memory.
+    large upload is never buffered whole in the sidecar's memory. Not cached
+    (the inputs are raw uploaded bytes -- no stable cache key without hashing
+    the upload).
     """
     base = _resolve_base()
     httpx = _require_httpx()
@@ -211,26 +285,64 @@ async def predict(request: Request, model_name: str) -> Response:
             if chunk:
                 yield chunk
 
-    try:
-        async with httpx.AsyncClient(timeout=_PROXY_TIMEOUT_SECS) as client:
-            resp = await client.post(
-                f"{base}/predict/{model_name}", content=_body_iter(), headers=headers
-            )
-    except httpx.HTTPError as exc:
-        raise HTTPException(status_code=502, detail=f"Change detection backend error: {exc}")
-    return Response(
-        content=resp.content,
-        status_code=resp.status_code,
-        media_type=resp.headers.get("content-type"),
+    return await _forward_streaming(
+        httpx, "POST", f"{base}/predict/{model_name}", content=_body_iter(), headers=headers
     )
 
 
 class MosaicPairRequest(BaseModel):
     pre_mosaic_id: int
     post_mosaic_id: int
-    threshold: float = 0.5
-    img_size: Optional[int] = None
-    window_overlap: int = 16
+    threshold: float = Field(default=0.5, ge=0.0, le=1.0)
+    img_size: Optional[int] = Field(default=None, ge=1)
+    window_overlap: int = Field(default=16, ge=0)
+
+
+# --- predict_paths result cache ---------------------------------------------
+#
+# Keyed on every input that affects the result; a re-run of the identical
+# (model, pre, post, threshold, window_overlap, img_size) tuple -- two tabs,
+# or re-checking after an unrelated UI tweak -- is served from here instead of
+# re-running GPU inference. A TTL (not a size-bounded LRU) because the
+# underlying mosaic imagery could in principle be reprocessed on the NAS, so
+# a stale result should eventually fall out on its own rather than live
+# forever just because it's popular.
+_CACHE_TTL_SECS = float(os.environ.get("GEOINT_CHANGE_DETECTION_CACHE_TTL_SECS", "600"))
+_result_cache: dict[tuple, tuple[float, bytes, int, Optional[str]]] = {}
+
+
+def _cache_key(model_name: str, body: "MosaicPairRequest") -> tuple:
+    return (
+        model_name,
+        body.pre_mosaic_id,
+        body.post_mosaic_id,
+        round(body.threshold, 4),
+        body.window_overlap,
+        body.img_size,
+    )
+
+
+def _cache_get(key: tuple) -> Optional[Response]:
+    if _CACHE_TTL_SECS <= 0:
+        return None
+    entry = _result_cache.get(key)
+    if entry is None:
+        return None
+    expires_at, content, status_code, media_type = entry
+    if time.monotonic() > expires_at:
+        del _result_cache[key]
+        return None
+    return Response(content=content, status_code=status_code, media_type=media_type)
+
+
+def _cache_put(key: tuple, content: bytes, status_code: int, media_type: Optional[str]) -> None:
+    if _CACHE_TTL_SECS <= 0:
+        return
+    _result_cache[key] = (time.monotonic() + _CACHE_TTL_SECS, content, status_code, media_type)
+
+
+def _reset_result_cache_for_tests() -> None:
+    _result_cache.clear()
 
 
 @router.post("/predict_paths/{model_name}")
@@ -240,10 +352,18 @@ async def predict_paths(model_name: str, body: MosaicPairRequest) -> Response:
     actual filesystem path is resolved here, server-side, so it can never
     smuggle in an arbitrary path.
     """
+    cache_key = _cache_key(model_name, body)
+    cached = _cache_get(cache_key)
+    if cached is not None:
+        return cached
+
     base = _resolve_base()
     httpx = _require_httpx()
-    pre_path = get_mosaic_path(body.pre_mosaic_id)
-    post_path = get_mosaic_path(body.post_mosaic_id)
+    # DuckDB path resolution is synchronous file/DB I/O; off the event loop so
+    # one change-detection request doesn't stall every other concurrent
+    # sidecar request (mosaics browsing, status polls, ...) for its duration.
+    pre_path = await run_in_threadpool(get_mosaic_path, body.pre_mosaic_id)
+    post_path = await run_in_threadpool(get_mosaic_path, body.post_mosaic_id)
     data = {
         "pre_path": pre_path,
         "post_path": post_path,
@@ -252,13 +372,6 @@ async def predict_paths(model_name: str, body: MosaicPairRequest) -> Response:
     }
     if body.img_size is not None:
         data["img_size"] = body.img_size
-    try:
-        async with httpx.AsyncClient(timeout=_PROXY_TIMEOUT_SECS) as client:
-            resp = await client.post(f"{base}/predict_paths/{model_name}", data=data)
-    except httpx.HTTPError as exc:
-        raise HTTPException(status_code=502, detail=f"Change detection backend error: {exc}")
-    return Response(
-        content=resp.content,
-        status_code=resp.status_code,
-        media_type=resp.headers.get("content-type"),
+    return await _forward_streaming(
+        httpx, "POST", f"{base}/predict_paths/{model_name}", data=data, cache_key=cache_key
     )

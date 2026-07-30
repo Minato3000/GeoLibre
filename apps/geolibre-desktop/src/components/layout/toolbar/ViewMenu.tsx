@@ -143,7 +143,7 @@ export function ViewMenu({
   const paneCount = mapLayout.rows * mapLayout.cols;
   const gridKey = `${mapLayout.rows}x${mapLayout.cols}`;
   // A custom profile could hide every item; render nothing rather than a menu
-  // whose dropdown is an empty shell. (TopToolbar's isMenuVisible guard normally
+  // whose dropdown is an empty shell. (SideRail's isMenuVisible guard normally
   // hides the menu first, but don't rely on that invariant here.)
   if (!showZoom && !showNavigation && !showReset && !showSetView && !showSplitView && !showExternal)
     return null;

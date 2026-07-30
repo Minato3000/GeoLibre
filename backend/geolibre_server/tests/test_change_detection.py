@@ -90,6 +90,23 @@ def db_path(tmp_path: Path, monkeypatch) -> Path:
     return path
 
 
+@pytest.fixture(autouse=True)
+def _clear_result_cache():
+    change_detection._reset_result_cache_for_tests()
+    yield
+    change_detection._reset_result_cache_for_tests()
+
+
+async def _drain(response) -> bytes:
+    """Consume a StreamingResponse's body, mirroring what serving it over
+    ASGI would do (needed so post-completion side effects, like writing the
+    result cache, actually run)."""
+    chunks = []
+    async for chunk in response.body_iterator:
+        chunks.append(chunk if isinstance(chunk, bytes) else chunk.encode())
+    return b"".join(chunks)
+
+
 # --- fakes ------------------------------------------------------------------
 
 
@@ -102,8 +119,27 @@ class _FakeResp:
     def json(self):
         return json.loads(self.content)
 
+    async def aiter_bytes(self):
+        yield self.content
+
+    async def aclose(self):
+        pass
+
+
+class _FakeRequest:
+    def __init__(self, method, url, content=None, data=None, headers=None):
+        self.method = method
+        self.url = url
+        self.content = content
+        self.data = data
+        self.headers = headers
+
 
 class _FakeAsyncClient:
+    # Content served by the next `send()` call; tests can override this to
+    # exercise different upstream payloads/status codes.
+    next_response = None
+
     def __init__(self, *args, **kwargs):
         pass
 
@@ -113,18 +149,29 @@ class _FakeAsyncClient:
     async def __aexit__(self, *args):
         return False
 
-    async def post(self, url, content=None, data=None, headers=None):
-        if hasattr(content, "__aiter__"):
+    async def get(self, url):
+        _FakeHttpx.calls.append(("GET", url))
+        return _FakeResp()
+
+    def build_request(self, method, url, content=None, data=None, headers=None):
+        return _FakeRequest(method, url, content=content, data=data, headers=headers)
+
+    async def send(self, request, stream=False):
+        content = request.content
+        if content is not None and hasattr(content, "__aiter__"):
             buffered = b""
             async for chunk in content:
                 buffered += chunk
             content = buffered
-        _FakeHttpx.calls.append(("POST", url, content, data, headers))
-        return _FakeResp(content=b'{"status": "success", "geojson": {"type": "FeatureCollection"}}')
+        _FakeHttpx.calls.append(
+            (request.method, request.url, content, request.data, request.headers)
+        )
+        return _FakeAsyncClient.next_response or _FakeResp(
+            content=b'{"status": "success", "geojson": {"type": "FeatureCollection"}}'
+        )
 
-    async def get(self, url):
-        _FakeHttpx.calls.append(("GET", url))
-        return _FakeResp()
+    async def aclose(self):
+        pass
 
 
 class _FakeHttpx:
@@ -133,6 +180,7 @@ class _FakeHttpx:
     calls: list = []
     HTTPError = Exception
     AsyncClient = _FakeAsyncClient
+    Timeout = dict
 
     @staticmethod
     def get(url, timeout=None):
@@ -242,6 +290,113 @@ def test_predict_paths_missing_mosaic_id_returns_404(monkeypatch, db_path: Path)
     with pytest.raises(HTTPException) as exc:
         asyncio.run(change_detection.predict_paths("bit", body))
     assert exc.value.status_code == 404
+
+
+@requires_duckdb
+def test_predict_paths_rejects_out_of_range_threshold() -> None:
+    with pytest.raises(Exception):  # pydantic ValidationError
+        change_detection.MosaicPairRequest(pre_mosaic_id=9, post_mosaic_id=10, threshold=5.0)
+
+
+# --- predict_paths: result cache ---------------------------------------------
+
+
+@requires_duckdb
+def test_predict_paths_second_identical_request_is_cached(monkeypatch, db_path: Path) -> None:
+    _FakeHttpx.calls.clear()
+    monkeypatch.setattr(change_detection, "_EXTERNAL_URL", "http://10.10.116.215:8005")
+    monkeypatch.setattr(change_detection, "_require_httpx", lambda: _FakeHttpx)
+
+    body = change_detection.MosaicPairRequest(pre_mosaic_id=9, post_mosaic_id=10, threshold=0.6)
+
+    first = asyncio.run(change_detection.predict_paths("bit", body))
+    asyncio.run(_drain(first))
+    forwarded_after_first = [c for c in _FakeHttpx.calls if c[0] == "POST"]
+    assert len(forwarded_after_first) == 1
+
+    second = asyncio.run(change_detection.predict_paths("bit", body))
+    forwarded_after_second = [c for c in _FakeHttpx.calls if c[0] == "POST"]
+    assert len(forwarded_after_second) == 1, "identical request should be served from cache"
+    assert second.status_code == 200
+    assert second.body == b'{"status": "success", "geojson": {"type": "FeatureCollection"}}'
+
+
+@requires_duckdb
+def test_predict_paths_different_threshold_is_not_cached(monkeypatch, db_path: Path) -> None:
+    _FakeHttpx.calls.clear()
+    monkeypatch.setattr(change_detection, "_EXTERNAL_URL", "http://10.10.116.215:8005")
+    monkeypatch.setattr(change_detection, "_require_httpx", lambda: _FakeHttpx)
+
+    first = asyncio.run(
+        change_detection.predict_paths(
+            "bit",
+            change_detection.MosaicPairRequest(pre_mosaic_id=9, post_mosaic_id=10, threshold=0.5),
+        )
+    )
+    asyncio.run(_drain(first))
+    asyncio.run(
+        change_detection.predict_paths(
+            "bit",
+            change_detection.MosaicPairRequest(pre_mosaic_id=9, post_mosaic_id=10, threshold=0.6),
+        )
+    )
+    forwarded = [c for c in _FakeHttpx.calls if c[0] == "POST"]
+    assert len(forwarded) == 2, "a different threshold must not hit the same cache entry"
+
+
+@requires_duckdb
+def test_predict_paths_cache_disabled_when_ttl_is_zero(monkeypatch, db_path: Path) -> None:
+    _FakeHttpx.calls.clear()
+    monkeypatch.setattr(change_detection, "_EXTERNAL_URL", "http://10.10.116.215:8005")
+    monkeypatch.setattr(change_detection, "_require_httpx", lambda: _FakeHttpx)
+    monkeypatch.setattr(change_detection, "_CACHE_TTL_SECS", 0.0)
+
+    body = change_detection.MosaicPairRequest(pre_mosaic_id=9, post_mosaic_id=10)
+    first = asyncio.run(change_detection.predict_paths("bit", body))
+    asyncio.run(_drain(first))
+    asyncio.run(change_detection.predict_paths("bit", body))
+    forwarded = [c for c in _FakeHttpx.calls if c[0] == "POST"]
+    assert len(forwarded) == 2, "TTL of 0 must disable caching entirely"
+
+
+# --- error message fallback ---------------------------------------------------
+
+
+def test_backend_error_detail_falls_back_to_exception_type_when_message_empty() -> None:
+    class _EmptyMessageError(Exception):
+        def __str__(self) -> str:
+            return ""
+
+    detail = change_detection._backend_error_detail(_EmptyMessageError())
+    assert detail == "Change detection backend error: _EmptyMessageError"
+    assert detail != "Change detection backend error: "
+
+
+@requires_duckdb
+def test_predict_paths_surfaces_non_empty_message_on_connect_failure(
+    monkeypatch, db_path: Path
+) -> None:
+    class _EmptyConnectError(Exception):
+        def __str__(self) -> str:
+            return ""
+
+    class _FailingClient(_FakeAsyncClient):
+        def build_request(self, *args, **kwargs):
+            raise _EmptyConnectError()
+
+    monkeypatch.setattr(change_detection, "_EXTERNAL_URL", "http://10.10.116.215:8005")
+    failing_httpx = type(
+        "FailingHttpx",
+        (),
+        {"HTTPError": Exception, "AsyncClient": _FailingClient, "Timeout": dict},
+    )
+    monkeypatch.setattr(change_detection, "_require_httpx", lambda: failing_httpx)
+
+    body = change_detection.MosaicPairRequest(pre_mosaic_id=9, post_mosaic_id=10)
+    with pytest.raises(HTTPException) as exc:
+        asyncio.run(change_detection.predict_paths("bit", body))
+    assert exc.value.detail != "Change detection backend error: "
+    assert "_EmptyConnectError" in exc.value.detail
 
 
 # --- predict: multipart passthrough (needs httpx for TestClient) ------------

@@ -26,7 +26,7 @@ export interface OpenAddDataDetail {
 
 /**
  * Open the Add Data dialog preselected to `kind` from anywhere in the app,
- * without prop-drilling (mirrors {@link openSettingsSection}). TopToolbar owns
+ * without prop-drilling (mirrors {@link openSettingsSection}). SideRail owns
  * the dialog and its kind state and listens for this event. Used by the Browser
  * panel's per-source "New connection" action and its PostGIS table nodes.
  *

@@ -12,14 +12,20 @@ import { PanelTitleResolver } from "./panel-title";
  * `@geoint/plugins` (rather than the app) lets the host API delegate to it
  * without the app and the plugins package depending on each other.
  *
- * Only one plugin panel is active at a time. It docks at one of four positions
- * and the user can step it between them. The built-in panel on the side the
- * panel is docked (Layers on the left, Style on the right) collapses to its
- * rail while the panel is expanded there; the shell handles that. Two further
+ * Only one plugin panel is active at a time. It docks at one of five
+ * positions and the user can step it between them. `left-dock` is a single
+ * standalone slot on the physical left of the map, beside the hamburger
+ * rail -- there is no built-in panel there to collapse (Layers moved to the
+ * right, outboard of Style, so the left side had no docked content at all
+ * until this position was added for plugins like Mosaic Timeline that want
+ * to sit there). The other four are the built-in-panel-flanking positions:
+ * the built-in panel on the side a panel is docked (Style innermost on the
+ * right, Layers outboard of it, also on the right) collapses to its rail
+ * while the panel is expanded there; the shell handles that. Two further
  * docks, `replace-style` and `replace-layers`, are non-positional shared-rail
- * modes in which the panel shares the Style (right) or Layers (left) sidebar's
- * single rail rather than sitting beside it; they are not part of the steppable
- * position order.
+ * modes in which the panel shares the Style or Layers sidebar's single rail
+ * rather than sitting beside it; they are not part of the steppable position
+ * order.
  */
 
 /**
@@ -33,12 +39,18 @@ export type RightPanelDock = GeoIntRightPanelDock;
  * between positions. Frozen so a consumer cannot mutate the validation/order
  * list. The non-positional `replace-style` mode is intentionally excluded: it
  * shares the Style rail and is not part of the move sequence.
+ *
+ * `left-dock` (physical left, beside the rail) comes first, then Style, then
+ * Layers: Style and Layers both sit physically on the right of the map,
+ * Layers outboard of Style (the team didn't want Layers sharing the
+ * hamburger rail's edge on the left).
  */
 export const RIGHT_PANEL_DOCKS: readonly RightPanelDock[] = Object.freeze([
-  "left-of-layers",
-  "right-of-layers",
+  "left-dock",
   "left-of-style",
   "right-of-style",
+  "left-of-layers",
+  "right-of-layers",
 ] as const);
 
 /**

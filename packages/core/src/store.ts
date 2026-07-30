@@ -175,17 +175,6 @@ export interface GpsStatusFix {
   timestamp: number;
 }
 
-/**
- * Mosaic ids preselected for the Change Detection dialog when opened from the
- * Mosaic Timeline panel's "Detect Change" button, or null when opened without
- * a target (e.g. from the Processing menu).
- */
-export interface ChangeDetectionPrefill {
-  locationId: number;
-  preMosaicId: number;
-  postMosaicId: number;
-}
-
 export interface AppState {
   projectName: string;
   projectPath: string | null;
@@ -273,9 +262,6 @@ export interface AppState {
     rasterToolOpen: RasterToolKind | null;
     segmentationOpen: boolean;
     changeDetectionOpen: boolean;
-    // Mosaic ids preselected when opened from the Mosaic Timeline panel's
-    // "Detect Change" button, or null when opened without a target.
-    changeDetectionPrefill: ChangeDetectionPrefill | null;
     objectDetectionOpen: boolean;
     segmentEverythingOpen: boolean;
     geocodeOpen: boolean;
@@ -401,7 +387,7 @@ export interface AppState {
   setStatisticsToolOpen: (kind: StatisticsToolKind | null) => void;
   setRasterToolOpen: (kind: RasterToolKind | null) => void;
   setSegmentationOpen: (open: boolean) => void;
-  setChangeDetectionOpen: (open: boolean, prefill?: ChangeDetectionPrefill | null) => void;
+  setChangeDetectionOpen: (open: boolean) => void;
   setObjectDetectionOpen: (open: boolean) => void;
   setSegmentEverythingOpen: (open: boolean) => void;
   setGeocodeOpen: (open: boolean) => void;
@@ -819,7 +805,6 @@ export const useAppStore = create<AppState>()(
         rasterToolOpen: null,
         segmentationOpen: false,
         changeDetectionOpen: false,
-        changeDetectionPrefill: null,
         objectDetectionOpen: false,
         segmentEverythingOpen: false,
         geocodeOpen: false,
@@ -1067,14 +1052,8 @@ export const useAppStore = create<AppState>()(
       setStatisticsToolOpen: (kind) => set((s) => ({ ui: { ...s.ui, statisticsToolOpen: kind } })),
       setRasterToolOpen: (kind) => set((s) => ({ ui: { ...s.ui, rasterToolOpen: kind } })),
       setSegmentationOpen: (open) => set((s) => ({ ui: { ...s.ui, segmentationOpen: open } })),
-      setChangeDetectionOpen: (open, prefill) =>
-        set((s) => ({
-          ui: {
-            ...s.ui,
-            changeDetectionOpen: open,
-            changeDetectionPrefill: open ? (prefill ?? null) : null,
-          },
-        })),
+      setChangeDetectionOpen: (open) =>
+        set((s) => ({ ui: { ...s.ui, changeDetectionOpen: open } })),
       setObjectDetectionOpen: (open) =>
         set((s) => ({ ui: { ...s.ui, objectDetectionOpen: open } })),
       setSegmentEverythingOpen: (open) =>

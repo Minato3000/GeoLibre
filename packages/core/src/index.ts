@@ -35,7 +35,6 @@ export {
   undo,
   useAppStore,
   type AppState,
-  type ChangeDetectionPrefill,
   type ConversionToolKind,
   type GpsStatusFix,
   type NetworkToolKind,

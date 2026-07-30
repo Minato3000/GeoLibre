@@ -149,7 +149,8 @@ import { DiagnosticsDialog } from "./DiagnosticsDialog";
 import { FileNamePromptDialog } from "./FileNamePromptDialog";
 import { ProjectPluginTrustDialog } from "./ProjectPluginTrustDialog";
 import { StatusBar } from "./StatusBar";
-import { TopToolbar } from "./TopToolbar";
+import { SideRail } from "./SideRail";
+import { TopBar } from "./TopBar";
 import type { LayoutOptions } from "../../hooks/useLayoutOptions";
 import type { ThemeMode } from "../../hooks/useThemeMode";
 import type { ProjectUrlLoadState } from "../../hooks/useProjectUrlLoader";
@@ -532,7 +533,7 @@ export function DesktopShell({
   const shellRef = useRef<HTMLDivElement>(null);
   const verticalResizeGuideRef = useRef<HTMLDivElement>(null);
   // Push the translated bookmark labels into the framework-agnostic plugins
-  // package (which can't call t() itself). Done here rather than in TopToolbar
+  // package (which can't call t() itself). Done here rather than in SideRail
   // so it still applies when the toolbar is hidden (e.g. `?maponly`), where the
   // BookmarkControl overlay is still present.
   useEffect(() => {
@@ -669,7 +670,7 @@ export function DesktopShell({
   // module-level global (which would leak across embeds).
   const autoCollapsedPanel = useAutoCollapsedPanel();
   // When set, a plugin panel is docked in a shared-rail mode and takes over the
-  // Style (right) or Layers (left) sidebar surface (issue #765).
+  // Style or Layers sidebar surface (both on the physical right, issue #765).
   const replaceStylePanelId = useReplaceStylePanelId();
   const replaceLayersPanelId = useReplaceLayersPanelId();
   const [pluginPanelWidth, setPluginPanelWidth] = useState(PLUGIN_PANEL_DEFAULT_WIDTH);
@@ -753,7 +754,7 @@ export function DesktopShell({
   // Close a binding-opened Time Slider once the last temporal layer is gone
   // (#1512), so the dock does not linger over a map with no timeline.
   useTimeSliderAutoClose(mapControllerRef);
-  // Live-collaboration session. Owned here (rather than in TopToolbar) so both
+  // Live-collaboration session. Owned here (rather than in SideRail) so both
   // the Collaborate dialog and the on-canvas status badge share one socket, and
   // so the dialog stays mounted in toolbar-hidden layouts.
   const collaboration = useCollaboration(mapControllerRef);
@@ -785,6 +786,11 @@ export function DesktopShell({
   // Routes the Layers-panel Identify action to the raster pixel inspector for
   // COG layers (read band values on click). Inert until a COG is identified.
   useRasterIdentify();
+  // A true hamburger menu: closed by default on every viewport, showing only
+  // TopBar's toggle button -- no SideRail menu is visible until the user opens
+  // it. Lifted here (rather than local to SideRail) so TopBar's button and
+  // SideRail's collapsed layout share one source of truth.
+  const [railCollapsed, setRailCollapsed] = useState(true);
   const [layerPanelWidth, setLayerPanelWidth] = useState(initialSidePanelWidth);
   const [stylePanelWidth, setStylePanelWidth] = useState(initialSidePanelWidth);
   const [notebookPanelWidth, setNotebookPanelWidth] = useState(DEFAULT_NOTEBOOK_PANEL_WIDTH);
@@ -1680,8 +1686,10 @@ export function DesktopShell({
       window.dispatchEvent(new Event(PANEL_RESIZE_START_EVENT));
 
       const onPointerMove = (moveEvent: PointerEvent) => {
+        // Layers now docks on the right (outboard of Style): dragging the
+        // handle left widens the panel, mirroring startStylePanelResize.
         nextWidth = clamp(
-          startWidth + dirSign * (moveEvent.clientX - startX),
+          startWidth + dirSign * (startX - moveEvent.clientX),
           MIN_SIDE_PANEL_WIDTH,
           MAX_SIDE_PANEL_WIDTH,
         );
@@ -1691,7 +1699,7 @@ export function DesktopShell({
           if (deferPanelResize) {
             if (verticalResizeGuideRef.current && panelRect) {
               verticalResizeGuideRef.current.style.left = `${
-                dirSign === 1 ? panelRect.left + nextWidth : panelRect.right - nextWidth
+                dirSign === 1 ? panelRect.right - nextWidth : panelRect.left + nextWidth
               }px`;
               verticalResizeGuideRef.current.classList.remove("hidden");
             }
@@ -1875,10 +1883,18 @@ export function DesktopShell({
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
+      {layoutOptions.toolbarVisible ? (
+        <SectionErrorBoundary label="Top bar" displayName={t("shell.section.topBar")}>
+          <TopBar
+            collapsed={railCollapsed}
+            onToggleCollapsed={() => setRailCollapsed((collapsed) => !collapsed)}
+          />
+        </SectionErrorBoundary>
+      ) : null}
       <div data-workspace-row="" className="relative flex min-h-0 flex-1 flex-col md:flex-row">
         {layoutOptions.toolbarVisible ? (
           <SectionErrorBoundary label="Toolbar" displayName={t("shell.section.toolbar")}>
-            <TopToolbar
+            <SideRail
               compact={layoutOptions.compact}
               diagnosticsErrorCount={diagnostics.errorCount}
               mapControllerRef={mapControllerRef}
@@ -1891,6 +1907,7 @@ export function DesktopShell({
               onOpenDiagnostics={() => setDiagnosticsOpen(true)}
               onToggleThemeMode={onToggleThemeMode}
               onOpenBasemapExtract={() => setBasemapExtractOpen(true)}
+              railCollapsed={railCollapsed}
             />
           </SectionErrorBoundary>
         ) : null}
@@ -1907,98 +1924,21 @@ export function DesktopShell({
               browserContentEl,
             )
           : null}
-        {/* Map-only / hidden-panels embeds show nothing but the map: skip the
-            whole left side-dock (Layers, plugin panels, and the shared rail that
-            hosts the Browser entry), not just the built-in Layers panel. */}
-        {layoutOptions.panelsHidden ? null : replaceLayersPanelId ? (
-          // Shared-rail mode on the Layers (left) side: the plugin panel shares
-          // the Layers sidebar surface, so a single rail lists both the workbench
-          // and Layers instead of the two positional plugin slots flanking it.
+        {/* The standalone left dock, beside the rail -- no built-in panel lives
+            here (Layers moved to the right), so there is nothing to collapse
+            when a plugin isn't docked here; it just renders nothing. */}
+        {layoutOptions.panelsHidden ? null : (
           <SectionErrorBoundary
-            label="Shared left sidebar"
-            displayName={t("shell.section.sharedLeftSidebar")}
+            label="Plugin panel (left dock)"
+            displayName={t("shell.section.pluginPanelLeftDock")}
           >
-            <SharedSidebar
-              key={replaceLayersPanelId}
-              side="layers"
-              pluginId={replaceLayersPanelId}
-              pluginContentEl={dockContentEl}
-              pluginWidth={pluginPanelWidth}
-              onPluginWidthChange={setPluginPanelWidth}
-              builtinVisible={layoutOptions.layerPanelVisible}
-              builtinTitle={t("sharedRail.layers")}
-              builtinIcon={<Layers className="h-4 w-4" />}
-              // The Browser docks here on by default but must not bury Layers:
-              // start with Layers expanded and Browser a collapsed rail entry.
-              // On a phone-width viewport both start collapsed (panels overlay
-              // there), matching the mobile "panels default collapsed" behavior.
-              initialBuiltinExpanded={
-                replaceLayersPanelId === BROWSER_PANEL_ID && !getIsMobileViewport()
-              }
-              // The story-map presentation is the only standalone Layers
-              // autoCollapse trigger (the notebook collapses Style, not Layers).
-              forceBuiltinCollapsed={storymapPresenting}
-              renderBuiltin={({ collapsed, onCollapsedChange }) => (
-                <LayerPanel
-                  mapControllerRef={mapControllerRef}
-                  onResizeStart={startLayerPanelResize}
-                  geometryEditLayerId={geometryEditLayerId}
-                  onToggleGeometryEdit={handleToggleGeometryEdit}
-                  onCancelGeometryEdit={handleCancelGeometryEdit}
-                  onMaterializeDuckDBLayer={handleMaterializeDuckDBLayer}
-                  onOpenRasterStylePanel={() =>
-                    openRasterLayerPanel(createAppAPI(mapControllerRef))
-                  }
-                  onOpenRasterSubset={setRasterSubsetLayer}
-                  collapsed={collapsed}
-                  onCollapsedChange={onCollapsedChange}
-                  hideOwnRail
-                />
-              )}
+            <PluginRightPanel
+              dock="left-dock"
+              contentEl={dockContentEl}
+              width={pluginPanelWidth}
+              onWidthChange={setPluginPanelWidth}
             />
           </SectionErrorBoundary>
-        ) : (
-          <>
-            <SectionErrorBoundary
-              label="Plugin panel (left of Layers)"
-              displayName={t("shell.section.pluginPanelLeftOfLayers")}
-            >
-              <PluginRightPanel
-                dock="left-of-layers"
-                contentEl={dockContentEl}
-                width={pluginPanelWidth}
-                onWidthChange={setPluginPanelWidth}
-              />
-            </SectionErrorBoundary>
-            {layoutOptions.layerPanelVisible ? (
-              <SectionErrorBoundary label="Layer panel" displayName={t("shell.section.layerPanel")}>
-                <LayerPanel
-                  mapControllerRef={mapControllerRef}
-                  onResizeStart={startLayerPanelResize}
-                  geometryEditLayerId={geometryEditLayerId}
-                  onToggleGeometryEdit={handleToggleGeometryEdit}
-                  onCancelGeometryEdit={handleCancelGeometryEdit}
-                  onMaterializeDuckDBLayer={handleMaterializeDuckDBLayer}
-                  onOpenRasterStylePanel={() =>
-                    openRasterLayerPanel(createAppAPI(mapControllerRef))
-                  }
-                  onOpenRasterSubset={setRasterSubsetLayer}
-                  autoCollapse={storymapPresenting || autoCollapsedPanel === "layers"}
-                />
-              </SectionErrorBoundary>
-            ) : null}
-            <SectionErrorBoundary
-              label="Plugin panel (right of Layers)"
-              displayName={t("shell.section.pluginPanelRightOfLayers")}
-            >
-              <PluginRightPanel
-                dock="right-of-layers"
-                contentEl={dockContentEl}
-                width={pluginPanelWidth}
-                onWidthChange={setPluginPanelWidth}
-              />
-            </SectionErrorBoundary>
-          </>
         )}
         <main
           // `isolate` creates a stacking context so map-panel z-indexes (up to 10000) stay below body-portaled dialogs. See #451.
@@ -2121,7 +2061,7 @@ export function DesktopShell({
             }}
             onConfirm={confirmKnowledgeConsent}
           />
-          {/* Rendered here (not in TopToolbar) so the dialog the status badge
+          {/* Rendered here (not in SideRail) so the dialog the status badge
               reopens stays mounted even in toolbar-hidden layouts (#754). */}
           {collaboration.enabled && (
             <CollaborateDialog
@@ -2131,15 +2071,16 @@ export function DesktopShell({
             />
           )}
         </main>
-        {/* Same as the left dock: a map-only / hidden-panels embed skips the
-            entire right side-dock (Style, plugin panels, and their shared rail). */}
+        {/* A map-only / hidden-panels embed skips this whole dock (Style,
+            plugin panels, and their shared rail) too -- see the Layers dock
+            below, which now sits outboard of this one on the same side. */}
         {layoutOptions.panelsHidden ? null : replaceStylePanelId ? (
           // Shared-rail mode (issue #765): the plugin panel shares the Style
           // sidebar surface, so a single rail lists both the workbench and Style
           // instead of the two positional plugin slots flanking the Style panel.
           <SectionErrorBoundary
-            label="Shared right sidebar"
-            displayName={t("shell.section.sharedRightSidebar")}
+            label="Shared Style sidebar"
+            displayName={t("shell.section.sharedStyleSidebar")}
           >
             <SharedSidebar
               // Key by the active panel id so switching between two replace-style
@@ -2213,6 +2154,101 @@ export function DesktopShell({
             >
               <PluginRightPanel
                 dock="right-of-style"
+                contentEl={dockContentEl}
+                width={pluginPanelWidth}
+                onWidthChange={setPluginPanelWidth}
+              />
+            </SectionErrorBoundary>
+          </>
+        )}
+        {/* Layers now docks outboard of Style, on the same (right) side of the
+            map -- the team didn't like it sharing the hamburger rail's edge.
+            Map-only / hidden-panels embeds skip this whole dock (Layers,
+            plugin panels, and the shared rail that hosts the Browser entry),
+            not just the built-in Layers panel. */}
+        {layoutOptions.panelsHidden ? null : replaceLayersPanelId ? (
+          // Shared-rail mode on the Layers side: the plugin panel shares the
+          // Layers sidebar surface, so a single rail lists both the workbench
+          // and Layers instead of the two positional plugin slots flanking it.
+          <SectionErrorBoundary
+            label="Shared Layers sidebar"
+            displayName={t("shell.section.sharedLayersSidebar")}
+          >
+            <SharedSidebar
+              key={replaceLayersPanelId}
+              side="layers"
+              pluginId={replaceLayersPanelId}
+              pluginContentEl={dockContentEl}
+              pluginWidth={pluginPanelWidth}
+              onPluginWidthChange={setPluginPanelWidth}
+              builtinVisible={layoutOptions.layerPanelVisible}
+              builtinTitle={t("sharedRail.layers")}
+              builtinIcon={<Layers className="h-4 w-4" />}
+              // The Browser docks here on by default but must not bury Layers:
+              // start with Layers expanded and Browser a collapsed rail entry.
+              // On a phone-width viewport both start collapsed (panels overlay
+              // there), matching the mobile "panels default collapsed" behavior.
+              initialBuiltinExpanded={
+                replaceLayersPanelId === BROWSER_PANEL_ID && !getIsMobileViewport()
+              }
+              // The story-map presentation is the only standalone Layers
+              // autoCollapse trigger (the notebook collapses Style, not Layers).
+              forceBuiltinCollapsed={storymapPresenting}
+              renderBuiltin={({ collapsed, onCollapsedChange }) => (
+                <LayerPanel
+                  mapControllerRef={mapControllerRef}
+                  onResizeStart={startLayerPanelResize}
+                  geometryEditLayerId={geometryEditLayerId}
+                  onToggleGeometryEdit={handleToggleGeometryEdit}
+                  onCancelGeometryEdit={handleCancelGeometryEdit}
+                  onMaterializeDuckDBLayer={handleMaterializeDuckDBLayer}
+                  onOpenRasterStylePanel={() =>
+                    openRasterLayerPanel(createAppAPI(mapControllerRef))
+                  }
+                  onOpenRasterSubset={setRasterSubsetLayer}
+                  collapsed={collapsed}
+                  onCollapsedChange={onCollapsedChange}
+                  hideOwnRail
+                />
+              )}
+            />
+          </SectionErrorBoundary>
+        ) : (
+          <>
+            <SectionErrorBoundary
+              label="Plugin panel (left of Layers)"
+              displayName={t("shell.section.pluginPanelLeftOfLayers")}
+            >
+              <PluginRightPanel
+                dock="left-of-layers"
+                contentEl={dockContentEl}
+                width={pluginPanelWidth}
+                onWidthChange={setPluginPanelWidth}
+              />
+            </SectionErrorBoundary>
+            {layoutOptions.layerPanelVisible ? (
+              <SectionErrorBoundary label="Layer panel" displayName={t("shell.section.layerPanel")}>
+                <LayerPanel
+                  mapControllerRef={mapControllerRef}
+                  onResizeStart={startLayerPanelResize}
+                  geometryEditLayerId={geometryEditLayerId}
+                  onToggleGeometryEdit={handleToggleGeometryEdit}
+                  onCancelGeometryEdit={handleCancelGeometryEdit}
+                  onMaterializeDuckDBLayer={handleMaterializeDuckDBLayer}
+                  onOpenRasterStylePanel={() =>
+                    openRasterLayerPanel(createAppAPI(mapControllerRef))
+                  }
+                  onOpenRasterSubset={setRasterSubsetLayer}
+                  autoCollapse={storymapPresenting || autoCollapsedPanel === "layers"}
+                />
+              </SectionErrorBoundary>
+            ) : null}
+            <SectionErrorBoundary
+              label="Plugin panel (right of Layers)"
+              displayName={t("shell.section.pluginPanelRightOfLayers")}
+            >
+              <PluginRightPanel
+                dock="right-of-layers"
                 contentEl={dockContentEl}
                 width={pluginPanelWidth}
                 onWidthChange={setPluginPanelWidth}

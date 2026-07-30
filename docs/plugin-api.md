@@ -185,11 +185,15 @@ export interface GeoIntFloatingPanelRegistration {
   onClose?: () => void;
 }
 
+// Both Layers and Style dock on the physical right of the map, Layers
+// outboard of Style. `left-dock` is the one standalone slot on the physical
+// left, beside the hamburger rail -- there's no built-in panel there.
 export type GeoIntRightPanelDock =
-  | "left-of-layers" // left of the Layers panel
-  | "right-of-layers" // between the Layers panel and the map
+  | "left-dock" // the far-left edge, beside the rail -- no built-in panel to collapse
+  | "left-of-layers" // between the Style panel and the Layers panel
+  | "right-of-layers" // right of the Layers panel, the far-right edge
   | "left-of-style" // between the map and the Style panel
-  | "right-of-style" // right of the Style panel (default)
+  | "right-of-style" // also between the Style panel and the Layers panel (default)
   | "replace-style" // share the Style sidebar's single rail (shared-rail mode)
   | "replace-layers"; // share the Layers sidebar's single rail (shared-rail mode)
 
@@ -206,7 +210,7 @@ export interface GeoIntRightPanelRegistration {
   // the next registry mutation, and must re-read the panel itself on language
   // change. A plain string is frozen at registration time.
   title: string | (() => string);
-  /** Initial dock position; "right-of-style" (default). */
+  /** Initial dock position; "right-of-style" (default), the innermost right-side slot. */
   dock?: GeoIntRightPanelDock;
   /** Optional rail icon: a URL or data: URI rendered as an image. */
   icon?: string;
@@ -733,12 +737,12 @@ export const myPlugin: GeoIntPlugin = {
 Notes:
 
 - `render(container)` is called once with an empty element you fill with plain DOM. An external plugin cannot share GeoInt's React instance, so the contract is DOM, not a React node. The container stays mounted across collapse, so any state in your DOM persists; the returned cleanup runs on close or unregister.
-- Only one plugin panel is active at a time. The built-in panel on the side the plugin panel is docked (Layers on the left, Style on the right) collapses to its rail while the plugin panel is expanded next to it, and restores when the plugin panel moves to the other side, collapses to its own rail, or closes.
+- Only one plugin panel is active at a time. The built-in panel on the side the plugin panel is docked (both Layers and Style dock on the physical right, Layers outboard of Style; `left-dock` has no built-in panel of its own) collapses to its rail while the plugin panel is expanded next to it, and restores when the plugin panel moves to the other side, collapses to its own rail, or closes.
 - `openRightPanel(id)` makes the panel active and expanded (it also expands a collapsed panel); `collapseRightPanel(id)` collapses it to its rail without closing; `closeRightPanel(id)` releases the workspace; `getActiveRightPanel()` returns the active id or `null`.
 - The panel is a flex sibling of the map, so opening it shrinks the map view (the map keeps filling the remaining space); no manual map padding is required.
-- **Dock position:** a panel docks at one of four positions (left to right): `left-of-layers`, `right-of-layers` (between Layers and the map), `left-of-style` (between the map and Style), or `right-of-style` (the default). Set `dock` on the registration to choose the initial position. The user steps the panel between positions at runtime with the two move buttons in the panel header (disabled at the ends), and a plugin can set it directly with `app.setActiveRightPanelDock?.(...)`. The position resets to the panel's declared `dock` when it closes or another panel opens.
-- **Shared-rail modes (`replace-style` / `replace-layers`):** two non-positional docks for workbench-style plugins that want to feel like a first-class sidebar workspace rather than a second rail beside Style (right) or Layers (left). Register with `dock: "replace-style"` (or `"replace-layers"`) and the host shows a single rail on that edge listing both your panel and the built-in panel; selecting one expands it while the other stays as a rail entry. The two are mutually exclusive, so the user never sees two adjacent rails. The built-in panel starts collapsed so the workbench reads as the active workspace, and the user can expand it (which collapses the workbench) at any time. Everything else (chrome, resize, collapse, close, lifecycle hooks) is unchanged.
-- **Switching modes at runtime:** the modes are not exclusive choices baked in at registration. In a positional dock the panel header shows a **merge** button that joins the shared rail on its current side — a layers-side panel (`left-of-layers`/`right-of-layers`) joins the Layers rail, a style-side panel the Style rail. In a shared rail it shows a **detach** button that pops the panel back out to a movable positional panel on the same side (`right-of-layers` / `right-of-style`), where the left/right move buttons return. A plugin can drive the same switch with `app.setActiveRightPanelDock?.("replace-style" | "replace-layers" | "right-of-style" | ...)`. The shared rails are not part of the left/right *step* sequence (the arrows only walk the four positional docks); merge/detach is the way in and out.
+- **Dock position:** a panel docks at one of five positions (left to right): `left-dock` (the far-left edge, beside the hamburger rail — a standalone slot with nothing built-in to collapse there), `left-of-style` (between the map and Style), `right-of-style` (the default) and `left-of-layers` (both name the gap between Style and Layers — only one panel is ever active, so at most one renders there), or `right-of-layers` (the far-right edge, outboard of Layers). Set `dock` on the registration to choose the initial position. The user steps the panel between positions at runtime with the two move buttons in the panel header (disabled at the ends), and a plugin can set it directly with `app.setActiveRightPanelDock?.(...)`. The position resets to the panel's declared `dock` when it closes or another panel opens.
+- **Shared-rail modes (`replace-style` / `replace-layers`):** two non-positional docks for workbench-style plugins that want to feel like a first-class sidebar workspace rather than a second rail beside Style or Layers (both now on the physical right, Layers outboard of Style). Register with `dock: "replace-style"` (or `"replace-layers"`) and the host shows a single rail on that edge listing both your panel and the built-in panel; selecting one expands it while the other stays as a rail entry. The two are mutually exclusive, so the user never sees two adjacent rails. The built-in panel starts collapsed so the workbench reads as the active workspace, and the user can expand it (which collapses the workbench) at any time. Everything else (chrome, resize, collapse, close, lifecycle hooks) is unchanged. There is no shared-rail mode for `left-dock` — it has no built-in panel to share with.
+- **Switching modes at runtime:** the modes are not exclusive choices baked in at registration. In a positional dock the panel header shows a **merge** button that joins the shared rail on its current side — a layers-side panel (`left-of-layers`/`right-of-layers`) joins the Layers rail, a style-side panel the Style rail (a panel docked at `left-dock` has no merge button at all). In a shared rail it shows a **detach** button that pops the panel back out to a movable positional panel on the same side (`right-of-layers` / `right-of-style`), where the left/right move buttons return. A plugin can drive the same switch with `app.setActiveRightPanelDock?.("replace-style" | "replace-layers" | "right-of-style" | ...)`. The shared rails are not part of the left/right *step* sequence (the arrows only walk the five positional docks); merge/detach is the way in and out.
 - These methods are typed optional for forward-compatibility with host variants that have no right sidebar, so call them with optional chaining (`app.registerRightPanel?.(...)`).
 
 ## Toolbar menus

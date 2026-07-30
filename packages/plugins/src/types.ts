@@ -646,7 +646,7 @@ export interface GeoIntAppAPI {
   getActiveRightPanel?: () => string | null;
   /**
    * Dock the active panel at any dock, mirroring the user-facing controls so a
-   * plugin can reposition its own panel. The four positional docks behave like
+   * plugin can reposition its own panel. The five positional docks behave like
    * the move buttons; `replace-style` switches the panel into the shared Style
    * rail (the inverse of detaching it back to a positional dock). No-op when no
    * panel is active. See {@link GeoIntRightPanelDock}.
@@ -801,23 +801,31 @@ export interface GeoIntFloatingPanelRegistration {
 }
 
 /**
- * Where a plugin panel docks. Four are positional, left to right: `left-of-layers`
- * (the far-left edge), `right-of-layers` (between the Layers panel and the map),
- * `left-of-style` (between the map and the Style panel), or `right-of-style` (the
- * far-right edge). The built-in panel on the docked side (Layers on the left,
- * Style on the right) collapses to its rail while the plugin panel is expanded
- * next to it.
+ * Where a plugin panel docks. Five are positional, left to right: `left-dock`
+ * (the far-left edge, beside the hamburger rail -- a standalone slot with no
+ * built-in panel there to collapse), `left-of-style` (between the map and
+ * the Style panel, the innermost right-side slot), `right-of-style` and
+ * `left-of-layers` (both name the same gap, between the Style panel and
+ * the Layers panel — only one panel is ever active, so at most one of the two
+ * renders there), or `right-of-layers` (the far-right edge, outboard of the
+ * Layers panel). Both Layers and Style dock on the physical right of the map
+ * (Layers outboard of Style); the built-in panel on the docked side (where
+ * one exists) collapses to its rail while the plugin panel is expanded next
+ * to it.
  *
  * `replace-style` and `replace-layers` are non-positional **shared-rail** modes:
- * the panel shares the Style (right) or Layers (left) panel's sidebar surface
- * instead of sitting beside it as a separate rail. The host shows a single rail
- * on that edge listing both the plugin panel and the built-in panel; selecting
- * one expands it while the other stays as a rail entry, so a workbench-style
+ * the panel shares the Style or Layers panel's sidebar surface instead of
+ * sitting beside it as a separate rail. The host shows a single rail on that
+ * edge listing both the plugin panel and the built-in panel; selecting one
+ * expands it while the other stays as a rail entry, so a workbench-style
  * plugin feels like a first-class sidebar workspace rather than a second rail.
  * Unlike the positional docks, these modes are not part of the move-button step
  * sequence; the host's merge/detach buttons switch a panel in and out of them.
+ * There is no shared-rail mode for `left-dock` (no built-in panel to share
+ * with).
  */
 export type GeoIntRightPanelDock =
+  | "left-dock"
   | "left-of-layers"
   | "right-of-layers"
   | "left-of-style"
@@ -852,16 +860,19 @@ export interface GeoIntRightPanelRegistration {
    */
   title: string | (() => string);
   /**
-   * Where the panel docks initially: one of the four positional docks
-   * (`left-of-layers`, `right-of-layers`, `left-of-style`, or `right-of-style`,
-   * the default), or a shared-rail mode (`replace-style` / `replace-layers`).
-   * With a positional dock the built-in panel on the docked side (Layers on the
-   * left, Style on the right) collapses to its rail while the plugin panel is
-   * expanded next to it, and the user can move the panel between positions at
-   * runtime with the move buttons in its header (or a plugin via
-   * {@link GeoIntAppAPI.setActiveRightPanelDock}). With a shared-rail mode the
-   * panel shares the Style or Layers sidebar's single rail instead and is not
-   * steppable (the header's merge/detach buttons switch it in and out).
+   * Where the panel docks initially: one of the five positional docks
+   * (`left-dock`, `left-of-layers`, `right-of-layers`, `left-of-style`, or
+   * `right-of-style`, the default), or a shared-rail mode (`replace-style` /
+   * `replace-layers`). With a positional dock the built-in panel on the
+   * docked side (both Layers and Style dock on the physical right, Layers
+   * outboard of Style; `left-dock` has no built-in panel of its own)
+   * collapses to its rail while the plugin panel is expanded next to it (when
+   * there is one to collapse), and the user can move the panel between
+   * positions at runtime with the move buttons in its header (or a plugin via
+   * {@link GeoIntAppAPI.setActiveRightPanelDock}).
+   * With a shared-rail mode the panel shares the Style or Layers sidebar's
+   * single rail instead and is not steppable (the header's merge/detach
+   * buttons switch it in and out).
    */
   dock?: GeoIntRightPanelDock;
   /**
