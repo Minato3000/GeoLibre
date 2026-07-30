@@ -3,10 +3,10 @@ import { beforeEach, describe, it } from "node:test";
 import {
   DEFAULT_LAYER_STYLE,
   darkenHex,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   LAYER_PALETTE,
   useAppStore,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import {
   EOX_S2CLOUDLESS_ATTRIBUTION,
@@ -534,7 +534,7 @@ describe("createBaseLayer", () => {
   }
 
   /** Puts `layer` in the store so the next createBaseLayer call can see it. */
-  function addToStore(layer: GeoLibreLayer): void {
+  function addToStore(layer: GeoIntLayer): void {
     useAppStore.getState().addLayer(layer);
   }
 

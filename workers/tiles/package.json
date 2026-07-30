@@ -1,5 +1,5 @@
 {
-  "name": "geolibre-tiles-worker",
+  "name": "geoint-tiles-worker",
   "version": "0.0.0",
   "private": true,
   "scripts": {

@@ -1,8 +1,8 @@
 # Interface Overview
 
-GeoLibre opens to a single workspace that is the same on desktop and in the browser. This page is a tour of that workspace so the rest of the User Guide can refer to its parts by name.
+GeoInt opens to a single workspace that is the same on desktop and in the browser. This page is a tour of that workspace so the rest of the User Guide can refer to its parts by name.
 
-![GeoLibre interface overview](https://data.geolibre.app/images/geolibre-interface-overview.webp)
+![GeoInt interface overview](https://data.geolibre.app/images/geoint-interface-overview.webp)
 
 ## The top toolbar
 
@@ -61,7 +61,7 @@ Shortcuts are ignored while you are typing in a text field, so they never interf
 
 ## The three panels
 
-GeoLibre has three dockable panels around the map:
+GeoInt has three dockable panels around the map:
 
 - **Layers panel** (left): the layer stack, including the basemap. Toggle visibility, change opacity, reorder layers, zoom to a layer, identify features, and open per-layer actions. See [Managing Layers](layers.md).
 - **Style panel** (right): the styling controls for the selected layer, including data-driven styling for vector layers and image adjustments for rasters. See [Styling Layers](styling.md).

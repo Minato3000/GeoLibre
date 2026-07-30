@@ -1,7 +1,7 @@
 /**
  * Color-ramp definitions and classification-break helpers shared by the
  * vector graduated-styling panel and the raster symbology panel. Kept in
- * `@geolibre/core` (dependency-light, map-agnostic) so both UIs derive class
+ * `@geoint/core` (dependency-light, map-agnostic) so both UIs derive class
  * colors and breaks from the same source. The ramp `value`s intentionally
  * match the named colormaps shipped by `@developmentseed/deck.gl-raster`
  * (`COLORMAP_INDEX` keys) so a ramp choice maps 1:1 onto the raster render

@@ -1,9 +1,4 @@
-import {
-  DEFAULT_BASEMAP,
-  DEFAULT_LAYER_STYLE,
-  type GeoLibreLayer,
-  useAppStore,
-} from "@geolibre/core";
+import { DEFAULT_BASEMAP, DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import {
   buildProtomapsBasemapStyle,
   evictOfflineBasemapStyle,
@@ -17,9 +12,9 @@ import {
   registerOfflineBasemapStyle,
   registerPMTilesArchive,
   unregisterPMTilesArchive,
-} from "@geolibre/map";
-import { extractPmtiles, type PmtilesExtractProgress } from "@geolibre/processing";
-import { Button, Input, Label, Select } from "@geolibre/ui";
+} from "@geoint/map";
+import { extractPmtiles, type PmtilesExtractProgress } from "@geoint/processing";
+import { Button, Input, Label, Select } from "@geoint/ui";
 import {
   Check,
   CheckCircle2,
@@ -73,9 +68,9 @@ const PANEL_MIN_W = 260;
 const PANEL_MIN_H = 240;
 
 /** Remembered across sessions so repeat extracts don't retype the archive URL. */
-const URL_STORAGE_KEY = "geolibre.basemapExtract.url";
+const URL_STORAGE_KEY = "geoint.basemapExtract.url";
 
-/** GeoLibre's Cloudflare Worker (workers/tiles) range-proxies the Protomaps
+/** GeoInt's Cloudflare Worker (workers/tiles) range-proxies the Protomaps
  * daily planet builds with CORS. */
 const PLANET_PROXY_PREFIX = "https://tiles.geolibre.app/pmtiles/";
 
@@ -185,7 +180,7 @@ function isProtomapsCompatible(sourceLayers: string[]): boolean {
 }
 
 /** Bundled Protomaps glyphs/sprites live under the app's public dir. Resolve
- * them against the deployment base (BASE_URL — "/", "/geolibre/", or a relative
+ * them against the deployment base (BASE_URL — "/", "/geoint/", or a relative
  * "./" for the embed/demo build) AND to a fully-qualified absolute URL:
  * MapLibre rejects non-absolute sprite/glyph URLs ("must be absolute"), so a
  * bare "./basemaps-assets" from a relative base would break labels and icons,
@@ -195,7 +190,7 @@ const BASEMAP_ASSETS_BASE = new URL(`${import.meta.env.BASE_URL}basemaps-assets`
   .href;
 
 // Tracks the in-memory archive (and style-registry id) backing the currently
-// applied styled offline basemap. A styled basemap is not a GeoLibreLayer, so
+// applied styled offline basemap. A styled basemap is not a GeoIntLayer, so
 // removeLayerFromMap never frees its archive; we free the previous one here
 // when a different basemap is applied, deleted, or the panel supersedes it.
 //
@@ -204,7 +199,7 @@ const BASEMAP_ASSETS_BASE = new URL(`${import.meta.env.BASE_URL}basemaps-assets`
 // would reset to null on reload and then fail to free the archive the live
 // PMTiles protocol still holds.
 type ActiveStyledBasemap = { archiveKey: string; id: string } | null;
-const ACTIVE_STYLED_BASEMAP_KEY = "__geolibreActiveStyledBasemap";
+const ACTIVE_STYLED_BASEMAP_KEY = "__geointActiveStyledBasemap";
 
 function activeStyledBasemap(): ActiveStyledBasemap {
   const scope = globalThis as typeof globalThis & {
@@ -709,7 +704,7 @@ export function BasemapExtractPanel({ open, onClose, mapControllerRef }: Basemap
         trackStyledBasemap(layerId, `${layerId}.pmtiles`);
       } else {
         const fillColor = DEFAULT_LAYER_STYLE.fillColor;
-        const layer: GeoLibreLayer = {
+        const layer: GeoIntLayer = {
           id: layerId,
           name: fileName,
           type: "pmtiles",

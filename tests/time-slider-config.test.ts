@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, useAppStore, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, useAppStore, type GeoIntLayer } from "@geoint/core";
 import {
   __reconcileBoundLayersForTests,
   configToOptions,
@@ -93,7 +93,7 @@ describe("Time Slider selector display-unit restoration", () => {
           displayUnits: ["day"],
         },
       },
-    } satisfies GeoLibreLayer;
+    } satisfies GeoIntLayer;
     const ranges: unknown[][] = [];
     const granularities: string[][] = [];
     const control = {
@@ -319,7 +319,7 @@ describe("Time Slider store layer identify metadata", () => {
 });
 
 describe("isTimeSliderIdle", () => {
-  const layer = (id: string, metadata: Record<string, unknown>): GeoLibreLayer => ({
+  const layer = (id: string, metadata: Record<string, unknown>): GeoIntLayer => ({
     id,
     name: id,
     type: "geojson",
@@ -330,7 +330,7 @@ describe("isTimeSliderIdle", () => {
     metadata,
   });
 
-  const withLayers = (layers: GeoLibreLayer[]): void => {
+  const withLayers = (layers: GeoIntLayer[]): void => {
     useAppStore.setState({ layers });
   };
 
@@ -381,7 +381,7 @@ describe("isTimeSliderIdle", () => {
   });
 
   describe("selector bindings on the Layers panel contract", () => {
-    const cube = (binding: unknown): GeoLibreLayer => ({
+    const cube = (binding: unknown): GeoIntLayer => ({
       id: "cube",
       name: "cube",
       type: "zarr",

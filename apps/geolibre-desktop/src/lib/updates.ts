@@ -1,5 +1,5 @@
 /**
- * Shared logic for checking GeoLibre releases on GitHub. Used by both the
+ * Shared logic for checking GeoInt releases on GitHub. Used by both the
  * manual "Check for updates" flow in the About dialog and the automated
  * startup check (desktop only). Keeping the version math and the GitHub fetch
  * here means the two surfaces classify and compare releases identically.
@@ -17,7 +17,7 @@ export const LATEST_RELEASE_URL = "https://api.github.com/repos/opengeos/GeoLibr
  * absent) without throwing a ReferenceError.
  */
 export const APP_VERSION: string =
-  typeof __GEOLIBRE_VERSION__ !== "undefined" ? __GEOLIBRE_VERSION__ : "0.0.0";
+  typeof __GEOINT_VERSION__ !== "undefined" ? __GEOINT_VERSION__ : "0.0.0";
 
 /**
  * True in the Microsoft Store MSIX build, where the entire in-app update flow is
@@ -28,7 +28,7 @@ export const APP_VERSION: string =
  * Injected by vite.config.ts; set only by the Store build (msix-store.yml).
  */
 export const IS_STORE_BUILD: boolean =
-  typeof __GEOLIBRE_STORE_BUILD__ !== "undefined" ? __GEOLIBRE_STORE_BUILD__ : false;
+  typeof __GEOINT_STORE_BUILD__ !== "undefined" ? __GEOINT_STORE_BUILD__ : false;
 
 /**
  * How a newer release differs from the running version. Used to filter startup
@@ -151,7 +151,7 @@ interface GitHubRelease {
 }
 
 /**
- * Fetch the latest GeoLibre release from GitHub.
+ * Fetch the latest GeoInt release from GitHub.
  *
  * @param signal - Optional abort signal to cancel the request.
  * @returns The normalized latest release.

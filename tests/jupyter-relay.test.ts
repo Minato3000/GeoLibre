@@ -16,20 +16,20 @@ const SERVER = { url: "http://127.0.0.1:8766", port: 8766, token: "s3cret" };
 
 describe("relaySocketUrl", () => {
   it("points at the relay socket with the server token", () => {
-    assert.equal(relaySocketUrl(SERVER), "ws://127.0.0.1:8766/geolibre/relay/socket?token=s3cret");
+    assert.equal(relaySocketUrl(SERVER), "ws://127.0.0.1:8766/geoint/relay/socket?token=s3cret");
   });
 
   it("upgrades an https server to wss", () => {
     assert.equal(
       relaySocketUrl({ ...SERVER, url: "https://127.0.0.1:8766" }),
-      "wss://127.0.0.1:8766/geolibre/relay/socket?token=s3cret",
+      "wss://127.0.0.1:8766/geoint/relay/socket?token=s3cret",
     );
   });
 
   it("does not double up the path separator", () => {
     assert.equal(
       relaySocketUrl({ ...SERVER, url: "http://127.0.0.1:8766/" }),
-      "ws://127.0.0.1:8766/geolibre/relay/socket?token=s3cret",
+      "ws://127.0.0.1:8766/geoint/relay/socket?token=s3cret",
     );
   });
 
@@ -41,7 +41,7 @@ describe("relaySocketUrl", () => {
   it("omits the token when the server has none", () => {
     assert.equal(
       relaySocketUrl({ ...SERVER, token: "" }),
-      "ws://127.0.0.1:8766/geolibre/relay/socket",
+      "ws://127.0.0.1:8766/geoint/relay/socket",
     );
   });
 });
@@ -50,7 +50,7 @@ describe("parseRelayMessage", () => {
   it("accepts a command envelope", () => {
     const command = parseRelayMessage(
       JSON.stringify({
-        type: "geolibre:command",
+        type: "geoint:command",
         requestId: "",
         method: "flyTo",
         params: { zoom: 4 },
@@ -62,23 +62,23 @@ describe("parseRelayMessage", () => {
   it("defaults missing or non-object params to an empty object", () => {
     for (const params of [undefined, null, "nope", [1, 2]]) {
       const command = parseRelayMessage(
-        JSON.stringify({ type: "geolibre:command", method: "x", params }),
+        JSON.stringify({ type: "geoint:command", method: "x", params }),
       );
       assert.deepEqual(command?.params, {});
     }
   });
 
   it("ignores the relay's ready greeting", () => {
-    assert.equal(parseRelayMessage(JSON.stringify({ type: "geolibre:relay-ready" })), null);
+    assert.equal(parseRelayMessage(JSON.stringify({ type: "geoint:relay-ready" })), null);
   });
 
   it("rejects anything that is not a command", () => {
     // A frame that is not ours must never be dispatched as a map command.
     assert.equal(parseRelayMessage(JSON.stringify({ type: "other", method: "flyTo" })), null);
-    assert.equal(parseRelayMessage(JSON.stringify({ type: "geolibre:command" })), null);
-    assert.equal(parseRelayMessage(JSON.stringify({ type: "geolibre:command", method: "" })), null);
-    assert.equal(parseRelayMessage(JSON.stringify({ type: "geolibre:command", method: 7 })), null);
-    assert.equal(parseRelayMessage(JSON.stringify(["geolibre:command"])), null);
+    assert.equal(parseRelayMessage(JSON.stringify({ type: "geoint:command" })), null);
+    assert.equal(parseRelayMessage(JSON.stringify({ type: "geoint:command", method: "" })), null);
+    assert.equal(parseRelayMessage(JSON.stringify({ type: "geoint:command", method: 7 })), null);
+    assert.equal(parseRelayMessage(JSON.stringify(["geoint:command"])), null);
     assert.equal(parseRelayMessage("not json"), null);
     assert.equal(parseRelayMessage(new ArrayBuffer(4)), null);
     assert.equal(parseRelayMessage(null), null);

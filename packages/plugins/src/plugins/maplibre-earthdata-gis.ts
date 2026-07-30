@@ -12,7 +12,7 @@
  * ready ArcGIS services EOSDIS publishes for its DAACs and disaster responses.
  */
 
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import { addArcGISLayer } from "./arcgis-layer";
 import {
   buildExportTileUrl,
@@ -38,7 +38,7 @@ import {
   webMapLayerAsItem,
 } from "./earthdata-gis-api";
 import { layerTypeForTiles } from "./web-service-sync";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 
 export const EARTHDATA_GIS_PLUGIN_ID = "maplibre-gl-earthdata-gis";
 const PANEL_ID = EARTHDATA_GIS_PLUGIN_ID;
@@ -193,7 +193,7 @@ export const DEFAULT_EARTHDATA_GIS_LABELS: EarthdataGisLabels = {
     added === total
       ? `Added ${added} layer${added === 1 ? "" : "s"} from this web map.`
       : `Added ${added} of ${total} layers from this web map; the rest could not be reached.`,
-  webMapEmpty: "this web map has no layers GeoLibre can render.",
+  webMapEmpty: "this web map has no layers GeoInt can render.",
   add: "Add",
   adding: "Adding…",
   remove: "Remove",
@@ -303,7 +303,7 @@ const CSS = {
     "color:hsl(var(--primary-foreground));",
 } as const;
 
-let appRef: GeoLibreAppAPI | null = null;
+let appRef: GeoIntAppAPI | null = null;
 let unregisterPanel: (() => void) | null = null;
 // The mounted panel container and its teardown, tracked so a language change can
 // rebuild the panel in place (see setEarthdataGisLabels).
@@ -1534,11 +1534,11 @@ export function setEarthdataGisLabels(next: Partial<EarthdataGisLabels>): void {
  * Earthdata GIS plugin: searches NASA's Earthdata GIS portal and adds its
  * ArcGIS imagery, map, and feature services to the map.
  */
-export const maplibreEarthdataGisPlugin: GeoLibrePlugin = {
+export const maplibreEarthdataGisPlugin: GeoIntPlugin = {
   id: EARTHDATA_GIS_PLUGIN_ID,
   name: "Earthdata GIS",
   version: "0.1.0",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     appRef = app;
     unregisterPanel =
       app.registerRightPanel?.({
@@ -1557,7 +1557,7 @@ export const maplibreEarthdataGisPlugin: GeoLibrePlugin = {
       }) ?? null;
     app.openRightPanel?.(PANEL_ID);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     app.closeRightPanel?.(PANEL_ID);
     unregisterPanel?.();
     unregisterPanel = null;

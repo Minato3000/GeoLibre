@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
 import {
-  type GeoLibreLayer,
-  type GeoLibreProject,
+  type GeoIntLayer,
+  type GeoIntProject,
   type LayerJoin,
   applyLayerJoins,
   applyJoinsToLayer,
@@ -11,7 +11,7 @@ import {
   reapplyLayerJoins,
   stripJoinFields,
   useAppStore,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { Feature, FeatureCollection } from "geojson";
 
 function tableFeature(properties: Record<string, unknown>): Feature {
@@ -425,7 +425,7 @@ describe("store integration", () => {
         preferences: useAppStore.getState().preferences,
         metadata: {},
       }),
-    ) as GeoLibreProject;
+    ) as GeoIntProject;
     // Stale saved output: the census table changed after the project was saved.
     const savedTable = snapshot.layers.find((l) => l.id === tableId);
     assert.ok(savedTable?.geojson);
@@ -460,7 +460,7 @@ function bareLayer(
   id: string,
   properties: Record<string, unknown>,
   joins?: LayerJoin[],
-): GeoLibreLayer {
+): GeoIntLayer {
   return {
     id,
     name: id,

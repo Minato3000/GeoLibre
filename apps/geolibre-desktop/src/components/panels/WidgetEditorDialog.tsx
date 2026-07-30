@@ -1,4 +1,4 @@
-import type { DashboardWidget, DashboardWidgetType, IndicatorAggregation } from "@geolibre/core";
+import type { DashboardWidget, DashboardWidgetType, IndicatorAggregation } from "@geoint/core";
 import {
   Button,
   ColorField,
@@ -10,7 +10,7 @@ import {
   Input,
   Label,
   Select,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {

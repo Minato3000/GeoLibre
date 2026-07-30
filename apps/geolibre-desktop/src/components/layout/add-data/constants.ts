@@ -2,7 +2,7 @@
  * Constants and default values shared across the Add Data dialog sources.
  */
 
-import type { ArcGISLayerType } from "@geolibre/plugins";
+import type { ArcGISLayerType } from "@geoint/plugins";
 import type { AddDataKind, DelimitedTextDelimiter } from "./types";
 
 // ~10 MB; deck-viz data is stored inline in the project file, so warn (but do
@@ -125,22 +125,22 @@ export const DEFAULT_ARCGIS_URLS: Record<ArcGISLayerType, string> = {
   "vector-tile": DEFAULT_ARCGIS_VECTOR_TILE_URL,
 };
 // Keep in sync with GPX_PROXY_PATH in vite.config.ts (the dev proxy binds it there).
-export const GPX_PROXY_PATH = "/__geolibre_gpx_proxy";
+export const GPX_PROXY_PATH = "/__geoint_gpx_proxy";
 // Keep in sync with WMS_PROXY_PATH in vite.config.ts (the dev proxy binds it
 // there). Used to fetch a WMS GetCapabilities document without tripping CORS.
-export const WMS_PROXY_PATH = "/__geolibre_wms_proxy";
+export const WMS_PROXY_PATH = "/__geoint_wms_proxy";
 // Keep in sync with WFS_PROXY_PATH in vite.config.ts. Used to fetch a WFS
 // GetCapabilities document (and GetFeature responses) without tripping CORS.
-export const WFS_PROXY_PATH = "/__geolibre_wfs_proxy";
+export const WFS_PROXY_PATH = "/__geoint_wfs_proxy";
 // PostgreSQL connection persistence constants moved to
 // lib/saved-postgres-connections.ts alongside the helpers that use them.
 // Cross-project catalog of reusable web-service layer definitions (see
 // service-library.ts). Bumping the key would orphan a user's saved services.
-export const SERVICE_LIBRARY_STORAGE_KEY = "geolibre.serviceLibrary";
+export const SERVICE_LIBRARY_STORAGE_KEY = "geoint.serviceLibrary";
 export const MAX_SAVED_SERVICES = 200;
 // Last File Geodatabase (and feature class) added through the GDB source, so
 // reopening the panel restores the selection instead of starting blank.
-export const LAST_GEODATABASE_STORAGE_KEY = "geolibre.lastGeodatabase";
+export const LAST_GEODATABASE_STORAGE_KEY = "geoint.lastGeodatabase";
 // A short list of common coordinate systems offered as quick presets wherever a
 // source CRS is named by hand: the Add CAD Layer dialog (CAD files carry no CRS
 // of their own) and the Add Delimited Text Layer dialog (a CSV's coordinate
@@ -161,7 +161,7 @@ export const COMMON_CRS_PRESETS: readonly { label: string; value: string }[] = [
 // dropdown. Each is a recognizable dataset written in a known CRS (CAD carries
 // none), so selecting one fetches the file and pre-fills the matching EPSG; a
 // blank `crs` loads the drawing as-is (already lon/lat). Hosted on Source
-// Cooperative alongside the other GeoLibre samples.
+// Cooperative alongside the other GeoInt samples.
 export const CAD_SAMPLES: readonly {
   label: string;
   url: string;

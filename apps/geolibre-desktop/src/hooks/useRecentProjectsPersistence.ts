@@ -1,7 +1,7 @@
-import { useAppStore, type RecentProjectEntry } from "@geolibre/core";
+import { useAppStore, type RecentProjectEntry } from "@geoint/core";
 import { useEffect } from "react";
 
-const RECENT_PROJECTS_STORAGE_KEY = "geolibre.recentProjects";
+const RECENT_PROJECTS_STORAGE_KEY = "geoint.recentProjects";
 
 function isRecentProjectEntry(value: unknown): value is RecentProjectEntry {
   if (!value || typeof value !== "object") return false;

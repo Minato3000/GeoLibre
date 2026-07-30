@@ -1,4 +1,4 @@
-import type { GeoLibreFloatingPanelRegistration } from "./types";
+import type { GeoIntFloatingPanelRegistration } from "./types";
 import { PanelTitleResolver } from "./panel-title";
 
 /**
@@ -22,13 +22,13 @@ export interface FloatingPanelsSnapshot {
   version: number;
 }
 
-const registry = new Map<string, GeoLibreFloatingPanelRegistration>();
+const registry = new Map<string, GeoIntFloatingPanelRegistration>();
 // Title resolution (string/getter normalization, throw/empty fallback, and the
 // per-id warning dedup the accessor relies on because it is called unmemoized
 // in FloatingPanelCard's render body, which re-renders on every pointermove
 // during a drag/resize) is shared with the right-panel registry via
 // PanelTitleResolver. Each registry owns its own instance.
-const titleResolver = new PanelTitleResolver<GeoLibreFloatingPanelRegistration>("Floating panel");
+const titleResolver = new PanelTitleResolver<GeoIntFloatingPanelRegistration>("Floating panel");
 const listeners = new Set<() => void>();
 
 let openIds: string[] = [];
@@ -57,7 +57,7 @@ function runHook(id: string, hookName: "onOpen" | "onClose", hook: (() => void) 
  * {@link openFloatingPanel} is called. Returns an unregister function (call it
  * from the plugin's `deactivate` hook); it closes the panel if open.
  */
-export function registerFloatingPanel(panel: GeoLibreFloatingPanelRegistration): () => void {
+export function registerFloatingPanel(panel: GeoIntFloatingPanelRegistration): () => void {
   if (!panel || typeof panel.id !== "string" || panel.id.length === 0) {
     throw new Error("registerFloatingPanel requires a panel with a non-empty id.");
   }
@@ -147,12 +147,12 @@ export function getOpenFloatingPanels(): string[] {
  * does not itself subscribe to i18n language changes, so live title
  * translation relies on the consumer re-rendering and re-reading on
  * `languageChanged`; see the `title` field on
- * {@link GeoLibreFloatingPanelRegistration} for the full contract a host must
+ * {@link GeoIntFloatingPanelRegistration} for the full contract a host must
  * satisfy.
  */
 export function getFloatingPanel(
   id: string,
-): (GeoLibreFloatingPanelRegistration & { title: string }) | undefined {
+): (GeoIntFloatingPanelRegistration & { title: string }) | undefined {
   const panel = registry.get(id);
   if (!panel) return undefined;
   // Returns a shallow clone with the resolved title so the caller's original

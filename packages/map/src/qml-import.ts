@@ -5,14 +5,14 @@ import {
   type MarkerShape,
   type VectorRule,
   type VectorStyleStop,
-} from "@geolibre/core";
+} from "@geoint/core";
 import { XMLParser } from "fast-xml-parser";
 import { OGC_SCALE_DENOMINATOR_AT_ZOOM_0 } from "./sld-export";
 
 const MIN_LAYER_ZOOM = DEFAULT_LAYER_STYLE.minZoom;
 const MAX_LAYER_ZOOM = DEFAULT_LAYER_STYLE.maxZoom;
 
-/** QGIS SimpleMarker `name` values that map back onto a GeoLibre marker shape. */
+/** QGIS SimpleMarker `name` values that map back onto a GeoInt marker shape. */
 const QGIS_NAME_TO_SHAPE: Record<string, MarkerShape> = {
   square: "square",
   triangle: "triangle",
@@ -451,7 +451,7 @@ function applySymbol(
   patch: Partial<Omit<LayerStyle, "labels">>,
   warnings: string[],
 ): void {
-  // A line symbol's color is the line stroke (GeoLibre renders lines from
+  // A line symbol's color is the line stroke (GeoInt renders lines from
   // strokeColor), so route it there; a fill/marker symbol's color is the fill.
   if (info.color !== undefined) {
     if (info.geometry === "line") patch.strokeColor = info.color;
@@ -478,7 +478,7 @@ function applySymbol(
       if (info.markerSize !== undefined) patch.circleRadius = info.markerSize / 2;
       if (name && name !== "circle") {
         warnings.push(
-          `The "${name}" marker has no GeoLibre equivalent; it was imported as a circle.`,
+          `The "${name}" marker has no GeoInt equivalent; it was imported as a circle.`,
         );
       }
     }
@@ -492,10 +492,10 @@ function readLabeling(labeling: unknown, warnings: string[]): Partial<LabelStyle
   const settings = toArray(labeling.settings)[0];
   if (!isNode(settings)) {
     // Rule-based/categorized labeling nests settings under <rules>, which
-    // GeoLibre's single label config cannot represent; flag it rather than
+    // GeoInt's single label config cannot represent; flag it rather than
     // dropping the labels silently.
     if (type && type !== "simple") {
-      warnings.push(`The "${type}" labeling has no GeoLibre equivalent; labels were not imported.`);
+      warnings.push(`The "${type}" labeling has no GeoInt equivalent; labels were not imported.`);
     }
     return null;
   }
@@ -511,7 +511,7 @@ function readLabeling(labeling: unknown, warnings: string[]): Partial<LabelStyle
     labels.field = field;
     labels.expression = "";
   } else if (field && isExpression) {
-    warnings.push("The label is a QGIS expression; enable labels and pick a field in GeoLibre.");
+    warnings.push("The label is a QGIS expression; enable labels and pick a field in GeoInt.");
   }
 
   const textStyle = toArray(settings["text-style"])[0];
@@ -539,12 +539,12 @@ function readLabeling(labeling: unknown, warnings: string[]): Partial<LabelStyle
 }
 
 /**
- * Parse a QGIS QML style document into a GeoLibre symbology patch. Classifies
+ * Parse a QGIS QML style document into a GeoInt symbology patch. Classifies
  * the `renderer-v2` type (singleSymbol / categorizedSymbol / graduatedSymbol /
- * RuleRenderer) into GeoLibre's renderer model and translates QGIS rule
- * expressions back to MapLibre filters. Reverses {@link buildQml} so a GeoLibre
+ * RuleRenderer) into GeoInt's renderer model and translates QGIS rule
+ * expressions back to MapLibre filters. Reverses {@link buildQml} so a GeoInt
  * export round-trips, and imports a hand-written or QGIS-authored QML as far as
- * its symbology maps onto GeoLibre's model. Anything that cannot be represented
+ * its symbology maps onto GeoInt's model. Anything that cannot be represented
  * is reported in {@link QmlImportResult.warnings} rather than dropped silently.
  */
 export function parseQml(xml: string): QmlImportResult {
@@ -691,7 +691,7 @@ function classifyGraduated(
     const color = symbolColor(symbols, attr(range, "symbol"));
     if (lower === null || color === undefined) continue;
     // A QGIS range label is a display description of the interval (e.g.
-    // "0 - 100") that GeoLibre regenerates from the stop values, so it is not
+    // "0 - 100") that GeoInt regenerates from the stop values, so it is not
     // imported as a stop label.
     stops.push({ value: lower, color });
   }
@@ -788,7 +788,7 @@ function classifyRules(
       if (blankFilter || filter.toUpperCase() === "ELSE") {
         // A blank or ELSE rule is the catch-all, but only at the top level and
         // only when it has no children; a blank-filter group is a real group
-        // (its filter adds no constraint) and a nested ELSE has no GeoLibre
+        // (its filter adds no constraint) and a nested ELSE has no GeoInt
         // equivalent.
         if (!isGroup && parentId === undefined) {
           elseColor = color;
@@ -800,9 +800,7 @@ function classifyRules(
           continue;
         }
         if (!isGroup || !blankFilter) {
-          warnings.push(
-            "A nested or grouped ELSE rule has no GeoLibre equivalent; it was skipped.",
-          );
+          warnings.push("A nested or grouped ELSE rule has no GeoInt equivalent; it was skipped.");
           continue;
         }
       }

@@ -3,8 +3,8 @@ import bbox from "@turf/bbox";
 import centroid from "@turf/centroid";
 import { featureCollection, polygon as turfPolygon } from "@turf/helpers";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
-import type { GeoLibreLayer } from "@geolibre/core";
-import { getActiveMeanRadiusMeters } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
+import { getActiveMeanRadiusMeters } from "@geoint/core";
 import type { ProcessingAlgorithm, ProcessingContext } from "./types";
 import { parseTimestamp } from "./vector-tools";
 
@@ -36,7 +36,7 @@ const WEIGHTS_TYPE_OPTIONS = [
   { value: "distance", label: "Distance band" },
 ];
 
-function getLayer(ctx: ProcessingContext, paramId = "layer"): GeoLibreLayer | undefined {
+function getLayer(ctx: ProcessingContext, paramId = "layer"): GeoIntLayer | undefined {
   const layerId = ctx.parameters[paramId] as string | undefined;
   return ctx.layers.find((layer) => layer.id === layerId);
 }

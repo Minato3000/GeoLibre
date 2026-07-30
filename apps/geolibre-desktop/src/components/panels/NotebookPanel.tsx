@@ -1,5 +1,5 @@
-import { useAppStore } from "@geolibre/core";
-import { Button } from "@geolibre/ui";
+import { useAppStore } from "@geoint/core";
+import { Button } from "@geoint/ui";
 import {
   Check,
   Link2,
@@ -17,7 +17,7 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import { getIsMobileViewport } from "../../hooks/useIsMobileViewport";
 import { useNotebookBridge } from "../../hooks/useNotebookBridge";
 import { useNotebookThemeSync } from "../../hooks/useNotebookThemeSync";

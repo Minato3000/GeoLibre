@@ -1,9 +1,9 @@
 // IndexedDB persistence for the app-level Template Library.
 // The template library survives across projects and app restarts.
 
-import type { ProjectTemplateEntry } from "@geolibre/core";
+import type { ProjectTemplateEntry } from "@geoint/core";
 
-const DB_NAME = "geolibre-template-library";
+const DB_NAME = "geoint-template-library";
 const DB_VERSION = 1;
 const STORE_NAME = "templates";
 

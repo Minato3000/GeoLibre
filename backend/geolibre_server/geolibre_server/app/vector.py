@@ -1,6 +1,6 @@
 """Vector geometry processing sidecar endpoints (GeoPandas).
 
-These endpoints mirror the client-side Turf.js tools in ``@geolibre/processing``
+These endpoints mirror the client-side Turf.js tools in ``@geoint/processing``
 but run on GeoPandas/Shapely, giving projection-aware results (notably buffers
 in real-world distance units). GeoPandas is an optional dependency: when it is
 not installed, ``/vector/status`` reports ``available: false`` and the desktop
@@ -141,7 +141,7 @@ def _validate_write_path(path: str) -> Path:
     resolved = target.resolve()
     # Confine writes (and the temp files beside the target) to the allowlisted
     # roots so a same-origin caller cannot overwrite arbitrary files. Shares the
-    # conversion allowlist so both endpoints honor GEOLIBRE_CONVERSION_ROOTS.
+    # conversion allowlist so both endpoints honor GEOINT_CONVERSION_ROOTS.
     if not _is_within_roots(resolved):
         raise HTTPException(
             status_code=403,
@@ -265,7 +265,7 @@ def vector_write(request: WriteVectorRequest):
 
     Overwrites the layer's original GeoPackage or GeoJSON file in place,
     preserving the source CRS and (for a multi-layer GeoPackage) sibling tables.
-    The write is atomic and confined to ``GEOLIBRE_CONVERSION_ROOTS`` when set.
+    The write is atomic and confined to ``GEOINT_CONVERSION_ROOTS`` when set.
 
     A plain ``def`` for the same reason as :func:`vector_run`: GeoPandas/OGR are
     synchronous and CPU/IO-bound, so FastAPI runs this in its thread pool.

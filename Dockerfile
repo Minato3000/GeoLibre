@@ -21,21 +21,21 @@ RUN npm ci
 
 COPY . .
 
-ARG GEOLIBRE_APP_BASE=/
+ARG GEOINT_APP_BASE=/
 ARG VITE_GEE_OAUTH_CLIENT_ID=
 ARG VITE_MAPILLARY_ACCESS_TOKEN=
 # Set to 1 (or true) to disable the first-launch welcome wizard for the whole
 # deployment; visitors land straight on the map.
 ARG VITE_WELCOME_DISABLED=
 # Comma-separated origins allowed to drive a framed app over the embed
-# postMessage API. Usually set at RUN time instead (-e GEOLIBRE_EMBED_ORIGINS=…),
+# postMessage API. Usually set at RUN time instead (-e GEOINT_EMBED_ORIGINS=…),
 # which the entrypoint writes into the runtime config without a rebuild.
-ARG VITE_GEOLIBRE_EMBED_ORIGINS=
-ENV GEOLIBRE_APP_BASE=${GEOLIBRE_APP_BASE}
+ARG VITE_GEOINT_EMBED_ORIGINS=
+ENV GEOINT_APP_BASE=${GEOINT_APP_BASE}
 ENV VITE_GEE_OAUTH_CLIENT_ID=${VITE_GEE_OAUTH_CLIENT_ID}
 ENV VITE_MAPILLARY_ACCESS_TOKEN=${VITE_MAPILLARY_ACCESS_TOKEN}
 ENV VITE_WELCOME_DISABLED=${VITE_WELCOME_DISABLED}
-ENV VITE_GEOLIBRE_EMBED_ORIGINS=${VITE_GEOLIBRE_EMBED_ORIGINS}
+ENV VITE_GEOINT_EMBED_ORIGINS=${VITE_GEOINT_EMBED_ORIGINS}
 
 RUN npm run build
 
@@ -58,10 +58,13 @@ RUN apt-get update \
 
 # Install the sidecar package plus the core conversion stack. duckdb and
 # rio-cogeo (rasterio) publish linux/arm64 wheels, so Vector->GeoParquet,
-# CSV->GeoParquet and Raster->COG work on both architectures.
+# CSV->GeoParquet and Raster->COG work on both architectures. Pillow decodes
+# the source PNGs and smbprotocol (the `smbclient` module) fetches them from
+# the NAS for the mosaic feature (app/mosaics.py) — both build/install on
+# every arch.
 COPY backend/geolibre_server /opt/geolibre_server
 RUN pip install --no-cache-dir /opt/geolibre_server \
-  && pip install --no-cache-dir "duckdb>=1.1.0" "rio-cogeo>=5.0.0"
+  && pip install --no-cache-dir "duckdb>=1.1.0" "rio-cogeo>=5.0.0" "Pillow>=10.0" "smbprotocol>=1.10.0"
 
 # freestiler (PMTiles) and whitebox-workflows publish no linux/arm64 wheels, so
 # they are installed on amd64 only. On arm64 those tools report unavailable
@@ -77,10 +80,10 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
 # /data by default: the sidecar is reachable same-origin through the nginx
 # proxy, so without this an arbitrary same-origin caller could read or
 # overwrite container paths. Mount input files at /data (read-write for
-# outputs); override GEOLIBRE_CONVERSION_ROOTS to widen or disable.
-ENV GEOLIBRE_CONVERSION_PYTHON=/usr/local/bin/python \
+# outputs); override GEOINT_CONVERSION_ROOTS to widen or disable.
+ENV GEOINT_CONVERSION_PYTHON=/usr/local/bin/python \
     WBW_EXTERNAL_PYTHON=/usr/local/bin/python \
-    GEOLIBRE_CONVERSION_ROOTS=/data
+    GEOINT_CONVERSION_ROOTS=/data
 RUN mkdir -p /data
 
 # WARNING: docker/nginx.conf's CSP allows http://localhost:* / http://127.0.0.1:*
@@ -95,16 +98,16 @@ COPY docker/nginx.conf /etc/nginx/nginx.conf.template
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh \
   # Default auth snippet (disabled). entrypoint.sh rewrites it at start based
-  # on GEOLIBRE_AUTH_USER/GEOLIBRE_AUTH_PASSWORD; baking a valid default keeps
+  # on GEOINT_AUTH_USER/GEOINT_AUTH_PASSWORD; baking a valid default keeps
   # `nginx -t` and non-entrypoint invocations working.
-  && printf '# Basic Auth disabled (GEOLIBRE_AUTH_USER/GEOLIBRE_AUTH_PASSWORD not set).\n' > /etc/nginx/geolibre-auth.conf \
-  && printf '# AI proxy disabled (GEOLIBRE_AI_URL not set).\n' > /etc/nginx/geolibre-ai-proxy.conf
+  && printf '# Basic Auth disabled (GEOINT_AUTH_USER/GEOINT_AUTH_PASSWORD not set).\n' > /etc/nginx/geoint-auth.conf \
+  && printf '# AI proxy disabled (GEOINT_AI_URL not set).\n' > /etc/nginx/geoint-ai-proxy.conf
 COPY --from=build /app/apps/geolibre-desktop/dist /usr/share/nginx/html
 
 EXPOSE 80
 
 # /healthz is exempt from the optional Basic Auth, so the check keeps passing
-# when GEOLIBRE_AUTH_USER/GEOLIBRE_AUTH_PASSWORD are set.
+# when GEOINT_AUTH_USER/GEOINT_AUTH_PASSWORD are set.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1/healthz', timeout=4).status==200 else 1)" || exit 1
 

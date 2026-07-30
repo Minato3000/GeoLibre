@@ -1,4 +1,4 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 
 import { fetchableUrl } from "./url-utils";
 
@@ -21,7 +21,7 @@ export type RasterSubsetKind = "cog" | "wms" | "xyz";
  * @param layer - The store layer to classify.
  * @returns The subset kind, or `null` if the layer can't be subset-extracted.
  */
-export function rasterSubsetKind(layer: GeoLibreLayer): RasterSubsetKind | null {
+export function rasterSubsetKind(layer: GeoIntLayer): RasterSubsetKind | null {
   const source = layer.source as Record<string, unknown>;
   if (layer.type === "cog") {
     const url = fetchableUrl(layer.metadata.localBytesUrl) ?? fetchableUrl(source.url);
@@ -41,7 +41,7 @@ export function rasterSubsetKind(layer: GeoLibreLayer): RasterSubsetKind | null 
 }
 
 /** Whether a layer can be exported as a bounding-box raster subset. */
-export function canExtractRasterSubset(layer: GeoLibreLayer): boolean {
+export function canExtractRasterSubset(layer: GeoIntLayer): boolean {
   return rasterSubsetKind(layer) !== null;
 }
 

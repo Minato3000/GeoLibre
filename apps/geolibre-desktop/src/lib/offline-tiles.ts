@@ -7,7 +7,7 @@
  * The mechanism is deliberately indirect: we do NOT write to the Cache Storage
  * API ourselves, because the generated Workbox service worker only *serves*
  * responses from the caches its own routes populate. Instead we issue ordinary
- * `fetch()`es; those pass through the SW, whose `geolibre-basemaps` CacheFirst
+ * `fetch()`es; those pass through the SW, whose `geoint-basemaps` CacheFirst
  * route (see vite.config.ts) stores them. That route matches by host
  * (openfreemap.org / cartocdn.com) and caches every path on those hosts — style,
  * sprite, glyphs, and tiles alike — so warming the viewport's resources makes
@@ -429,7 +429,7 @@ export async function collectOfflineUrls(
       // (urls.length) stays correct; only the dialog's `tiles + assets` size
       // preview would over-count this URL by one asset.
       console.warn(
-        `[GeoLibre] offline asset URL collides with a tile URL; the size preview over-counts it by one asset (the download itself is unaffected): ${url}`,
+        `[GeoInt] offline asset URL collides with a tile URL; the size preview over-counts it by one asset (the download itself is unaffected): ${url}`,
       );
     }
     urls.add(url);

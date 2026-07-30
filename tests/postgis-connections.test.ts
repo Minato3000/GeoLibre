@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import {
   postgisBaselineKeys,
   prunePostgisConnections,
@@ -12,7 +12,7 @@ import { savedPostgresConnectionLabel } from "../apps/geolibre-desktop/src/compo
 
 const CONNECTION = "postgresql://alice:hunter2@db.example.com:5432/gis";
 
-function postgisLayer(id: string, metadata: Record<string, unknown> = {}): GeoLibreLayer {
+function postgisLayer(id: string, metadata: Record<string, unknown> = {}): GeoIntLayer {
   return {
     id,
     name: "cities",
@@ -34,7 +34,7 @@ function postgisLayer(id: string, metadata: Record<string, unknown> = {}): GeoLi
 // just enough of it for Node's test runner.
 function withSavedConnections(connections: string[], run: () => void): void {
   const store = new Map<string, string>([
-    ["geolibre.postgres.connectionStrings", JSON.stringify(connections)],
+    ["geoint.postgres.connectionStrings", JSON.stringify(connections)],
   ]);
   (globalThis as { window?: unknown }).window = {
     localStorage: {

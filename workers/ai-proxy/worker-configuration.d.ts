@@ -11,7 +11,7 @@ interface __BaseEnv_Env {
 	MAX_OUTPUT_TOKENS: "16384";
 	CF_AI_GATEWAY_TOKEN: string;
 	CLOUDFLARE_ACCOUNT_ID: string;
-	GEOLIBRE_AI_PROXY_TOKEN: string;
+	GEOINT_AI_PROXY_TOKEN: string;
 }
 declare namespace Cloudflare {
 	interface GlobalProps {
@@ -24,7 +24,7 @@ type StringifyValues<EnvType extends Record<string, unknown>> = {
 	[Binding in keyof EnvType]: EnvType[Binding] extends string ? EnvType[Binding] : string;
 };
 declare namespace NodeJS {
-	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "ALLOWED_ORIGINS" | "ALLOWED_MODELS" | "DEFAULT_MODEL" | "AI_GATEWAY_ID" | "MAX_BODY_BYTES" | "MAX_OUTPUT_TOKENS" | "CF_AI_GATEWAY_TOKEN" | "CLOUDFLARE_ACCOUNT_ID" | "GEOLIBRE_AI_PROXY_TOKEN">> {}
+	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "ALLOWED_ORIGINS" | "ALLOWED_MODELS" | "DEFAULT_MODEL" | "AI_GATEWAY_ID" | "MAX_BODY_BYTES" | "MAX_OUTPUT_TOKENS" | "CF_AI_GATEWAY_TOKEN" | "CLOUDFLARE_ACCOUNT_ID" | "GEOINT_AI_PROXY_TOKEN">> {}
 }
 
 // Begin runtime types

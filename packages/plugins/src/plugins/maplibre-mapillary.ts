@@ -5,10 +5,10 @@ import type {
   Map as MapLibreMap,
 } from "maplibre-gl";
 import type {
-  GeoLibreAppAPI,
-  GeoLibreFloatingPanelRegistration,
-  GeoLibreMapControlPosition,
-  GeoLibrePlugin,
+  GeoIntAppAPI,
+  GeoIntFloatingPanelRegistration,
+  GeoIntMapControlPosition,
+  GeoIntPlugin,
 } from "../types";
 
 // mapillary-js is a heavy WebGL module, so it is loaded lazily the first time
@@ -17,25 +17,25 @@ type MapillaryViewer = import("mapillary-js").Viewer;
 type MapillaryImage = import("mapillary-js").Image;
 
 export const MAPILLARY_PLUGIN_ID = "maplibre-gl-mapillary";
-const PANEL_ID = "geolibre-mapillary-viewer";
+const PANEL_ID = "geoint-mapillary-viewer";
 
-const SOURCE_ID = "geolibre-mapillary-coverage";
-const SELECTED_SOURCE_ID = "geolibre-mapillary-selected";
-const SEQUENCE_LAYER_ID = "geolibre-mapillary-sequence";
-const SEQUENCE_HIGHLIGHT_LAYER_ID = "geolibre-mapillary-sequence-highlight";
+const SOURCE_ID = "geoint-mapillary-coverage";
+const SELECTED_SOURCE_ID = "geoint-mapillary-selected";
+const SEQUENCE_LAYER_ID = "geoint-mapillary-sequence";
+const SEQUENCE_HIGHLIGHT_LAYER_ID = "geoint-mapillary-sequence-highlight";
 // Two point source-layers make up the "images" coverage: `overview` carries the
 // sampled low-zoom points, `image` the full-resolution points once zoomed in.
 // Together they show coverage points at every zoom, including the low zooms where
 // Mapillary serves no sequence lines.
-const OVERVIEW_LAYER_ID = "geolibre-mapillary-overview";
-const IMAGE_LAYER_ID = "geolibre-mapillary-image";
-const SELECTED_LAYER_ID = "geolibre-mapillary-selected-marker";
+const OVERVIEW_LAYER_ID = "geoint-mapillary-overview";
+const IMAGE_LAYER_ID = "geoint-mapillary-image";
+const SELECTED_LAYER_ID = "geoint-mapillary-selected-marker";
 // The Layers-panel entries that stand in for the (imperatively added) coverage
 // layers so the user can toggle/reorder/restyle them like any other layer. The
 // sequence lines and image points are surfaced separately so each can be shown,
 // hidden, and styled on its own.
-const LINES_STORE_LAYER_ID = "geolibre-mapillary-lines-layer";
-const POINTS_STORE_LAYER_ID = "geolibre-mapillary-points-layer";
+const LINES_STORE_LAYER_ID = "geoint-mapillary-lines-layer";
+const POINTS_STORE_LAYER_ID = "geoint-mapillary-points-layer";
 // The point layers carrying a clickable image `id` property.
 const CLICKABLE_LAYER_IDS = [IMAGE_LAYER_ID, OVERVIEW_LAYER_ID];
 // Hand off between the two point source-layers: `overview` below this zoom,
@@ -49,7 +49,7 @@ const COVERAGE_COLOR = "#05cb63";
 const SELECTED_COLOR = "#f5811f";
 const SEQUENCE_HIGHLIGHT_COLOR = "#e91e63";
 
-const TOKEN_STORAGE_KEY = "geolibre:mapillary-access-token";
+const TOKEN_STORAGE_KEY = "geoint:mapillary-access-token";
 const ATTRIBUTION =
   '<a href="https://www.mapillary.com/" target="_blank" rel="noopener noreferrer">© Mapillary</a>';
 
@@ -113,7 +113,7 @@ function updatePanelText(): void {
 
 function readEnvToken(): string | undefined {
   const buildEnv = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env;
-  const runtimeEnv = typeof window === "undefined" ? undefined : window.__GEOLIBRE_RUNTIME_ENV__;
+  const runtimeEnv = typeof window === "undefined" ? undefined : window.__GEOINT_RUNTIME_ENV__;
   const env = { ...(buildEnv ?? {}), ...(runtimeEnv ?? {}) };
   return env.VITE_MAPILLARY_ACCESS_TOKEN?.trim() || undefined;
 }
@@ -147,7 +147,7 @@ function saveUserToken(token: string): void {
 // ---------------------------------------------------------------------------
 
 let map: MapLibreMap | null = null;
-let appRef: GeoLibreAppAPI | null = null;
+let appRef: GeoIntAppAPI | null = null;
 let unregisterPanel: (() => void) | null = null;
 let unsubscribeBasemap: (() => void) | null = null;
 
@@ -173,7 +173,7 @@ let enterHandler: (() => void) | null = null;
 let leaveHandler: (() => void) | null = null;
 
 // Where the floating viewer panel docks; drives the Plugins-menu position submenu.
-let panelPosition: GeoLibreMapControlPosition = "top-left";
+let panelPosition: GeoIntMapControlPosition = "top-left";
 
 // ---------------------------------------------------------------------------
 // Coverage layers
@@ -726,7 +726,7 @@ function ensureCoverageWhenReady(activeMap: MapLibreMap): void {
 // A single registration object reused across re-registrations, so changing the
 // dock position (which re-registers to move the card) keeps the object identity
 // and does not tear down the live viewer. See setMapControlPosition.
-const floatingPanelRegistration: GeoLibreFloatingPanelRegistration = {
+const floatingPanelRegistration: GeoIntFloatingPanelRegistration = {
   id: PANEL_ID,
   title: () => labels.getTitle?.() ?? labels.title,
   defaultWidth: 460,
@@ -749,11 +749,11 @@ const floatingPanelRegistration: GeoLibreFloatingPanelRegistration = {
 // Plugin definition
 // ---------------------------------------------------------------------------
 
-export const maplibreMapillaryPlugin: GeoLibrePlugin = {
+export const maplibreMapillaryPlugin: GeoIntPlugin = {
   id: MAPILLARY_PLUGIN_ID,
   name: "Mapillary",
   version: "0.1.0",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     const activeMap = app.getMap?.();
     if (!activeMap) return false;
     map = activeMap;
@@ -778,7 +778,7 @@ export const maplibreMapillaryPlugin: GeoLibrePlugin = {
     app.openFloatingPanel?.(PANEL_ID);
   },
   getMapControlPosition: () => panelPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     panelPosition = position;
     floatingPanelRegistration.position = position;
     // Re-register the same object so the host re-reads its position and moves the
@@ -787,7 +787,7 @@ export const maplibreMapillaryPlugin: GeoLibrePlugin = {
       unregisterPanel = app.registerFloatingPanel?.(floatingPanelRegistration) ?? null;
     }
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     unsubscribeBasemap?.();
     unsubscribeBasemap = null;
     destroyViewer();

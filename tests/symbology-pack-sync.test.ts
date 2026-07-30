@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, type LayerStyle } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, type LayerStyle } from "@geoint/core";
 import { syncLayer } from "../packages/map/src/layer-sync";
 
 // Stateful fake MapLibre map, mirroring tests/point-renderer-sync.test.ts: it
@@ -49,7 +49,7 @@ function makeMap() {
   return { map, sources, layers, calls };
 }
 
-function polygonLayer(style: Partial<LayerStyle> = {}): GeoLibreLayer {
+function polygonLayer(style: Partial<LayerStyle> = {}): GeoIntLayer {
   return {
     id: "poly",
     name: "Polygons",
@@ -83,7 +83,7 @@ function polygonLayer(style: Partial<LayerStyle> = {}): GeoLibreLayer {
   };
 }
 
-function lineLayer(style: Partial<LayerStyle> = {}): GeoLibreLayer {
+function lineLayer(style: Partial<LayerStyle> = {}): GeoIntLayer {
   return {
     id: "lines",
     name: "Lines",
@@ -128,7 +128,7 @@ describe("inverted fill sync", () => {
     assert.equal(inverted.type, "fill");
     assert.equal(inverted.source, "source-poly-inverted");
     // Internal chrome: hidden from the layer control.
-    assert.equal(inverted.metadata["geolibre:internal"], true);
+    assert.equal(inverted.metadata["geoint:internal"], true);
     const maskData = sources.get("source-poly-inverted")?.data as
       | GeoJSON.FeatureCollection
       | undefined;
@@ -170,8 +170,8 @@ describe("line decoration sync", () => {
     assert.equal(decoration.type, "symbol");
     assert.equal(decoration.layout["symbol-placement"], "line");
     assert.equal(decoration.layout["symbol-spacing"], 120);
-    assert.match(String(decoration.layout["icon-image"]), /^geolibre-line-decoration-arrow-/);
-    assert.equal(decoration.metadata["geolibre:internal"], true);
+    assert.match(String(decoration.layout["icon-image"]), /^geoint-line-decoration-arrow-/);
+    assert.equal(decoration.metadata["geoint:internal"], true);
   });
 
   it("removes the decoration layer when switched off", () => {
@@ -199,7 +199,7 @@ describe("geometry generator sync", () => {
       metadata: Record<string, unknown>;
     };
     assert.equal(circle.type, "circle");
-    assert.equal(circle.metadata["geolibre:internal"], true);
+    assert.equal(circle.metadata["geoint:internal"], true);
     assert.ok(!layers.has("layer-poly-generator-fill"));
   });
 

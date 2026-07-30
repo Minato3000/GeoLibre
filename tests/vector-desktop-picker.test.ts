@@ -4,7 +4,7 @@ import {
   addPickedVectorFiles,
   type VectorDataSink,
 } from "../packages/plugins/src/plugins/maplibre-vector";
-import type { GeoLibrePickedVectorFile } from "../packages/plugins/src/types";
+import type { GeoIntPickedVectorFile } from "../packages/plugins/src/types";
 
 function createSink() {
   const calls: Array<{
@@ -35,7 +35,7 @@ function createSink() {
 describe("addPickedVectorFiles", () => {
   it("passes a shapefile's sidecars as companionFiles", async () => {
     const { sink, calls } = createSink();
-    const picked: GeoLibrePickedVectorFile[] = [
+    const picked: GeoIntPickedVectorFile[] = [
       {
         file: new File(["shp"], "cities.shp"),
         companionFiles: [new File(["shx"], "cities.shx"), new File(["dbf"], "cities.dbf")],

@@ -1,4 +1,4 @@
-import type { GeoLibreToolbarMenu, GeoLibreToolbarMenuItem } from "@geolibre/plugins";
+import type { GeoIntToolbarMenu, GeoIntToolbarMenuItem } from "@geoint/plugins";
 import {
   Button,
   DropdownMenu,
@@ -9,7 +9,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { Puzzle } from "lucide-react";
 import { useToolbarMenus } from "../../../hooks/usePluginUiSurfaces";
 import { isExternalPluginId } from "../../../lib/external-plugins";
@@ -39,7 +39,7 @@ function MenuIcon({ icon, className }: { icon?: string; className: string }) {
 const MAX_MENU_DEPTH = 8;
 
 /** Render a plugin menu item tree (actions, submenus, separators) recursively. */
-function renderItems(items: GeoLibreToolbarMenuItem[], menuId: string, depth = 0): React.ReactNode {
+function renderItems(items: GeoIntToolbarMenuItem[], menuId: string, depth = 0): React.ReactNode {
   if (depth > MAX_MENU_DEPTH) {
     console.warn(
       `Toolbar menu "${menuId}" exceeds the maximum submenu depth (${MAX_MENU_DEPTH}); deeper items are not rendered.`,
@@ -85,7 +85,7 @@ function renderItems(items: GeoLibreToolbarMenuItem[], menuId: string, depth = 0
   });
 }
 
-function PluginToolbarMenu({ menu, chrome }: { menu: GeoLibreToolbarMenu; chrome: ToolbarChrome }) {
+function PluginToolbarMenu({ menu, chrome }: { menu: GeoIntToolbarMenu; chrome: ToolbarChrome }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

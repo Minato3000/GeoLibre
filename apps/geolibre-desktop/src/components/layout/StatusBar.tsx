@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useAppStore } from "@geolibre/core";
-import { cn } from "@geolibre/ui";
+import { useAppStore } from "@geoint/core";
+import { cn } from "@geoint/ui";
 import { Bug } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { formatAccuracy, formatSpeedKmh } from "../../lib/gps-tracking";
@@ -63,19 +63,10 @@ export function StatusBar({
         compact ? "overflow-hidden" : "overflow-x-auto",
       )}
     >
-      <span className="shrink-0">
-        {compact ? "XY" : "Coords"}: {coordText}
-      </span>
-      {gpsText && <span className="shrink-0">GPS: {gpsText}</span>}
-      <span className="shrink-0">Zoom: {mapView.zoom.toFixed(2)}</span>
-      <span className="shrink-0">Bearing: {mapView.bearing.toFixed(1)}°</span>
-      <span className="shrink-0">Pitch: {mapView.pitch.toFixed(1)}°</span>
-      {compact ? null : <span className="min-w-0 flex-1 truncate">BBox: {bboxText}</span>}
       <button
         type="button"
         className={cn(
           "inline-flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 hover:bg-accent hover:text-accent-foreground",
-          "ms-auto",
           diagnosticsErrorCount > 0 && "text-red-700 dark:text-red-300",
           diagnosticsErrorCount === 0 &&
             diagnosticsWarningCount > 0 &&
@@ -86,6 +77,14 @@ export function StatusBar({
         <Bug className="h-3 w-3" />
         {compact ? "Diag" : "Diagnostics"}: {diagnosticsCount}
       </button>
+      {compact ? null : <span className="min-w-0 flex-1 truncate">BBox: {bboxText}</span>}
+      <span className="shrink-0 ms-auto">Pitch: {mapView.pitch.toFixed(1)}°</span>
+      <span className="shrink-0">Bearing: {mapView.bearing.toFixed(1)}°</span>
+      <span className="shrink-0">Zoom: {mapView.zoom.toFixed(2)}</span>
+      {gpsText && <span className="shrink-0">GPS: {gpsText}</span>}
+      <span className="shrink-0">
+        {compact ? "XY" : "Coords"}: {coordText}
+      </span>
     </footer>
   );
 }

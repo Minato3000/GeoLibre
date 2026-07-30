@@ -1,5 +1,5 @@
-import type { MapViewState } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+import type { MapViewState } from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /**

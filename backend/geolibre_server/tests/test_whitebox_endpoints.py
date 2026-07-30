@@ -17,22 +17,22 @@ _SECRET = "/secret/path/to/python: boom traceback leak"
 
 def test_run_timeout_defaults_to_one_hour(monkeypatch):
     """An unset or invalid override falls back to the 1-hour default."""
-    monkeypatch.delenv("GEOLIBRE_WHITEBOX_RUN_TIMEOUT_SECS", raising=False)
+    monkeypatch.delenv("GEOINT_WHITEBOX_RUN_TIMEOUT_SECS", raising=False)
     assert whitebox._whitebox_run_timeout_secs() == 3600
 
-    monkeypatch.setenv("GEOLIBRE_WHITEBOX_RUN_TIMEOUT_SECS", "not-a-number")
+    monkeypatch.setenv("GEOINT_WHITEBOX_RUN_TIMEOUT_SECS", "not-a-number")
     assert whitebox._whitebox_run_timeout_secs() == 3600
 
-    monkeypatch.setenv("GEOLIBRE_WHITEBOX_RUN_TIMEOUT_SECS", "0")
+    monkeypatch.setenv("GEOINT_WHITEBOX_RUN_TIMEOUT_SECS", "0")
     assert whitebox._whitebox_run_timeout_secs() == 3600
 
-    monkeypatch.setenv("GEOLIBRE_WHITEBOX_RUN_TIMEOUT_SECS", "-1")
+    monkeypatch.setenv("GEOINT_WHITEBOX_RUN_TIMEOUT_SECS", "-1")
     assert whitebox._whitebox_run_timeout_secs() == 3600
 
 
 def test_run_timeout_reads_positive_override(monkeypatch):
     """A positive override is honoured so long jobs can be tuned per deployment."""
-    monkeypatch.setenv("GEOLIBRE_WHITEBOX_RUN_TIMEOUT_SECS", "120")
+    monkeypatch.setenv("GEOINT_WHITEBOX_RUN_TIMEOUT_SECS", "120")
     assert whitebox._whitebox_run_timeout_secs() == 120
 
 

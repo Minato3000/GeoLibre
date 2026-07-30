@@ -34,7 +34,7 @@ jobs:
       # without reddening CI for the moderate/low noise Dependabot handles via PR.
       # Scoped to production deps: `--omit=dev` drops advisories that only reach
       # local build/dev tooling (e.g. sharp/libvips via wrangler+miniflare, which
-      # never ships in a GeoLibre artifact), while still blocking anything that
+      # never ships in a GeoInt artifact), while still blocking anything that
       # reaches users. Dependabot bumps the dev toolchain separately.
       - name: Audit npm dependencies (high and critical)
         run: npm audit --omit=dev --audit-level=high

@@ -1,9 +1,9 @@
-import type { GeoLibreToolbarMenu } from "./types";
+import type { GeoIntToolbarMenu } from "./types";
 
 /**
  * Imperative registry for plugin-owned top toolbar menus.
  *
- * A plugin can contribute its own top-level menu button to the GeoLibre banner
+ * A plugin can contribute its own top-level menu button to the GeoInt banner
  * (beside Project / Edit / View / Plugins), with nested submenus and action
  * items. Mirrors the open/subscribe pattern used by the other registries in
  * this package; the desktop toolbar subscribes with `useSyncExternalStore` and
@@ -16,7 +16,7 @@ import type { GeoLibreToolbarMenu } from "./types";
  * toolbar place a menu by its owner — e.g. external plugin menus after Help.
  */
 export interface ToolbarMenuEntry {
-  menu: GeoLibreToolbarMenu;
+  menu: GeoIntToolbarMenu;
   ownerPluginId?: string;
 }
 
@@ -31,7 +31,7 @@ export interface ToolbarMenuEntry {
  * what in-repo consumers use.
  */
 export interface ToolbarMenusSnapshot {
-  menus: GeoLibreToolbarMenu[];
+  menus: GeoIntToolbarMenu[];
   entries: ToolbarMenuEntry[];
   version: number;
 }
@@ -59,7 +59,7 @@ function emit(): void {
  * `ownerPluginId` is injected by the host (the PluginManager scopes each
  * plugin's app API to its id); plugins call this with a single argument.
  */
-export function registerToolbarMenu(menu: GeoLibreToolbarMenu, ownerPluginId?: string): () => void {
+export function registerToolbarMenu(menu: GeoIntToolbarMenu, ownerPluginId?: string): () => void {
   if (!menu || typeof menu.id !== "string" || menu.id.length === 0) {
     throw new Error("registerToolbarMenu requires a menu with a non-empty id.");
   }
@@ -87,7 +87,7 @@ export function unregisterToolbarMenu(id: string): void {
 }
 
 /** All registered toolbar menus, in registration order. */
-export function listToolbarMenus(): GeoLibreToolbarMenu[] {
+export function listToolbarMenus(): GeoIntToolbarMenu[] {
   return [...registry.values()].map((entry) => entry.menu);
 }
 

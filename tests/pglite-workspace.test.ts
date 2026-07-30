@@ -74,7 +74,7 @@ describe("pickGeometryColumnName", () => {
 describe("buildCreateTableStatement", () => {
   it("quotes identifiers and appends a 4326 geometry column", () => {
     const sql = buildCreateTableStatement(
-      '"geolibre"."cities"',
+      '"geoint"."cities"',
       [
         { name: "name", type: "text" },
         { name: "pop", type: "double precision" },
@@ -83,7 +83,7 @@ describe("buildCreateTableStatement", () => {
     );
     assert.equal(
       sql,
-      'CREATE TABLE "geolibre"."cities" ("name" text, "pop" double precision, ' +
+      'CREATE TABLE "geoint"."cities" ("name" text, "pop" double precision, ' +
         '"geom" geometry(Geometry, 4326))',
     );
   });

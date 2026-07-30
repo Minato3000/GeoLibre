@@ -8,7 +8,7 @@
  * only the dialog-scoped UI state.
  */
 
-import { Button, Input, Label, Select } from "@geolibre/ui";
+import { Button, Input, Label, Select } from "@geoint/ui";
 import { Bookmark, Download, Save, Trash2, Upload } from "lucide-react";
 import { type KeyboardEvent, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -156,7 +156,7 @@ export function ServiceLibrarySection({
     setNotice(null);
     try {
       await saveTextFileWithFallback(serializeUserServices(userEntries), {
-        defaultName: "geolibre-service-library.json",
+        defaultName: "geoint-service-library.json",
         filters: [{ name: "JSON", extensions: ["json"] }],
         browserTypes: [{ description: "JSON", accept: { "application/json": [".json"] } }],
         mimeType: "application/json",

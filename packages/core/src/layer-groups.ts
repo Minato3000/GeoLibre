@@ -1,4 +1,4 @@
-import type { GeoLibreLayer, LayerGroup } from "./types";
+import type { GeoIntLayer, LayerGroup } from "./types";
 
 /** Opacity a freshly created {@link LayerGroup} starts at (fully opaque). */
 export const DEFAULT_LAYER_GROUP_OPACITY = 1;
@@ -8,8 +8,8 @@ export const DEFAULT_LAYER_GROUP_OPACITY = 1;
  * header together with its child layers.
  */
 export type LayerTreeItem =
-  | { kind: "layer"; layer: GeoLibreLayer }
-  | { kind: "group"; group: LayerGroup; children: GeoLibreLayer[] };
+  | { kind: "layer"; layer: GeoIntLayer }
+  | { kind: "group"; group: LayerGroup; children: GeoIntLayer[] };
 
 /**
  * Derive the layer-panel tree from the flat `layers` array and the group
@@ -30,13 +30,13 @@ export type LayerTreeItem =
  * @param groups Group definitions.
  * @returns Panel rows in top-to-bottom display order.
  */
-export function buildLayerTree(layers: GeoLibreLayer[], groups: LayerGroup[]): LayerTreeItem[] {
+export function buildLayerTree(layers: GeoIntLayer[], groups: LayerGroup[]): LayerTreeItem[] {
   const groupById = new Map(groups.map((g) => [g.id, g]));
   const display = [...layers].reverse();
 
   // Bucket every layer's children by group id in a single pass so emitting a
   // group is an O(1) lookup rather than a per-group filter over `display`.
-  const childrenByGroupId = new Map<string, GeoLibreLayer[]>();
+  const childrenByGroupId = new Map<string, GeoIntLayer[]>();
   for (const layer of display) {
     if (!layer.groupId || !groupById.has(layer.groupId)) continue;
     const bucket = childrenByGroupId.get(layer.groupId);
@@ -68,7 +68,7 @@ export function buildLayerTree(layers: GeoLibreLayer[], groups: LayerGroup[]): L
     ...emptyGroups.map((group) => ({
       kind: "group" as const,
       group,
-      children: [] as GeoLibreLayer[],
+      children: [] as GeoIntLayer[],
     })),
     ...items,
   ];
@@ -88,7 +88,7 @@ export function buildLayerTree(layers: GeoLibreLayer[], groups: LayerGroup[]): L
  * @param groups Group definitions.
  * @returns Layers with group effects applied.
  */
-export function applyGroupEffects(layers: GeoLibreLayer[], groups: LayerGroup[]): GeoLibreLayer[] {
+export function applyGroupEffects(layers: GeoIntLayer[], groups: LayerGroup[]): GeoIntLayer[] {
   if (groups.length === 0) return layers;
   const groupById = new Map(groups.map((g) => [g.id, g]));
   return layers.map((layer) => {
@@ -109,7 +109,7 @@ export function applyGroupEffects(layers: GeoLibreLayer[], groups: LayerGroup[])
  * @param groupId Group whose members to locate.
  * @returns Ascending list of member indices (empty when the group has none).
  */
-export function groupMemberIndices(layers: GeoLibreLayer[], groupId: string): number[] {
+export function groupMemberIndices(layers: GeoIntLayer[], groupId: string): number[] {
   const indices: number[] = [];
   for (let i = 0; i < layers.length; i++) {
     if (layers[i]?.groupId === groupId) indices.push(i);
@@ -130,8 +130,8 @@ export function groupMemberIndices(layers: GeoLibreLayer[], groupId: string): nu
  * @param layers Flat layer list, possibly with interleaved group members.
  * @returns A new array with grouped layers made contiguous.
  */
-export function normalizeGroupContiguity(layers: GeoLibreLayer[]): GeoLibreLayer[] {
-  const result: GeoLibreLayer[] = [];
+export function normalizeGroupContiguity(layers: GeoIntLayer[]): GeoIntLayer[] {
+  const result: GeoIntLayer[] = [];
   const placed = new Set<string>();
   for (let i = 0; i < layers.length; i++) {
     const layer = layers[i];

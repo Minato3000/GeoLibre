@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import { syncLayer } from "../packages/map/src/layer-sync";
 
 /**
@@ -51,7 +51,7 @@ function makeSource(tiles: string[]): FakeSource {
   };
 }
 
-function vectorTileLayer(tiles: string[]): GeoLibreLayer {
+function vectorTileLayer(tiles: string[]): GeoIntLayer {
   return {
     id: "layer-1",
     name: "GeoLens dataset",
@@ -68,7 +68,7 @@ function vectorTileLayer(tiles: string[]): GeoLibreLayer {
     opacity: 1,
     style: {},
     metadata: { sourceLayers: ["data.buildings"] },
-  } as unknown as GeoLibreLayer;
+  } as unknown as GeoIntLayer;
 }
 
 const SIGNED_A = "https://geolens.example/api/tiles/data.b/{z}/{x}/{y}.pbf?sig=aaa&exp=1";

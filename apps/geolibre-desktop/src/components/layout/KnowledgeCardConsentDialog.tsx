@@ -5,7 +5,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { useTranslation } from "react-i18next";
 
 interface KnowledgeCardConsentDialogProps {

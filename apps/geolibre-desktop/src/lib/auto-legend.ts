@@ -18,7 +18,7 @@ import {
   isHexColor,
   proportionalSizeRange,
   styleValue,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerStyle,
   type LegendConfig,
   type LegendCustomEntry,
@@ -26,7 +26,7 @@ import {
   type LegendItemOverride,
   type ProportionalSizeRange,
   type VectorStyleStop,
-} from "@geolibre/core";
+} from "@geoint/core";
 import { isRasterLike, layerSwatchShape, type LayerSwatchShape } from "./layer-swatch";
 import {
   diagramSwatches,
@@ -36,9 +36,9 @@ import {
 } from "./print-legend";
 import type { LegendMarker } from "./print-layout";
 import { savedRasterAttributeTable } from "./raster-attribute-table";
-// Deep import (not the @geolibre/plugins barrel): the barrel pulls browser-only
+// Deep import (not the @geoint/plugins barrel): the barrel pulls browser-only
 // plugin modules, and this derivation must stay importable from node tests.
-import { savedRasterSymbology, type RasterSymbology } from "@geolibre/plugins/raster-symbology";
+import { savedRasterSymbology, type RasterSymbology } from "@geoint/plugins/raster-symbology";
 
 /** Neutral fallback color, matching the Layers panel / print legend. */
 const NEUTRAL = "#94a3b8";
@@ -51,7 +51,7 @@ const GRADIENT_SAMPLES = 6;
 
 /**
  * The map's heatmap ramp colors (mirrors `HEATMAP_COLOR_RAMP` in
- * `@geolibre/map`'s style-mapper, minus the fully-transparent zero stop so the
+ * `@geoint/map`'s style-mapper, minus the fully-transparent zero stop so the
  * bar starts visible).
  */
 export const HEATMAP_RAMP_COLORS: readonly string[] = [
@@ -127,7 +127,7 @@ export interface AutoLegendOptions {
   locale?: string;
   /**
    * Resolves a named raster colormap to its anchor colors (the panel passes
-   * `colormapColors` from `@geolibre/plugins`); null falls back to grayscale.
+   * `colormapColors` from `@geoint/plugins`); null falls back to grayscale.
    */
   resolveColormapColors?: (name: string) => readonly string[] | null;
 }
@@ -209,7 +209,7 @@ function stopRows(
 }
 
 /** Rule-based renderer rows (mirrors the live map's effective rules). */
-function ruleRows(layer: GeoLibreLayer, shape: LayerSwatchShape): RawRow[] {
+function ruleRows(layer: GeoIntLayer, shape: LayerSwatchShape): RawRow[] {
   const { rules, elseRule } = effectiveVectorRules(layer.style);
   const rows: RawRow[] = rules.slice(0, MAX_LEGEND_ROWS).map((rule) => ({
     label: rule.label || JSON.stringify(rule.filter),
@@ -549,7 +549,7 @@ function sampleColors(anchors: readonly string[], count: number): string[] {
 }
 
 /** Reads `metadata.rasterState` fields the legend needs, defensively. */
-function readRasterRenderState(layer: GeoLibreLayer): {
+function readRasterRenderState(layer: GeoIntLayer): {
   mode: "single" | "rgb" | "index";
   colormap: string;
   reversed: boolean;
@@ -579,7 +579,7 @@ function readRasterRenderState(layer: GeoLibreLayer): {
 
 /** Raster entry parts: RAT / classified class rows, or a continuous gradient. */
 function rasterParts(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   locale: string | undefined,
   resolve: (name: string) => readonly string[] | null,
 ): { rows: RawRow[]; gradient: AutoLegendGradient | null; fieldLabel?: string } {
@@ -642,7 +642,7 @@ function rasterParts(
 
 /** Entry parts derived from a vector layer's symbology. */
 function vectorParts(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   shape: LayerSwatchShape,
   locale: string | undefined,
 ): {
@@ -669,7 +669,7 @@ function vectorParts(
     };
   }
 
-  // The shared guard from @geolibre/core, so the legend advertises proportional
+  // The shared guard from @geoint/core, so the legend advertises proportional
   // sizing on exactly the layers the map actually sizes. Only circles and line
   // strokes carry a size; polygon fills ignore it.
   const sizeRange = shape === "circle" || shape === "line" ? proportionalSizeRange(style) : null;
@@ -775,7 +775,7 @@ function customRows(entry: LegendCustomEntry): RawRow[] {
 }
 
 /** Compound swatch opacity for a layer (layer opacity × fill opacity). */
-function entryOpacity(layer: GeoLibreLayer): number {
+function entryOpacity(layer: GeoIntLayer): number {
   const layerOpacity = typeof layer.opacity === "number" ? layer.opacity : 1;
   const fillOpacity = isVectorStyledLayer(layer) ? styleValue(layer.style, "fillOpacity") : 1;
   const compound = layerOpacity * (typeof fillOpacity === "number" ? fillOpacity : 1);
@@ -809,7 +809,7 @@ function orderEntries(entries: AutoLegendEntry[], order: string[]): AutoLegendEn
  * panel's edit mode can dim and unhide them; display mode filters them out.
  */
 export function buildAutoLegend(
-  layers: GeoLibreLayer[],
+  layers: GeoIntLayer[],
   config: LegendConfig,
   options: AutoLegendOptions = {},
 ): AutoLegendEntry[] {

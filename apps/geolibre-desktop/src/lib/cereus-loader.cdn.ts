@@ -1,6 +1,6 @@
 // CDN CereusDB loader: the default for every build (web, desktop, embed). A Vite
 // alias swaps it in for `./cereus-loader` (see vite.config.ts, gated on
-// GEOLIBRE_CEREUS_CDN) so the ~40 MB wasm blob is never emitted into dist and so
+// GEOINT_CEREUS_CDN) so the ~40 MB wasm blob is never emitted into dist and so
 // never embedded into the Tauri binary (it was ~8.6 MB brotli — the entire
 // 27 → 36 MB v1.3 installer growth).
 //
@@ -32,7 +32,7 @@ export async function loadCereusDb(): Promise<CereusInstance> {
   if (!__CEREUS_WASM_CDN_URL__) {
     throw new Error(
       "CereusDB wasm CDN URL was not injected. This loader is only meant for " +
-        "the default build (GEOLIBRE_CEREUS_CDN=1).",
+        "the default build (GEOINT_CEREUS_CDN=1).",
     );
   }
   // The JS glue is bundled, so this import resolves to a local chunk; the network
@@ -47,7 +47,7 @@ export async function loadCereusDb(): Promise<CereusInstance> {
   } catch (err) {
     // No network, jsDelivr unreachable, or a strict CSP blocking the fetch.
     throw new Error(
-      "Could not load the Apache Sedona SQL engine from the CDN. GeoLibre " +
+      "Could not load the Apache Sedona SQL engine from the CDN. GeoInt " +
         "fetches the CereusDB WebAssembly module from jsDelivr on first use, " +
         "so this engine needs network access and a Content-Security-Policy " +
         "that allows connecting to cdn.jsdelivr.net.",

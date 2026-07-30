@@ -673,7 +673,7 @@ describe("diffFeatures", () => {
           type: "Feature",
           id: 1,
           geometry: point(0, 0),
-          properties: { name: "a", __geolibre_fid: "1", __gm_shape: "circle_marker" },
+          properties: { name: "a", __geoint_fid: "1", __gm_shape: "circle_marker" },
         },
         {
           type: "Feature",

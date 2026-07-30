@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import type { VectorLayerInfo, VectorLayerStyle } from "maplibre-gl-vector";
 import {
   createVectorStoreLayer,
@@ -72,7 +72,7 @@ function fakeControl(infos: VectorLayerInfo[] = [], options: { collapsed?: boole
   return { control, calls };
 }
 
-function otherStoreLayer(id = "unrelated"): GeoLibreLayer {
+function otherStoreLayer(id = "unrelated"): GeoIntLayer {
   return {
     id,
     name: "Unrelated",
@@ -298,7 +298,7 @@ describe("createVectorStoreLayer", () => {
       }),
     );
 
-    // Points fold the circle color/opacity onto GeoLibre's shared fill fields,
+    // Points fold the circle color/opacity onto GeoInt's shared fill fields,
     // not the polygon fillColor.
     assert.equal(layer.style.fillColor, "#abc123");
     assert.equal(layer.style.fillOpacity, 0.7);
@@ -530,7 +530,7 @@ describe("wireVectorStoreSync", () => {
 
     useAppStore.getState().setLayerStyle("vector-1", { fillColor: "#ff0000" });
 
-    // GeoLibre's shared fillColor/strokeColor/fillOpacity/strokeWidth map onto
+    // GeoInt's shared fillColor/strokeColor/fillOpacity/strokeWidth map onto
     // the control's per-geometry fill/line/circle style; the unedited fields
     // come from the style seeded off the control's own style. The color
     // expression fields are undefined for a single-color (non-data-driven) edit.
@@ -591,7 +591,7 @@ describe("wireVectorStoreSync", () => {
 
     assert.equal(calls.length, 1);
     const pushed = calls[0].args[1] as VectorLayerStyle;
-    // GeoLibre's "cluster" maps to the control's pointMode, with cluster params.
+    // GeoInt's "cluster" maps to the control's pointMode, with cluster params.
     assert.equal(pushed.pointMode, "cluster");
     assert.equal(pushed.clusterRadius, 40);
   });
@@ -697,7 +697,7 @@ describe("wireVectorStoreSync", () => {
     assert.equal(pushed.labelField, "");
   });
 
-  it("does not touch the control for GeoLibre-only style fields", () => {
+  it("does not touch the control for GeoInt-only style fields", () => {
     const { control, calls } = fakeControl([vectorInfo()]);
     syncVectorLayersToStore(control);
     wireVectorStoreSync(control);

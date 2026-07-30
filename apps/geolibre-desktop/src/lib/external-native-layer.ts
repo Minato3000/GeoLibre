@@ -1,9 +1,5 @@
-import {
-  DEFAULT_LAYER_STYLE,
-  type ExternalNativePaintMode,
-  type GeoLibreLayer,
-} from "@geolibre/core";
-import type { GeoLibreExternalNativeLayerRegistration } from "@geolibre/plugins";
+import { DEFAULT_LAYER_STYLE, type ExternalNativePaintMode, type GeoIntLayer } from "@geoint/core";
+import type { GeoIntExternalNativeLayerRegistration } from "@geoint/plugins";
 
 /**
  * Build the store layer record for an external plugin's native GeoJSON layer.
@@ -19,19 +15,19 @@ import type { GeoLibreExternalNativeLayerRegistration } from "@geolibre/plugins"
  * on the next visibility/layer-control change.
  */
 export function createExternalNativeStoreLayer(
-  registration: GeoLibreExternalNativeLayerRegistration,
-  existing?: GeoLibreLayer,
-): GeoLibreLayer {
+  registration: GeoIntExternalNativeLayerRegistration,
+  existing?: GeoIntLayer,
+): GeoIntLayer {
   const sourceIds = registration.sourceIds?.length
     ? registration.sourceIds
     : registration.sourceId
       ? [registration.sourceId]
       : [];
   const sourceId = registration.sourceId ?? sourceIds[0];
-  // Supplying a paint bridge is only meaningful for a layer GeoLibre cannot
+  // Supplying a paint bridge is only meaningful for a layer GeoInt cannot
   // paint through MapLibre, so it implies plugin-owned paint. The flag is the
   // serializable half of the contract (the bridge's functions live in the
-  // registry in @geolibre/core), so it must land in metadata.
+  // registry in @geoint/core), so it must land in metadata.
   const paintMode =
     registration.paintMode ??
     (registration.metadata?.paintMode as ExternalNativePaintMode | undefined) ??
@@ -71,7 +67,7 @@ export function createExternalNativeStoreLayer(
       ...DEFAULT_LAYER_STYLE,
       ...(existing?.style ?? {}),
       ...(registration.style ?? {}),
-    } as GeoLibreLayer["style"],
+    } as GeoIntLayer["style"],
     metadata,
     beforeId: registration.beforeId ?? existing?.beforeId,
     geojson: registration.geojson ?? existing?.geojson,

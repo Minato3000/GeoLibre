@@ -3,7 +3,7 @@ import { ExternalLink, WifiOff } from "lucide-react";
 import { openExternalLink } from "../../lib/open-external";
 
 /**
- * The hosted GeoLibre web app, where the offline-caching service worker is
+ * The hosted GeoInt web app, where the offline-caching service worker is
  * active. Offered as the remediation link when the current build (desktop, or
  * the dev server) has no controlling service worker so downloads can't persist.
  */

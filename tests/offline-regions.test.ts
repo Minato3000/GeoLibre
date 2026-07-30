@@ -156,13 +156,13 @@ describe("persistence round-trip", () => {
   });
 
   it("ignores a corrupt stored value", () => {
-    storage.setItem("geolibre.offlineRegions.v1", "{ not json");
+    storage.setItem("geoint.offlineRegions.v1", "{ not json");
     assert.deepEqual(loadOfflineRegions(storage), []);
   });
 
   it("drops structurally invalid records", () => {
     storage.setItem(
-      "geolibre.offlineRegions.v1",
+      "geoint.offlineRegions.v1",
       JSON.stringify([{ id: "x" }, makeRegion({ id: "ok" })]),
     );
     const loaded = loadOfflineRegions(storage);
@@ -174,7 +174,7 @@ describe("persistence round-trip", () => {
 
   it("drops records with non-numeric bbox or missing numeric fields", () => {
     storage.setItem(
-      "geolibre.offlineRegions.v1",
+      "geoint.offlineRegions.v1",
       JSON.stringify([
         makeRegion({ id: "bad-bbox", bbox: [null, "a", {}, 1] as never }),
         { ...makeRegion({ id: "no-hosts" }), hosts: undefined },

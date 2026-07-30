@@ -12,7 +12,7 @@ import {
   Input,
   Label,
   Select,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { Download } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

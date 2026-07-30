@@ -34,12 +34,12 @@ import {
   sliceRouteAtDistance,
   type LngLat,
 } from "../packages/plugins/src/plugins/route-animation-geometry";
-import type { GeoLibreAppAPI } from "../packages/plugins/src/types";
+import type { GeoIntAppAPI } from "../packages/plugins/src/types";
 
 // A minimal app whose map is never available, so the module's store logic runs
 // with the engine detached (engine stays null) — enough to exercise every store
 // path without a DOM or a MapLibre instance.
-const mapLessApp = { getMap: () => null } as unknown as GeoLibreAppAPI;
+const mapLessApp = { getMap: () => null } as unknown as GeoIntAppAPI;
 
 /** Reset the singleton store to defaults and a closed panel between cases. */
 function resetStore(): void {

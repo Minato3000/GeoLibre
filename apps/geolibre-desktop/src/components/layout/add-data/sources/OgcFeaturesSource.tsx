@@ -1,4 +1,4 @@
-import { Button, Input, Label, Select } from "@geolibre/ui";
+import { Button, Input, Label, Select } from "@geoint/ui";
 import { ListTree, Loader2 } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

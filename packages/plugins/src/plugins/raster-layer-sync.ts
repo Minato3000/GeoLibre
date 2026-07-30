@@ -1,4 +1,4 @@
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, styleValue, useAppStore } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, styleValue, useAppStore } from "@geoint/core";
 import type { RasterLayerInfo, RasterLayerState, RenderEngine } from "maplibre-gl-raster";
 
 export const RASTER_SOURCE_KIND = "maplibre-gl-raster";
@@ -89,7 +89,7 @@ let storeSyncSuspended = 0;
  * @param layer - A store layer.
  * @returns True when the layer mirrors a control-managed raster.
  */
-export function isRasterControlStoreLayer(layer: GeoLibreLayer): boolean {
+export function isRasterControlStoreLayer(layer: GeoIntLayer): boolean {
   return (
     layer.metadata.sourceKind === RASTER_SOURCE_KIND && layer.metadata.externalNativeLayer === true
   );
@@ -105,13 +105,13 @@ export function isRasterControlStoreLayer(layer: GeoLibreLayer): boolean {
  *
  * @param info - Public raster snapshot from RasterControl.getRasters().
  * @param panelCollapsed - Whether the Add Raster Layer panel is collapsed.
- * @returns The corresponding GeoLibre store layer.
+ * @returns The corresponding GeoInt store layer.
  */
 export function createRasterStoreLayer(
   info: RasterLayerInfo,
   panelCollapsed = true,
   options: RasterSyncOptions = {},
-): GeoLibreLayer {
+): GeoIntLayer {
   const interleaved = options.interleaved ?? true;
   const nativeMapLibreLayer = rendersNativeMapLibreLayer(options.engine ?? "maplibre-gl-raster");
   // Desktop local paths are handed to the control as Tauri asset-protocol URLs
@@ -215,17 +215,17 @@ export function syncRasterLayersToStore(control: RasterSyncableControl): void {
 }
 
 /**
- * Metadata keys GeoLibre writes onto control-managed raster layers that the
+ * Metadata keys GeoInt writes onto control-managed raster layers that the
  * control itself knows nothing about: `rasterSymbology` (discrete
  * classification), `rasterAttributeTable` (the categorical class table,
  * #1307), and `localBytesUrl` (a blob URL retaining a File-loaded raster's
  * bytes for in-browser tools). The store sync rebuilds a raster layer's
  * metadata wholesale from the control's `RasterLayerInfo` on every control
  * event, so any key not listed here is silently wiped by the next opacity
- * drag or visibility toggle — add new GeoLibre-owned raster metadata keys to
+ * drag or visibility toggle — add new GeoInt-owned raster metadata keys to
  * this list.
  */
-export const GEOLIBRE_OWNED_METADATA_KEYS = [
+export const GEOINT_OWNED_METADATA_KEYS = [
   "rasterSymbology",
   "rasterAttributeTable",
   "localBytesUrl",
@@ -259,12 +259,12 @@ export function syncRasterLayersToStoreWithOptions(
         continue;
       }
 
-      // GeoLibre-owned metadata keys (see GEOLIBRE_OWNED_METADATA_KEYS) are
+      // GeoInt-owned metadata keys (see GEOINT_OWNED_METADATA_KEYS) are
       // absent from RasterLayerInfo, so carry them forward across the
       // wholesale metadata rebuild instead of letting every control event
       // wipe them.
       const preserved: Record<string, unknown> = {};
-      for (const key of GEOLIBRE_OWNED_METADATA_KEYS) {
+      for (const key of GEOINT_OWNED_METADATA_KEYS) {
         if (existing.metadata[key] !== undefined) {
           preserved[key] = existing.metadata[key];
         }
@@ -374,8 +374,8 @@ const SYNCED_RASTER_STATE_KEYS = [
  * @returns A partial RasterLayerState patch, or null.
  */
 function rasterStatePatch(
-  previous: GeoLibreLayer,
-  current: GeoLibreLayer,
+  previous: GeoIntLayer,
+  current: GeoIntLayer,
 ): Partial<RasterLayerState> | null {
   const before = rasterStateRecord(previous);
   const after = rasterStateRecord(current);
@@ -405,8 +405,8 @@ function rasterStatePatch(
  * @returns A `{ minZoom, maxZoom }` patch, or null.
  */
 function zoomRangePatch(
-  previous: GeoLibreLayer,
-  current: GeoLibreLayer,
+  previous: GeoIntLayer,
+  current: GeoIntLayer,
 ): Partial<RasterLayerState> | null {
   const beforeMin = styleValue(previous.style, "minZoom");
   const beforeMax = styleValue(previous.style, "maxZoom");
@@ -416,7 +416,7 @@ function zoomRangePatch(
   return { minZoom: afterMin, maxZoom: afterMax };
 }
 
-function rasterStateRecord(layer: GeoLibreLayer): Record<string, unknown> {
+function rasterStateRecord(layer: GeoIntLayer): Record<string, unknown> {
   const raw = layer.metadata.rasterState;
   return raw && typeof raw === "object" && !Array.isArray(raw)
     ? (raw as Record<string, unknown>)
@@ -501,7 +501,7 @@ export function resetRasterStoreSyncSuspension(): void {
  * @param layer - A store layer created by createRasterStoreLayer.
  * @returns The state overrides to replay through RasterControl.addRaster.
  */
-export function savedRasterState(layer: GeoLibreLayer): Partial<RasterLayerState> {
+export function savedRasterState(layer: GeoIntLayer): Partial<RasterLayerState> {
   const raw = layer.metadata.rasterState;
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
   const candidate = raw as Record<string, unknown>;
@@ -581,7 +581,7 @@ function rasterPanelCollapsedFromControl(control: RasterSyncableControl): boolea
   } catch (error) {
     // getState is optional, so only a throwing implementation lands here;
     // surface it instead of letting it look like the method being absent.
-    console.warn("[GeoLibre] rasterPanelCollapsedFromControl: getState threw", error);
+    console.warn("[GeoInt] rasterPanelCollapsedFromControl: getState threw", error);
     return true;
   }
 }

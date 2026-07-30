@@ -1,7 +1,7 @@
 import type { Layer } from "@deck.gl/core";
 import type { FeatureCollection } from "geojson";
 import { colorToRgba } from "../deck-style-utils";
-import type { GeoLibreDeckGL } from "../../types";
+import type { GeoIntDeckGL } from "../../types";
 
 /**
  * Registry of deck.gl layer types a user can build from an uploaded file or a
@@ -151,7 +151,7 @@ export interface DeckVizLayerDef {
   roles: DeckVizRole[];
   styleControls: DeckVizStyleControl[];
   animated?: boolean;
-  build: (deckGL: GeoLibreDeckGL, layerId: string, ctx: DeckVizBuildContext) => Layer;
+  build: (deckGL: GeoIntDeckGL, layerId: string, ctx: DeckVizBuildContext) => Layer;
   example: DeckVizExample;
   /** Largest timestamp in the data, used to size the animation loop. */
   getTimeRange?: (ctx: DeckVizBuildContext) => number;

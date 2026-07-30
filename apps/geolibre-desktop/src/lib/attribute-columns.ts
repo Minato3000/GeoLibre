@@ -1,4 +1,4 @@
-import { styleValue, type GeoLibreLayer, type LayerStyle } from "@geolibre/core";
+import { styleValue, type GeoIntLayer, type LayerStyle } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import {
   coerceComputedValue,
@@ -42,7 +42,7 @@ function stringArray(value: unknown): string[] | undefined {
 }
 
 /** Read the layer's column settings, tolerating missing/malformed metadata. */
-export function getColumnSettings(layer?: GeoLibreLayer | null): ColumnSettings {
+export function getColumnSettings(layer?: GeoIntLayer | null): ColumnSettings {
   const raw = layer?.metadata?.[COLUMN_SETTINGS_KEY];
   if (!raw || typeof raw !== "object") return {};
   const settings = raw as ColumnSettings;
@@ -68,7 +68,7 @@ function normalizeSettings(settings: ColumnSettings): ColumnSettings | null {
  * to `updateLayer` (which replaces metadata wholesale). Removes the key when the
  * settings are empty.
  */
-function metadataWithSettings(layer: GeoLibreLayer, next: ColumnSettings): Record<string, unknown> {
+function metadataWithSettings(layer: GeoIntLayer, next: ColumnSettings): Record<string, unknown> {
   const metadata = { ...(layer.metadata ?? {}) };
   const normalized = normalizeSettings(next);
   if (normalized) metadata[COLUMN_SETTINGS_KEY] = normalized;
@@ -238,12 +238,12 @@ function appendKeyToOrder(settings: ColumnSettings, key: string): ColumnSettings
  * never trip, letting the same name be added repeatedly) — reject it instead.
  */
 export function addColumn(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   discovered: string[],
   rawName: string,
   type: NewColumnType,
   rawDefault: string,
-): Partial<GeoLibreLayer> | null {
+): Partial<GeoIntLayer> | null {
   const name = rawName.trim();
   if (!layer.geojson || layer.geojson.features.length === 0 || !name) {
     return null;
@@ -264,7 +264,7 @@ function featureKey(feature: FeatureCollection["features"][number], index: numbe
 
 /** Outcome of a field calculation: a layer patch plus per-run statistics. */
 export interface FieldCalculationResult {
-  patch: Partial<GeoLibreLayer>;
+  patch: Partial<GeoIntLayer>;
   /** How many features had the expression evaluated against them. */
   evaluated: number;
   /** How many of those threw at runtime and were written as null instead. */
@@ -288,7 +288,7 @@ export interface FieldCalculationResult {
  * absent.
  */
 export function calculateField(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   discovered: string[],
   rawTargetName: string,
   createField: boolean,
@@ -343,7 +343,7 @@ export function calculateField(
 
   const geojson: FeatureCollection = { ...layer.geojson, features };
   const settings = getColumnSettings(layer);
-  const patch: Partial<GeoLibreLayer> = createField
+  const patch: Partial<GeoIntLayer> = createField
     ? {
         geojson,
         metadata: metadataWithSettings(layer, appendKeyToOrder(settings, target)),
@@ -360,11 +360,11 @@ export function calculateField(
  * in-store GeoJSON.
  */
 export function renameColumn(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   discovered: string[],
   oldKey: string,
   rawNewKey: string,
-): Partial<GeoLibreLayer> | null {
+): Partial<GeoIntLayer> | null {
   const newKey = rawNewKey.trim();
   if (!layer.geojson || !newKey || newKey === oldKey) return null;
   if (!discovered.includes(oldKey)) return null; // nothing to rename
@@ -378,7 +378,7 @@ export function renameColumn(
 }
 
 /** Destructive removal of a property key from every feature. */
-export function deleteColumn(layer: GeoLibreLayer, key: string): Partial<GeoLibreLayer> | null {
+export function deleteColumn(layer: GeoIntLayer, key: string): Partial<GeoIntLayer> | null {
   if (!layer.geojson) return null;
   // Mirror renameColumn's guard: a key absent from every feature is a no-op, so
   // don't return a patch that would touch style/settings without changing data.
@@ -395,7 +395,7 @@ export function deleteColumn(layer: GeoLibreLayer, key: string): Partial<GeoLibr
 }
 
 /** Toggle a column's visibility (view-only metadata change). */
-export function toggleColumnHidden(layer: GeoLibreLayer, key: string): Partial<GeoLibreLayer> {
+export function toggleColumnHidden(layer: GeoIntLayer, key: string): Partial<GeoIntLayer> {
   const settings = getColumnSettings(layer);
   const hidden = new Set(settings.hidden ?? []);
   if (hidden.has(key)) hidden.delete(key);
@@ -406,7 +406,7 @@ export function toggleColumnHidden(layer: GeoLibreLayer, key: string): Partial<G
 }
 
 /** Reveal every hidden column. */
-export function showAllColumns(layer: GeoLibreLayer): Partial<GeoLibreLayer> {
+export function showAllColumns(layer: GeoIntLayer): Partial<GeoIntLayer> {
   const settings = getColumnSettings(layer);
   return {
     metadata: metadataWithSettings(layer, { ...settings, hidden: [] }),
@@ -418,11 +418,11 @@ export function showAllColumns(layer: GeoLibreLayer): Partial<GeoLibreLayer> {
  * the new order. No-op at the respective edge.
  */
 export function moveColumn(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   discovered: string[],
   key: string,
   direction: ColumnMoveDirection,
-): Partial<GeoLibreLayer> | null {
+): Partial<GeoIntLayer> | null {
   const settings = getColumnSettings(layer);
   const full = orderColumns(discovered, settings);
   const hidden = new Set(settings.hidden ?? []);

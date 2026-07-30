@@ -23,7 +23,7 @@ RUNTIME_DISCOVERY_TIMEOUT_SECS = 5
 RUNTIME_CATALOG_TIMEOUT_SECS = 120
 RUNTIME_SETUP_TIMEOUT_SECS = 600
 UV_INSTALL_BASE_URL = os.environ.get(
-    "GEOLIBRE_UV_INSTALL_BASE_URL",
+    "GEOINT_UV_INSTALL_BASE_URL",
     "https://astral.sh/uv",
 ).rstrip("/")
 
@@ -87,20 +87,20 @@ def _subprocess_startup_kwargs() -> dict[str, Any]:
 
 
 def _runtime_cache_root() -> Path:
-    """Return the cache root for managed GeoLibre runtime environments."""
-    configured = os.environ.get("GEOLIBRE_RUNTIME_DIR")
+    """Return the cache root for managed GeoInt runtime environments."""
+    configured = os.environ.get("GEOINT_RUNTIME_DIR")
     if configured:
         return Path(configured).expanduser()
     if os.name == "nt":
         base = os.environ.get("LOCALAPPDATA") or str(Path.home() / "AppData" / "Local")
-        return Path(base) / "GeoLibre"
+        return Path(base) / "GeoInt"
     base = os.environ.get("XDG_CACHE_HOME") or str(Path.home() / ".cache")
-    return Path(base) / "geolibre"
+    return Path(base) / "geoint"
 
 
 def _managed_uv_dir() -> Path:
-    """Return the directory for GeoLibre's managed uv binary."""
-    configured = os.environ.get("GEOLIBRE_UV_DIR")
+    """Return the directory for GeoInt's managed uv binary."""
+    configured = os.environ.get("GEOINT_UV_DIR")
     if configured:
         return Path(configured).expanduser()
     return _runtime_cache_root() / "uv-bin"
@@ -121,10 +121,10 @@ def _venv_python(env_dir: Path) -> Path:
 
 def _download_to_temp(url: str, suffix: str) -> Path:
     """Download a URL to a temporary file and return its path."""
-    target = Path(tempfile.mkdtemp(prefix="geolibre-uv-installer-")) / f"install{suffix}"
+    target = Path(tempfile.mkdtemp(prefix="geoint-uv-installer-")) / f"install{suffix}"
     request = urllib.request.Request(
         url,
-        headers={"User-Agent": "GeoLibre/0.7 uv-bootstrap"},
+        headers={"User-Agent": "GeoInt/0.7 uv-bootstrap"},
     )
     try:
         with urllib.request.urlopen(request, timeout=60) as response:
@@ -143,7 +143,7 @@ def _is_valid_managed_uv(path: Path) -> bool:
 
 
 def _install_managed_uv() -> str:
-    """Download and install uv into GeoLibre's managed runtime directory."""
+    """Download and install uv into GeoInt's managed runtime directory."""
     uv = _managed_uv_executable()
     if _is_valid_managed_uv(uv):
         return str(uv)
@@ -202,7 +202,7 @@ def _install_managed_uv_locked(uv: Path) -> str:
 
 def _uv_executable() -> str:
     """Return the configured or discovered uv executable."""
-    configured = os.environ.get("GEOLIBRE_UV")
+    configured = os.environ.get("GEOINT_UV")
     if configured:
         resolved = str(Path(configured).expanduser())
         if os.path.isfile(resolved) and os.access(resolved, os.X_OK):

@@ -1,10 +1,10 @@
-import type { GeoLibreLayer, GeoLibreProject } from "@geolibre/core";
+import type { GeoIntLayer, GeoIntProject } from "@geoint/core";
 import { invoke } from "@tauri-apps/api/core";
 import { addProtocol, type RequestParameters } from "maplibre-gl";
 import { resolveUrlRedirect } from "./native-http";
 import { isTauri } from "./tauri-io";
 
-const XYZ_TILE_PROTOCOL = "geolibre-xyz";
+const XYZ_TILE_PROTOCOL = "geoint-xyz";
 
 let protocolRegistered = false;
 
@@ -92,9 +92,9 @@ export function registerXyzTileProtocol(): void {
 }
 
 export async function resolveProjectXyzLayers(
-  project: GeoLibreProject,
+  project: GeoIntProject,
   signal?: AbortSignal,
-): Promise<GeoLibreProject> {
+): Promise<GeoIntProject> {
   const results = await Promise.allSettled(
     project.layers.map((layer) => resolveProjectXyzLayer(layer, signal)),
   );
@@ -109,9 +109,9 @@ export async function resolveProjectXyzLayers(
 }
 
 async function resolveProjectXyzLayer(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   signal?: AbortSignal,
-): Promise<GeoLibreLayer> {
+): Promise<GeoIntLayer> {
   if (layer.type !== "xyz") return layer;
 
   const url = getSavedXyzUrl(layer);
@@ -143,7 +143,7 @@ async function resolveProjectXyzLayer(
   };
 }
 
-function getSavedXyzUrl(layer: GeoLibreLayer): string | null {
+function getSavedXyzUrl(layer: GeoIntLayer): string | null {
   const originalUrl = layer.metadata.originalUrl;
   if (typeof originalUrl === "string" && originalUrl.trim()) {
     return originalUrl;

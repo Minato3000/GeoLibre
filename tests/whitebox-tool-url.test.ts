@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 
 import {
   buildWhiteboxToolShareUrl,
-  GEOLIBRE_WEB_APP_URL,
+  GEOINT_WEB_APP_URL,
   isKnownWhiteboxToolId,
   WHITEBOX_TOOL_PARAM,
   whiteboxToolFromSearch,
@@ -12,7 +12,7 @@ import {
 
 describe("isKnownWhiteboxToolId", () => {
   it("accepts ids present in the checked-in menu catalog", () => {
-    // A Whitebox catalog tool, a terrain tool, and a GeoLibre-authored WASM
+    // A Whitebox catalog tool, a terrain tool, and a GeoInt-authored WASM
     // tool — all three families the catalog merges.
     assert.equal(isKnownWhiteboxToolId("adaptive_filter"), true);
     assert.equal(isKnownWhiteboxToolId("slope"), true);
@@ -139,11 +139,11 @@ describe("buildWhiteboxToolShareUrl", () => {
 
 describe("whiteboxToolShareBase", () => {
   it("uses the hosted web app URL for the desktop build", () => {
-    assert.equal(whiteboxToolShareBase(true), GEOLIBRE_WEB_APP_URL);
+    assert.equal(whiteboxToolShareBase(true), GEOINT_WEB_APP_URL);
   });
 
   it("falls back to the hosted web app URL when there is no window (web build, no DOM)", () => {
     // node:test runs without a `window`, standing in for the SSR/no-DOM case.
-    assert.equal(whiteboxToolShareBase(false), GEOLIBRE_WEB_APP_URL);
+    assert.equal(whiteboxToolShareBase(false), GEOINT_WEB_APP_URL);
   });
 });

@@ -1,9 +1,9 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import {
   DEFAULT_DECK_VIZ_STYLE,
   createDeckVizStoreLayer,
   type DeckVizConfig,
-} from "@geolibre/plugins";
+} from "@geoint/plugins";
 import { kmlModelBounds, kmlModelDisplayName, kmlModelRow, kmlModelTranslation } from "./kml-model";
 import type { LoadedModel } from "./tauri-io";
 
@@ -19,9 +19,9 @@ import type { LoadedModel } from "./tauri-io";
  * layer only exposes a single bearing).
  *
  * @param model - A resolved KML model descriptor.
- * @returns The corresponding GeoLibre store layer.
+ * @returns The corresponding GeoInt store layer.
  */
-export function buildKmlModelLayer(model: LoadedModel): GeoLibreLayer {
+export function buildKmlModelLayer(model: LoadedModel): GeoIntLayer {
   const config: DeckVizConfig = {
     layerKind: "scenegraph",
     format: "csv-rows",

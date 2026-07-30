@@ -30,7 +30,7 @@ export interface GeoTiffInfo {
   bigtiff: boolean;
 }
 
-/** Tile size (px) for the encoded COG. 512 matches the COGs GeoLibre's sample
+/** Tile size (px) for the encoded COG. 512 matches the COGs GeoInt's sample
  * data ships with and the upstream reader's expectations. */
 const COG_TILE_SIZE = 512;
 

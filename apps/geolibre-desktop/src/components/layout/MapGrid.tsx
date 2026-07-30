@@ -1,5 +1,5 @@
-import { getCesiumIonToken, useAppStore } from "@geolibre/core";
-import { CesiumCanvas, isCesiumSupportedLayerType, SecondaryMapCanvas } from "@geolibre/map";
+import { getCesiumIonToken, useAppStore } from "@geoint/core";
+import { CesiumCanvas, isCesiumSupportedLayerType, SecondaryMapCanvas } from "@geoint/map";
 import {
   Button,
   DropdownMenu,
@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { Globe, Layers, Map as MapIcon, X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
@@ -26,8 +26,8 @@ function useCesiumIonToken(): string | undefined {
   useEffect(() => {
     const refresh = () => setToken(getCesiumIonToken());
     refresh();
-    window.addEventListener("geolibre:runtime-env-change", refresh);
-    return () => window.removeEventListener("geolibre:runtime-env-change", refresh);
+    window.addEventListener("geoint:runtime-env-change", refresh);
+    return () => window.removeEventListener("geoint:runtime-env-change", refresh);
   }, []);
   return token;
 }

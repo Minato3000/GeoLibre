@@ -1,10 +1,10 @@
-"""Jupyter Server configuration for the GeoLibre desktop Notebook panel.
+"""Jupyter Server configuration for the GeoInt desktop Notebook panel.
 
 The desktop app (Tauri) launches ``jupyter lab`` from the uv-managed sidecar
 environment and embeds it in an ``<iframe>`` beside the map. By default Jupyter
 Server only allows itself to be framed by its own origin
 (``Content-Security-Policy: frame-ancestors 'self'``), which would block the
-GeoLibre webview (a different origin: ``tauri://localhost`` /
+GeoInt webview (a different origin: ``tauri://localhost`` /
 ``https://tauri.localhost``). This config relaxes ``frame-ancestors`` to the
 loopback / Tauri webview origins so the panel can host it.
 

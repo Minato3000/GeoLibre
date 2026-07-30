@@ -1,4 +1,4 @@
-# GeoLibre Plugin API
+# GeoInt Plugin API
 
 ## Interface
 
@@ -6,13 +6,13 @@
 import type { FeatureCollection } from "geojson";
 import type { IControl } from "maplibre-gl";
 
-export type GeoLibreMapControlPosition =
+export type GeoIntMapControlPosition =
   | "top-left"
   | "top-right"
   | "bottom-left"
   | "bottom-right";
 
-export type GeoLibreBuiltInMapControl =
+export type GeoIntBuiltInMapControl =
   | "navigation"
   | "fullscreen"
   | "geolocate"
@@ -23,31 +23,31 @@ export type GeoLibreBuiltInMapControl =
   | "logo"
   | "layer-control";
 
-export interface GeoLibrePlugin {
+export interface GeoIntPlugin {
   id: string;
   name: string;
   version: string;
   activeByDefault?: boolean;
   /** At least one name is required for handleUrlParameters to be called. */
   urlParameterNames?: string[];
-  activate: (app: GeoLibreAppAPI) => boolean | void;
-  deactivate: (app: GeoLibreAppAPI) => void;
+  activate: (app: GeoIntAppAPI) => boolean | void;
+  deactivate: (app: GeoIntAppAPI) => void;
   handleUrlParameters?: (
-    app: GeoLibreAppAPI,
+    app: GeoIntAppAPI,
     params: URLSearchParams,
   ) => void | Promise<void>;
-  getMapControlPosition?: () => GeoLibreMapControlPosition;
+  getMapControlPosition?: () => GeoIntMapControlPosition;
   setMapControlPosition?: (
-    app: GeoLibreAppAPI,
-    position: GeoLibreMapControlPosition,
+    app: GeoIntAppAPI,
+    position: GeoIntMapControlPosition,
   ) => boolean | void;
   getProjectState?: () => unknown;
-  applyProjectState?: (app: GeoLibreAppAPI, state: unknown) => boolean | void;
+  applyProjectState?: (app: GeoIntAppAPI, state: unknown) => boolean | void;
 }
 
-// Resolved by app.getDeckGL(): GeoLibre's own deck.gl modules, so a plugin
+// Resolved by app.getDeckGL(): GeoInt's own deck.gl modules, so a plugin
 // renders on the host's single instance instead of bundling its own copy.
-export interface GeoLibreDeckGL {
+export interface GeoIntDeckGL {
   core: typeof import("@deck.gl/core");
   layers: typeof import("@deck.gl/layers");
   geoLayers: typeof import("@deck.gl/geo-layers");
@@ -55,7 +55,7 @@ export interface GeoLibreDeckGL {
   mapbox: typeof import("@deck.gl/mapbox");
 }
 
-export interface GeoLibreAppAPI {
+export interface GeoIntAppAPI {
   setBasemap: (styleUrl: string) => void;
   addGeoJsonLayer: (
     name: string,
@@ -68,28 +68,28 @@ export interface GeoLibreAppAPI {
   addTileLayer?: (
     name: string,
     url: string,
-    options?: GeoLibreTileLayerOptions,
+    options?: GeoIntTileLayerOptions,
   ) => string;
   addWmtsLayer?: (
     name: string,
     url: string,
-    options?: GeoLibreTileLayerOptions,
+    options?: GeoIntTileLayerOptions,
   ) => string;
-  addWmsLayer?: (name: string, options: GeoLibreWmsLayerOptions) => string;
+  addWmsLayer?: (name: string, options: GeoIntWmsLayerOptions) => string;
   // Native client-side COG (reads the GeoTIFF directly; band/rescale/colormap/
   // nodata controls). Resolves with the new layer's id (see "Raster and tile
   // layers" below).
   addCogLayer?: (
     name: string,
     url: string,
-    options?: GeoLibreCogLayerOptions,
+    options?: GeoIntCogLayerOptions,
   ) => Promise<string>;
   // Zarr through the host's own @carbonplan/zarr-layer instance, with
   // crs/proj4 reprojection (see "Zarr layers" below).
   addZarrLayer?: (
     name: string,
     url: string,
-    options: GeoLibreZarrLayerOptions,
+    options: GeoIntZarrLayerOptions,
   ) => Promise<string>;
   setZarrLayerSelector?: (
     layerId: string,
@@ -98,14 +98,14 @@ export interface GeoLibreAppAPI {
   // Click-to-value / region statistics on a Zarr layer (see "Zarr layers").
   queryZarrLayer?: (
     layerId: string,
-    geometry: GeoLibreZarrQueryGeometry,
-    selector?: GeoLibreZarrQuerySelector,
-    options?: GeoLibreZarrQueryOptions,
-  ) => Promise<GeoLibreZarrQueryResult | null>;
+    geometry: GeoIntZarrQueryGeometry,
+    selector?: GeoIntZarrQuerySelector,
+    options?: GeoIntZarrQueryOptions,
+  ) => Promise<GeoIntZarrQueryResult | null>;
   // Register a layer the plugin added to the map itself, so it appears in the
   // Layers panel (see "Custom (WebGL) layers and paint ownership" below).
   registerExternalNativeLayer?: (
-    layer: GeoLibreExternalNativeLayerRegistration,
+    layer: GeoIntExternalNativeLayerRegistration,
   ) => void;
   unregisterExternalNativeLayer?: (id: string) => void;
   getActiveBasemap: () => string;
@@ -115,57 +115,57 @@ export interface GeoLibreAppAPI {
   getMap?: () => import("maplibre-gl").Map | null;
   addMapControl: (
     control: IControl,
-    position?: GeoLibreMapControlPosition,
+    position?: GeoIntMapControlPosition,
   ) => boolean;
   removeMapControl: (control: IControl) => void;
   // Note: showing the "terrain" control (visible: true) also switches 3D
   // terrain on, mirroring the Controls menu so the user doesn't have to click
   // the control button as a second step. Hiding it turns terrain back off.
   setBuiltInMapControlVisible: (
-    control: GeoLibreBuiltInMapControl,
+    control: GeoIntBuiltInMapControl,
     visible: boolean,
   ) => boolean;
   getBuiltInMapControlPosition: (
-    control: GeoLibreBuiltInMapControl,
-  ) => GeoLibreMapControlPosition;
+    control: GeoIntBuiltInMapControl,
+  ) => GeoIntMapControlPosition;
   setBuiltInMapControlPosition: (
-    control: GeoLibreBuiltInMapControl,
-    position: GeoLibreMapControlPosition,
+    control: GeoIntBuiltInMapControl,
+    position: GeoIntMapControlPosition,
   ) => boolean;
-  getDeckGL?: () => Promise<GeoLibreDeckGL>;
+  getDeckGL?: () => Promise<GeoIntDeckGL>;
   // Right-sidebar panels (see "Right sidebar panels" below).
-  registerRightPanel?: (panel: GeoLibreRightPanelRegistration) => () => void;
+  registerRightPanel?: (panel: GeoIntRightPanelRegistration) => () => void;
   unregisterRightPanel?: (id: string) => void;
   openRightPanel?: (id: string) => boolean;
   collapseRightPanel?: (id: string) => void;
   closeRightPanel?: (id: string) => void;
   getActiveRightPanel?: () => string | null;
-  setActiveRightPanelDock?: (dock: GeoLibreRightPanelDock) => void;
-  getActiveRightPanelDock?: () => GeoLibreRightPanelDock | null;
+  setActiveRightPanelDock?: (dock: GeoIntRightPanelDock) => void;
+  getActiveRightPanelDock?: () => GeoIntRightPanelDock | null;
   // Top toolbar menus (see "Toolbar menus" below).
-  registerToolbarMenu?: (menu: GeoLibreToolbarMenu) => () => void;
+  registerToolbarMenu?: (menu: GeoIntToolbarMenu) => () => void;
   unregisterToolbarMenu?: (id: string) => void;
   // Floating panels (see "Floating panels" below).
-  registerFloatingPanel?: (panel: GeoLibreFloatingPanelRegistration) => () => void;
+  registerFloatingPanel?: (panel: GeoIntFloatingPanelRegistration) => () => void;
   unregisterFloatingPanel?: (id: string) => void;
   openFloatingPanel?: (id: string) => boolean;
   closeFloatingPanel?: (id: string) => void;
   getOpenFloatingPanels?: () => string[];
 }
 
-export interface GeoLibreToolbarMenu {
+export interface GeoIntToolbarMenu {
   id: string;
   label: string;
   icon?: string; // URL or data: URI
-  items: GeoLibreToolbarMenuItem[];
+  items: GeoIntToolbarMenuItem[];
 }
 
-export type GeoLibreToolbarMenuItem =
+export type GeoIntToolbarMenuItem =
   | { type?: "action"; id: string; label: string; icon?: string; disabled?: boolean; onSelect: () => void }
-  | { type: "submenu"; id: string; label: string; icon?: string; items: GeoLibreToolbarMenuItem[] }
+  | { type: "submenu"; id: string; label: string; icon?: string; items: GeoIntToolbarMenuItem[] }
   | { type: "separator"; id?: string };
 
-export interface GeoLibreFloatingPanelRegistration {
+export interface GeoIntFloatingPanelRegistration {
   id: string;
   // A getter makes the title re-localize live on language changes: it is
   // re-evaluated on every getFloatingPanel() call, so it picks up the current
@@ -185,7 +185,7 @@ export interface GeoLibreFloatingPanelRegistration {
   onClose?: () => void;
 }
 
-export type GeoLibreRightPanelDock =
+export type GeoIntRightPanelDock =
   | "left-of-layers" // left of the Layers panel
   | "right-of-layers" // between the Layers panel and the map
   | "left-of-style" // between the map and the Style panel
@@ -193,7 +193,7 @@ export type GeoLibreRightPanelDock =
   | "replace-style" // share the Style sidebar's single rail (shared-rail mode)
   | "replace-layers"; // share the Layers sidebar's single rail (shared-rail mode)
 
-export interface GeoLibreRightPanelRegistration {
+export interface GeoIntRightPanelRegistration {
   id: string;
   // A getter makes the title re-localize live on language changes: it is
   // re-evaluated on every getRightPanel() call, so it picks up the current
@@ -207,7 +207,7 @@ export interface GeoLibreRightPanelRegistration {
   // change. A plain string is frozen at registration time.
   title: string | (() => string);
   /** Initial dock position; "right-of-style" (default). */
-  dock?: GeoLibreRightPanelDock;
+  dock?: GeoIntRightPanelDock;
   /** Optional rail icon: a URL or data: URI rendered as an image. */
   icon?: string;
   /** Preferred expanded width in px (desktop only; host-clamped). */
@@ -223,7 +223,7 @@ export interface GeoLibreRightPanelRegistration {
 ## Register a plugin
 
 ```typescript
-import { PluginManager } from "@geolibre/plugins";
+import { PluginManager } from "@geoint/plugins";
 
 const manager = new PluginManager();
 manager.register(myPlugin);
@@ -232,20 +232,20 @@ manager.activate("my-plugin", appApi);
 
 ## Add a built-in plugin (in this repository)
 
-Built-in plugins ship with GeoLibre itself. Most plugins do **not** need to be
+Built-in plugins ship with GeoInt itself. Most plugins do **not** need to be
 built in — see [External plugins](#external-plugins) to ship one without forking
-GeoLibre. To add one to this repository:
+GeoInt. To add one to this repository:
 
 1. Create a plugin file in `packages/plugins/src/plugins/`.
 
    ```typescript
-   import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+   import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 
-   export const myPlugin: GeoLibrePlugin = {
+   export const myPlugin: GeoIntPlugin = {
      id: "my-plugin",
      name: "My Plugin",
      version: "0.1.0",
-     activate: (app: GeoLibreAppAPI) => {
+     activate: (app: GeoIntAppAPI) => {
        app.setBasemap("https://example.com/style.json");
      },
      deactivate: () => {
@@ -269,7 +269,7 @@ GeoLibre. To add one to this repository:
 3. Register it in `apps/geolibre-desktop/src/hooks/usePlugins.ts`.
 
    ```typescript
-   import { myPlugin } from "@geolibre/plugins";
+   import { myPlugin } from "@geoint/plugins";
 
    manager.registerAll([
      maplibreLayerControlPlugin,
@@ -296,7 +296,7 @@ and Components in the Plugins menu when they use the plugin API or need plugin
 lifecycle behavior.
 
 The Components plugin wraps `maplibre-gl-components` controls and wires their
-layer events into the GeoLibre store. It provides Add Data shortcuts for
+layer events into the GeoInt store. It provides Add Data shortcuts for
 FlatGeobuf, PMTiles, Zarr, LiDAR, and Gaussian splats, while raster COG and
 GeoTIFF layers can also be added through the standard Add Raster Layer dialog.
 
@@ -347,13 +347,13 @@ change. If you also touched pages under `docs/`, build the site — CI runs
 ## Example plugin
 
 ```typescript
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "@geolibre/plugins";
+import type { GeoIntAppAPI, GeoIntPlugin } from "@geoint/plugins";
 
-export const myPlugin: GeoLibrePlugin = {
+export const myPlugin: GeoIntPlugin = {
   id: "my-plugin",
   name: "My Plugin",
   version: "0.1.0",
-  activate(app: GeoLibreAppAPI) {
+  activate(app: GeoIntAppAPI) {
     app.setBasemap("https://example.com/style.json");
   },
   deactivate() {
@@ -364,16 +364,16 @@ export const myPlugin: GeoLibrePlugin = {
 
 Map control plugins can optionally expose `getMapControlPosition()` and `setMapControlPosition()` so the desktop Plugins menu can move the control between map corners. Position-aware plugins should remove and recreate or re-add their control when the position changes.
 
-Plugins with serializable runtime settings can expose `getProjectState()` and `applyProjectState()` so GeoLibre can save and restore those settings in the project file. A wrapper should use these hooks to adapt upstream control APIs such as `getState()` without requiring every upstream package to implement a GeoLibre-specific interface.
+Plugins with serializable runtime settings can expose `getProjectState()` and `applyProjectState()` so GeoInt can save and restore those settings in the project file. A wrapper should use these hooks to adapt upstream control APIs such as `getState()` without requiring every upstream package to implement a GeoInt-specific interface.
 
-Plugins that render with deck.gl should call `app.getDeckGL()` (returns a promise) to obtain GeoLibre's own deck.gl modules — `core`, `layers`, `geoLayers`, `meshLayers`, and `mapbox` (use `mapbox.MapboxOverlay` for interleaved MapLibre rendering). Render on the host's single deck.gl instance rather than bundling a second copy: deck.gl and luma.gl throw on a version mismatch and share global singletons, so a bundled copy fails to render. Call it with optional chaining (`app.getDeckGL?.()`) since a host variant may not ship deck.gl.
+Plugins that render with deck.gl should call `app.getDeckGL()` (returns a promise) to obtain GeoInt's own deck.gl modules — `core`, `layers`, `geoLayers`, `meshLayers`, and `mapbox` (use `mapbox.MapboxOverlay` for interleaved MapLibre rendering). Render on the host's single deck.gl instance rather than bundling a second copy: deck.gl and luma.gl throw on a version mismatch and share global singletons, so a bundled copy fails to render. Call it with optional chaining (`app.getDeckGL?.()`) since a host variant may not ship deck.gl.
 
-Plugins can also declare URL query parameters and handle them when GeoLibre opens. URL parameter handlers run after the map is ready, external plugins are loaded, and project plugin state has been restored. GeoLibre calls handlers for plugins whose declared parameter names are present in the URL, and it suppresses repeated handling of the same URL context for the same plugin. If a matching plugin is registered (installed) but inactive, GeoLibre first attempts to activate it via `PluginManager.activate`; the handler runs only if activation succeeds (an `activate()` that returns `false` or throws leaves the plugin inactive and skips dispatch). Parameter names are case-sensitive, as URL query parameters are: declaring `exampleGeoJson` will not match `?ExampleGeoJson=…`.
+Plugins can also declare URL query parameters and handle them when GeoInt opens. URL parameter handlers run after the map is ready, external plugins are loaded, and project plugin state has been restored. GeoInt calls handlers for plugins whose declared parameter names are present in the URL, and it suppresses repeated handling of the same URL context for the same plugin. If a matching plugin is registered (installed) but inactive, GeoInt first attempts to activate it via `PluginManager.activate`; the handler runs only if activation succeeds (an `activate()` that returns `false` or throws leaves the plugin inactive and skips dispatch). Parameter names are case-sensitive, as URL query parameters are: declaring `exampleGeoJson` will not match `?ExampleGeoJson=…`.
 
 ```typescript
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "@geolibre/plugins";
+import type { GeoIntAppAPI, GeoIntPlugin } from "@geoint/plugins";
 
-export const plugin: GeoLibrePlugin = {
+export const plugin: GeoIntPlugin = {
   id: "example-url-loader",
   name: "Example URL Loader",
   version: "0.1.0",
@@ -384,7 +384,7 @@ export const plugin: GeoLibrePlugin = {
   deactivate() {
     // Clean up controls, listeners, and plugin state here.
   },
-  async handleUrlParameters(app: GeoLibreAppAPI, params: URLSearchParams) {
+  async handleUrlParameters(app: GeoIntAppAPI, params: URLSearchParams) {
     for (const dataUrl of params.getAll("exampleGeoJson")) {
       // URL parameter values are attacker-controlled: only fetch HTTPS URLs
       // and verify the origin is one you trust before loading. Parsing the
@@ -406,22 +406,22 @@ export const plugin: GeoLibrePlugin = {
 };
 ```
 
-Validate URL parameter values before acting on them. Anyone can craft a link to GeoLibre, so handlers that fetch a parameter value should reject unexpected schemes (`file://`, `data:`, plain `http://`) and only contact origins they trust.
+Validate URL parameter values before acting on them. Anyone can craft a link to GeoInt, so handlers that fetch a parameter value should reject unexpected schemes (`file://`, `data:`, plain `http://`) and only contact origins they trust.
 
 For example:
 
 ```text
-https://web.geolibre.app/?url=https://example.com/project.geolibre.json&exampleGeoJson=https://example.com/data.geojson
+https://web.geolibre.app/?url=https://example.com/project.geoint.json&exampleGeoJson=https://example.com/data.geojson
 ```
 
 A URL parameter activates only an already-registered (installed) plugin that owns it; it never loads a plugin from the URL. For external plugins, include the plugin manifest URL in the project `plugins` state (so the plugin is registered) before relying on its URL handler — the matching parameter then activates and dispatches it even if it is not in the active set.
 
 ## Raster and tile layers
 
-`addGeoJsonLayer` registers vector data as a native layer. For raster and tile data there are three matching helpers — `addTileLayer` (XYZ), `addWmtsLayer` (WMTS), and `addWmsLayer` (WMS). Each returns the new layer's id, and the layer appears in the Layers panel with full opacity, reorder, and styling support and persists with the project, so a plugin no longer has to call `getMap().addSource()/addLayer()` directly (which leaves the layer invisible to GeoLibre's layer store).
+`addGeoJsonLayer` registers vector data as a native layer. For raster and tile data there are three matching helpers — `addTileLayer` (XYZ), `addWmtsLayer` (WMTS), and `addWmsLayer` (WMS). Each returns the new layer's id, and the layer appears in the Layers panel with full opacity, reorder, and styling support and persists with the project, so a plugin no longer has to call `getMap().addSource()/addLayer()` directly (which leaves the layer invisible to GeoInt's layer store).
 
 ```typescript
-export interface GeoLibreTileLayerOptions {
+export interface GeoIntTileLayerOptions {
   tileSize?: number; // default 256
   attribution?: string;
   bounds?: [number, number, number, number]; // [west, south, east, north] in WGS84
@@ -433,7 +433,7 @@ export interface GeoLibreTileLayerOptions {
   beforeLayerId?: string; // insert beneath this layer
 }
 
-export interface GeoLibreWmsLayerOptions extends GeoLibreTileLayerOptions {
+export interface GeoIntWmsLayerOptions extends GeoIntTileLayerOptions {
   url: string; // WMS GetMap endpoint
   layers: string; // comma-separated layer name(s)
   styles?: string;
@@ -442,7 +442,7 @@ export interface GeoLibreWmsLayerOptions extends GeoLibreTileLayerOptions {
   version?: string; // "1.1.1" (default) or "1.3.0" (sends CRS instead of SRS)
 }
 
-export interface GeoLibreCogLayerOptions {
+export interface GeoIntCogLayerOptions {
   bands?: string; // "1" (single band) or "1,2,3" (RGB)
   colormap?: string; // named colormap for a single-band COG, e.g. "terrain"
   rescaleMin?: number;
@@ -483,16 +483,16 @@ const cogId = await app.addCogLayer?.(
 
 The helpers are typed optional for forward-compatibility with host variants, so call them with optional chaining (`app.addTileLayer?.(...)`).
 
-> **Desktop (Tauri) note:** The desktop app enforces a Content Security Policy that restricts which tile hosts the WebView can reach. If your plugin registers tiles from a host not already in the GeoLibre CSP allowlist, the layer is created but its tiles silently fail to load. For bundled (first-party) plugins, add the host to `connect-src` / `img-src` in `apps/geolibre-desktop/src-tauri/tauri.conf.json`; external plugins can only reach already-permitted hosts. The web build is unaffected.
+> **Desktop (Tauri) note:** The desktop app enforces a Content Security Policy that restricts which tile hosts the WebView can reach. If your plugin registers tiles from a host not already in the GeoInt CSP allowlist, the layer is created but its tiles silently fail to load. For bundled (first-party) plugins, add the host to `connect-src` / `img-src` in `apps/geolibre-desktop/src-tauri/tauri.conf.json`; external plugins can only reach already-permitted hosts. The web build is unaffected.
 
 ## Zarr layers
 
-`addZarrLayer` renders a Zarr store (Zarr v2/v3, Icechunk over HTTP, kerchunk-backed cloud NetCDF) through **GeoLibre's own** `@carbonplan/zarr-layer` instance and mirrors the result into the Layers panel. It is the Zarr counterpart of `addCogLayer`.
+`addZarrLayer` renders a Zarr store (Zarr v2/v3, Icechunk over HTTP, kerchunk-backed cloud NetCDF) through **GeoInt's own** `@carbonplan/zarr-layer` instance and mirrors the result into the Layers panel. It is the Zarr counterpart of `addCogLayer`.
 
 Do not bundle `@carbonplan/zarr-layer` in a plugin: a second copy ships a duplicate numcodecs WASM payload, and adding the renderer's layer yourself with `getMap().addLayer()` produces a MapLibre **custom** layer, which has no paint properties for the Style panel to drive.
 
 ```typescript
-export interface GeoLibreZarrLayerOptions {
+export interface GeoIntZarrLayerOptions {
   variable: string;                            // array to render (required)
   selector?: Record<string, number | string>;  // non-spatial dims, e.g. { time: 0 }
   clim?: [number, number];
@@ -540,25 +540,25 @@ if (layerId) {
 `queryZarrLayer` reads the layer's values under a GeoJSON geometry: a `Point` for Identify, a `Polygon` / `MultiPolygon` for zonal statistics. It is the read counterpart of `setZarrLayerSelector`, reaching the same live renderer by layer id.
 
 ```typescript
-export type GeoLibreZarrQueryGeometry =
+export type GeoIntZarrQueryGeometry =
   | { type: "Point"; coordinates: [number, number] }        // WGS84 lng/lat
   | { type: "Polygon"; coordinates: number[][][] }
   | { type: "MultiPolygon"; coordinates: number[][][][] };
 
 // Dimension values to read instead of the slice on screen. A list per dimension
 // (e.g. { month: [1, 7] }) nests the returned values by that dimension.
-export type GeoLibreZarrQuerySelector = Record<
+export type GeoIntZarrQuerySelector = Record<
   string,
   number | string | number[] | string[] | { selected: number | string | number[] | string[]; type?: "index" | "value" }
 >;
 
-export interface GeoLibreZarrQueryOptions {
+export interface GeoIntZarrQueryOptions {
   signal?: AbortSignal;                    // cancel a query the user moved past
   includeSpatialCoordinates?: boolean;     // default true
 }
 
 // { [variable]: values, dimensions, coordinates }
-export interface GeoLibreZarrQueryResult {
+export interface GeoIntZarrQueryResult {
   [variable: string]: unknown;
   dimensions: string[];
   coordinates: { [key: string]: (number | string)[] };
@@ -642,13 +642,13 @@ Neither may target the **calling** plugin: `activatePlugin` on yourself is meani
 
 ## Custom (WebGL) layers and paint ownership
 
-`registerExternalNativeLayer` mirrors a layer the plugin added to the map itself into GeoLibre's layer store, so it appears in the Layers panel and persists with the project:
+`registerExternalNativeLayer` mirrors a layer the plugin added to the map itself into GeoInt's layer store, so it appears in the Layers panel and persists with the project:
 
 ```typescript
-export interface GeoLibreExternalNativeLayerRegistration {
+export interface GeoIntExternalNativeLayerRegistration {
   id: string;
   name: string;
-  type?: GeoLibreLayer["type"];        // closest built-in type, e.g. "raster"
+  type?: GeoIntLayer["type"];        // closest built-in type, e.g. "raster"
   nativeLayerIds: string[];            // the MapLibre layer id(s) you added
   source?: Record<string, unknown>;
   sourceIds?: string[];
@@ -659,7 +659,7 @@ export interface GeoLibreExternalNativeLayerRegistration {
   style?: Partial<LayerStyle>;
   metadata?: Record<string, unknown>;
   sourcePath?: string;
-  paintMode?: "geolibre" | "plugin";   // see below
+  paintMode?: "geoint" | "plugin";   // see below
   paintBridge?: {                      // see below
     setOpacity?: (opacity: number) => void;
     setVisibility?: (visible: boolean) => void;
@@ -678,7 +678,7 @@ app.registerExternalNativeLayer?.({
   name: "My WebGL layer",
   type: "raster",
   nativeLayerIds: ["my-layer"],
-  // The layer has no MapLibre paint properties, so GeoLibre must not offer
+  // The layer has no MapLibre paint properties, so GeoInt must not offer
   // paint editors that cannot reach it.
   paintMode: "plugin",
   // Optional: keep the Opacity sliders live by forwarding them to the layer.
@@ -690,7 +690,7 @@ app.registerExternalNativeLayer?.({
 ```
 
 - `paintMode: "plugin"` tells the Style panel that the plugin paints the layer. It then shows only the controls that actually apply — insert-below, zoom range, and (with a bridge) opacity — instead of raster brightness/saturation/contrast/hue sliders that silently do nothing. Visibility, reordering, and removal keep working from the Layers panel; MapLibre honors `visibility` and the zoom range on a custom layer.
-- `paintBridge` supplies the setters GeoLibre calls when the user changes opacity or visibility. Supplying `setOpacity` keeps the Opacity slider in both the Layers and Style panels; omitting it hides the slider rather than leaving an inert one. Supplying a bridge implies `paintMode: "plugin"`.
+- `paintBridge` supplies the setters GeoInt calls when the user changes opacity or visibility. Supplying `setOpacity` keeps the Opacity slider in both the Layers and Style panels; omitting it hides the slider rather than leaving an inert one. Supplying a bridge implies `paintMode: "plugin"`.
 - The setters are called only when the value changes, not on every layer sync, and they are held outside the layer record (functions cannot be serialized into a project file). Re-register the layer after a project reload to restore the bridge, and call `unregisterExternalNativeLayer(id)` from `deactivate`.
 
 For Zarr specifically, prefer `addZarrLayer` above: the host's renderer already integrates with the panels, so no custom layer or bridge is needed.
@@ -700,7 +700,7 @@ For Zarr specifically, prefer `addZarrLayer` above: the host's renderer already 
 A plugin can register a native right-sidebar panel that docks beside the built-in Style panel and behaves like a first-class part of the workspace, instead of emulating one with a fixed overlay. The host renders the panel chrome (a header with collapse and close buttons, a collapsible rail, and a resize handle); the plugin owns only the body.
 
 ```typescript
-export const myPlugin: GeoLibrePlugin = {
+export const myPlugin: GeoIntPlugin = {
   id: "my-workbench",
   name: "Workbench",
   version: "0.1.0",
@@ -727,12 +727,12 @@ export const myPlugin: GeoLibrePlugin = {
     app.closeRightPanel?.("my-workbench");
     this._unregister?.();
   },
-} as GeoLibrePlugin & { _unregister?: () => void };
+} as GeoIntPlugin & { _unregister?: () => void };
 ```
 
 Notes:
 
-- `render(container)` is called once with an empty element you fill with plain DOM. An external plugin cannot share GeoLibre's React instance, so the contract is DOM, not a React node. The container stays mounted across collapse, so any state in your DOM persists; the returned cleanup runs on close or unregister.
+- `render(container)` is called once with an empty element you fill with plain DOM. An external plugin cannot share GeoInt's React instance, so the contract is DOM, not a React node. The container stays mounted across collapse, so any state in your DOM persists; the returned cleanup runs on close or unregister.
 - Only one plugin panel is active at a time. The built-in panel on the side the plugin panel is docked (Layers on the left, Style on the right) collapses to its rail while the plugin panel is expanded next to it, and restores when the plugin panel moves to the other side, collapses to its own rail, or closes.
 - `openRightPanel(id)` makes the panel active and expanded (it also expands a collapsed panel); `collapseRightPanel(id)` collapses it to its rail without closing; `closeRightPanel(id)` releases the workspace; `getActiveRightPanel()` returns the active id or `null`.
 - The panel is a flex sibling of the map, so opening it shrinks the map view (the map keeps filling the remaining space); no manual map padding is required.
@@ -743,7 +743,7 @@ Notes:
 
 ## Toolbar menus
 
-A plugin can add its own top-level menu button to the GeoLibre banner (beside Project / Edit / View / Plugins), with nested submenus and action items. Register the menu in `activate` and unregister it in `deactivate`:
+A plugin can add its own top-level menu button to the GeoInt banner (beside Project / Edit / View / Plugins), with nested submenus and action items. Register the menu in `activate` and unregister it in `deactivate`:
 
 ```typescript
 const unregister = app.registerToolbarMenu?.({
@@ -795,26 +795,26 @@ Use a right panel for a primary, persistent workspace and a floating panel for a
 
 ## External plugins
 
-Use the [GeoLibre plugin template](https://github.com/opengeos/geolibre-plugin-template) as the recommended starting point for external plugin development. The template includes a MapLibre control wrapper, a `plugin.json` manifest, a GeoLibre plugin entry point, and a `package:geolibre` script that builds the zip layout GeoLibre Desktop expects.
+Use the [GeoInt plugin template](https://github.com/opengeos/geolibre-plugin-template) as the recommended starting point for external plugin development. The template includes a MapLibre control wrapper, a `plugin.json` manifest, a GeoInt plugin entry point, and a `package:geoint` script that builds the zip layout GeoInt Desktop expects.
 
-GeoLibre Desktop loads external plugins from the app data `plugins/` directory at startup. External plugins are trusted code and can be installed as:
+GeoInt Desktop loads external plugins from the app data `plugins/` directory at startup. External plugins are trusted code and can be installed as:
 
 - A `.zip` file with a root `plugin.json`.
 - An unpacked directory with a root `plugin.json`.
 - A HTTPS `plugin.json` manifest URL.
 
-The fastest way to install a `.zip` is **Manage Plugins > Settings > Install from file**: pick a packaged plugin archive and GeoLibre validates it (parsing `plugin.json`, enforcing the manifest rules, and checking the entry/style are present and within the size limit) before installing it. The plugin loads immediately and persists; reinstalling the same id replaces the previous copy and reloads the updated version. Persistence differs by build:
+The fastest way to install a `.zip` is **Manage Plugins > Settings > Install from file**: pick a packaged plugin archive and GeoInt validates it (parsing `plugin.json`, enforcing the manifest rules, and checking the entry/style are present and within the size limit) before installing it. The plugin loads immediately and persists; reinstalling the same id replaces the previous copy and reloads the updated version. Persistence differs by build:
 
 - **Desktop** copies the archive into the app data `plugins/` directory as `<plugin-id>.zip`, where the startup scan re-loads it.
 - **Web** unpacks the archive in the browser and stores the bundle in IndexedDB, replaying it on the next visit. Web-installed plugins are listed under **Install from file** with an uninstall control (the desktop copies live on disk and are managed there).
 
 The Plugins settings section can also add local development directories outside the app data folder. Each configured directory can contain plugin zips, unpacked plugin bundle folders, or be a single unpacked plugin bundle itself. Configured development directories are scanned before the app data `plugins/` directory, so a development copy can override an installed external plugin with the same ID. Built-in plugins still take precedence over all external plugins.
 
-For the web app, use manifest URLs or **Install from file** (above). Manifest URLs: GeoLibre fetches the manifest, resolves `entry` and `style` relative to the manifest URL, then loads the bundled ESM entry. Browser loading requires HTTPS except for `localhost` and depends on the host allowing CORS. Install-from-file unpacks the uploaded zip in the browser (no network or CORS) and persists it in IndexedDB. Both paths execute the bundled ESM entry the same way (a `blob:` `import()`, allowed by the web build's `script-src`), so external plugins remain trusted code regardless of how they were installed.
+For the web app, use manifest URLs or **Install from file** (above). Manifest URLs: GeoInt fetches the manifest, resolves `entry` and `style` relative to the manifest URL, then loads the bundled ESM entry. Browser loading requires HTTPS except for `localhost` and depends on the host allowing CORS. Install-from-file unpacks the uploaded zip in the browser (no network or CORS) and persists it in IndexedDB. Both paths execute the bundled ESM entry the same way (a `blob:` `import()`, allowed by the web build's `script-src`), so external plugins remain trusted code regardless of how they were installed.
 
 ### Bundled plugins (baked into the build)
 
-To ship an external plugin as part of GeoLibre — loaded automatically, with no Settings entry and no manifest URL — drop its built bundle into the Vite public directory, one folder per plugin id:
+To ship an external plugin as part of GeoInt — loaded automatically, with no Settings entry and no manifest URL — drop its built bundle into the Vite public directory, one folder per plugin id:
 
 ```text
 apps/geolibre-desktop/public/plugins/example-plugin/
@@ -827,7 +827,7 @@ This is the **same content a manifest URL would serve**. A drop-in is all that i
 
 The same folder serves **both** the web and desktop builds: the desktop app bundles the identical frontend (`frontendDist` in `tauri.conf.json`) and serves it from `tauri://localhost`, which is same-origin and allowed by the desktop CSP (`connect-src 'self'`, `script-src ... blob:`). Bundled manifest URLs are injected at load time rather than stored in Settings, so a baked-in plugin always loads and cannot be removed by a user; they are deduplicated by plugin id against any user/project plugin of the same id.
 
-Private plugins should be git-ignored under `public/plugins/` (see that folder's `.gitignore`) and copied in at build/deploy time (for example in CI before `npm run build`, or by a plugin repo's own install script) so their code stays out of GeoLibre's history. The discovery code is generic and committed; only the plugin payload is excluded.
+Private plugins should be git-ignored under `public/plugins/` (see that folder's `.gitignore`) and copied in at build/deploy time (for example in CI before `npm run build`, or by a plugin repo's own install script) so their code stays out of GeoInt's history. The discovery code is generic and committed; only the plugin payload is excluded.
 
 A bundled drop-in's `plugin.json` may additionally set `"activeByDefault": true` to activate the plugin on startup, so its control appears without a trip to the Plugins menu. Saved plugin state still wins: a loaded project (or the user's persisted plugin state) that carries `activePluginIds` overrides the default. The flag is honored **only** for bundled drop-ins, since a deployer who bakes a plugin into the build is trusted like a built-in author; it is silently ignored on manifests installed at runtime from URLs or zips.
 
@@ -844,23 +844,23 @@ If instead you want a plugin compiled into the main JS bundle (no `plugin.json`,
 }
 ```
 
-The `entry` file must export a `GeoLibrePlugin` as either the default export or a named `plugin` export. The exported plugin `id`, `name`, and `version` must match `plugin.json`. The entry must be a self-contained `.js` or `.mjs` bundle because relative module imports inside the zip are not resolved by this first loader.
+The `entry` file must export a `GeoIntPlugin` as either the default export or a named `plugin` export. The exported plugin `id`, `name`, and `version` must match `plugin.json`. The entry must be a self-contained `.js` or `.mjs` bundle because relative module imports inside the zip are not resolved by this first loader.
 
 External plugin entries are executed with `import(URL.createObjectURL(...))`, which is why the desktop CSP in `tauri.conf.json` includes `blob:` in `script-src`. Removing `blob:` from `script-src` breaks external plugin loading. Combined with `'unsafe-eval'`, this means code that can create a blob URL can execute scripts, which is acceptable because external plugins are trusted local files installed by the user.
 
-Because plugins run as trusted code in the host document, they can read `window.__GEOLIBRE_RUNTIME_ENV__`, the runtime environment map. On the desktop app this map includes the AI Assistant's [OS-environment keys](user-guide/ai-assistant.md#reading-keys-from-your-system-environment-desktop) (the allowlisted provider variables read from the user's shell), not only the values typed into Settings → Environment Variables. Treat any credential reachable through the app's environment as visible to installed plugins, and only install plugins you trust.
+Because plugins run as trusted code in the host document, they can read `window.__GEOINT_RUNTIME_ENV__`, the runtime environment map (geocoding, Cesium, and other integration credentials projected from Settings → Environment Variables). Treat any credential reachable through the app's environment as visible to installed plugins, and only install plugins you trust.
 
 Manifest paths must be relative zip paths with forward slashes, no leading slash, no backslashes, and no `..` segments. External plugins cannot set `activeByDefault` on the exported plugin object, and the manifest-level flag is honored only for bundled drop-ins (see "Bundled plugins" above); saved project state can still reactivate an external plugin by ID after the zip is loaded.
 
 The optional `style` CSS is injected globally into the host document, not scoped to the plugin. Plugin authors are responsible for scoping their selectors (for example with a plugin-specific class prefix) so broad rules do not restyle the rest of the app. Injected CSS can also issue network requests through `url()` references and `@import`, so a plugin stylesheet can load external fonts, images, or additional sheets; treat plugin CSS with the same trust expectations as plugin code.
 
-When using the template, update `geolibre-plugin/plugin.json` and `src/geolibre.ts` together so `id`, `name`, and `version` stay in sync. Run `npm run package:geolibre`, then either copy the generated zip into the desktop app data `plugins/` directory, add the template's `geolibre-plugin/` directory in Settings > Plugins for local development, or host the `geolibre-plugin/` directory and add its `plugin.json` URL.
+When using the template, update `geoint-plugin/plugin.json` and `src/geoint.ts` together so `id`, `name`, and `version` stay in sync. Run `npm run package:geoint`, then either copy the generated zip into the desktop app data `plugins/` directory, add the template's `geoint-plugin/` directory in Settings > Plugins for local development, or host the `geoint-plugin/` directory and add its `plugin.json` URL.
 
 ### Plugin marketplace
 
 The Settings menu's **Manage Plugins** entry opens a standalone dialog (modeled on QGIS's plugin manager) with **All**, **Installed**, **Not installed**, **Upgradeable**, and **Settings** sections. The first four list curated registry plugins so users can install, update, and uninstall them without hand-entering manifest URLs; the Settings section installs a plugin from a local `.zip` and manages additional local plugin directories and manual manifest URLs. Actions apply immediately (install/uninstall/update are live; uninstall asks for confirmation). It is a thin layer over the manifest-URL loader above: installing an entry records its manifest URL in the plugin manifest URL list, and the existing loader fetches and registers it. It introduces no new trust path.
 
-The registry is JSON, fetched from `VITE_GEOLIBRE_PLUGIN_REGISTRY_URL` or, by default, the hosted registry at `https://plugins.geolibre.app/plugin-registry.json` (the [opengeos/geolibre-plugins](https://github.com/opengeos/geolibre-plugins) repo, published to GitHub Pages with CORS enabled). It is an array, or an object with a `plugins` array, of entries:
+The registry is JSON, fetched from `VITE_GEOINT_PLUGIN_REGISTRY_URL` or, by default, the hosted registry at `https://plugins.geolibre.app/plugin-registry.json` (the [opengeos/geolibre-plugins](https://github.com/opengeos/geolibre-plugins) repo, published to GitHub Pages with CORS enabled). It is an array, or an object with a `plugins` array, of entries:
 
 ```json
 {
@@ -875,12 +875,12 @@ The registry is JSON, fetched from `VITE_GEOLIBRE_PLUGIN_REGISTRY_URL` or, by de
       "homepage": "https://github.com/example/example-plugin",
       "manifestUrl": "https://example.com/example-plugin/plugin.json",
       "categories": ["Example"],
-      "minGeoLibreVersion": "1.0.0"
+      "minGeoIntVersion": "1.0.0"
     }
   ]
 }
 ```
 
-`id`, `name`, `version`, and `manifestUrl` are required; the rest are optional. A relative `manifestUrl` is resolved against the registry location, so a plugin hosted alongside the registry (e.g. `sample/plugin.json`) can be listed with a relative path. `minGeoLibreVersion` gates installation against the running app version. Curate the registry and host plugin bundles in the [opengeos/geolibre-plugins](https://github.com/opengeos/geolibre-plugins) repo, which ships a `sample/` template.
+`id`, `name`, `version`, and `manifestUrl` are required; the rest are optional. A relative `manifestUrl` is resolved against the registry location, so a plugin hosted alongside the registry (e.g. `sample/plugin.json`) can be listed with a relative path. `minGeoIntVersion` gates installation against the running app version. Curate the registry and host plugin bundles in the [opengeos/geolibre-plugins](https://github.com/opengeos/geolibre-plugins) repo, which ships a `sample/` template.
 
 Uninstalling prompts for confirmation, then unregisters the plugin at runtime (deactivating any active map control) so the Plugins menu updates without a reload. When a registry entry advertises a newer `version` than the loaded plugin, the marketplace shows an Update action that re-fetches the manifest URL and re-registers the published version in place; the new version is fetched and validated before the old one is removed, so a failed update leaves the installed plugin intact.

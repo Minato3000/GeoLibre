@@ -28,8 +28,8 @@
   },
   "about": {
     "trigger": "Tentang",
-    "title": "Tentang GeoLibre",
-    "description": "GeoLibre adalah platform GIS berbasis cloud yang ringan.",
+    "title": "Tentang GeoInt",
+    "description": "GeoInt adalah platform GIS berbasis cloud yang ringan.",
     "version": "Versi",
     "checkForUpdates": "Periksa pembaruan",
     "tryAgain": "Coba lagi",
@@ -48,7 +48,7 @@
     "steps": {
       "download": "Unduh installer untuk platform Anda dari halaman unduhan.",
       "install": "Jalankan installer. Proyek, pengaturan, dan kunci API lokal Anda tetap tersimpan.",
-      "reopen": "Buka kembali GeoLibre untuk menyelesaikan pembaruan."
+      "reopen": "Buka kembali GeoInt untuk menyelesaikan pembaruan."
     },
     "severity": {
       "major": "Rilis besar",
@@ -67,7 +67,7 @@
       "noTag": "Rilis terbaru tidak menyertakan tag versi.",
       "network": "Tidak dapat menjangkau GitHub. Periksa koneksi Anda dan coba lagi.",
       "viewDownloads": "Lihat unduhan",
-      "viewDownloadsHint": "Membuka halaman unduhan GeoLibre di browser Anda sehingga Anda dapat memeriksa versi terbaru secara manual."
+      "viewDownloadsHint": "Membuka halaman unduhan GeoInt di browser Anda sehingga Anda dapat memeriksa versi terbaru secara manual."
     },
     "startup": {
       "title": "Pembaruan tersedia",
@@ -94,7 +94,7 @@
     "trust": {
       "title": "Muat plugin dari proyek ini?",
       "description_other": "Proyek ini ingin memuat {{count}} plugin eksternal dari URL yang belum Anda pasang. Plugin menjalankan kode dengan akses penuh ke aplikasi.",
-      "warning": "Hanya muat plugin dari sumber yang Anda percayai. Plugin yang dimuat berjalan dengan hak akses yang sama seperti GeoLibre sendiri.",
+      "warning": "Hanya muat plugin dari sumber yang Anda percayai. Plugin yang dimuat berjalan dengan hak akses yang sama seperti GeoInt sendiri.",
       "trustButton": "Percayai dan muat",
       "dismissButton": "Jangan muat"
     },
@@ -113,7 +113,7 @@
     "openHomepageAria": "Buka beranda {{name}}",
     "byAuthor": "oleh {{author}}",
     "updateAvailable": "pembaruan tersedia",
-    "requiresVersion": "membutuhkan GeoLibre {{version}}+",
+    "requiresVersion": "membutuhkan GeoInt {{version}}+",
     "install": "Pasang",
     "installAria": "Pasang {{name}}",
     "removeConfirm": "Hapus?",
@@ -124,10 +124,10 @@
     "updateAria": "Perbarui {{name}}",
     "loading": "Memuat…",
     "installed": "Terpasang",
-    "settingsIntro": "GeoLibre selalu memindai direktori plugin di data aplikasinya. Pasang plugin terpaket (.zip) dari berkas, atau tambahkan direktori lokal lain (khusus desktop). URL manifest (termasuk pemasangan dari marketplace) dimuat lewat jaringan; perubahan di sini langsung berlaku.",
+    "settingsIntro": "GeoInt selalu memindai direktori plugin di data aplikasinya. Pasang plugin terpaket (.zip) dari berkas, atau tambahkan direktori lokal lain (khusus desktop). URL manifest (termasuk pemasangan dari marketplace) dimuat lewat jaringan; perubahan di sini langsung berlaku.",
     "installFromFile": "Pasang dari berkas",
     "chooseZip": "Pilih .zip…",
-    "installFromFileHintDesktop": "Menyalin arsip plugin terpaket ke direktori plugin GeoLibre.",
+    "installFromFileHintDesktop": "Menyalin arsip plugin terpaket ke direktori plugin GeoInt.",
     "installFromFileHintWeb": "Memuat arsip plugin terpaket; arsip disimpan di peramban Anda dan dimuat ulang pada kunjungan berikutnya.",
     "localDirectories": "Direktori lokal",
     "directoryAria": "Direktori plugin",
@@ -142,7 +142,7 @@
     "errorDirectoryPicker": "Tidak dapat membuka pemilih direktori.",
     "errorInstall": "Tidak dapat memasang plugin.",
     "errorUninstall": "Tidak dapat mencopot plugin.",
-    "description": "Jelajahi, pasang, perbarui, dan hapus plugin GeoLibre eksternal. Plugin terdaftar di <registryLink>registri plugin GeoLibre</registryLink>."
+    "description": "Jelajahi, pasang, perbarui, dan hapus plugin GeoInt eksternal. Plugin terdaftar di <registryLink>registri plugin GeoInt</registryLink>."
   },
   "viewState": {
     "panelTitle": "Info"
@@ -213,7 +213,7 @@
     "add": "Tambah",
     "ok": "OK",
     "done": "Selesai",
-    "openWebApp": "Buka aplikasi web GeoLibre"
+    "openWebApp": "Buka aplikasi web GeoInt"
   },
   "addData": {
     "title": "Tambah Data",
@@ -256,7 +256,7 @@
       },
       "gdb": {
         "label": "Tambahkan Layer File Geodatabase",
-        "description": "Tambahkan layer dari Esri File Geodatabase (folder .gdb). Layer dibaca dengan server GeoLibre lokal dan diproyeksikan ulang ke WGS84."
+        "description": "Tambahkan layer dari Esri File Geodatabase (folder .gdb). Layer dibaca dengan server GeoInt lokal dan diproyeksikan ulang ke WGS84."
       },
       "photos": {
         "label": "Tambahkan Foto Bertag Geo",
@@ -476,8 +476,8 @@
       "layerPlaceholder": "Pilih geodatabase terlebih dahulu",
       "readingLayers": "Membaca layer...",
       "layerOption": "{{name}} ({{type}}, {{count}} fitur)",
-      "help": "Tabel tanpa geometri tidak ditampilkan. Kelas fitur yang dipilih dimuat melalui server GeoLibre lokal dan diproyeksikan ulang ke WGS84.",
-      "desktopOnly": "Layer File Geodatabase hanya tersedia di GeoLibre Desktop. Fitur ini membaca folder .gdb lokal melalui server GeoLibre lokal, yang tidak dapat diakses aplikasi web.",
+      "help": "Tabel tanpa geometri tidak ditampilkan. Kelas fitur yang dipilih dimuat melalui server GeoInt lokal dan diproyeksikan ulang ke WGS84.",
+      "desktopOnly": "Layer File Geodatabase hanya tersedia di GeoInt Desktop. Fitur ini membaca folder .gdb lokal melalui server GeoInt lokal, yang tidak dapat diakses aplikasi web.",
       "readError": "Tidak dapat membaca File Geodatabase ini.",
       "convertError": "Tidak dapat memuat kelas fitur ini.",
       "errorNotGdb": "Pilih folder yang berakhiran .gdb (Esri File Geodatabase).",
@@ -551,7 +551,7 @@
     },
     "postgres": {
       "defaultName": "Layer PostgreSQL",
-      "errorDesktopOnly": "Layer PostgreSQL memerlukan GeoLibre Desktop.",
+      "errorDesktopOnly": "Layer PostgreSQL memerlukan GeoInt Desktop.",
       "errorConnectionString": "Masukkan string koneksi PostgreSQL.",
       "statusCheckingBinary": "Memeriksa biner Martin...",
       "statusDownloaded": "Martin diunduh. Memulai server lokal...",
@@ -565,7 +565,7 @@
       "errorConnectFirst": "Hubungkan ke PostgreSQL terlebih dahulu.",
       "errorNoVectorLayers": "Sumber Martin yang dipilih tidak memiliki layer vektor.",
       "errorSelectSource": "Pilih sumber Martin untuk ditambahkan.",
-      "desktopOnlyNotice": "Layer PostgreSQL hanya tersedia di GeoLibre Desktop. Fitur ini menjalankan server ubin Martin lokal, yang tidak dapat diluncurkan oleh aplikasi web.",
+      "desktopOnlyNotice": "Layer PostgreSQL hanya tersedia di GeoInt Desktop. Fitur ini menjalankan server ubin Martin lokal, yang tidak dapat diluncurkan oleh aplikasi web.",
       "savedConnection": "Koneksi tersimpan",
       "selectSavedConnection": "Pilih koneksi tersimpan",
       "connectionString": "String koneksi PostgreSQL",
@@ -585,7 +585,7 @@
       "editableTable": "Tabel",
       "tableReadOnly": "{{table}} (hanya baca: tanpa kunci utama)",
       "errorSelectTable": "Pilih tabel untuk dimuat.",
-      "errorRuntimeMissing": "Server pemrosesan tidak memiliki runtime PostGIS (psycopg) terpasang. Pasang ekstra 'postgis' pada geolibre-server untuk memuat layer yang dapat diedit."
+      "errorRuntimeMissing": "Server pemrosesan tidak memiliki runtime PostGIS (psycopg) terpasang. Pasang ekstra 'postgis' pada geoint-server untuk memuat layer yang dapat diedit."
     },
     "video": {
       "defaultName": "Layer Video",
@@ -1044,7 +1044,7 @@
     "step1Title": "1. Dapatkan token API",
     "step1Description": "Masuk ke share.geolibre.app, lalu buat token di Settings → API tokens.",
     "getToken": "Dapatkan token API",
-    "step2Title": "2. Tambahkan token ke GeoLibre",
+    "step2Title": "2. Tambahkan token ke GeoInt",
     "step2Description": "Tempel token ke Settings → Environment Variables pada perangkat ini.",
     "configureToken": "Konfigurasi token lokal",
     "liveAt": "Proyek Anda aktif di:",
@@ -1066,7 +1066,7 @@
   },
   "gallery": {
     "title": "Galeri proyek",
-    "description": "Jelajahi proyek publik yang dibagikan di share.geolibre.app dan buka salah satunya di GeoLibre.",
+    "description": "Jelajahi proyek publik yang dibagikan di share.geolibre.app dan buka salah satunya di GeoInt.",
     "searchPlaceholder": "Filter proyek yang dimuat berdasarkan judul, penulis, atau tag",
     "loading": "Memuat proyek…",
     "loadingMore": "Memuat lebih banyak…",
@@ -1151,7 +1151,7 @@
       "groupNavigation": "Kelompokkan penunjuk utara & skala batang",
       "footer": "Teks footer",
       "date": "Tanggal",
-      "attribution": "Sertakan atribusi GeoLibre",
+      "attribution": "Sertakan atribusi GeoInt",
       "pageBorder": "Batas halaman",
       "infoBlock": "Blok info (blok judul)",
       "colorbar": "Bilah warna",
@@ -1527,7 +1527,7 @@
     "noticeDesc": "Membuka kartu pengetahuan mengirimkan koordinat tempat yang Anda klik (dan judul artikel terdekat yang Anda buka) ke API publik Wikipedia untuk mengambil ringkasan dan foto — koordinat Anda meninggalkan perangkat untuk permintaan tersebut."
   },
   "onboarding": {
-    "title": "Selamat Datang di GeoLibre",
+    "title": "Selamat Datang di GeoInt",
     "description": "Pilih tingkat pengalaman Anda untuk menyesuaikan antarmuka. Anda dapat mengubah ini kapan saja di Pengaturan → Antarmuka.",
     "level": {
       "beginner": {
@@ -1540,7 +1540,7 @@
       },
       "advanced": {
         "title": "Lanjutan",
-        "description": "Tampilkan semua yang ditawarkan GeoLibre."
+        "description": "Tampilkan semua yang ditawarkan GeoInt."
       }
     },
     "showEverything": "Lewati — tampilkan semua"
@@ -1555,7 +1555,6 @@
       "appearance": "Tampilan",
       "interface": "Antarmuka",
       "geocoding": "Geocoding",
-      "ai": "Penyedia AI",
       "environment": "Lingkungan",
       "updates": "Pembaruan"
     },
@@ -1565,7 +1564,6 @@
       "appearanceSettings": "Pengaturan Tampilan",
       "interfaceSettings": "Pengaturan Antarmuka",
       "geocoding": "Geocoding",
-      "ai": "Penyedia AI",
       "environmentVariables": "Variabel Lingkungan",
       "updates": "Pengaturan Pembaruan",
       "managePlugins": "Kelola Plugin",
@@ -1574,9 +1572,9 @@
     },
     "updates": {
       "title": "Pembaruan Perangkat Lunak",
-      "description": "Kontrol bagaimana GeoLibre memeriksa versi baru saat aplikasi desktop dimulai.",
+      "description": "Kontrol bagaimana GeoInt memeriksa versi baru saat aplikasi desktop dimulai.",
       "checkOnStartup": "Periksa pembaruan saat memulai",
-      "checkOnStartupHint": "Jika diaktifkan, GeoLibre memeriksa versi lebih baru setiap kali aplikasi dimulai. Nonaktifkan ini untuk alur kerja yang sepenuhnya offline.",
+      "checkOnStartupHint": "Jika diaktifkan, GeoInt memeriksa versi lebih baru setiap kali aplikasi dimulai. Nonaktifkan ini untuk alur kerja yang sepenuhnya offline.",
       "notificationLevel": "Beri tahu saya tentang",
       "notificationLevelHint": "Pilih jenis rilis mana yang memicu notifikasi saat memulai.",
       "level": {
@@ -1659,7 +1657,7 @@
       "lockedNote": "Profil antarmuka ini dikelola oleh administrator Anda dan tidak dapat diubah."
     },
     "env": {
-      "tokenTitle": "Token API Share.GeoLibre",
+      "tokenTitle": "Token API Share.GeoInt",
       "tokenDescription": "Project > Share menggunakan token ini untuk mengunggah peta Anda ke share.geolibre.app. Buka <tokenLink>share.geolibre.app/settings</tokenLink>, buat token di Settings > API tokens, lalu tempelkan ke bidang di bawah.",
       "tokenStorageNote": "Disimpan secara lokal di perangkat ini dan hanya dikirim ke share.geolibre.app untuk mengautentikasi unggahan. Pada build web, token ini berbagi penyimpanan browser yang sama dengan data situs lainnya, jadi cabut aksesnya di share.geolibre.app jika perangkat Anda disusupi.",
       "tokenPlaceholder": "glb_…",
@@ -1704,60 +1702,6 @@
       "emailHint": "Hanya digunakan oleh Nominatim, yang menyarankan menyediakannya untuk membantu mengidentifikasi aplikasi Anda — hanya dikirim jika disediakan.",
       "secretsWarning": "Kunci disimpan dalam teks biasa pada file proyek dan dapat terekspos saat proyek dibagikan. Kunci juga dikirim sebagai parameter kueri, sehingga muncul dalam URL permintaan geocoding yang terlihat di DevTools browser dan log proxy mana pun.",
       "corsNote": "Google tidak secara resmi mengizinkan permintaan browser ke Geocoding API-nya, sehingga permintaan mungkin diblokir kecuali dilayani melalui proxy dengan asal yang sama."
-    },
-    "ai": {
-      "title": "Penyedia Asisten AI",
-      "description": "Konfigurasikan kredensial untuk Asisten AI. Pilih penyedia, isi bidang yang diperlukan, lalu Simpan. Hanya satu penyedia yang dikonfigurasi diperlukan untuk mulai mengobrol.",
-      "providerLabel": "Penyedia",
-      "providerHint": "Pilih penyedia untuk menampilkan bidang yang tepat diperlukan.",
-      "configuredMark": "(dikonfigurasi)",
-      "optionalMark": "(opsional)",
-      "statusReady": "{{provider}} telah dikonfigurasi dan siap digunakan.",
-      "statusIncomplete": "Isi bidang wajib di bawah untuk mengaktifkan {{provider}}.",
-      "secretsNote": "Kredensial disimpan secara lokal di perangkat ini, bukan dalam file proyek yang Anda bagikan, sehingga tetap tersimpan setelah aplikasi dimulai ulang. Siapa pun yang memiliki akses ke perangkat ini dapat membacanya.",
-      "getCredentials": "Tempat mendapatkan kredensial {{provider}}",
-      "showValue": "Tampilkan {{name}}",
-      "hideValue": "Sembunyikan {{name}}",
-      "osEnvNote": "Aplikasi desktop juga membaca kunci API yang cocok dari variabel lingkungan sistem Anda. Kunci tersebut digunakan secara otomatis dan tidak pernah disimpan ke file proyek — biarkan bidang kosong untuk tetap menggunakan nilai lingkungan.",
-      "osEnvField": "Dibaca dari variabel lingkungan sistem Anda {{name}}.",
-      "osEnvPlaceholder": "Atur di lingkungan sistem Anda",
-      "newProfile": "Profil baru",
-      "cancel": "Batal",
-      "addProfile": "Tambah profil",
-      "profileName": "Nama profil",
-      "profileNamePlaceholder": "mis. Gemini Kerja, Ollama Lokal",
-      "profileCount_other": "{{count}} profil",
-      "noProfiles": "Belum ada profil. Tambahkan satu di bawah untuk mengonfigurasi Asisten AI.",
-      "setDefault": "Jadikan default",
-      "defaultProfile": "Default",
-      "edit": "Edit",
-      "deleteProfile": "Hapus profil",
-      "backToProfiles": "← Kembali ke profil",
-      "saveProfile": "Simpan profil",
-      "profileEditSaveHint": "Simpan atau buang perubahan profil di atas, lalu klik Simpan Pengaturan untuk menerapkan semua perubahan.",
-      "field": {
-        "apiKey": "Kunci API",
-        "baseUrl": "URL dasar",
-        "model": "Model",
-        "region": "Wilayah",
-        "accessKeyId": "ID Kunci Akses",
-        "secretAccessKey": "Kunci Akses Rahasia",
-        "sessionToken": "Token sesi"
-      },
-      "placeholder": {
-        "geminiKey": "AIza…",
-        "anthropicKey": "sk-ant-…",
-        "openaiKey": "sk-…",
-        "ollamaBaseUrl": "http://localhost:11434",
-        "ollamaModel": "llama3.2",
-        "awsAccessKey": "AKIA…",
-        "awsSecretKey": "wJalrXUtnFEMI…",
-        "awsRegion": "us-east-1",
-        "awsSessionToken": "FwoGZXIvYXdz… (jika menggunakan kredensial sementara)",
-        "customBaseUrl": "https://api.example.com/v1",
-        "customModel": "model-id",
-        "customApiKey": "sk-… (jika diperlukan)"
-      }
     }
   },
   "toolbar": {
@@ -1867,7 +1811,7 @@
       "smartPaste": "Tempel koordinat",
       "smartPasteInputLabel": "String koordinat",
       "smartPastePlaceholder": "mis. 51.5074, -0.1278 atau 51°30'26\"N, 0°07'39\"W",
-      "smartPasteInfo": "Ketik atau tempel string koordinat lengkap dalam format DD, DMS, atau DDM, lalu jalankan Proses input. GeoLibre mendeteksi formatnya dan mengisi bidang bujur dan lintang di bawah. Sesuaikan zoom, kemiringan, dan arah secara terpisah sebelum berangkat.",
+      "smartPasteInfo": "Ketik atau tempel string koordinat lengkap dalam format DD, DMS, atau DDM, lalu jalankan Proses input. GeoInt mendeteksi formatnya dan mengisi bidang bujur dan lintang di bawah. Sesuaikan zoom, kemiringan, dan arah secara terpisah sebelum berangkat.",
       "smartPasteInfoLabel": "Tentang menempel koordinat",
       "smartPasteInvalid": "Tidak dapat membaca koordinat tersebut. Masukkan bujur dan lintang lengkap dalam format DD, DMS, atau DDM, misalnya 51.5074, -0.1278. String yang sebagian atau tidak lengkap tidak dapat diuraikan.",
       "processInput": "Proses input",
@@ -1996,8 +1940,8 @@
     },
     "conversion": {
       "vectorToVector": "Vektor ke Vektor",
-      "zipInputBrowserError": "Shapefile terzip hanya dapat dikonversi di aplikasi desktop GeoLibre. Di browser, pilih .shp yang tidak terzip beserta file .dbf, .shx, dan .prj-nya.",
-      "browserOutputUnsupported": "Di browser, keluaran dapat berupa GeoJSON, CSV, GeoParquet, GeoPackage, atau Shapefile (.zip). Keluaran \".{{extension}}\" memerlukan aplikasi desktop GeoLibre.",
+      "zipInputBrowserError": "Shapefile terzip hanya dapat dikonversi di aplikasi desktop GeoInt. Di browser, pilih .shp yang tidak terzip beserta file .dbf, .shx, dan .prj-nya.",
+      "browserOutputUnsupported": "Di browser, keluaran dapat berupa GeoJSON, CSV, GeoParquet, GeoPackage, atau Shapefile (.zip). Keluaran \".{{extension}}\" memerlukan aplikasi desktop GeoInt.",
       "outputExtensionRequired": "Tambahkan ekstensi file ke nama keluaran untuk memilih formatnya.",
       "readingWithDuckDb": "Membaca {{name}} dengan DuckDB-WASM",
       "readFeatures": "Membaca {{features}} fitur dari {{name}}",
@@ -2011,7 +1955,7 @@
       "vectorToPmtiles": "Vektor ke PMTiles",
       "rasterToCog": "Raster ke COG",
       "rasterToPmtiles": "Raster ke PMTiles",
-      "needsDesktop": "Konversi ini memerlukan aplikasi desktop GeoLibre atau sidecar yang sedang berjalan.",
+      "needsDesktop": "Konversi ini memerlukan aplikasi desktop GeoInt atau sidecar yang sedang berjalan.",
       "runsInBrowserDuckDb": "Konversi berjalan di browser Anda dengan DuckDB-WASM.",
       "runsInBrowserWriters": "Konversi berjalan di browser Anda dengan DuckDB-WASM dan penulis bawaan.",
       "runsInBrowserWasm": "Konversi berjalan di browser Anda dengan geolibre-wasm. Tidak memerlukan sidecar.",
@@ -2166,7 +2110,7 @@
       "noOutput": "Belum ada keluaran.",
       "errorConnect": "Tidak dapat terhubung ke sidecar.",
       "errorPoll": "Tidak dapat memeriksa status pekerjaan.",
-      "errorStartSidecar": "Tidak dapat menjalankan sidecar GeoLibre.",
+      "errorStartSidecar": "Tidak dapat menjalankan sidecar GeoInt.",
       "errorStartTool": "Tidak dapat menjalankan alat raster."
     },
     "mapControl": {
@@ -2270,7 +2214,7 @@
       "terrain": "Medan",
       "remoteSensing": "Penginderaan Jauh",
       "projection": "Proyeksi",
-      "geolibre": "GeoLibre",
+      "geoint": "GeoInt",
       "subGroupGeometry": "Geometri",
       "subGroupOverlay": "Overlay",
       "subGroupJoin": "Gabungan",
@@ -2332,7 +2276,7 @@
       "webServices": "Layanan Web",
       "commandPalette": "Palet Perintah",
       "openProjectFromUrl": "Buka proyek dari URL",
-      "openProjectFromUrlDesc": "Muat proyek `.geolibre.json` dan tambahkan ke proyek terbaru.",
+      "openProjectFromUrlDesc": "Muat proyek `.geoint.json` dan tambahkan ke proyek terbaru.",
       "projectUrl": "URL proyek",
       "opening": "Membuka...",
       "open": "Buka",
@@ -2347,7 +2291,7 @@
       "embedVectorReferenceButton": "Simpan referensi file",
       "embedVectorSkipButton": "Simpan tanpa data",
       "saveProjectFileName": "Nama file",
-      "saveProjectFileNamePlaceholder": "proyek-saya.geolibre.json",
+      "saveProjectFileNamePlaceholder": "proyek-saya.geoint.json",
       "exportHtmlAsTitle": "Ekspor sebagai HTML interaktif",
       "exportHtmlAsDesc": "Masukkan nama file. Halaman HTML akan diunduh ke folder unduhan browser Anda saat Anda mengklik Simpan.",
       "exportHtmlFileName": "Nama file",
@@ -2388,21 +2332,21 @@
       "maplibre-gl-annotations": "Anotasi",
       "maplibre-gl-streetview": "Tampilan Jalan",
       "maplibre-gl-time-slider": "Penggeser Waktu",
-      "geolibre-timelapse": "Timelapse",
+      "geoint-timelapse": "Timelapse",
       "maplibre-gl-esri-wayback": "Citra Historis",
       "maplibre-gl-openaerialmap": "OpenAerialMap",
-      "geolibre-stac-catalogs": "Katalog STAC",
+      "geoint-stac-catalogs": "Katalog STAC",
       "maplibre-gl-source-coop": "Source Cooperative",
       "maplibre-gl-natural-earth": "Natural Earth",
       "maplibre-gl-swipe": "Geser Lapisan",
-      "geolibre-elevation-profile": "Profil Ketinggian",
+      "geoint-elevation-profile": "Profil Ketinggian",
       "maplibre-gl-basemap-control": "Peta Dasar",
       "maplibre-layer-control": "Kontrol Lapisan",
       "maplibre-gl-huggingface": "Hugging Face",
       "carto-light": "Peta Dasar Carto Light",
-      "geolibre-flight-simulator": "Simulator Penerbangan",
-      "geolibre-route-animation": "Animasi Rute",
-      "geolibre-sun": "Simulasi Matahari",
+      "geoint-flight-simulator": "Simulator Penerbangan",
+      "geoint-route-animation": "Animasi Rute",
+      "geoint-sun": "Simulasi Matahari",
       "maplibre-atmosphere-effects": "Efek Atmosfer",
       "maplibre-deckgl-viz": "Layer Deck.gl",
       "maplibre-gl-clouds": "Awan",
@@ -2558,7 +2502,7 @@
     "summary": "{{selected}} dari {{total}} fitur terpilih ({{matched}} cocok).",
     "evaluationErrors": "{{count}} fitur tidak dapat dievaluasi dan tidak dicocokkan.",
     "unevaluableDisjoint": "{{count}} fitur dikecualikan karena geometrinya tidak dapat dievaluasi.",
-    "tooManyPairs": "Perbandingan ini membutuhkan {{pairs}} pengujian pasangan fitur (batas {{limit}}). Gunakan Processing → GeoLibre → Vector → Select by location dengan mesin Sidecar sebagai gantinya.",
+    "tooManyPairs": "Perbandingan ini membutuhkan {{pairs}} pengujian pasangan fitur (batas {{limit}}). Gunakan Processing → GeoInt → Vector → Select by location dengan mesin Sidecar sebagai gantinya.",
     "exportedLayerName": "{{name}} (seleksi)"
   },
   "loadEditorFeatures": {
@@ -2784,7 +2728,7 @@
     "filterWebMap": "Peta web",
     "webMapAdded_other": "{{count}} layer ditambahkan dari peta web ini.",
     "webMapAddedPartial": "{{added}} dari {{total}} layer ditambahkan dari peta web ini; sisanya tidak dapat dijangkau.",
-    "webMapEmpty": "peta web ini tidak memiliki layer yang dapat dirender GeoLibre.",
+    "webMapEmpty": "peta web ini tidak memiliki layer yang dapat dirender GeoInt.",
     "add": "Tambah",
     "adding": "Menambahkan…",
     "remove": "Hapus",
@@ -2866,7 +2810,7 @@
     "downloadTitle": "Unduh file ini",
     "copyUrlTitle": "Salin URL file ini",
     "openProductTitle": "Buka halaman produk ini di source.coop",
-    "unsupportedTitle": "GeoLibre tidak dapat merender format ini — unduh saja",
+    "unsupportedTitle": "GeoInt tidak dapat merender format ini — unduh saja",
     "addError": "Tidak dapat menambahkan file ini: {{message}}",
     "largeFileWarning": "File ini {{size}}. File di-stream dari sumber, sehingga hanya bagian yang terlihat yang dibaca.",
     "streamHint": "File ini {{size}}. Tambah menyalinnya ke memori; Stream hanya membaca bagian yang terlihat.",
@@ -2910,7 +2854,7 @@
     "downloadTitle": "Unduh file ini",
     "copyUrlTitle": "Salin URL file ini",
     "openDatasetTitle": "Buka halaman dataset ini di huggingface.co",
-    "unsupportedTitle": "GeoLibre tidak dapat merender format ini — unduh saja",
+    "unsupportedTitle": "GeoInt tidak dapat merender format ini — unduh saja",
     "addError": "Tidak dapat menambahkan file ini: {{message}}",
     "notRasterIndex": "File JSON ini tidak mengindeks raster apa pun, jadi tidak ada yang bisa ditaruh di peta. MosaicJSON dan koleksi STAC didukung.",
     "largeFileWarning": "File ini {{size}}. File di-stream dari sumber, sehingga hanya bagian yang terlihat yang dibaca.",
@@ -2952,7 +2896,7 @@
     "clearSelection": "Bersihkan",
     "selectedFiles_other": "{{count}} file dipilih ({{size}}).",
     "commitMessageLabel": "Pesan commit (opsional)",
-    "commitMessagePlaceholder": "Diunggah dengan GeoLibre",
+    "commitMessagePlaceholder": "Diunggah dengan GeoInt",
     "upload": "Unggah",
     "uploadPreparing": "Menyiapkan unggahan…",
     "uploadHashing": "Menghitung hash {{name}} ({{index}}/{{total}})…",
@@ -3015,7 +2959,7 @@
     "runHint": "Jalankan (Ctrl/Cmd+Enter)",
     "completions": "Pelengkapan",
     "placeholder": "Python di sini · Ctrl/Cmd+Enter untuk menjalankan · Tab untuk melengkapi otomatis · ↑/↓ untuk riwayat",
-    "intro": "Konsol Python siap. Gunakan objek `geolibre` untuk membuat skrip peta, mis. geolibre.get_center(). Tab melengkapi otomatis, ↑/↓ memanggil kembali perintah sebelumnya, dan `await geolibre.load_package(\"numpy\")` menambahkan paket.",
+    "intro": "Konsol Python siap. Gunakan objek `geoint` untuk membuat skrip peta, mis. geoint.get_center(). Tab melengkapi otomatis, ↑/↓ memanggil kembali perintah sebelumnya, dan `await geoint.load_package(\"numpy\")` menambahkan paket.",
     "loadFailed": "Gagal memuat runtime Python.",
     "showEditor": "Tampilkan editor",
     "hideEditor": "Sembunyikan editor",
@@ -3125,21 +3069,7 @@
     "stop": "Hentikan",
     "placeholder": "Tanyakan tentang data Anda, mis. \"tampilkan negara dengan populasi di atas 50 juta\" · Ctrl/Cmd+Enter untuk mengirim",
     "intro": "Mengobrol dengan data Anda. Saya dapat menjalankan Spatial SQL, menambah atau menghapus layer, mengubah gayanya, dan menggerakkan peta — setiap perubahan dapat diurungkan. Coba \"warnai negara berdasarkan populasi dengan gradasi merah bertingkat\".",
-    "setupTitle": "Siapkan Asisten AI",
-    "setupStatus": "Asisten memerlukan penyedia AI untuk berpikir. Tambahkan kredensial untuk salah satu penyedia di bawah dan panel beralih ke mode obrolan segera setelah Anda menyimpan.",
-    "setupProviders": "Tambahkan kredensial untuk salah satu penyedia",
-    "setupOpenSettings": "Buka Pengaturan → Penyedia AI",
-    "thinking": "Memproses…",
-    "toolError": "gagal",
-    "provider": "Penyedia LLM",
-    "profile": "Profil AI",
-    "deploymentProxy": "Proksi deployment",
-    "model": "Model",
-    "codeApprovalTitle": "Jalankan kode asisten?",
-    "codeApprovalBody": "Asisten ingin menjalankan kode {{language}} di aplikasi. Tinjau terlebih dahulu — kode dapat mengubah peta dan mengakses data aplikasi.",
-    "codeApprovalAlways": "Izinkan kode asisten untuk sisa sesi ini",
-    "codeApprovalRun": "Jalankan",
-    "codeApprovalDecline": "Batal"
+    "thinking": "Memproses…"
   },
   "storymap": {
     "title": "Peta Cerita",
@@ -3354,7 +3284,7 @@
       },
       "filterBySource": "Filter berdasarkan sumber",
       "allSources": "Semua sumber",
-      "geolibreTools": "Alat GeoLibre",
+      "geointTools": "Alat GeoInt",
       "whiteboxTools": "Alat Whitebox",
       "toolbox": "Kotak alat Whitebox",
       "checkingRuntime": "Memeriksa runtime.",
@@ -3383,8 +3313,8 @@
       "errorConnect": "Tidak dapat terhubung ke sidecar.",
       "errorPoll": "Tidak dapat memeriksa status pekerjaan.",
       "errorStartTool": "Tidak dapat menjalankan alat Whitebox.",
-      "errorStartSidecar": "Tidak dapat menjalankan sidecar GeoLibre.",
-      "errorStopSidecar": "Tidak dapat menghentikan sidecar GeoLibre.",
+      "errorStartSidecar": "Tidak dapat menjalankan sidecar GeoInt.",
+      "errorStopSidecar": "Tidak dapat menghentikan sidecar GeoInt.",
       "noToolsFound": "Tidak ada alat yang ditemukan.",
       "noParameters": "Alat ini tidak memiliki parameter.",
       "noOutput": "Belum ada keluaran.",
@@ -3404,9 +3334,9 @@
       "runLocallyButton": "Jalankan lokal (WASM)",
       "troubleshootingTitle": "Masih ingin menggunakan server?",
       "stepStartServerDesktop": "Klik \"Mulai server\" di panel daftar alat untuk meluncurkannya, lalu tunggu beberapa detik hingga aktif.",
-      "stepStartServerBrowser": "Server hanya dapat dimulai dari aplikasi desktop GeoLibre. Di browser, biarkan \"Jalankan lokal (WASM)\" tetap aktif.",
+      "stepStartServerBrowser": "Server hanya dapat dimulai dari aplikasi desktop GeoInt. Di browser, biarkan \"Jalankan lokal (WASM)\" tetap aktif.",
       "stepCheckPort": "Pastikan firewall, antivirus, atau kebijakan jaringan tidak memblokir port lokal {{port}}.",
-      "stepRestart": "Jika server berhenti secara tak terduga, mulai ulang aplikasi desktop GeoLibre dan buka kembali dialog ini."
+      "stepRestart": "Jika server berhenti secara tak terduga, mulai ulang aplikasi desktop GeoInt dan buka kembali dialog ini."
     },
     "vectorTools": {
       "title": "Alat vektor",
@@ -3440,13 +3370,13 @@
     "segment": "Segmentasikan",
     "status": {
       "checking": "Memeriksa layanan segmentasi AI…",
-      "unavailableDesktop": "Layanan segmentasi AI belum berjalan. Mulai server GeoLibre dengan segment-geospatial diaktifkan untuk menggunakannya.",
-      "unavailableWeb": "Segmentasi AI tidak tersedia di browser. Gunakan aplikasi desktop GeoLibre untuk menjalankannya."
+      "unavailableDesktop": "Layanan segmentasi AI belum berjalan. Mulai server GeoInt dengan segment-geospatial diaktifkan untuk menggunakannya.",
+      "unavailableWeb": "Segmentasi AI tidak tersedia di browser. Gunakan aplikasi desktop GeoInt untuk menjalankannya."
     },
     "error": {
       "chooseImage": "Pilih gambar (GeoTIFF) untuk disegmentasi.",
       "enterPrompt": "Masukkan perintah teks, mis. “pohon” atau “bangunan”.",
-      "startServer": "Tidak dapat memulai sidecar GeoLibre.",
+      "startServer": "Tidak dapat memulai sidecar GeoInt.",
       "failed": "Segmentasi gagal."
     },
     "noObjects": "Tidak ditemukan objek.",
@@ -3457,7 +3387,7 @@
       "title": "Tidak dapat memulai server segmentasi AI.",
       "intro": "Segmentasi AI berjalan di server helper lokal ({{sidecarUrl}}) yang menjalankan model SAM3 dari segment-geospatial. Server ini menjalankan Python di latar belakang, terpisah dari aplikasi, dan bukan bagian dari build browser.",
       "troubleshootingTitle": "Cara menjalankan server",
-      "stepInstall": "Pastikan server GeoLibre terpasang dengan backend segment-geospatial diaktifkan, sehingga model segmentasi tersedia.",
+      "stepInstall": "Pastikan server GeoInt terpasang dengan backend segment-geospatial diaktifkan, sehingga model segmentasi tersedia.",
       "stepStartServerDesktop": "Klik \"Mulai server\" di atas untuk meluncurkannya, lalu tunggu beberapa detik hingga model aktif."
     }
   },
@@ -3703,7 +3633,7 @@
     "import": "Impor…",
     "export": "Ekspor…",
     "importFilterName": "Pustaka gaya / QML / SLD",
-    "exportFilterName": "Pustaka gaya GeoLibre",
+    "exportFilterName": "Pustaka gaya GeoInt",
     "applied": "Menerapkan \"{{name}}\" ke {{layer}}.",
     "appliedRampHint": "Menerapkan \"{{name}}\". Alihkan layer ke gaya bertingkat atau terkategori untuk melihat gradasi.",
     "saved": "Menyimpan \"{{name}}\" ke pustaka.",
@@ -4530,10 +4460,10 @@
   },
   "errorBoundary": {
     "title": "Terjadi kesalahan",
-    "description": "GeoLibre mengalami kesalahan tak terduga dan tidak dapat melanjutkan. Pekerjaan Anda mungkin belum tersimpan — coba pulihkan sebelum memuat ulang.",
+    "description": "GeoInt mengalami kesalahan tak terduga dan tidak dapat melanjutkan. Pekerjaan Anda mungkin belum tersimpan — coba pulihkan sebelum memuat ulang.",
     "tryAgain": "Coba lagi",
     "reload": "Muat ulang aplikasi",
-    "sectionFailed": "{{label}} gagal ditampilkan. Bagian lain GeoLibre tetap tersedia."
+    "sectionFailed": "{{label}} gagal ditampilkan. Bagian lain GeoInt tetap tersedia."
   },
   "commandPalette": {
     "title": "Palet perintah",
@@ -4578,7 +4508,7 @@
     "emptyNetworkError": "Tidak ada diagnostik kesalahan jaringan yang terekam."
   },
   "shell": {
-    "workspaceTitle": "Ruang kerja peta GeoLibre",
+    "workspaceTitle": "Ruang kerja peta GeoInt",
     "section": {
       "toolbar": "Bilah alat",
       "sharedLeftSidebar": "Bilah sisi kiri bersama",
@@ -4722,6 +4652,6 @@
     "added": "{{asset}} ditambahkan ke peta.",
     "addUnsupported": "Hanya aset GeoTIFF/COG dan GeoJSON yang dapat ditambahkan ke peta",
     "addFailed": "Tidak dapat menambahkan aset",
-    "cogUnsupported": "Host GeoLibre ini tidak dapat memvisualisasikan aset GeoTIFF jarak jauh"
+    "cogUnsupported": "Host GeoInt ini tidak dapat memvisualisasikan aset GeoTIFF jarak jauh"
   }
 }

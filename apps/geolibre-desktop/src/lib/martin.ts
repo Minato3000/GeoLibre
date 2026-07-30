@@ -102,7 +102,7 @@ export function martinTileJsonUrl(server: MartinServerInfo, sourceId: string): s
 
 function assertTauri(): void {
   if (!isTauri()) {
-    throw new Error("PostgreSQL layers require GeoLibre Desktop.");
+    throw new Error("PostgreSQL layers require GeoInt Desktop.");
   }
 }
 

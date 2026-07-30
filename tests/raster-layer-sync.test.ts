@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import type { RasterLayerInfo, RasterLayerState } from "maplibre-gl-raster";
 import {
   createRasterStoreLayer,
@@ -66,7 +66,7 @@ function fakeControl(infos: RasterLayerInfo[] = [], options: { collapsed?: boole
   return { control, calls };
 }
 
-function otherStoreLayer(id = "unrelated"): GeoLibreLayer {
+function otherStoreLayer(id = "unrelated"): GeoIntLayer {
   return {
     id,
     name: "Unrelated",
@@ -328,7 +328,7 @@ describe("syncRasterLayersToStore", () => {
   });
 
   // localFilePath is derived from the path registry on every sync rather than
-  // carried in GEOLIBRE_OWNED_METADATA_KEYS, so a repeated sync (any control
+  // carried in GEOINT_OWNED_METADATA_KEYS, so a repeated sync (any control
   // event: an opacity drag, a header load) must not drop it. The registry
   // outlives a control teardown -- LayerManager.destroy() clears its layers
   // without emitting rasterremove -- so the only thing that forgets a path is
@@ -383,7 +383,7 @@ describe("syncRasterLayersToStore", () => {
     assert.deepEqual(layer.metadata.bounds, [0, 0, 1, 1]);
   });
 
-  it("preserves GeoLibre-owned symbology across a control resync", () => {
+  it("preserves GeoInt-owned symbology across a control resync", () => {
     const { control } = fakeControl([rasterInfo()]);
     syncRasterLayersToStore(control);
 

@@ -1,4 +1,4 @@
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 
 /**
@@ -67,21 +67,21 @@ export function geoAgentStoreLayerId(overlayName: string): string {
   return `geoagent:${overlayName}`;
 }
 
-export function isGeoAgentStoreLayer(layer: GeoLibreLayer): boolean {
+export function isGeoAgentStoreLayer(layer: GeoIntLayer): boolean {
   return (
     layer.metadata.sourceKind === GEOAGENT_SOURCE_KIND &&
     layer.metadata.externalNativeLayer === true
   );
 }
 
-export function geoAgentOverlayName(layer: GeoLibreLayer): string {
+export function geoAgentOverlayName(layer: GeoIntLayer): string {
   return typeof layer.metadata.geoAgentOverlayName === "string"
     ? layer.metadata.geoAgentOverlayName
     : layer.name;
 }
 
 /**
- * Overlays the GeoAgent tools track that should appear in GeoLibre's layer
+ * Overlays the GeoAgent tools track that should appear in GeoInt's layer
  * panel. Markers carry no style layers and internal records ("__terrain",
  * "__sky") are map state rather than layers, so both are excluded.
  */
@@ -89,12 +89,12 @@ function isSyncableOverlay(overlay: GeoAgentOverlayRecord): boolean {
   return overlay.kind !== "marker" && !overlay.name.startsWith("__") && overlay.layerIds.length > 0;
 }
 
-export function createGeoAgentStoreLayer(overlay: GeoAgentOverlayRecord): GeoLibreLayer {
+export function createGeoAgentStoreLayer(overlay: GeoAgentOverlayRecord): GeoIntLayer {
   // Native overlays may only reference sources that already exist on the
   // map, so sourceIds can legitimately be empty; omit sourceId rather than
   // leaking `undefined` into the layer.
   const sourceId = overlay.sourceIds[0] ? { sourceId: overlay.sourceIds[0] } : {};
-  const base: GeoLibreLayer = {
+  const base: GeoIntLayer = {
     id: geoAgentStoreLayerId(overlay.name),
     name: overlay.name,
     type: "raster",
@@ -313,7 +313,7 @@ export function unwireGeoAgentStoreSync(): void {
 
 function applyGeoAgentCustomLayerState(
   map: GeoAgentSyncableTools["map"],
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   changed: { opacity: boolean; visibility: boolean },
 ): void {
   if (!map || (!changed.opacity && !changed.visibility)) return;
@@ -345,11 +345,11 @@ function applyGeoAgentCustomLayerState(
 }
 
 /**
- * Map a GeoAgent geojson overlay style onto GeoLibre's LayerStyle using the
+ * Map a GeoAgent geojson overlay style onto GeoInt's LayerStyle using the
  * same keys and defaults as geojsonLayerPaint in maplibre-gl-geoagent, so the
  * store-driven repaint reproduces what the agent drew.
  */
-function geoJsonOverlayStyle(style: Record<string, unknown>): GeoLibreLayer["style"] {
+function geoJsonOverlayStyle(style: Record<string, unknown>): GeoIntLayer["style"] {
   const color = stringValue(style.color) ?? stringValue(style["line-color"]) ?? "#1c7ed6";
   const fillColor = stringValue(style["fill-color"]) ?? stringValue(style.fillColor) ?? color;
   const strokeColor = stringValue(style["line-color"]) ?? stringValue(style.lineColor) ?? color;

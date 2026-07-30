@@ -15,14 +15,14 @@
   NSLocation*UsageDescription is present. This is the iOS analogue of the
   AndroidManifest ACCESS_FINE/COARSE_LOCATION entries the plugin injects. It
   covers all three location consumers: Field Collection, GPS Tracking, and the
-  Controls -> GeoLocate map control. "WhenInUse" (not "Always") because GeoLibre
+  Controls -> GeoLocate map control. "WhenInUse" (not "Always") because GeoInt
   only reads location while the app is foregrounded — there is no background
   tracking.
 -->
 <plist version="1.0">
   <dict>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>GeoLibre uses your location to center the map, capture GPS points during Field Collection, and record GPS tracks.</string>
+    <string>GeoInt uses your location to center the map, capture GPS points during Field Collection, and record GPS tracks.</string>
 
     <!--
       Export compliance. App Store Connect asks about encryption on *every*
@@ -30,10 +30,10 @@
       sent to TestFlight ("Missing Compliance"). Declaring it here answers it
       once, at build time, instead of by hand per upload.
 
-      `false` asserts that GeoLibre's use of encryption is limited to what Apple
+      `false` asserts that GeoInt's use of encryption is limited to what Apple
       treats as exempt: HTTPS/TLS through the system libraries for basemap
       tiles, geocoding, the AI assistant, cloud catalogs, and the collaboration
-      relay. GeoLibre ships no cryptography of its own and implements no custom
+      relay. GeoInt ships no cryptography of its own and implements no custom
       encryption. Revisit this if that ever changes — it is a legal declaration,
       not a build flag.
     -->

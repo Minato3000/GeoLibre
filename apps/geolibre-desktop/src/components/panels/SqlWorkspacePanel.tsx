@@ -1,5 +1,5 @@
-import { useAppStore } from "@geolibre/core";
-import { Button, Input, ScrollArea, Select, cn } from "@geolibre/ui";
+import { useAppStore } from "@geoint/core";
+import { Button, Input, ScrollArea, Select, cn } from "@geoint/ui";
 import {
   AlertCircle,
   ChevronDown,
@@ -49,7 +49,7 @@ const MAX_EDITOR_FRACTION = 0.8;
 /** SQL engine backing the workspace. */
 type SqlEngine = "duckdb" | "postgis" | "sedona";
 
-const ENGINE_STORAGE_KEY = "geolibre.sqlWorkspace.engine";
+const ENGINE_STORAGE_KEY = "geoint.sqlWorkspace.engine";
 
 /** Load the last-used engine from localStorage, defaulting to DuckDB. */
 function loadEngine(): SqlEngine {
@@ -185,7 +185,7 @@ function sampleQueryForTable(tableName: string): string {
   return `SELECT *\nFROM "${tableName.replaceAll('"', '""')}"\nLIMIT 10;`;
 }
 
-const HISTORY_STORAGE_KEY = "geolibre.sqlWorkspace.history";
+const HISTORY_STORAGE_KEY = "geoint.sqlWorkspace.history";
 const MAX_HISTORY_ENTRIES = 25;
 
 /** Load saved query history from localStorage, newest first. */

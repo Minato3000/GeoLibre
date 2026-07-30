@@ -5,7 +5,7 @@ import {
   resetShareFetch,
   setShareFetch,
 } from "../apps/geolibre-desktop/src/lib/share-fetch";
-import { uploadProjectToShare } from "../apps/geolibre-desktop/src/lib/share-geolibre";
+import { uploadProjectToShare } from "../apps/geolibre-desktop/src/lib/share-geoint";
 import {
   fetchMyProjects,
   fetchSharedProjects,
@@ -65,7 +65,7 @@ describe("share fetch override", () => {
         jsonResponse({
           project: {
             projectUrl: "https://share.geolibre.app/u/p",
-            rawJsonUrl: "https://share.geolibre.app/u/p.geolibre.json",
+            rawJsonUrl: "https://share.geolibre.app/u/p.geoint.json",
           },
         }),
       );
@@ -73,7 +73,7 @@ describe("share fetch override", () => {
 
     await uploadProjectToShare({
       token: "tok",
-      filename: "p.geolibre.json",
+      filename: "p.geoint.json",
       content: "{}",
       visibility: "public",
     });

@@ -8,7 +8,7 @@
  */
 
 /** Window event fired when a prefill query is requested. */
-export const SQL_WORKSPACE_PREFILL_EVENT = "geolibre:sql-workspace-prefill";
+export const SQL_WORKSPACE_PREFILL_EVENT = "geoint:sql-workspace-prefill";
 
 let pendingQuery: string | null = null;
 

@@ -1,7 +1,7 @@
 import type MapLibreGlDirections from "@maplibre/maplibre-gl-directions";
 import type { MapLibreGlDirectionsRoutingData } from "@maplibre/maplibre-gl-directions";
 import type { IControl, Map as MapLibreMap } from "maplibre-gl";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 
 /**
  * Interactive routing via `@maplibre/maplibre-gl-directions`.
@@ -288,7 +288,7 @@ function handleDirectionsWaypointChange(): void {
   notifyDirectionsState();
 }
 
-function attach(app: GeoLibreAppAPI): void {
+function attach(app: GeoIntAppAPI): void {
   const map = app.getMap?.();
   if (!map) return;
   const token = ++loadToken;
@@ -325,7 +325,7 @@ function attach(app: GeoLibreAppAPI): void {
     });
 }
 
-function teardown(app: GeoLibreAppAPI): void {
+function teardown(app: GeoIntAppAPI): void {
   // Invalidate any in-flight import so it doesn't reattach after teardown.
   ++loadToken;
   if (loadingControl) {
@@ -361,7 +361,7 @@ function teardown(app: GeoLibreAppAPI): void {
  * object is replaced (a MapCanvas remount), where the manager would otherwise
  * leave the instance bound to the destroyed old map. Idempotent.
  */
-export function restoreDirections(app: GeoLibreAppAPI, active: boolean): void {
+export function restoreDirections(app: GeoIntAppAPI, active: boolean): void {
   if (!active) {
     teardown(app);
     return;
@@ -372,10 +372,10 @@ export function restoreDirections(app: GeoLibreAppAPI, active: boolean): void {
   attach(app);
 }
 
-export const maplibreDirectionsPlugin: GeoLibrePlugin = {
+export const maplibreDirectionsPlugin: GeoIntPlugin = {
   id: DIRECTIONS_PLUGIN_ID,
   name: "Directions",
   version: "1.0.0",
-  activate: (app: GeoLibreAppAPI) => attach(app),
-  deactivate: (app: GeoLibreAppAPI) => teardown(app),
+  activate: (app: GeoIntAppAPI) => attach(app),
+  deactivate: (app: GeoIntAppAPI) => teardown(app),
 };

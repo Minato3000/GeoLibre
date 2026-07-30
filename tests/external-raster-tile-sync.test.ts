@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import { syncLayer } from "../packages/map/src/layer-sync";
 
 // Records the maplibre operations a sync performs so a test can assert that a
@@ -62,11 +62,11 @@ function makePopulatedMapStub(layerId: string) {
   return { map, calls };
 }
 
-// The store layer GeoLibre derives (via createExternalNativeStoreLayer) from a
-// third-party plugin's generic raster registration — e.g. the GeoLibre D2S
-// plugin handing the host titiler XYZ tiles. It carries no GeoLibre-internal
+// The store layer GeoInt derives (via createExternalNativeStoreLayer) from a
+// third-party plugin's generic raster registration — e.g. the GeoInt D2S
+// plugin handing the host titiler XYZ tiles. It carries no GeoInt-internal
 // sourceKind, which is exactly the case that previously rendered nothing.
-function d2sRasterStoreLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function d2sRasterStoreLayer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   const id = "d2s-raster-1";
   return {
     id,

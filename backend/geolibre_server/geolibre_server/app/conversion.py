@@ -32,14 +32,14 @@ router = APIRouter(prefix="/conversion", tags=["conversion"])
 logger = logging.getLogger(__name__)
 
 CONVERSION_RUN_TIMEOUT_SECS = 3600
-CONVERSION_PYTHON_VERSION = os.environ.get("GEOLIBRE_CONVERSION_PYTHON_VERSION", "3.12")
+CONVERSION_PYTHON_VERSION = os.environ.get("GEOINT_CONVERSION_PYTHON_VERSION", "3.12")
 # Whitespace-separated so a single requirement may carry a comma-joined version
 # range (e.g. "duckdb>=1.1.0,<2.0.0") without being split into two tokens.
 # rasterio + numpy already arrive transitively via rio-cogeo; they are listed
 # explicitly so the Raster processing tools' dependency is intentional, and
 # contourpy is added for the Contour tool.
 CONVERSION_RUNTIME_PACKAGES = os.environ.get(
-    "GEOLIBRE_CONVERSION_PACKAGES",
+    "GEOINT_CONVERSION_PACKAGES",
     "duckdb>=1.1.0 rio-cogeo>=5.0.0 freestiler>=0.1.0 rasterio>=1.3.0 numpy>=1.24 contourpy>=1.2.0",
 ).split()
 
@@ -94,7 +94,7 @@ def _output_extension(path: str) -> str:
 COG_COMPRESSIONS = {"deflate", "zstd", "lzw", "webp", "jpeg", "packbits", "raw"}
 DEFAULT_COG_COMPRESSION = "deflate"
 
-_RESULT_MARKER = "__GEOLIBRE_CONVERSION_RESULT__"
+_RESULT_MARKER = "__GEOINT_CONVERSION_RESULT__"
 
 # Single source of truth for the Shapefile field-warning helper. Each conversion
 # script is a self-contained subprocess source string and cannot import from the
@@ -126,14 +126,14 @@ def shapefile_field_warnings(column_names):
 """
 
 # Optional allowlist of directories that conversion inputs/outputs must live
-# under, set via GEOLIBRE_CONVERSION_ROOTS (os.pathsep-separated). Unset means
+# under, set via GEOINT_CONVERSION_ROOTS (os.pathsep-separated). Unset means
 # no restriction (the default for the desktop app, where paths are the user's
 # own filesystem). The bundled Docker image sets this so the sidecar — which is
 # reachable same-origin through the nginx proxy — cannot read or overwrite
 # arbitrary container paths.
 _CONVERSION_ROOTS = [
     str(Path(root).expanduser().resolve())
-    for root in os.environ.get("GEOLIBRE_CONVERSION_ROOTS", "").split(os.pathsep)
+    for root in os.environ.get("GEOINT_CONVERSION_ROOTS", "").split(os.pathsep)
     if root.strip()
 ]
 
@@ -346,7 +346,7 @@ if output_format == "shapefile":
         print(f"Warning: {message}")
     # The Shapefile driver writes a .shp plus .shx/.dbf/.prj/.cpg sidecars, so
     # write into a temp directory and zip them into the requested output path.
-    tmp_dir = tempfile.mkdtemp(prefix="geolibre-shapefile-")
+    tmp_dir = tempfile.mkdtemp(prefix="geoint-shapefile-")
     stem = os.path.splitext(os.path.basename(output_path))[0] or "layer"
     copy_target = os.path.join(tmp_dir, stem + ".shp")
 else:
@@ -594,7 +594,7 @@ if is_shapefile:
     # nothing behind in the user's directory (the outer cleanup only unlinks
     # output_path, not the sidecars). On success the bundle is zipped into
     # output_path (.zip) or moved next to it (.shp).
-    tmp_dir = tempfile.mkdtemp(prefix="geolibre-shapefile-")
+    tmp_dir = tempfile.mkdtemp(prefix="geoint-shapefile-")
     stem = os.path.splitext(os.path.basename(output_path))[0] or "layer"
     copy_target = os.path.join(tmp_dir, stem + ".shp")
 else:
@@ -747,7 +747,7 @@ if input_path.lower().endswith((".parquet", ".geoparquet")):
 else:
     relation = f"ST_Read({quote(input_path)})"
 
-tmp_dir = tempfile.mkdtemp(prefix="geolibre-pmtiles-")
+tmp_dir = tempfile.mkdtemp(prefix="geoint-pmtiles-")
 tmp_parquet = os.path.join(tmp_dir, uuid.uuid4().hex + ".parquet")
 # try/finally so the temp dir is removed even if tiling raises or is killed.
 try:
@@ -814,7 +814,7 @@ print(
 
 def _managed_runtime_dir() -> Path:
     """Return the managed conversion runtime environment directory."""
-    configured = os.environ.get("GEOLIBRE_CONVERSION_ENV")
+    configured = os.environ.get("GEOINT_CONVERSION_ENV")
     if configured:
         return Path(configured).expanduser()
     return _runtime_cache_root() / "conversion-runtime"
@@ -928,7 +928,7 @@ def _runtime_python() -> str:
         if cached is not None and os.path.isfile(cached):
             return cached
         _CHECKED_RUNTIME_PYTHON = None
-        configured = os.environ.get("GEOLIBRE_CONVERSION_PYTHON")
+        configured = os.environ.get("GEOINT_CONVERSION_PYTHON")
         if configured:
             resolved = str(Path(configured).expanduser())
             if os.path.isfile(resolved) and os.access(resolved, os.X_OK):

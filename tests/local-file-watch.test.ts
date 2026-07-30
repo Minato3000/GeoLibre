@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
 import { before, describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 
 // local-file-watch statically pulls in tauri-io, which pulls in shpjs, whose
 // bundle reads the browser `self` global at module-eval time; shim it before
 // the dynamic import below.
 (globalThis as { self?: unknown }).self ??= globalThis;
 
-type IsLocalFileLayer = (layer: GeoLibreLayer) => boolean;
-type GetLayerWatchConfig = (layer: GeoLibreLayer) => { enabled: boolean };
-type SetLayerWatchConfig = (layer: GeoLibreLayer, enabled: boolean) => Partial<GeoLibreLayer>;
+type IsLocalFileLayer = (layer: GeoIntLayer) => boolean;
+type GetLayerWatchConfig = (layer: GeoIntLayer) => { enabled: boolean };
+type SetLayerWatchConfig = (layer: GeoIntLayer, enabled: boolean) => Partial<GeoIntLayer>;
 
 let isLocalFileLayer: IsLocalFileLayer;
 let getLayerWatchConfig: GetLayerWatchConfig;
@@ -22,7 +22,7 @@ before(async () => {
   setLayerWatchConfig = mod.setLayerWatchConfig;
 });
 
-function makeLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function makeLayer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id: "layer-1",
     name: "Test Layer",
@@ -125,7 +125,7 @@ describe("getLayerWatchConfig / setLayerWatchConfig", () => {
   it("round-trips through get after set", () => {
     const layer = makeLayer();
     const enabled = setLayerWatchConfig(layer, true);
-    assert.deepEqual(getLayerWatchConfig({ ...layer, ...enabled } as GeoLibreLayer), {
+    assert.deepEqual(getLayerWatchConfig({ ...layer, ...enabled } as GeoIntLayer), {
       enabled: true,
     });
   });

@@ -1,7 +1,7 @@
-import { type GeoLibreLayer, useAppStore } from "@geolibre/core";
-import { getPaletteLegend, savedRasterSymbology } from "@geolibre/plugins";
-import { type RasterData, readRasterData } from "@geolibre/processing";
-import { Button, Input, Select } from "@geolibre/ui";
+import { type GeoIntLayer, useAppStore } from "@geoint/core";
+import { getPaletteLegend, savedRasterSymbology } from "@geoint/plugins";
+import { type RasterData, readRasterData } from "@geoint/processing";
+import { Button, Input, Select } from "@geoint/ui";
 import { FileDown, ListChecks, Paintbrush, RefreshCw, Table2, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -38,12 +38,12 @@ const MIN_PANEL_HEIGHT = 140;
 const MAX_AUX_XML_BYTES = 8 * 1024 * 1024;
 
 /** The layer types the table can census (a downloadable single GeoTIFF). */
-function isRatLayer(layer: GeoLibreLayer | undefined): layer is GeoLibreLayer {
+function isRatLayer(layer: GeoIntLayer | undefined): layer is GeoIntLayer {
   return !!layer && canExportRasterLayer(layer);
 }
 
 /** The layer's `metadata.rasterState` as a record ({} when absent/malformed). */
-function rasterStateOf(layer: GeoLibreLayer): Record<string, unknown> {
+function rasterStateOf(layer: GeoIntLayer): Record<string, unknown> {
   const state = layer.metadata.rasterState;
   return state && typeof state === "object" && !Array.isArray(state)
     ? (state as Record<string, unknown>)
@@ -51,7 +51,7 @@ function rasterStateOf(layer: GeoLibreLayer): Record<string, unknown> {
 }
 
 /** The 1-indexed band the layer currently renders (rasterState.bands[0]). */
-function currentBand(layer: GeoLibreLayer): number {
+function currentBand(layer: GeoIntLayer): number {
   const bands = rasterStateOf(layer).bands;
   if (Array.isArray(bands) && typeof bands[0] === "number" && bands[0] >= 1) {
     return bands[0];
@@ -59,7 +59,7 @@ function currentBand(layer: GeoLibreLayer): number {
   return 1;
 }
 
-function bandCountOf(layer: GeoLibreLayer): number {
+function bandCountOf(layer: GeoIntLayer): number {
   const value = layer.metadata.bandCount;
   return typeof value === "number" && value > 0 ? value : 1;
 }
@@ -70,7 +70,7 @@ function bandCountOf(layer: GeoLibreLayer): number {
  * and most servers simply 404 — any failure quietly returns null.
  */
 async function fetchGdalRat(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   band: number,
   signal: AbortSignal,
 ): Promise<GdalRatEntry[] | null> {
@@ -236,7 +236,7 @@ export function RasterAttributeTable() {
   );
 
   const compute = useCallback(
-    async (target: GeoLibreLayer, band: number) => {
+    async (target: GeoIntLayer, band: number) => {
       const url = rasterExportUrl(target);
       if (!url) {
         setError(t("rasterAttributeTable.noSource"));
@@ -337,7 +337,7 @@ export function RasterAttributeTable() {
    * categorical edges. When it is, color edits write through to it live.
    */
   function tableSymbologyActive(
-    target: GeoLibreLayer,
+    target: GeoIntLayer,
     rows: readonly RasterAttributeTableRow[],
   ): boolean {
     const current = savedRasterSymbology(target);
@@ -360,7 +360,7 @@ export function RasterAttributeTable() {
   }
 
   /** The layer's live store snapshot, read at write time. */
-  function liveLayer(layerId: string): GeoLibreLayer | undefined {
+  function liveLayer(layerId: string): GeoIntLayer | undefined {
     return useAppStore.getState().layers.find((l) => l.id === layerId);
   }
 

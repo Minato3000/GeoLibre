@@ -16,9 +16,9 @@ import {
   type StoryActiveSlideMode,
   type StoryChapter,
   type StoryMap,
-} from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
-import { Button, cn } from "@geolibre/ui";
+} from "@geoint/core";
+import type { MapController } from "@geoint/map";
+import { Button, cn } from "@geoint/ui";
 import { GripVertical, List, X } from "lucide-react";
 import { sanitizeStoryHtml } from "../../lib/sanitize-html";
 import {
@@ -89,7 +89,7 @@ const INSET_POSITION_CLASS: Record<string, string> = {
 /**
  * Full-screen scroll-driven presentation overlay for a story map.
  *
- * Drives the live GeoLibre map underneath: as the reader scrolls each chapter
+ * Drives the live GeoInt map underneath: as the reader scrolls each chapter
  * into view the map flies to the chapter's camera and applies its layer fades,
  * mirroring the standalone storytelling template. Rendering nothing unless a
  * presentation is active keeps it inert the rest of the time.

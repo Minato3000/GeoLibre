@@ -55,7 +55,7 @@ function makeFakeElement(): FakeElement {
   return el;
 }
 
-const TERRAIN_SOURCE = "geolibre-terrain-dem";
+const TERRAIN_SOURCE = "geoint-terrain-dem";
 // Mirrors the control's private DOUBLE_CLICK_MS: advancing timers by exactly the
 // debounce window fires the pending single-click toggle.
 const DOUBLE_CLICK_MS = 250;

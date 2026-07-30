@@ -5,7 +5,7 @@ import type { MarkerShape } from "./types";
  * path, centered in a `size`×`size` box. The caller supplies the fill/stroke;
  * this only builds the path (via `beginPath`/`closePath`), so it stays free of
  * any DOM other than the passed context and can be shared by the map's sprite
- * baker (`@geolibre/map`) and the Print Layout legend renderer.
+ * baker (`@geoint/map`) and the Print Layout legend renderer.
  *
  * `"custom"` (SVG) markers have no built-in path and are handled by the caller
  * (rasterized separately); passing one draws the default circle so the marker

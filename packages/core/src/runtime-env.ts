@@ -1,7 +1,7 @@
 /**
  * Resolves runtime environment variables shared by the external-service clients
  * (geocoding, routing). Build-time Vite vars (`import.meta.env`) are overlaid
- * with project-supplied runtime vars (`window.__GEOLIBRE_RUNTIME_ENV__`, set
+ * with project-supplied runtime vars (`window.__GEOINT_RUNTIME_ENV__`, set
  * from project preferences) so a self-hosted endpoint can be configured without
  * a rebuild. Carries no React/MapLibre dependency so callers stay unit-testable.
  */
@@ -21,10 +21,10 @@ const buildEnv = (
 export function getRuntimeEnvironment(): Record<string, string | undefined> {
   if (typeof window === "undefined") return buildEnv ?? {};
 
-  // __GEOLIBRE_RUNTIME_ENV__ is declared globally in ./types.
+  // __GEOINT_RUNTIME_ENV__ is declared globally in ./types.
   return {
     ...(buildEnv ?? {}),
-    ...(window.__GEOLIBRE_RUNTIME_ENV__ ?? {}),
+    ...(window.__GEOINT_RUNTIME_ENV__ ?? {}),
   };
 }
 
@@ -35,7 +35,7 @@ export function getRuntimeEnvironment(): Record<string, string | undefined> {
  * desktop app's own loader and the Add Vector panel's maplibre-gl-vector
  * control) load the spatial extension from this path with `LOAD '<path>'`
  * instead of installing it from the remote repository, which hangs in
- * sandboxed or firewalled environments. Lives in `@geolibre/core` so every
+ * sandboxed or firewalled environments. Lives in `@geoint/core` so every
  * consumer shares one implementation.
  *
  * @param env - Environment record (defaults to the runtime environment);
@@ -71,12 +71,12 @@ export function getProtomapsApiKey(env?: Record<string, string | undefined>): st
 /**
  * Resolves the Google Maps API key from the runtime environment.
  *
- * GeoLibre's browser-facing builds normally use `VITE_GOOGLE_MAPS_API_KEY`.
+ * GeoInt's browser-facing builds normally use `VITE_GOOGLE_MAPS_API_KEY`.
  * The bare `GOOGLE_MAPS_API_KEY` fallback is reached two ways: (1) the desktop
  * Vite config copies it to `VITE_GOOGLE_MAPS_API_KEY` at build time for local
  * shell testing (`vite.config.ts`'s `envPrefix` does not include the bare
  * name), and (2) a project's own runtime environment variables
- * (`window.__GEOLIBRE_RUNTIME_ENV__`), which are not subject to Vite's
+ * (`window.__GEOINT_RUNTIME_ENV__`), which are not subject to Vite's
  * envPrefix allowlist at all.
  *
  * @param env - Environment record (defaults to the runtime environment);
@@ -97,7 +97,7 @@ export function getGoogleMapsApiKey(env?: Record<string, string | undefined>): s
  * It is supplied via `VITE_MAPBOX_ACCESS_TOKEN` (baked in at build time from the
  * bare `MAPBOX_TOKEN` env var, which `vite.config.ts` copies into the prefixed
  * name — the spelling Mapbox's own tooling uses) or set at runtime through
- * Settings → Environment variables (`window.__GEOLIBRE_RUNTIME_ENV__`, which
+ * Settings → Environment variables (`window.__GEOINT_RUNTIME_ENV__`, which
  * bypasses Vite's envPrefix allowlist, so a bare `MAPBOX_TOKEN` entry works
  * there too). When unset, the Mapbox basemaps prompt for a token in the basemap
  * panel's API keys view instead.
@@ -127,7 +127,7 @@ export function getMapboxAccessToken(env?: Record<string, string | undefined>): 
  * supplied via `VITE_CESIUM_TOKEN` (baked in at build time from the bare
  * `CESIUM_TOKEN` env var, which `vite.config.ts` copies into the prefixed name)
  * or set at runtime through Settings → Environment variables
- * (`window.__GEOLIBRE_RUNTIME_ENV__`, which bypasses Vite's envPrefix allowlist,
+ * (`window.__GEOINT_RUNTIME_ENV__`, which bypasses Vite's envPrefix allowlist,
  * so a bare `CESIUM_TOKEN` entry works there too). When unset, the globe cannot
  * render and the 3D view is not offered.
  *

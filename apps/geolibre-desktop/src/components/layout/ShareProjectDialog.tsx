@@ -8,7 +8,7 @@ import {
   Input,
   Label,
   Select,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { Check, Copy, ExternalLink, KeyRound, Loader2, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -23,7 +23,7 @@ import {
   type ShareUploadErrorCode,
   type ShareUploadResult,
   type ShareVisibility,
-} from "../../lib/share-geolibre";
+} from "../../lib/share-geoint";
 import { openSettingsSection } from "./SettingsDialog";
 
 interface ShareProjectDialogProps {

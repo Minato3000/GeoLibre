@@ -2,7 +2,7 @@
 
 The **Layers panel** on the left lists every layer in the project, from the topmost drawing layer down to the basemap. Selecting a layer here drives the [Style panel](styling.md) and the [Attribute table](attribute-table.md).
 
-![Layers panel with a vector layer and the basemap](https://data.geolibre.app/images/geolibre-layer-panel.webp)
+![Layers panel with a vector layer and the basemap](https://data.geolibre.app/images/geoint-layer-panel.webp)
 
 ## Layer order and visibility
 

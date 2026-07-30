@@ -6,11 +6,11 @@ import {
   vectorCircleColorValue,
   vectorFillColorValue,
   vectorLineColorValue,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerStyle,
   type VectorColorValue,
   useAppStore,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { PropertyValueSpecification } from "maplibre-gl";
 import type { VectorLayerInfo, VectorLayerOptions, VectorLayerStyle } from "maplibre-gl-vector";
 
@@ -55,13 +55,13 @@ let storeSyncSuspended = 0;
  * @param layer - A store layer.
  * @returns True when the layer mirrors a control-managed vector layer.
  */
-export function isVectorControlStoreLayer(layer: GeoLibreLayer): boolean {
+export function isVectorControlStoreLayer(layer: GeoIntLayer): boolean {
   return (
     layer.metadata.sourceKind === VECTOR_SOURCE_KIND && layer.metadata.externalNativeLayer === true
   );
 }
 
-function hasRestorableVectorUrl(layer: GeoLibreLayer): boolean {
+function hasRestorableVectorUrl(layer: GeoIntLayer): boolean {
   return typeof layer.source.url === "string" && layer.source.url.trim() !== "";
 }
 
@@ -77,7 +77,7 @@ function hasRestorableVectorUrl(layer: GeoLibreLayer): boolean {
  * @param layer - A store layer.
  * @returns True when the layer's data can be embedded.
  */
-export function isEmbeddableLocalVectorLayer(layer: GeoLibreLayer): boolean {
+export function isEmbeddableLocalVectorLayer(layer: GeoIntLayer): boolean {
   return isVectorControlStoreLayer(layer) && !hasRestorableVectorUrl(layer);
 }
 
@@ -92,12 +92,9 @@ export function isEmbeddableLocalVectorLayer(layer: GeoLibreLayer): boolean {
  *
  * @param info - Public layer snapshot from VectorControl.getLayers().
  * @param panelCollapsed - Whether the Add Vector Layer panel is collapsed.
- * @returns The corresponding GeoLibre store layer.
+ * @returns The corresponding GeoInt store layer.
  */
-export function createVectorStoreLayer(
-  info: VectorLayerInfo,
-  panelCollapsed = true,
-): GeoLibreLayer {
+export function createVectorStoreLayer(info: VectorLayerInfo, panelCollapsed = true): GeoIntLayer {
   const url = info.source.kind === "url" ? info.source.url : undefined;
   // A desktop host echoes the absolute path a local file was read from, so the
   // layer can be re-read from disk on reopen; the browser only knows the file
@@ -117,12 +114,12 @@ export function createVectorStoreLayer(
     opacity: info.opacity,
     // Seed the panel style from the control's own style so the Style panel
     // reflects what is actually rendered, and so an edit to one field does
-    // not reset the others back to GeoLibre defaults.
+    // not reset the others back to GeoInt defaults.
     style: { ...DEFAULT_LAYER_STYLE, ...vectorStyleToLayerStyle(info) },
     metadata: {
       customLayerType: vectorCustomLayerType(info.geometryType),
       externalNativeLayer: true,
-      // The control owns its layers' paint: GeoLibre pushes style edits through
+      // The control owns its layers' paint: GeoInt pushes style edits through
       // control.setLayerStyle (see wireVectorStoreSync), so the core sync must
       // not also re-apply paint — that would clobber control-only renderers like
       // the cluster bubble's stepped radius.
@@ -161,7 +158,7 @@ export function createVectorStoreLayer(
  * Diffs the control's layer list into the app store so the layer panel
  * lists control-managed vector layers. Adds new layers, drops store layers
  * whose vector layers are gone, and refreshes changed fields on existing
- * layers. The name is only seeded on creation so renames in the GeoLibre
+ * layers. The name is only seeded on creation so renames in the GeoInt
  * layer panel survive later syncs.
  *
  * @param control - The vector control to mirror.
@@ -398,7 +395,7 @@ export function resetVectorStoreSyncSuspension(): void {
  * @returns The addData options to replay through VectorControl.addData.
  */
 export function savedVectorState(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
 ): Pick<
   VectorLayerOptions,
   "format" | "ingestMode" | "picker" | "renderMode" | "sourceLayer" | "style"
@@ -571,8 +568,8 @@ function savedVectorStyle(raw: unknown): Partial<VectorLayerStyle> | null {
 }
 
 /**
- * Maps GeoLibre's shared LayerStyle onto the control's per-geometry
- * VectorLayerStyle. GeoLibre exposes one fillColor/strokeColor/fillOpacity/
+ * Maps GeoInt's shared LayerStyle onto the control's per-geometry
+ * VectorLayerStyle. GeoInt exposes one fillColor/strokeColor/fillOpacity/
  * strokeWidth for every geometry, so the fill fields also drive point circles
  * and the stroke fields drive lines and polygon outlines; the control applies
  * only the fields relevant to each layer's actual geometry.
@@ -580,7 +577,7 @@ function savedVectorStyle(raw: unknown): Partial<VectorLayerStyle> | null {
  * The collapse is intentionally lossy: circleColor/circleOpacity always track
  * fillColor/fillOpacity. Single-geometry layers round-trip cleanly; a "mixed"
  * layer's point circles unify with its fill from the first panel edit onward,
- * since GeoLibre has no separate point-fill control.
+ * since GeoInt has no separate point-fill control.
  *
  * Categorized/graduated/expression style modes produce a data-driven MapLibre
  * color expression that a flat color cannot represent, so it is carried in the
@@ -589,7 +586,7 @@ function savedVectorStyle(raw: unknown): Partial<VectorLayerStyle> | null {
  * data-driven mode, or to undefined in `single` mode — so reverting to a single
  * color clears any previously pushed expression on the control.
  *
- * @param style - The GeoLibre layer style.
+ * @param style - The GeoInt layer style.
  * @returns The equivalent control style patch.
  */
 function layerStyleToVectorStyle(style: LayerStyle): VectorLayerStyle {
@@ -609,7 +606,7 @@ function layerStyleToVectorStyle(style: LayerStyle): VectorLayerStyle {
     lineColorExpression: colorExpressionField(vectorLineColorValue(style)),
     circleColorExpression: colorExpressionField(vectorCircleColorValue(style)),
     // 3D extrusion. The control renders a fill-extrusion layer for polygons
-    // when extrusionEnabled; height and color reuse GeoLibre's shared resolvers
+    // when extrusionEnabled; height and color reuse GeoInt's shared resolvers
     // so a control-managed layer extrudes identically to the core fill-extrusion
     // path. extrusionColorExpression carries the data-driven color (the flat
     // extrusionColor is the fallback), matching the fill color contract above.
@@ -619,7 +616,7 @@ function layerStyleToVectorStyle(style: LayerStyle): VectorLayerStyle {
     extrusionOpacity: style.extrusionOpacity,
     extrusionHeight: extrusionHeightValue(style) as VectorLayerStyle["extrusionHeight"],
     extrusionBase: style.extrusionBase,
-    // Point renderer: GeoLibre's "single" maps to the control's "circle".
+    // Point renderer: GeoInt's "single" maps to the control's "circle".
     pointMode:
       (style.pointRenderer ?? "single") === "single"
         ? "circle"
@@ -628,7 +625,7 @@ function layerStyleToVectorStyle(style: LayerStyle): VectorLayerStyle {
     heatmapIntensity: style.heatmapIntensity,
     clusterRadius: style.clusterRadius,
     clusterMaxZoom: style.clusterMaxZoom,
-    // Attribute labels: GeoLibre's LabelStyle maps onto the control's flat
+    // Attribute labels: GeoInt's LabelStyle maps onto the control's flat
     // label fields. The control renders the field's value as a symbol layer;
     // an empty labelField clears it.
     //
@@ -654,7 +651,7 @@ function layerStyleToVectorStyle(style: LayerStyle): VectorLayerStyle {
  * expression when the style mode is data-driven, or undefined when it resolves
  * to a flat color (so the control falls back to fillColor/lineColor/circleColor).
  *
- * @param value - A color value from the @geolibre/core color builders.
+ * @param value - A color value from the @geoint/core color builders.
  * @returns The expression, or undefined for a flat color.
  */
 function colorExpressionField(
@@ -664,14 +661,14 @@ function colorExpressionField(
 }
 
 /**
- * Seeds a GeoLibre LayerStyle from the control's VectorLayerStyle so the Style
+ * Seeds a GeoInt LayerStyle from the control's VectorLayerStyle so the Style
  * panel reflects what the control actually rendered. Collapses the control's
- * per-geometry colors onto GeoLibre's shared fields, choosing the fill source
+ * per-geometry colors onto GeoInt's shared fields, choosing the fill source
  * by geometry (point circles use the circle fill; everything else the polygon
  * fill).
  *
  * @param info - The control layer snapshot.
- * @returns A partial GeoLibre style to overlay on the defaults.
+ * @returns A partial GeoInt style to overlay on the defaults.
  */
 function vectorStyleToLayerStyle(info: VectorLayerInfo): Partial<LayerStyle> {
   const style = info.style;
@@ -803,7 +800,7 @@ function vectorPanelCollapsedFromControl(control: VectorSyncableControl): boolea
   } catch (error) {
     // getState is optional, so only a throwing implementation lands here;
     // surface it instead of letting it look like the method being absent.
-    console.warn("[GeoLibre] vectorPanelCollapsedFromControl: getState threw", error);
+    console.warn("[GeoInt] vectorPanelCollapsedFromControl: getState threw", error);
     return true;
   }
 }

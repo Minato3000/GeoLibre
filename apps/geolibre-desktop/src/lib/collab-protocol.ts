@@ -3,16 +3,16 @@
 // This is the frontend copy. The worker keeps a parallel copy in
 // `workers/collab/src/protocol.ts` with the `project` field typed as `unknown`
 // (the relay never inspects a project). Here `project` is the concrete
-// `GeoLibreProject`. Keep the two `type` discriminants and field names in sync.
+// `GeoIntProject`. Keep the two `type` discriminants and field names in sync.
 
 import type {
   CollaborationChatMessage,
   CollaborationMode,
   CollaborationParticipant,
   CollaborationRole,
-  GeoLibreProject,
+  GeoIntProject,
   MapViewState,
-} from "@geolibre/core";
+} from "@geoint/core";
 
 export type { CollaborationMode, CollaborationRole };
 
@@ -51,7 +51,7 @@ export interface JoinMessage {
 
 export interface ClientSnapshotMessage {
   type: "snapshot";
-  project: GeoLibreProject;
+  project: GeoIntProject;
   rev: number;
 }
 
@@ -96,7 +96,7 @@ export interface WelcomeMessage {
   role: CollaborationRole;
   mode: CollaborationMode;
   participants: CollaborationParticipant[];
-  snapshot: GeoLibreProject | null;
+  snapshot: GeoIntProject | null;
   /** Current presence of existing participants (keyed by clientId) so a late
    *  joiner sees their cursors/viewports without waiting for the next move. */
   presence: Record<string, PresenceEntry>;
@@ -112,7 +112,7 @@ export interface PresenceEntry {
 
 export interface ServerSnapshotMessage {
   type: "snapshot";
-  project: GeoLibreProject;
+  project: GeoIntProject;
   origin: string;
   rev: number;
 }

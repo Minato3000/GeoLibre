@@ -8,7 +8,7 @@ import {
   vectorFillColorValue,
   vectorLineColorValue,
   type LayerStyle,
-} from "@geolibre/core";
+} from "@geoint/core";
 import { circlePaint, fillPaint, linePaint } from "../packages/map/src/style-mapper";
 
 function style(patch: Partial<LayerStyle> = {}): LayerStyle {

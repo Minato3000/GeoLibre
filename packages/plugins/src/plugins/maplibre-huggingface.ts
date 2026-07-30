@@ -23,8 +23,8 @@
  * the document.
  */
 
-import { useAppStore, VECTOR_COLOR_RAMPS } from "@geolibre/core";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import { useAppStore, VECTOR_COLOR_RAMPS } from "@geoint/core";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 import { isVectorLayerSelectionCancelled } from "maplibre-gl-vector/errors";
 import { addPMTilesLayerFromUrl } from "./maplibre-components";
 import {
@@ -75,13 +75,13 @@ import {
 export const HUGGINGFACE_PLUGIN_ID = "maplibre-gl-huggingface";
 
 /** Where the user's access token is kept. Mirrors the Mapillary plugin's key. */
-const TOKEN_STORAGE_KEY = "geolibre:huggingface-token";
+const TOKEN_STORAGE_KEY = "geoint:huggingface-token";
 
 /** Where the panel sends a user who has no token yet. */
 const TOKEN_SETTINGS_URL = `${HF_SITE}/settings/tokens`;
 
 /** Where the raster display defaults are kept, alongside the access token. */
-const RASTER_DEFAULTS_STORAGE_KEY = "geolibre:huggingface-raster-defaults";
+const RASTER_DEFAULTS_STORAGE_KEY = "geoint:huggingface-raster-defaults";
 
 /**
  * The renderers offered in Settings.
@@ -336,7 +336,7 @@ export const DEFAULT_HUGGINGFACE_LABELS: HuggingFaceLabels = {
   downloadTitle: "Download this file",
   copyUrlTitle: "Copy this file's URL",
   openDatasetTitle: "Open this dataset's page on huggingface.co",
-  unsupportedTitle: "GeoLibre cannot render this format — download it instead",
+  unsupportedTitle: "GeoInt cannot render this format — download it instead",
   addError: (message) => `Could not add this file: ${message}`,
   notRasterIndex:
     "This JSON file does not index any rasters, so there is nothing to put on the map. " +
@@ -389,7 +389,7 @@ export const DEFAULT_HUGGINGFACE_LABELS: HuggingFaceLabels = {
   clearSelection: "Clear",
   selectedFiles: (count, size) => `${count} file${count === 1 ? "" : "s"} selected (${size}).`,
   commitMessageLabel: "Commit message (optional)",
-  commitMessagePlaceholder: "Upload with GeoLibre",
+  commitMessagePlaceholder: "Upload with GeoInt",
   upload: "Upload",
   uploadPreparing: "Preparing upload…",
   uploadHashing: (name, index, total) => `Hashing ${name} (${index}/${total})…`,
@@ -585,7 +585,7 @@ function button(text: string, style: string, title?: string): HTMLButtonElement 
 let fieldIdCounter = 0;
 function nextFieldId(): string {
   fieldIdCounter += 1;
-  return `geolibre-hf-field-${fieldIdCounter}`;
+  return `geoint-hf-field-${fieldIdCounter}`;
 }
 
 /**
@@ -669,7 +669,7 @@ function ingestModeOf(layer: ReturnType<typeof findAddedLayer>): RemoteIngestMod
  * renders as download-only.
  */
 async function addFileToMap(
-  app: GeoLibreAppAPI | null,
+  app: GeoIntAppAPI | null,
   file: HfFile,
   ingestMode: RemoteIngestMode = "table",
   rasterDefaults?: RasterVisualizationDefaults,
@@ -937,7 +937,7 @@ function mergeDatasets(...groups: HfDataset[][]): HfDataset[] {
  * All view state lives in this closure, so the panel is self-contained and
  * `mountPanel` can rebuild it wholesale on a language change.
  */
-function buildPanel(container: HTMLElement, app: GeoLibreAppAPI | null): () => void {
+function buildPanel(container: HTMLElement, app: GeoIntAppAPI | null): () => void {
   type View =
     | { kind: "browse" }
     | { kind: "dataset"; dataset: HfDataset; path: string }
@@ -2000,7 +2000,7 @@ function buildPanel(container: HTMLElement, app: GeoLibreAppAPI | null): () => v
     colormapRow.appendChild(colormapLabel);
     const colormapSelect = el("select", CSS.fieldInput);
     labelControl(colormapLabel, colormapSelect);
-    // GeoLibre's own curated ramps, which the raster renderer treats as
+    // GeoInt's own curated ramps, which the raster renderer treats as
     // built-in colormap names. Read from core rather than from the renderer so
     // opening Settings does not pull in the deck.gl raster bundle.
     for (const ramp of VECTOR_COLOR_RAMPS) {
@@ -2160,8 +2160,8 @@ export function setHuggingFaceLabels(next: Partial<HuggingFaceLabels>): void {
  * vector/raster files on the map, and — with an access token — create a dataset
  * repo and upload files to it.
  */
-export const maplibreHuggingFacePlugin: GeoLibrePlugin = (() => {
-  let appRef: GeoLibreAppAPI | null = null;
+export const maplibreHuggingFacePlugin: GeoIntPlugin = (() => {
+  let appRef: GeoIntAppAPI | null = null;
   let unregisterPanel: (() => void) | null = null;
   // The mounted container and its teardown, tracked so a language change can
   // rebuild the panel in place (see setHuggingFaceLabels).
@@ -2183,7 +2183,7 @@ export const maplibreHuggingFacePlugin: GeoLibrePlugin = (() => {
     id: HUGGINGFACE_PLUGIN_ID,
     name: "Hugging Face",
     version: "0.1.0",
-    activate: (app: GeoLibreAppAPI) => {
+    activate: (app: GeoIntAppAPI) => {
       appRef = app;
       mountedPanels.add(remount);
       unregisterPanel =
@@ -2203,12 +2203,12 @@ export const maplibreHuggingFacePlugin: GeoLibrePlugin = (() => {
         }) ?? null;
       app.openRightPanel?.(HUGGINGFACE_PLUGIN_ID);
     },
-    deactivate: (app: GeoLibreAppAPI) => {
+    deactivate: (app: GeoIntAppAPI) => {
       app.closeRightPanel?.(HUGGINGFACE_PLUGIN_ID);
       unregisterPanel?.();
       unregisterPanel = null;
       mountedPanels.delete(remount);
-      // Layers the user added stay on the map: they are ordinary GeoLibre
+      // Layers the user added stay on the map: they are ordinary GeoInt
       // layers now, owned by the Layers panel, not by this browser.
       appRef = null;
     },

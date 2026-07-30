@@ -28,8 +28,8 @@
   },
   "about": {
     "trigger": "परिचय",
-    "title": "GeoLibre के बारे में",
-    "description": "GeoLibre एक हल्का क्लाउड-नेटिव GIS प्लेटफ़ॉर्म है।",
+    "title": "GeoInt के बारे में",
+    "description": "GeoInt एक हल्का क्लाउड-नेटिव GIS प्लेटफ़ॉर्म है।",
     "version": "संस्करण",
     "checkForUpdates": "अपडेट के लिए जाँचें",
     "tryAgain": "पुनः प्रयास करें",
@@ -48,7 +48,7 @@
     "steps": {
       "download": "डाउनलोड पेज से अपने प्लेटफ़ॉर्म के लिए इंस्टॉलर डाउनलोड करें।",
       "install": "इंस्टॉलर चलाएँ। आपके स्थानीय प्रोजेक्ट, सेटिंग्स और API कुंजियाँ सुरक्षित रहेंगी।",
-      "reopen": "अपडेट पूरा करने के लिए GeoLibre को फिर से खोलें।"
+      "reopen": "अपडेट पूरा करने के लिए GeoInt को फिर से खोलें।"
     },
     "severity": {
       "major": "प्रमुख रिलीज़",
@@ -67,7 +67,7 @@
       "noTag": "नवीनतम रिलीज़ में संस्करण टैग शामिल नहीं है।",
       "network": "GitHub तक नहीं पहुँच सका। अपना कनेक्शन जाँचें और पुनः प्रयास करें।",
       "viewDownloads": "डाउनलोड देखें",
-      "viewDownloadsHint": "आपके ब्राउज़र में GeoLibre डाउनलोड पेज खोलता है ताकि आप नवीनतम संस्करण को मैन्युअल रूप से जाँच सकें।"
+      "viewDownloadsHint": "आपके ब्राउज़र में GeoInt डाउनलोड पेज खोलता है ताकि आप नवीनतम संस्करण को मैन्युअल रूप से जाँच सकें।"
     },
     "startup": {
       "title": "अपडेट उपलब्ध है",
@@ -95,7 +95,7 @@
       "title": "इस प्रोजेक्ट से प्लगइन लोड करें?",
       "description_one": "यह प्रोजेक्ट एक ऐसे URL से 1 बाहरी प्लगइन लोड करना चाहता है जिसे आपने इंस्टॉल नहीं किया है। प्लगइन ऐप तक पूर्ण पहुँच के साथ कोड चलाते हैं।",
       "description_other": "यह प्रोजेक्ट ऐसे URL से {{count}} बाहरी प्लगइन लोड करना चाहता है जिन्हें आपने इंस्टॉल नहीं किया है। प्लगइन ऐप तक पूर्ण पहुँच के साथ कोड चलाते हैं।",
-      "warning": "केवल उन्हीं स्रोतों से प्लगइन लोड करें जिन पर आपको भरोसा है। लोड किए गए प्लगइन GeoLibre के समान अधिकारों के साथ चलते हैं।",
+      "warning": "केवल उन्हीं स्रोतों से प्लगइन लोड करें जिन पर आपको भरोसा है। लोड किए गए प्लगइन GeoInt के समान अधिकारों के साथ चलते हैं।",
       "trustButton": "भरोसा करें और लोड करें",
       "dismissButton": "लोड न करें"
     },
@@ -114,7 +114,7 @@
     "openHomepageAria": "{{name}} का होमपेज खोलें",
     "byAuthor": "{{author}} द्वारा",
     "updateAvailable": "अपडेट उपलब्ध",
-    "requiresVersion": "GeoLibre {{version}}+ आवश्यक",
+    "requiresVersion": "GeoInt {{version}}+ आवश्यक",
     "install": "इंस्टॉल करें",
     "installAria": "{{name}} इंस्टॉल करें",
     "removeConfirm": "हटाएँ?",
@@ -125,10 +125,10 @@
     "updateAria": "{{name}} अपडेट करें",
     "loading": "लोड हो रहा है…",
     "installed": "इंस्टॉल किया गया",
-    "settingsIntro": "GeoLibre हमेशा अपने ऐप डेटा के प्लगइन डायरेक्टरी को स्कैन करता है। किसी फ़ाइल से पैकेज्ड प्लगइन (.zip) इंस्टॉल करें, या अतिरिक्त स्थानीय डायरेक्टरी जोड़ें (केवल डेस्कटॉप)। मेनिफ़ेस्ट URL (मार्केटप्लेस इंस्टॉल सहित) नेटवर्क से लोड होते हैं; यहाँ किए गए बदलाव तुरंत लागू होते हैं।",
+    "settingsIntro": "GeoInt हमेशा अपने ऐप डेटा के प्लगइन डायरेक्टरी को स्कैन करता है। किसी फ़ाइल से पैकेज्ड प्लगइन (.zip) इंस्टॉल करें, या अतिरिक्त स्थानीय डायरेक्टरी जोड़ें (केवल डेस्कटॉप)। मेनिफ़ेस्ट URL (मार्केटप्लेस इंस्टॉल सहित) नेटवर्क से लोड होते हैं; यहाँ किए गए बदलाव तुरंत लागू होते हैं।",
     "installFromFile": "फ़ाइल से इंस्टॉल करें",
     "chooseZip": ".zip चुनें…",
-    "installFromFileHintDesktop": "पैकेज्ड प्लगइन संग्रह को GeoLibre की प्लगइन डायरेक्टरी में कॉपी करता है।",
+    "installFromFileHintDesktop": "पैकेज्ड प्लगइन संग्रह को GeoInt की प्लगइन डायरेक्टरी में कॉपी करता है।",
     "installFromFileHintWeb": "पैकेज्ड प्लगइन संग्रह लोड करता है; यह आपके ब्राउज़र में संग्रहीत होता है और अगली बार आने पर फिर से लोड होता है।",
     "localDirectories": "स्थानीय डायरेक्टरी",
     "directoryAria": "प्लगइन डायरेक्टरी",
@@ -143,7 +143,7 @@
     "errorDirectoryPicker": "डायरेक्टरी चयनकर्ता नहीं खोला जा सका।",
     "errorInstall": "प्लगइन इंस्टॉल नहीं किया जा सका।",
     "errorUninstall": "प्लगइन अनइंस्टॉल नहीं किया जा सका।",
-    "description": "बाहरी GeoLibre प्लगइन ब्राउज़ करें, इंस्टॉल करें, अपडेट करें और हटाएँ। प्लगइन <registryLink>GeoLibre प्लगइन रजिस्ट्री</registryLink> में सूचीबद्ध हैं।"
+    "description": "बाहरी GeoInt प्लगइन ब्राउज़ करें, इंस्टॉल करें, अपडेट करें और हटाएँ। प्लगइन <registryLink>GeoInt प्लगइन रजिस्ट्री</registryLink> में सूचीबद्ध हैं।"
   },
   "viewState": {
     "panelTitle": "जानकारी"
@@ -214,7 +214,7 @@
     "add": "जोड़ें",
     "ok": "ठीक है",
     "done": "हो गया",
-    "openWebApp": "GeoLibre वेब ऐप खोलें"
+    "openWebApp": "GeoInt वेब ऐप खोलें"
   },
   "addData": {
     "title": "डेटा जोड़ें",
@@ -257,7 +257,7 @@
       },
       "gdb": {
         "label": "फ़ाइल जियोडेटाबेस लेयर जोड़ें",
-        "description": "एक Esri फ़ाइल जियोडेटाबेस (.gdb फ़ोल्डर) से लेयर जोड़ें। लेयर स्थानीय GeoLibre सर्वर से पढ़ी जाती है और WGS84 में रीप्रोजेक्ट की जाती है।"
+        "description": "एक Esri फ़ाइल जियोडेटाबेस (.gdb फ़ोल्डर) से लेयर जोड़ें। लेयर स्थानीय GeoInt सर्वर से पढ़ी जाती है और WGS84 में रीप्रोजेक्ट की जाती है।"
       },
       "photos": {
         "label": "जियोटैग की गई तस्वीरें जोड़ें",
@@ -481,8 +481,8 @@
       "layerPlaceholder": "पहले एक जियोडेटाबेस चुनें",
       "readingLayers": "लेयर पढ़ी जा रही हैं...",
       "layerOption": "{{name}} ({{type}}, {{count}} फ़ीचर)",
-      "help": "केवल-एट्रिब्यूट वाली टेबल सूचीबद्ध नहीं हैं। चयनित फ़ीचर क्लास स्थानीय GeoLibre सर्वर के माध्यम से लोड की जाती है और WGS84 में रीप्रोजेक्ट की जाती है।",
-      "desktopOnly": "फ़ाइल जियोडेटाबेस लेयर केवल GeoLibre Desktop में उपलब्ध हैं। यह सुविधा स्थानीय GeoLibre सर्वर के माध्यम से एक स्थानीय .gdb फ़ोल्डर पढ़ती है, जिस तक वेब ऐप नहीं पहुँच सकता।",
+      "help": "केवल-एट्रिब्यूट वाली टेबल सूचीबद्ध नहीं हैं। चयनित फ़ीचर क्लास स्थानीय GeoInt सर्वर के माध्यम से लोड की जाती है और WGS84 में रीप्रोजेक्ट की जाती है।",
+      "desktopOnly": "फ़ाइल जियोडेटाबेस लेयर केवल GeoInt Desktop में उपलब्ध हैं। यह सुविधा स्थानीय GeoInt सर्वर के माध्यम से एक स्थानीय .gdb फ़ोल्डर पढ़ती है, जिस तक वेब ऐप नहीं पहुँच सकता।",
       "readError": "यह फ़ाइल जियोडेटाबेस नहीं पढ़ा जा सका।",
       "convertError": "यह फ़ीचर क्लास लोड नहीं हो सकी।",
       "errorNotGdb": ".gdb पर समाप्त होने वाला फ़ोल्डर चुनें (एक Esri फ़ाइल जियोडेटाबेस)।",
@@ -563,7 +563,7 @@
     },
     "postgres": {
       "defaultName": "PostgreSQL लेयर",
-      "errorDesktopOnly": "PostgreSQL लेयर के लिए GeoLibre Desktop आवश्यक है।",
+      "errorDesktopOnly": "PostgreSQL लेयर के लिए GeoInt Desktop आवश्यक है।",
       "errorConnectionString": "एक PostgreSQL कनेक्शन स्ट्रिंग दर्ज करें।",
       "statusCheckingBinary": "Martin बाइनरी जाँची जा रही है...",
       "statusDownloaded": "Martin डाउनलोड हो गया। स्थानीय सर्वर शुरू किया जा रहा है...",
@@ -578,7 +578,7 @@
       "errorConnectFirst": "पहले PostgreSQL से कनेक्ट करें।",
       "errorNoVectorLayers": "चयनित Martin स्रोत में कोई वेक्टर लेयर नहीं है।",
       "errorSelectSource": "जोड़ने के लिए एक Martin स्रोत चुनें।",
-      "desktopOnlyNotice": "PostgreSQL लेयर केवल GeoLibre Desktop में उपलब्ध हैं। यह सुविधा एक स्थानीय Martin टाइल सर्वर चलाती है, जिसे वेब ऐप शुरू नहीं कर सकता।",
+      "desktopOnlyNotice": "PostgreSQL लेयर केवल GeoInt Desktop में उपलब्ध हैं। यह सुविधा एक स्थानीय Martin टाइल सर्वर चलाती है, जिसे वेब ऐप शुरू नहीं कर सकता।",
       "savedConnection": "सहेजा गया कनेक्शन",
       "selectSavedConnection": "सहेजा गया कनेक्शन चुनें",
       "connectionString": "PostgreSQL कनेक्शन स्ट्रिंग",
@@ -599,7 +599,7 @@
       "editableTable": "टेबल",
       "tableReadOnly": "{{table}} (केवल पढ़ने योग्य: कोई प्राइमरी की नहीं)",
       "errorSelectTable": "लोड करने के लिए एक टेबल चुनें।",
-      "errorRuntimeMissing": "प्रोसेसिंग सर्वर में PostGIS रनटाइम (psycopg) इंस्टॉल नहीं है। संपादन योग्य लेयर लोड करने के लिए geolibre-server का 'postgis' एक्स्ट्रा इंस्टॉल करें।"
+      "errorRuntimeMissing": "प्रोसेसिंग सर्वर में PostGIS रनटाइम (psycopg) इंस्टॉल नहीं है। संपादन योग्य लेयर लोड करने के लिए geoint-server का 'postgis' एक्स्ट्रा इंस्टॉल करें।"
     },
     "video": {
       "defaultName": "वीडियो लेयर",
@@ -1078,7 +1078,7 @@
     "step1Title": "1. एक API टोकन प्राप्त करें",
     "step1Description": "share.geolibre.app में साइन इन करें, फिर Settings → API tokens के अंतर्गत एक टोकन बनाएं।",
     "getToken": "API टोकन प्राप्त करें",
-    "step2Title": "2. टोकन को GeoLibre में जोड़ें",
+    "step2Title": "2. टोकन को GeoInt में जोड़ें",
     "step2Description": "इस डिवाइस पर Settings → Environment Variables में टोकन पेस्ट करें।",
     "configureToken": "स्थानीय टोकन कॉन्फ़िगर करें",
     "liveAt": "आपका प्रोजेक्ट यहां लाइव है:",
@@ -1100,7 +1100,7 @@
   },
   "gallery": {
     "title": "प्रोजेक्ट गैलरी",
-    "description": "share.geolibre.app पर साझा किए गए सार्वजनिक प्रोजेक्ट ब्राउज़ करें और उनमें से किसी एक को GeoLibre में खोलें।",
+    "description": "share.geolibre.app पर साझा किए गए सार्वजनिक प्रोजेक्ट ब्राउज़ करें और उनमें से किसी एक को GeoInt में खोलें।",
     "searchPlaceholder": "शीर्षक, लेखक या टैग के आधार पर लोड किए गए प्रोजेक्ट फ़िल्टर करें",
     "loading": "प्रोजेक्ट लोड हो रहे हैं…",
     "loadingMore": "अधिक लोड हो रहा है…",
@@ -1186,7 +1186,7 @@
       "groupNavigation": "उत्तर तीर और स्केल बार समूहित करें",
       "footer": "फ़ुटर टेक्स्ट",
       "date": "तारीख़",
-      "attribution": "GeoLibre एट्रिब्यूशन शामिल करें",
+      "attribution": "GeoInt एट्रिब्यूशन शामिल करें",
       "pageBorder": "पेज बॉर्डर",
       "infoBlock": "जानकारी ब्लॉक (शीर्षक ब्लॉक)",
       "colorbar": "कलरबार",
@@ -1566,7 +1566,7 @@
     "noticeDesc": "नॉलेज कार्ड खोलने पर आपके क्लिक किए गए स्थान के निर्देशांक (और आपके द्वारा खोले गए किसी भी आस-पास के लेख का शीर्षक) सारांश और फ़ोटो प्राप्त करने के लिए Wikipedia के सार्वजनिक API को भेजे जाते हैं — उन अनुरोधों के लिए आपके निर्देशांक आपके डिवाइस से बाहर जाते हैं।"
   },
   "onboarding": {
-    "title": "GeoLibre में आपका स्वागत है",
+    "title": "GeoInt में आपका स्वागत है",
     "description": "इंटरफ़ेस को अपने अनुसार ढालने के लिए अपना अनुभव स्तर चुनें। आप इसे किसी भी समय Settings → Interface में बदल सकते हैं।",
     "level": {
       "beginner": {
@@ -1579,7 +1579,7 @@
       },
       "advanced": {
         "title": "उन्नत",
-        "description": "GeoLibre द्वारा दी जाने वाली हर चीज़ दिखाएँ।"
+        "description": "GeoInt द्वारा दी जाने वाली हर चीज़ दिखाएँ।"
       }
     },
     "showEverything": "छोड़ें — सब कुछ दिखाएँ"
@@ -1594,7 +1594,6 @@
       "appearance": "दिखावट",
       "interface": "इंटरफ़ेस",
       "geocoding": "जियोकोडिंग",
-      "ai": "AI प्रदाता",
       "environment": "एनवायरनमेंट",
       "updates": "अपडेट"
     },
@@ -1604,7 +1603,6 @@
       "appearanceSettings": "दिखावट सेटिंग्स",
       "interfaceSettings": "इंटरफ़ेस सेटिंग्स",
       "geocoding": "जियोकोडिंग",
-      "ai": "AI प्रदाता",
       "environmentVariables": "एनवायरनमेंट वेरिएबल",
       "updates": "अपडेट सेटिंग्स",
       "managePlugins": "प्लगइन प्रबंधित करें",
@@ -1613,9 +1611,9 @@
     },
     "updates": {
       "title": "सॉफ़्टवेयर अपडेट",
-      "description": "नियंत्रित करें कि डेस्कटॉप ऐप शुरू होने पर GeoLibre नए वर्शन की जाँच कैसे करता है।",
+      "description": "नियंत्रित करें कि डेस्कटॉप ऐप शुरू होने पर GeoInt नए वर्शन की जाँच कैसे करता है।",
       "checkOnStartup": "शुरू होने पर अपडेट जाँचें",
-      "checkOnStartupHint": "सक्षम होने पर, GeoLibre हर बार ऐप शुरू होने पर नए वर्शन की जाँच करता है। पूरी तरह ऑफ़लाइन वर्कफ़्लो के लिए इसे बंद करें।",
+      "checkOnStartupHint": "सक्षम होने पर, GeoInt हर बार ऐप शुरू होने पर नए वर्शन की जाँच करता है। पूरी तरह ऑफ़लाइन वर्कफ़्लो के लिए इसे बंद करें।",
       "notificationLevel": "मुझे इस बारे में सूचित करें",
       "notificationLevelHint": "चुनें कि किस तरह के रिलीज़ स्टार्टअप सूचना ट्रिगर करें।",
       "level": {
@@ -1698,7 +1696,7 @@
       "lockedNote": "यह इंटरफ़ेस प्रोफ़ाइल आपके व्यवस्थापक द्वारा प्रबंधित की जाती है और इसे बदला नहीं जा सकता।"
     },
     "env": {
-      "tokenTitle": "Share.GeoLibre API टोकन",
+      "tokenTitle": "Share.GeoInt API टोकन",
       "tokenDescription": "Project > Share इस टोकन का उपयोग आपके मानचित्रों को share.geolibre.app पर अपलोड करने के लिए करता है। <tokenLink>share.geolibre.app/settings</tokenLink> खोलें, Settings > API tokens के अंतर्गत एक टोकन बनाएँ, फिर उसे नीचे दिए गए फ़ील्ड में पेस्ट करें।",
       "tokenStorageNote": "इस डिवाइस पर स्थानीय रूप से संग्रहीत और अपलोड प्रमाणित करने के लिए केवल share.geolibre.app पर भेजा जाता है। वेब बिल्ड पर यह अन्य साइट डेटा के समान ब्राउज़र स्टोरेज साझा करता है, इसलिए यदि आपकी मशीन से समझौता हो जाए तो इसे share.geolibre.app पर रद्द करें।",
       "tokenPlaceholder": "glb_…",
@@ -1744,61 +1742,6 @@
       "emailHint": "केवल Nominatim द्वारा उपयोग किया जाता है, जो आपके एप्लिकेशन की पहचान में मदद के लिए इसे देने की सलाह देता है — केवल दिए जाने पर ही भेजा जाता है।",
       "secretsWarning": "कुंजियाँ प्रोजेक्ट फ़ाइल में सादे टेक्स्ट में संग्रहीत होती हैं और प्रोजेक्ट साझा करने पर उजागर हो सकती हैं। इन्हें क्वेरी पैरामीटर के रूप में भी भेजा जाता है, इसलिए ये ब्राउज़र DevTools और किसी भी प्रॉक्सी लॉग में दिखाई देने वाले जियोकोडिंग अनुरोध URL में दिखती हैं।",
       "corsNote": "Google आधिकारिक रूप से अपने Geocoding API पर ब्राउज़र अनुरोधों की अनुमति नहीं देता, इसलिए सेम-ओरिजिन प्रॉक्सी के माध्यम से भेजे जाने तक अनुरोध अवरुद्ध हो सकते हैं।"
-    },
-    "ai": {
-      "title": "AI सहायक प्रदाता",
-      "description": "AI सहायक के लिए क्रेडेंशियल कॉन्फ़िगर करें। एक प्रदाता चुनें, आवश्यक फ़ील्ड भरें, फिर सहेजें। चैट शुरू करने के लिए केवल एक कॉन्फ़िगर किया गया प्रदाता आवश्यक है।",
-      "providerLabel": "प्रदाता",
-      "providerHint": "आवश्यक फ़ील्ड देखने के लिए एक प्रदाता चुनें।",
-      "configuredMark": "(कॉन्फ़िगर किया गया)",
-      "optionalMark": "(वैकल्पिक)",
-      "statusReady": "{{provider}} कॉन्फ़िगर हो गया है और उपयोग के लिए तैयार है।",
-      "statusIncomplete": "{{provider}} सक्षम करने के लिए नीचे दिए गए आवश्यक फ़ील्ड भरें।",
-      "secretsNote": "क्रेडेंशियल इस डिवाइस पर स्थानीय रूप से सहेजे जाते हैं, आपके द्वारा साझा की गई प्रोजेक्ट फ़ाइल में नहीं, इसलिए वे पुनः आरंभ करने पर भी बने रहते हैं। इस डिवाइस तक पहुँच रखने वाला कोई भी उन्हें पढ़ सकता है।",
-      "getCredentials": "{{provider}} क्रेडेंशियल कहाँ से प्राप्त करें",
-      "showValue": "{{name}} दिखाएँ",
-      "hideValue": "{{name}} छिपाएँ",
-      "osEnvNote": "डेस्कटॉप ऐप आपके सिस्टम एनवायरनमेंट वेरिएबल्स से मेल खाने वाली API कुंजियाँ भी पढ़ता है। वे स्वचालित रूप से उपयोग होती हैं और कभी प्रोजेक्ट फ़ाइल में सहेजी नहीं जातीं — एनवायरनमेंट मान का उपयोग जारी रखने के लिए फ़ील्ड खाली छोड़ें।",
-      "osEnvField": "आपके सिस्टम एनवायरनमेंट वेरिएबल {{name}} से पढ़ें।",
-      "osEnvPlaceholder": "आपके सिस्टम एनवायरनमेंट में सेट है",
-      "newProfile": "नई प्रोफ़ाइल",
-      "cancel": "रद्द करें",
-      "addProfile": "प्रोफ़ाइल जोड़ें",
-      "profileName": "प्रोफ़ाइल नाम",
-      "profileNamePlaceholder": "जैसे कार्य Gemini, लोकल Ollama",
-      "profileCount_one": "{{count}} प्रोफ़ाइल",
-      "profileCount_other": "{{count}} प्रोफ़ाइल",
-      "noProfiles": "अभी कोई प्रोफ़ाइल नहीं है। AI सहायक कॉन्फ़िगर करने के लिए नीचे एक जोड़ें।",
-      "setDefault": "डिफ़ॉल्ट के रूप में सेट करें",
-      "defaultProfile": "डिफ़ॉल्ट",
-      "edit": "संपादित करें",
-      "deleteProfile": "प्रोफ़ाइल हटाएँ",
-      "backToProfiles": "← प्रोफ़ाइल पर वापस",
-      "saveProfile": "प्रोफ़ाइल सहेजें",
-      "profileEditSaveHint": "ऊपर अपनी प्रोफ़ाइल के परिवर्तन सहेजें या छोड़ें, फिर सभी परिवर्तन लागू करने के लिए सेटिंग्स सहेजें पर क्लिक करें।",
-      "field": {
-        "apiKey": "API कुंजी",
-        "baseUrl": "बेस URL",
-        "model": "मॉडल",
-        "region": "क्षेत्र",
-        "accessKeyId": "एक्सेस की ID",
-        "secretAccessKey": "सीक्रेट एक्सेस की",
-        "sessionToken": "सेशन टोकन"
-      },
-      "placeholder": {
-        "geminiKey": "AIza…",
-        "anthropicKey": "sk-ant-…",
-        "openaiKey": "sk-…",
-        "ollamaBaseUrl": "http://localhost:11434",
-        "ollamaModel": "llama3.2",
-        "awsAccessKey": "AKIA…",
-        "awsSecretKey": "wJalrXUtnFEMI…",
-        "awsRegion": "us-east-1",
-        "awsSessionToken": "FwoGZXIvYXdz… (यदि अस्थायी क्रेडेंशियल का उपयोग कर रहे हैं)",
-        "customBaseUrl": "https://api.example.com/v1",
-        "customModel": "model-id",
-        "customApiKey": "sk-… (यदि आवश्यक हो)"
-      }
     }
   },
   "toolbar": {
@@ -1908,7 +1851,7 @@
       "smartPaste": "निर्देशांक पेस्ट करें",
       "smartPasteInputLabel": "निर्देशांक स्ट्रिंग",
       "smartPastePlaceholder": "उदाहरण: 51.5074, -0.1278 या 51°30'26\"N, 0°07'39\"W",
-      "smartPasteInfo": "DD, DMS, या DDM में पूरी निर्देशांक स्ट्रिंग टाइप करें या पेस्ट करें, फिर इनपुट प्रोसेस करें चलाएं। GeoLibre प्रारूप को पहचान लेता है और नीचे रेखांश तथा अक्षांश फ़ील्ड भर देता है। ज़ूम, पिच, और बेयरिंग को आगे बढ़ने से पहले अलग से समायोजित करें।",
+      "smartPasteInfo": "DD, DMS, या DDM में पूरी निर्देशांक स्ट्रिंग टाइप करें या पेस्ट करें, फिर इनपुट प्रोसेस करें चलाएं। GeoInt प्रारूप को पहचान लेता है और नीचे रेखांश तथा अक्षांश फ़ील्ड भर देता है। ज़ूम, पिच, और बेयरिंग को आगे बढ़ने से पहले अलग से समायोजित करें।",
       "smartPasteInfoLabel": "निर्देशांक पेस्ट करने के बारे में",
       "smartPasteInvalid": "उन निर्देशांकों को पढ़ा नहीं जा सका। DD, DMS, या DDM में पूरा रेखांश और अक्षांश दर्ज करें, उदाहरण के लिए 51.5074, -0.1278। आंशिक या अधूरी स्ट्रिंग को पार्स नहीं किया जा सकता।",
       "processInput": "इनपुट प्रोसेस करें",
@@ -2037,8 +1980,8 @@
     },
     "conversion": {
       "vectorToVector": "वेक्टर से वेक्टर",
-      "zipInputBrowserError": "ज़िप की गई Shapefile केवल GeoLibre डेस्कटॉप ऐप में ही परिवर्तित की जा सकती हैं। ब्राउज़र में, अनज़िप की गई .shp फ़ाइल को उसकी .dbf, .shx, और .prj फ़ाइलों के साथ चुनें।",
-      "browserOutputUnsupported": "ब्राउज़र में, आउटपुट GeoJSON, CSV, GeoParquet, GeoPackage, या Shapefile (.zip) हो सकता है। \".{{extension}}\" आउटपुट के लिए GeoLibre डेस्कटॉप ऐप चाहिए।",
+      "zipInputBrowserError": "ज़िप की गई Shapefile केवल GeoInt डेस्कटॉप ऐप में ही परिवर्तित की जा सकती हैं। ब्राउज़र में, अनज़िप की गई .shp फ़ाइल को उसकी .dbf, .shx, और .prj फ़ाइलों के साथ चुनें।",
+      "browserOutputUnsupported": "ब्राउज़र में, आउटपुट GeoJSON, CSV, GeoParquet, GeoPackage, या Shapefile (.zip) हो सकता है। \".{{extension}}\" आउटपुट के लिए GeoInt डेस्कटॉप ऐप चाहिए।",
       "outputExtensionRequired": "प्रारूप चुनने के लिए आउटपुट नाम में एक फ़ाइल एक्सटेंशन जोड़ें।",
       "readingWithDuckDb": "DuckDB-WASM के साथ {{name}} पढ़ा जा रहा है",
       "readFeatures": "{{name}} से {{features}} फ़ीचर पढ़े गए",
@@ -2052,7 +1995,7 @@
       "vectorToPmtiles": "वेक्टर से PMTiles",
       "rasterToCog": "रास्टर से COG",
       "rasterToPmtiles": "रास्टर से PMTiles",
-      "needsDesktop": "इस रूपांतरण के लिए GeoLibre डेस्कटॉप ऐप या चालू साइडकार की आवश्यकता है।",
+      "needsDesktop": "इस रूपांतरण के लिए GeoInt डेस्कटॉप ऐप या चालू साइडकार की आवश्यकता है।",
       "runsInBrowserDuckDb": "रूपांतरण आपके ब्राउज़र में DuckDB-WASM के साथ चलता है।",
       "runsInBrowserWriters": "रूपांतरण आपके ब्राउज़र में DuckDB-WASM और बंडल किए गए राइटर के साथ चलता है।",
       "runsInBrowserWasm": "रूपांतरण आपके ब्राउज़र में geolibre-wasm के साथ चलता है। किसी साइडकार की आवश्यकता नहीं।",
@@ -2207,7 +2150,7 @@
       "noOutput": "अभी कोई आउटपुट नहीं।",
       "errorConnect": "साइडकार से कनेक्ट नहीं हो सका।",
       "errorPoll": "जॉब की स्थिति नहीं ली जा सकी।",
-      "errorStartSidecar": "GeoLibre साइडकार शुरू नहीं हो सका।",
+      "errorStartSidecar": "GeoInt साइडकार शुरू नहीं हो सका।",
       "errorStartTool": "रास्टर टूल शुरू नहीं हो सका।"
     },
     "mapControl": {
@@ -2311,7 +2254,7 @@
       "terrain": "भू-भाग",
       "remoteSensing": "रिमोट सेंसिंग",
       "projection": "प्रोजेक्शन",
-      "geolibre": "GeoLibre",
+      "geoint": "GeoInt",
       "subGroupGeometry": "ज्यामिति",
       "subGroupOverlay": "ओवरले",
       "subGroupJoin": "जॉइन",
@@ -2373,7 +2316,7 @@
       "webServices": "वेब सेवाएं",
       "commandPalette": "कमांड पैलेट",
       "openProjectFromUrl": "URL से प्रोजेक्ट खोलें",
-      "openProjectFromUrlDesc": "एक `.geolibre.json` प्रोजेक्ट लोड करें और उसे हाल के प्रोजेक्ट में जोड़ें।",
+      "openProjectFromUrlDesc": "एक `.geoint.json` प्रोजेक्ट लोड करें और उसे हाल के प्रोजेक्ट में जोड़ें।",
       "projectUrl": "प्रोजेक्ट URL",
       "opening": "खोला जा रहा है...",
       "open": "खोलें",
@@ -2388,7 +2331,7 @@
       "embedVectorReferenceButton": "फ़ाइल संदर्भ सहेजें",
       "embedVectorSkipButton": "बिना डेटा के सहेजें",
       "saveProjectFileName": "फ़ाइल नाम",
-      "saveProjectFileNamePlaceholder": "my-project.geolibre.json",
+      "saveProjectFileNamePlaceholder": "my-project.geoint.json",
       "exportHtmlAsTitle": "इंटरैक्टिव HTML के रूप में निर्यात करें",
       "exportHtmlAsDesc": "एक फ़ाइल नाम दर्ज करें। सहेजें पर क्लिक करने पर HTML पेज आपके ब्राउज़र के डाउनलोड फ़ोल्डर में डाउनलोड हो जाएगा।",
       "exportHtmlFileName": "फ़ाइल नाम",
@@ -2429,21 +2372,21 @@
       "maplibre-gl-annotations": "एनोटेशन",
       "maplibre-gl-streetview": "स्ट्रीट व्यू",
       "maplibre-gl-time-slider": "समय स्लाइडर",
-      "geolibre-timelapse": "टाइमलैप्स",
+      "geoint-timelapse": "टाइमलैप्स",
       "maplibre-gl-esri-wayback": "ऐतिहासिक इमेजरी",
       "maplibre-gl-openaerialmap": "OpenAerialMap",
-      "geolibre-stac-catalogs": "STAC कैटलॉग",
+      "geoint-stac-catalogs": "STAC कैटलॉग",
       "maplibre-gl-source-coop": "Source Cooperative",
       "maplibre-gl-natural-earth": "Natural Earth",
       "maplibre-gl-swipe": "लेयर स्वाइप",
-      "geolibre-elevation-profile": "ऊँचाई प्रोफ़ाइल",
+      "geoint-elevation-profile": "ऊँचाई प्रोफ़ाइल",
       "maplibre-gl-basemap-control": "बेसमैप",
       "maplibre-layer-control": "लेयर नियंत्रण",
       "maplibre-gl-huggingface": "Hugging Face",
       "carto-light": "Carto Light बेसमैप",
-      "geolibre-flight-simulator": "फ़्लाइट सिम्युलेटर",
-      "geolibre-route-animation": "मार्ग एनिमेशन",
-      "geolibre-sun": "सूर्य सिमुलेशन",
+      "geoint-flight-simulator": "फ़्लाइट सिम्युलेटर",
+      "geoint-route-animation": "मार्ग एनिमेशन",
+      "geoint-sun": "सूर्य सिमुलेशन",
       "maplibre-atmosphere-effects": "वायुमंडलीय प्रभाव",
       "maplibre-deckgl-viz": "Deck.gl लेयर",
       "maplibre-gl-clouds": "बादल",
@@ -2607,7 +2550,7 @@
     "summary": "{{total}} में से {{selected}} फ़ीचर चयनित ({{matched}} मेल खाईं)।",
     "evaluationErrors": "{{count}} फ़ीचर का मूल्यांकन नहीं किया जा सका और वे मेल नहीं खाईं।",
     "unevaluableDisjoint": "{{count}} फ़ीचर को बाहर रखा गया क्योंकि उनकी ज्यामिति का मूल्यांकन नहीं किया जा सका।",
-    "tooManyPairs": "इस तुलना के लिए {{pairs}} फ़ीचर-जोड़ी परीक्षण चाहिए (सीमा {{limit}})। इसके बजाय साइडकार इंजन के साथ Processing → GeoLibre → Vector → Select by location का उपयोग करें।",
+    "tooManyPairs": "इस तुलना के लिए {{pairs}} फ़ीचर-जोड़ी परीक्षण चाहिए (सीमा {{limit}})। इसके बजाय साइडकार इंजन के साथ Processing → GeoInt → Vector → Select by location का उपयोग करें।",
     "exportedLayerName": "{{name}} (चयन)"
   },
   "loadEditorFeatures": {
@@ -2834,7 +2777,7 @@
     "webMapAdded_one": "इस वेब मानचित्र से {{count}} लेयर जोड़ी गई।",
     "webMapAdded_other": "इस वेब मानचित्र से {{count}} लेयर जोड़ी गईं।",
     "webMapAddedPartial": "इस वेब मानचित्र से {{total}} में से {{added}} लेयर जोड़ी गईं; बाकी तक नहीं पहुँचा जा सका।",
-    "webMapEmpty": "इस वेब मानचित्र में ऐसी कोई लेयर नहीं है जिसे GeoLibre रेंडर कर सके।",
+    "webMapEmpty": "इस वेब मानचित्र में ऐसी कोई लेयर नहीं है जिसे GeoInt रेंडर कर सके।",
     "add": "जोड़ें",
     "adding": "जोड़ा जा रहा है…",
     "remove": "हटाएँ",
@@ -2916,7 +2859,7 @@
     "downloadTitle": "इस फ़ाइल को डाउनलोड करें",
     "copyUrlTitle": "इस फ़ाइल का URL कॉपी करें",
     "openProductTitle": "इस उत्पाद का पेज source.coop पर खोलें",
-    "unsupportedTitle": "GeoLibre इस फ़ॉर्मैट को रेंडर नहीं कर सकता — इसके बजाय इसे डाउनलोड करें",
+    "unsupportedTitle": "GeoInt इस फ़ॉर्मैट को रेंडर नहीं कर सकता — इसके बजाय इसे डाउनलोड करें",
     "addError": "यह फ़ाइल नहीं जोड़ी जा सकी: {{message}}",
     "largeFileWarning": "यह फ़ाइल {{size}} है। यह स्रोत से स्ट्रीम होती है, इसलिए केवल दृश्य में मौजूद भाग ही पढ़े जाते हैं।",
     "streamHint": "यह फ़ाइल {{size}} है। «जोड़ें» इसे मेमोरी में कॉपी करता है; «स्ट्रीम» केवल दृश्य में मौजूद भाग पढ़ता है।",
@@ -2961,7 +2904,7 @@
     "downloadTitle": "इस फ़ाइल को डाउनलोड करें",
     "copyUrlTitle": "इस फ़ाइल का URL कॉपी करें",
     "openDatasetTitle": "इस डेटासेट का पेज huggingface.co पर खोलें",
-    "unsupportedTitle": "GeoLibre इस फ़ॉर्मैट को रेंडर नहीं कर सकता — इसके बजाय इसे डाउनलोड करें",
+    "unsupportedTitle": "GeoInt इस फ़ॉर्मैट को रेंडर नहीं कर सकता — इसके बजाय इसे डाउनलोड करें",
     "addError": "यह फ़ाइल नहीं जोड़ी जा सकी: {{message}}",
     "notRasterIndex": "यह JSON फ़ाइल किसी रास्टर को इंडेक्स नहीं करती, इसलिए मानचित्र पर रखने के लिए कुछ नहीं है। MosaicJSON और STAC कलेक्शन समर्थित हैं।",
     "largeFileWarning": "यह फ़ाइल {{size}} है। यह स्रोत से स्ट्रीम होती है, इसलिए केवल दृश्य में मौजूद भाग ही पढ़े जाते हैं।",
@@ -3005,7 +2948,7 @@
     "selectedFiles_one": "{{count}} फ़ाइल चयनित ({{size}})।",
     "selectedFiles_other": "{{count}} फ़ाइलें चयनित ({{size}})।",
     "commitMessageLabel": "कमिट संदेश (वैकल्पिक)",
-    "commitMessagePlaceholder": "GeoLibre से अपलोड किया गया",
+    "commitMessagePlaceholder": "GeoInt से अपलोड किया गया",
     "upload": "अपलोड करें",
     "uploadPreparing": "अपलोड की तैयारी हो रही है…",
     "uploadHashing": "{{name}} का हैश बनाया जा रहा है ({{index}}/{{total}})…",
@@ -3070,7 +3013,7 @@
     "runHint": "चलाएँ (Ctrl/Cmd+Enter)",
     "completions": "कम्प्लीशन्स",
     "placeholder": "यहाँ Python लिखें · चलाने के लिए Ctrl/Cmd+Enter · ऑटोकम्प्लीट के लिए Tab · इतिहास के लिए ↑/↓",
-    "intro": "Python कंसोल तैयार है। मैप को स्क्रिप्ट करने के लिए `geolibre` ऑब्जेक्ट का उपयोग करें, जैसे geolibre.get_center()। Tab ऑटोकम्प्लीट करता है, ↑/↓ पिछले कमांड याद दिलाता है, और `await geolibre.load_package(\"numpy\")` पैकेज जोड़ता है।",
+    "intro": "Python कंसोल तैयार है। मैप को स्क्रिप्ट करने के लिए `geoint` ऑब्जेक्ट का उपयोग करें, जैसे geoint.get_center()। Tab ऑटोकम्प्लीट करता है, ↑/↓ पिछले कमांड याद दिलाता है, और `await geoint.load_package(\"numpy\")` पैकेज जोड़ता है।",
     "loadFailed": "Python रनटाइम लोड करने में विफल।",
     "showEditor": "एडिटर दिखाएँ",
     "hideEditor": "एडिटर छिपाएँ",
@@ -3183,21 +3126,7 @@
     "stop": "रोकें",
     "placeholder": "अपने डेटा के बारे में पूछें, जैसे \"50 मिलियन से अधिक जनसंख्या वाले देश दिखाएँ\" · भेजने के लिए Ctrl/Cmd+Enter",
     "intro": "अपने डेटा से चैट करें। मैं Spatial SQL चला सकता हूँ, लेयर जोड़ या हटा सकता हूँ, उन्हें फिर से स्टाइल कर सकता हूँ, और मैप को स्थानांतरित कर सकता हूँ — हर बदलाव को पूर्ववत किया जा सकता है। \"देशों को जनसंख्या के अनुसार ग्रेजुएटेड लाल रैंप से रंगें\" जैसा प्रयास करें।",
-    "setupTitle": "AI सहायक सेट करें",
-    "setupStatus": "सहायक को सोचने के लिए एक AI प्रदाता चाहिए। नीचे दिए गए किसी भी एक प्रदाता के लिए क्रेडेंशियल जोड़ें और सेव करते ही पैनल चैट मोड में बदल जाएगा।",
-    "setupProviders": "किसी भी एक प्रदाता के लिए क्रेडेंशियल जोड़ें",
-    "setupOpenSettings": "सेटिंग्स → AI प्रदाता खोलें",
-    "thinking": "काम हो रहा है…",
-    "toolError": "विफल",
-    "provider": "LLM प्रदाता",
-    "profile": "AI प्रोफ़ाइल",
-    "deploymentProxy": "डिप्लॉयमेंट प्रॉक्सी",
-    "model": "मॉडल",
-    "codeApprovalTitle": "असिस्टेंट कोड चलाएँ?",
-    "codeApprovalBody": "असिस्टेंट ऐप में {{language}} कोड चलाना चाहता है। पहले इसकी समीक्षा करें — यह मानचित्र बदल सकता है और ऐप डेटा तक पहुँच सकता है।",
-    "codeApprovalAlways": "इस सत्र के शेष समय के लिए असिस्टेंट कोड की अनुमति दें",
-    "codeApprovalRun": "चलाएँ",
-    "codeApprovalDecline": "रद्द करें"
+    "thinking": "काम हो रहा है…"
   },
   "storymap": {
     "title": "स्टोरी मैप",
@@ -3413,7 +3342,7 @@
       },
       "filterBySource": "स्रोत के अनुसार फ़िल्टर करें",
       "allSources": "सभी स्रोत",
-      "geolibreTools": "GeoLibre टूल",
+      "geointTools": "GeoInt टूल",
       "whiteboxTools": "Whitebox टूल",
       "toolbox": "Whitebox टूलबॉक्स",
       "checkingRuntime": "रनटाइम जाँचा जा रहा है।",
@@ -3443,8 +3372,8 @@
       "errorConnect": "साइडकार से कनेक्ट नहीं हो सका।",
       "errorPoll": "जॉब की स्थिति नहीं ली जा सकी।",
       "errorStartTool": "Whitebox टूल शुरू नहीं हो सका।",
-      "errorStartSidecar": "GeoLibre साइडकार शुरू नहीं हो सका।",
-      "errorStopSidecar": "GeoLibre साइडकार रोका नहीं जा सका।",
+      "errorStartSidecar": "GeoInt साइडकार शुरू नहीं हो सका।",
+      "errorStopSidecar": "GeoInt साइडकार रोका नहीं जा सका।",
       "noToolsFound": "कोई टूल नहीं मिला।",
       "noParameters": "इस टूल में कोई पैरामीटर नहीं है।",
       "noOutput": "अभी कोई आउटपुट नहीं।",
@@ -3464,9 +3393,9 @@
       "runLocallyButton": "स्थानीय रूप से चलाएं (WASM)",
       "troubleshootingTitle": "फिर भी सर्वर का उपयोग करना चाहते हैं?",
       "stepStartServerDesktop": "इसे लॉन्च करने के लिए टूल सूची पैनल में \"Start server\" पर क्लिक करें, फिर इसके ऑनलाइन होने के लिए कुछ सेकंड प्रतीक्षा करें।",
-      "stepStartServerBrowser": "सर्वर केवल GeoLibre डेस्कटॉप ऐप से ही शुरू किया जा सकता है। ब्राउज़र में, इसके बजाय \"Run locally (WASM)\" सक्षम रखें।",
+      "stepStartServerBrowser": "सर्वर केवल GeoInt डेस्कटॉप ऐप से ही शुरू किया जा सकता है। ब्राउज़र में, इसके बजाय \"Run locally (WASM)\" सक्षम रखें।",
       "stepCheckPort": "सुनिश्चित करें कि कोई फ़ायरवॉल, एंटीवायरस, या नेटवर्क नीति स्थानीय पोर्ट {{port}} को अवरुद्ध नहीं कर रही है।",
-      "stepRestart": "यदि सर्वर अप्रत्याशित रूप से बंद हो गया है, तो GeoLibre डेस्कटॉप ऐप को पुनः आरंभ करें और इस डायलॉग को फिर से खोलें।"
+      "stepRestart": "यदि सर्वर अप्रत्याशित रूप से बंद हो गया है, तो GeoInt डेस्कटॉप ऐप को पुनः आरंभ करें और इस डायलॉग को फिर से खोलें।"
     },
     "vectorTools": {
       "title": "वेक्टर टूल",
@@ -3500,13 +3429,13 @@
     "segment": "विभाजित करें",
     "status": {
       "checking": "AI विभाजन सेवा जांची जा रही है…",
-      "unavailableDesktop": "AI विभाजन सेवा अभी चल नहीं रही है। इसका उपयोग करने के लिए segment-geospatial सक्षम करके GeoLibre सर्वर शुरू करें।",
-      "unavailableWeb": "AI विभाजन ब्राउज़र में उपलब्ध नहीं है। इसे चलाने के लिए GeoLibre डेस्कटॉप ऐप का उपयोग करें।"
+      "unavailableDesktop": "AI विभाजन सेवा अभी चल नहीं रही है। इसका उपयोग करने के लिए segment-geospatial सक्षम करके GeoInt सर्वर शुरू करें।",
+      "unavailableWeb": "AI विभाजन ब्राउज़र में उपलब्ध नहीं है। इसे चलाने के लिए GeoInt डेस्कटॉप ऐप का उपयोग करें।"
     },
     "error": {
       "chooseImage": "विभाजित करने के लिए एक छवि (GeoTIFF) चुनें।",
       "enterPrompt": "एक टेक्स्ट प्रॉम्प्ट दर्ज करें, उदा. “पेड़” या “इमारतें”।",
-      "startServer": "GeoLibre सहायक सर्वर शुरू नहीं किया जा सका।",
+      "startServer": "GeoInt सहायक सर्वर शुरू नहीं किया जा सका।",
       "failed": "विभाजन विफल रहा।"
     },
     "noObjects": "कोई ऑब्जेक्ट नहीं मिला।",
@@ -3517,7 +3446,7 @@
       "title": "AI विभाजन सर्वर शुरू नहीं किया जा सका।",
       "intro": "AI विभाजन एक स्थानीय सहायक सर्वर ({{sidecarUrl}}) में चलता है जो segment-geospatial के SAM3 मॉडल को होस्ट करता है। यह ऐप से अलग, बैकग्राउंड में Python चलाता है, और ब्राउज़र बिल्ड का हिस्सा नहीं है।",
       "troubleshootingTitle": "सर्वर को चालू करने का तरीका",
-      "stepInstall": "सुनिश्चित करें कि GeoLibre सर्वर segment-geospatial बैकएंड सक्षम के साथ इंस्टॉल किया गया है, ताकि विभाजन मॉडल उपलब्ध हो।",
+      "stepInstall": "सुनिश्चित करें कि GeoInt सर्वर segment-geospatial बैकएंड सक्षम के साथ इंस्टॉल किया गया है, ताकि विभाजन मॉडल उपलब्ध हो।",
       "stepStartServerDesktop": "इसे लॉन्च करने के लिए ऊपर \"Start server\" पर क्लिक करें, फिर मॉडल के ऑनलाइन होने के लिए कुछ सेकंड प्रतीक्षा करें।"
     }
   },
@@ -3766,7 +3695,7 @@
     "import": "आयात करें…",
     "export": "निर्यात करें…",
     "importFilterName": "स्टाइल लाइब्रेरी / QML / SLD",
-    "exportFilterName": "GeoLibre स्टाइल लाइब्रेरी",
+    "exportFilterName": "GeoInt स्टाइल लाइब्रेरी",
     "applied": "\"{{name}}\" को {{layer}} पर लागू किया।",
     "appliedRampHint": "\"{{name}}\" लागू किया। रैंप देखने के लिए लेयर को ग्रेजुएटेड या केटेगराइज़्ड स्टाइलिंग पर स्विच करें।",
     "saved": "\"{{name}}\" को लाइब्रेरी में सहेजा।",
@@ -4597,10 +4526,10 @@
   },
   "errorBoundary": {
     "title": "कुछ गलत हो गया",
-    "description": "GeoLibre में एक अप्रत्याशित त्रुटि आई और वह आगे नहीं बढ़ सका। हो सकता है आपका काम सहेजा न गया हो — पुनः लोड करने से पहले उसे पुनर्प्राप्त करने का प्रयास करें।",
+    "description": "GeoInt में एक अप्रत्याशित त्रुटि आई और वह आगे नहीं बढ़ सका। हो सकता है आपका काम सहेजा न गया हो — पुनः लोड करने से पहले उसे पुनर्प्राप्त करने का प्रयास करें।",
     "tryAgain": "पुनः प्रयास करें",
     "reload": "ऐप पुनः लोड करें",
-    "sectionFailed": "{{label}} रेंडर नहीं हो सका। GeoLibre का बाकी हिस्सा अब भी उपलब्ध है।"
+    "sectionFailed": "{{label}} रेंडर नहीं हो सका। GeoInt का बाकी हिस्सा अब भी उपलब्ध है।"
   },
   "commandPalette": {
     "title": "कमांड पैलेट",
@@ -4650,7 +4579,7 @@
     "emptyNetworkError": "कोई नेटवर्क त्रुटि डायग्नोस्टिक्स दर्ज नहीं हुए।"
   },
   "shell": {
-    "workspaceTitle": "GeoLibre मानचित्र कार्यक्षेत्र",
+    "workspaceTitle": "GeoInt मानचित्र कार्यक्षेत्र",
     "section": {
       "toolbar": "टूलबार",
       "sharedLeftSidebar": "साझा बायाँ साइडबार",
@@ -4794,6 +4723,6 @@
     "added": "{{asset}} मानचित्र में जोड़ा गया।",
     "addUnsupported": "मानचित्र में केवल GeoTIFF/COG और GeoJSON एसेट जोड़ी जा सकती हैं",
     "addFailed": "एसेट नहीं जोड़ी जा सकी",
-    "cogUnsupported": "यह GeoLibre होस्ट दूरस्थ GeoTIFF एसेट प्रदर्शित नहीं कर सकता"
+    "cogUnsupported": "यह GeoInt होस्ट दूरस्थ GeoTIFF एसेट प्रदर्शित नहीं कर सकता"
   }
 }

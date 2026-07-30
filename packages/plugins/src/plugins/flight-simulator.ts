@@ -1,6 +1,6 @@
 /**
  * Flight Simulator plugin — an interactive, keyboard-driven free-flight camera
- * over GeoLibre's terrain and 3D layers (issue #1454).
+ * over GeoInt's terrain and 3D layers (issue #1454).
  *
  * Every other camera path in the app is scripted and discrete: `flyTo` from Set
  * View, story-map chapters, the keyframe Camera Tour recorder. This one is
@@ -24,7 +24,7 @@
  */
 
 import type { Map as MapLibreMap } from "maplibre-gl";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 import {
   DEFAULT_FLIGHT_MODEL,
   type AircraftState,
@@ -36,7 +36,7 @@ import {
   stepFlight,
 } from "./flight-simulator-physics";
 
-export const FLIGHT_SIMULATOR_PLUGIN_ID = "geolibre-flight-simulator";
+export const FLIGHT_SIMULATOR_PLUGIN_ID = "geoint-flight-simulator";
 
 /**
  * Marker merged into the event data of every camera jump the simulator makes.
@@ -651,7 +651,7 @@ function publishHud(next: FlightHudState): void {
   for (const listener of hudListeners) listener();
 }
 
-function attachEngine(app: GeoLibreAppAPI): void {
+function attachEngine(app: GeoIntAppAPI): void {
   const map = app.getMap?.() ?? null;
   if (!map) return;
   if (engine) return;
@@ -665,7 +665,7 @@ function detachEngine(): void {
 }
 
 /** Open the Flight Simulator panel and attach the engine to the live map. */
-export function openFlightSimulatorPanel(app: GeoLibreAppAPI): void {
+export function openFlightSimulatorPanel(app: GeoIntAppAPI): void {
   if (!panelVisible) {
     panelVisible = true;
     notifyPanel();
@@ -674,7 +674,7 @@ export function openFlightSimulatorPanel(app: GeoLibreAppAPI): void {
 }
 
 /** Close the panel, ending any flight in progress and restoring the map. */
-export function closeFlightSimulatorPanel(_app?: GeoLibreAppAPI): void {
+export function closeFlightSimulatorPanel(_app?: GeoIntAppAPI): void {
   detachEngine();
   if (panelVisible) {
     panelVisible = false;
@@ -703,7 +703,7 @@ export function getFlightHudSnapshot(): FlightHudState {
 }
 
 /** Re-attach the engine after the map is rebuilt (style reload, project load). */
-export function reattachFlightSimulator(app: GeoLibreAppAPI): void {
+export function reattachFlightSimulator(app: GeoIntAppAPI): void {
   if (!panelVisible) return;
   const map = app.getMap?.() ?? null;
   // Rebinding tears the engine down, which hands the map back and ends any
@@ -767,7 +767,7 @@ export function toggleFlying(): boolean {
  * `flying` is never restored as true: taking over the camera and the keyboard
  * is an explicit user action, not something a loaded project should do.
  */
-export function restoreFlightSimulator(app: GeoLibreAppAPI, state: unknown): boolean {
+export function restoreFlightSimulator(app: GeoIntAppAPI, state: unknown): boolean {
   if (!state || typeof state !== "object") {
     closeFlightSimulatorPanel(app);
     settings = { ...DEFAULT_FLIGHT_SIMULATOR_SETTINGS };
@@ -785,13 +785,13 @@ export function restoreFlightSimulator(app: GeoLibreAppAPI, state: unknown): boo
   return true;
 }
 
-export const flightSimulatorPlugin: GeoLibrePlugin = {
+export const flightSimulatorPlugin: GeoIntPlugin = {
   id: FLIGHT_SIMULATOR_PLUGIN_ID,
   name: "Flight Simulator",
   version: "1.0.0",
   activeByDefault: false,
-  activate: (app: GeoLibreAppAPI) => openFlightSimulatorPanel(app),
-  deactivate: (app: GeoLibreAppAPI) => closeFlightSimulatorPanel(app),
+  activate: (app: GeoIntAppAPI) => openFlightSimulatorPanel(app),
+  deactivate: (app: GeoIntAppAPI) => closeFlightSimulatorPanel(app),
   // Persist the panel flag and the handling/HUD preferences, but never the
   // aircraft: a flight starts from wherever the reopened project's view is.
   getProjectState: () => {
@@ -799,5 +799,5 @@ export const flightSimulatorPlugin: GeoLibrePlugin = {
       return undefined;
     return { open: panelVisible, ...settings };
   },
-  applyProjectState: (app: GeoLibreAppAPI, state: unknown) => restoreFlightSimulator(app, state),
+  applyProjectState: (app: GeoIntAppAPI, state: unknown) => restoreFlightSimulator(app, state),
 };

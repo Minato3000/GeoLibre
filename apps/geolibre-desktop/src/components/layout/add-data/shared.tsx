@@ -4,8 +4,8 @@
  * the presentational fields and footer reused across every source.
  */
 
-import type { GeoLibreLayer } from "@geolibre/core";
-import { Button, Input, Label, Select } from "@geolibre/ui";
+import type { GeoIntLayer } from "@geoint/core";
+import { Button, Input, Label, Select } from "@geoint/ui";
 import { Globe2, Map as MapIcon } from "lucide-react";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -28,7 +28,7 @@ export function useAddDataSource(defaultLayerName: string) {
 
   const beforeLayer = beforeLayerId.trim() || null;
 
-  const addAndClose = (layer: GeoLibreLayer, options: { fit?: boolean } = {}) => {
+  const addAndClose = (layer: GeoIntLayer, options: { fit?: boolean } = {}) => {
     shell.addLayer(layer, beforeLayer);
     if (options.fit) shell.mapControllerRef.current?.fitLayer(layer);
     shell.closeDialog();

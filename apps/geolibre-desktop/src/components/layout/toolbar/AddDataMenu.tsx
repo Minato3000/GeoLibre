@@ -6,7 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { Database } from "lucide-react";
 import { Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";

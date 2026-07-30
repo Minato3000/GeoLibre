@@ -16,10 +16,10 @@ import {
   type LegendConfig,
   type LegendCustomEntry,
   type LegendPanelPosition,
-} from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
-import { colormapColors, warmColormapColors } from "@geolibre/plugins";
-import { cn } from "@geolibre/ui";
+} from "@geoint/core";
+import type { MapController } from "@geoint/map";
+import { colormapColors, warmColormapColors } from "@geoint/plugins";
+import { cn } from "@geoint/ui";
 import {
   ArrowDown,
   ArrowUp,
@@ -67,7 +67,7 @@ import { useMapPanelControl } from "../../hooks/useMapPanelControl";
 import { GeometrySwatch, GradientBar, MarkerSwatch } from "./LegendSwatch";
 
 /** Class the recorder's MAP_PANEL_SELECTOR matches to burn the panel into videos. */
-export const LEGEND_PANEL_CLASS = "geolibre-legend-panel";
+export const LEGEND_PANEL_CLASS = "geoint-legend-panel";
 
 const POSITIONS: LegendPanelPosition[] = ["top-left", "top-right", "bottom-left", "bottom-right"];
 

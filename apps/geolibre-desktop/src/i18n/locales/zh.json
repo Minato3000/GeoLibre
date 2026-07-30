@@ -28,8 +28,8 @@
   },
   "about": {
     "trigger": "关于",
-    "title": "关于 GeoLibre",
-    "description": "GeoLibre 是一款轻量级的云原生 GIS 平台。",
+    "title": "关于 GeoInt",
+    "description": "GeoInt 是一款轻量级的云原生 GIS 平台。",
     "version": "版本",
     "checkForUpdates": "检查更新",
     "tryAgain": "重试",
@@ -48,7 +48,7 @@
     "steps": {
       "download": "从下载页面下载适用于您平台的安装程序。",
       "install": "运行安装程序。您的本地项目、设置和 API 密钥将被保留。",
-      "reopen": "重新打开 GeoLibre 以完成更新。"
+      "reopen": "重新打开 GeoInt 以完成更新。"
     },
     "severity": {
       "major": "主要版本",
@@ -67,7 +67,7 @@
       "noTag": "最新发行版未包含版本标签。",
       "network": "无法连接到 GitHub。请检查您的网络连接并重试。",
       "viewDownloads": "查看下载页面",
-      "viewDownloadsHint": "在浏览器中打开 GeoLibre 下载页面，以便手动检查最新版本。"
+      "viewDownloadsHint": "在浏览器中打开 GeoInt 下载页面，以便手动检查最新版本。"
     },
     "startup": {
       "title": "有可用更新",
@@ -94,7 +94,7 @@
     "trust": {
       "title": "是否加载此项目中的插件？",
       "description_other": "此项目希望从您尚未安装的 URL 加载 {{count}} 个外部插件。插件运行的代码可完全访问本应用。",
-      "warning": "请仅加载来自可信来源的插件。已加载的插件将以与 GeoLibre 本身相同的权限运行。",
+      "warning": "请仅加载来自可信来源的插件。已加载的插件将以与 GeoInt 本身相同的权限运行。",
       "trustButton": "信任并加载",
       "dismissButton": "不加载"
     },
@@ -113,7 +113,7 @@
     "openHomepageAria": "打开 {{name}} 的主页",
     "byAuthor": "作者：{{author}}",
     "updateAvailable": "有可用更新",
-    "requiresVersion": "需要 GeoLibre {{version}}+",
+    "requiresVersion": "需要 GeoInt {{version}}+",
     "install": "安装",
     "installAria": "安装 {{name}}",
     "removeConfirm": "移除？",
@@ -124,10 +124,10 @@
     "updateAria": "更新 {{name}}",
     "loading": "加载中…",
     "installed": "已安装",
-    "settingsIntro": "GeoLibre 始终会扫描其应用数据中的插件目录。可从文件安装打包好的插件（.zip），或添加额外的本地目录（仅桌面版）。清单 URL（包括市场安装）通过网络加载；此处的更改立即生效。",
+    "settingsIntro": "GeoInt 始终会扫描其应用数据中的插件目录。可从文件安装打包好的插件（.zip），或添加额外的本地目录（仅桌面版）。清单 URL（包括市场安装）通过网络加载；此处的更改立即生效。",
     "installFromFile": "从文件安装",
     "chooseZip": "选择 .zip…",
-    "installFromFileHintDesktop": "将打包好的插件归档复制到 GeoLibre 的插件目录。",
+    "installFromFileHintDesktop": "将打包好的插件归档复制到 GeoInt 的插件目录。",
     "installFromFileHintWeb": "加载打包好的插件归档；它将保存在您的浏览器中，并在下次访问时重新加载。",
     "localDirectories": "本地目录",
     "directoryAria": "插件目录",
@@ -142,7 +142,7 @@
     "errorDirectoryPicker": "无法打开目录选择器。",
     "errorInstall": "无法安装该插件。",
     "errorUninstall": "无法卸载该插件。",
-    "description": "浏览、安装、更新和移除外部 GeoLibre 插件。插件列于 <registryLink>GeoLibre 插件注册表</registryLink>。"
+    "description": "浏览、安装、更新和移除外部 GeoInt 插件。插件列于 <registryLink>GeoInt 插件注册表</registryLink>。"
   },
   "viewState": {
     "panelTitle": "信息"
@@ -213,7 +213,7 @@
     "add": "添加",
     "ok": "确定",
     "done": "完成",
-    "openWebApp": "打开 GeoLibre 网页应用"
+    "openWebApp": "打开 GeoInt 网页应用"
   },
   "addData": {
     "title": "添加数据",
@@ -256,7 +256,7 @@
       },
       "gdb": {
         "label": "添加文件地理数据库图层",
-        "description": "从 Esri 文件地理数据库（.gdb 文件夹）添加图层。图层通过本地 GeoLibre 服务器读取并重投影至 WGS84。"
+        "description": "从 Esri 文件地理数据库（.gdb 文件夹）添加图层。图层通过本地 GeoInt 服务器读取并重投影至 WGS84。"
       },
       "photos": {
         "label": "添加带地理标记的照片",
@@ -476,8 +476,8 @@
       "layerPlaceholder": "请先选择地理数据库",
       "readingLayers": "正在读取图层...",
       "layerOption": "{{name}}（{{type}}，{{count}} 个要素）",
-      "help": "仅含属性的表不会列出。所选要素类通过本地 GeoLibre 服务器加载并重投影至 WGS84。",
-      "desktopOnly": "文件地理数据库图层仅在 GeoLibre 桌面版中可用。此功能需要通过本地 GeoLibre 服务器读取本地 .gdb 文件夹，而网页应用无法访问。",
+      "help": "仅含属性的表不会列出。所选要素类通过本地 GeoInt 服务器加载并重投影至 WGS84。",
+      "desktopOnly": "文件地理数据库图层仅在 GeoInt 桌面版中可用。此功能需要通过本地 GeoInt 服务器读取本地 .gdb 文件夹，而网页应用无法访问。",
       "readError": "无法读取此文件地理数据库。",
       "convertError": "无法加载此要素类。",
       "errorNotGdb": "请选择以 .gdb 结尾的文件夹（Esri 文件地理数据库）。",
@@ -551,7 +551,7 @@
     },
     "postgres": {
       "defaultName": "PostgreSQL 图层",
-      "errorDesktopOnly": "PostgreSQL 图层需要使用 GeoLibre 桌面版。",
+      "errorDesktopOnly": "PostgreSQL 图层需要使用 GeoInt 桌面版。",
       "errorConnectionString": "请输入 PostgreSQL 连接字符串。",
       "statusCheckingBinary": "正在检查 Martin 可执行文件...",
       "statusDownloaded": "Martin 已下载完成。正在启动本地服务器...",
@@ -565,7 +565,7 @@
       "errorConnectFirst": "请先连接到 PostgreSQL。",
       "errorNoVectorLayers": "所选的 Martin 数据源没有矢量图层。",
       "errorSelectSource": "请选择要添加的 Martin 数据源。",
-      "desktopOnlyNotice": "PostgreSQL 图层仅在 GeoLibre 桌面版中可用。此功能需要运行本地 Martin 瓦片服务器，而网页应用无法启动它。",
+      "desktopOnlyNotice": "PostgreSQL 图层仅在 GeoInt 桌面版中可用。此功能需要运行本地 Martin 瓦片服务器，而网页应用无法启动它。",
       "savedConnection": "已保存的连接",
       "selectSavedConnection": "选择已保存的连接",
       "connectionString": "PostgreSQL 连接字符串",
@@ -585,7 +585,7 @@
       "editableTable": "表",
       "tableReadOnly": "{{table}}（只读：无主键）",
       "errorSelectTable": "请选择要加载的表。",
-      "errorRuntimeMissing": "处理服务器未安装 PostGIS 运行时（psycopg）。请安装 geolibre-server 的 “postgis” 扩展以加载可编辑图层。"
+      "errorRuntimeMissing": "处理服务器未安装 PostGIS 运行时（psycopg）。请安装 geoint-server 的 “postgis” 扩展以加载可编辑图层。"
     },
     "video": {
       "defaultName": "视频图层",
@@ -1044,7 +1044,7 @@
     "step1Title": "1. 获取 API 令牌",
     "step1Description": "登录 share.geolibre.app，然后在“设置 → API 令牌”下创建一个令牌。",
     "getToken": "获取 API 令牌",
-    "step2Title": "2. 将令牌添加到 GeoLibre",
+    "step2Title": "2. 将令牌添加到 GeoInt",
     "step2Description": "将令牌粘贴到本设备上的“设置 → 环境变量”中。",
     "configureToken": "配置本地令牌",
     "liveAt": "您的项目已发布在：",
@@ -1066,7 +1066,7 @@
   },
   "gallery": {
     "title": "项目图库",
-    "description": "浏览在 share.geolibre.app 上共享的公开项目，并在 GeoLibre 中打开其中一个。",
+    "description": "浏览在 share.geolibre.app 上共享的公开项目，并在 GeoInt 中打开其中一个。",
     "searchPlaceholder": "按标题、作者或标签筛选已加载的项目",
     "loading": "正在加载项目…",
     "loadingMore": "正在加载更多…",
@@ -1151,7 +1151,7 @@
       "groupNavigation": "将指北针与比例尺编组",
       "footer": "页脚文本",
       "date": "日期",
-      "attribution": "包含 GeoLibre 归属信息",
+      "attribution": "包含 GeoInt 归属信息",
       "pageBorder": "页面边框",
       "infoBlock": "信息块（标题栏）",
       "colorbar": "色带",
@@ -1527,7 +1527,7 @@
     "noticeDesc": "打开知识卡片会将您点击地点的坐标（以及您打开的附近条目标题）发送到维基百科公共 API 以获取摘要和照片 — 您的坐标会离开您的设备用于这些请求。"
   },
   "onboarding": {
-    "title": "欢迎使用 GeoLibre",
+    "title": "欢迎使用 GeoInt",
     "description": "选择您的经验水平以定制界面。您可以随时在“设置 → 界面”中更改此设置。",
     "level": {
       "beginner": {
@@ -1540,7 +1540,7 @@
       },
       "advanced": {
         "title": "高级",
-        "description": "显示 GeoLibre 提供的所有功能。"
+        "description": "显示 GeoInt 提供的所有功能。"
       }
     },
     "showEverything": "跳过 — 显示全部内容"
@@ -1555,7 +1555,6 @@
       "appearance": "外观",
       "interface": "界面",
       "geocoding": "地理编码",
-      "ai": "AI 提供方",
       "environment": "环境",
       "updates": "更新"
     },
@@ -1565,7 +1564,6 @@
       "appearanceSettings": "外观设置",
       "interfaceSettings": "界面设置",
       "geocoding": "地理编码",
-      "ai": "AI 提供方",
       "environmentVariables": "环境变量",
       "updates": "更新设置",
       "managePlugins": "管理插件",
@@ -1574,9 +1572,9 @@
     },
     "updates": {
       "title": "软件更新",
-      "description": "控制 GeoLibre 桌面应用启动时如何检查新版本。",
+      "description": "控制 GeoInt 桌面应用启动时如何检查新版本。",
       "checkOnStartup": "启动时检查更新",
-      "checkOnStartupHint": "启用后，GeoLibre 每次启动时都会检查是否有新版本。若要实现完全离线的工作流程，请关闭此选项。",
+      "checkOnStartupHint": "启用后，GeoInt 每次启动时都会检查是否有新版本。若要实现完全离线的工作流程，请关闭此选项。",
       "notificationLevel": "通知我关于",
       "notificationLevelHint": "选择哪些类型的发行版会触发启动通知。",
       "level": {
@@ -1659,7 +1657,7 @@
       "lockedNote": "此界面配置由您的管理员管理，无法更改。"
     },
     "env": {
-      "tokenTitle": "Share.GeoLibre API 令牌",
+      "tokenTitle": "Share.GeoInt API 令牌",
       "tokenDescription": "“项目 > 共享”使用此令牌将您的地图上传到 share.geolibre.app。请打开 <tokenLink>share.geolibre.app/settings</tokenLink>，在“设置 > API 令牌”下创建一个令牌，然后将其粘贴到下方字段中。",
       "tokenStorageNote": "仅存储在本设备上，并且仅发送到 share.geolibre.app 用于验证上传。在 Web 版本中，它与其他站点数据共用同一浏览器存储，因此如果您的设备遭到入侵，请在 share.geolibre.app 上撤销该令牌。",
       "tokenPlaceholder": "glb_…",
@@ -1704,60 +1702,6 @@
       "emailHint": "仅由 Nominatim 使用，该服务建议提供此项以帮助识别您的应用程序 — 仅在提供时发送。",
       "secretsWarning": "密钥以纯文本形式存储在项目文件中，在共享项目时可能会暴露。它们也会作为查询参数发送，因此会出现在浏览器开发者工具及任何代理日志中可见的地理编码请求 URL 中。",
       "corsNote": "Google 官方并不允许浏览器直接请求其地理编码 API，因此除非通过同源代理提供服务，否则请求可能会被阻止。"
-    },
-    "ai": {
-      "title": "AI 助手提供方",
-      "description": "为 AI 助手配置凭据。选择一个提供方，填写其所需字段，然后保存。仅需配置一个提供方即可开始对话。",
-      "providerLabel": "提供方",
-      "providerHint": "选择一个提供方以显示其所需的具体字段。",
-      "configuredMark": "（已配置）",
-      "optionalMark": "（可选）",
-      "statusReady": "{{provider}} 已配置完成，可以使用。",
-      "statusIncomplete": "请填写以下必填字段以启用 {{provider}}。",
-      "secretsNote": "凭据保存在此设备本地，不在您共享的项目文件中，因此会在重启后保留。任何有权访问此设备的人都可以读取它们。",
-      "getCredentials": "在哪里获取 {{provider}} 凭据",
-      "showValue": "显示 {{name}}",
-      "hideValue": "隐藏 {{name}}",
-      "osEnvNote": "桌面应用还会从系统环境变量读取匹配的 API 密钥。这些会自动使用且永远不会保存到项目文件中 — 留空字段以继续使用环境变量值。",
-      "osEnvField": "从系统环境变量 {{name}} 读取。",
-      "osEnvPlaceholder": "在系统环境中设置",
-      "newProfile": "新建配置文件",
-      "cancel": "取消",
-      "addProfile": "添加配置文件",
-      "profileName": "配置文件名称",
-      "profileNamePlaceholder": "例如 工作 Gemini、本地 Ollama",
-      "profileCount_other": "{{count}} 个配置文件",
-      "noProfiles": "尚无配置文件。请在下方添加一个以配置 AI 助手。",
-      "setDefault": "设为默认",
-      "defaultProfile": "默认",
-      "edit": "编辑",
-      "deleteProfile": "删除配置文件",
-      "backToProfiles": "← 返回配置文件列表",
-      "saveProfile": "保存配置文件",
-      "profileEditSaveHint": "请先保存或放弃上方的配置文件更改，然后点击“保存设置”以提交所有更改。",
-      "field": {
-        "apiKey": "API 密钥",
-        "baseUrl": "基础 URL",
-        "model": "模型",
-        "region": "区域",
-        "accessKeyId": "访问密钥 ID",
-        "secretAccessKey": "秘密访问密钥",
-        "sessionToken": "会话令牌"
-      },
-      "placeholder": {
-        "geminiKey": "AIza…",
-        "anthropicKey": "sk-ant-…",
-        "openaiKey": "sk-…",
-        "ollamaBaseUrl": "http://localhost:11434",
-        "ollamaModel": "llama3.2",
-        "awsAccessKey": "AKIA…",
-        "awsSecretKey": "wJalrXUtnFEMI…",
-        "awsRegion": "us-east-1",
-        "awsSessionToken": "FwoGZXIvYXdz…（如使用临时凭据）",
-        "customBaseUrl": "https://api.example.com/v1",
-        "customModel": "model-id",
-        "customApiKey": "sk-…（如需要）"
-      }
     }
   },
   "toolbar": {
@@ -1867,7 +1811,7 @@
       "smartPaste": "粘贴坐标",
       "smartPasteInputLabel": "坐标字符串",
       "smartPastePlaceholder": "例如 51.5074, -0.1278 或 51°30'26\"N, 0°07'39\"W",
-      "smartPasteInfo": "以 DD、DMS 或 DDM 格式键入或粘贴完整的坐标字符串，然后运行“处理输入”。GeoLibre 会检测格式并填充下方的经度和纬度字段。请在前往目标位置前分别调整缩放、倾斜角和方位角。",
+      "smartPasteInfo": "以 DD、DMS 或 DDM 格式键入或粘贴完整的坐标字符串，然后运行“处理输入”。GeoInt 会检测格式并填充下方的经度和纬度字段。请在前往目标位置前分别调整缩放、倾斜角和方位角。",
       "smartPasteInfoLabel": "关于粘贴坐标",
       "smartPasteInvalid": "无法读取这些坐标。请以 DD、DMS 或 DDM 格式输入完整的经纬度，例如 51.5074, -0.1278。部分或不完整的字符串无法解析。",
       "processInput": "处理输入",
@@ -1996,8 +1940,8 @@
     },
     "conversion": {
       "vectorToVector": "矢量转矢量",
-      "zipInputBrowserError": "压缩的 Shapefile 只能在 GeoLibre 桌面应用中转换。在浏览器中，请选择解压后的 .shp 文件及其对应的 .dbf、.shx 和 .prj 文件。",
-      "browserOutputUnsupported": "在浏览器中，输出格式可以是 GeoJSON、CSV、GeoParquet、GeoPackage 或 Shapefile (.zip)。“.{{extension}}”输出需要使用 GeoLibre 桌面应用。",
+      "zipInputBrowserError": "压缩的 Shapefile 只能在 GeoInt 桌面应用中转换。在浏览器中，请选择解压后的 .shp 文件及其对应的 .dbf、.shx 和 .prj 文件。",
+      "browserOutputUnsupported": "在浏览器中，输出格式可以是 GeoJSON、CSV、GeoParquet、GeoPackage 或 Shapefile (.zip)。“.{{extension}}”输出需要使用 GeoInt 桌面应用。",
       "outputExtensionRequired": "请为输出文件名添加扩展名以选择格式。",
       "readingWithDuckDb": "正在使用 DuckDB-WASM 读取 {{name}}",
       "readFeatures": "已从 {{name}} 读取 {{features}} 个要素",
@@ -2011,7 +1955,7 @@
       "vectorToPmtiles": "矢量转 PMTiles",
       "rasterToCog": "栅格转 COG",
       "rasterToPmtiles": "栅格转 PMTiles",
-      "needsDesktop": "此转换需要 GeoLibre 桌面应用或运行中的 sidecar。",
+      "needsDesktop": "此转换需要 GeoInt 桌面应用或运行中的 sidecar。",
       "runsInBrowserDuckDb": "转换在浏览器中使用 DuckDB-WASM 运行。",
       "runsInBrowserWriters": "转换在浏览器中使用 DuckDB-WASM 和内置写入器运行。",
       "runsInBrowserWasm": "转换在浏览器中使用 geolibre-wasm 运行。无需 sidecar。",
@@ -2166,7 +2110,7 @@
       "noOutput": "暂无输出。",
       "errorConnect": "无法连接到 sidecar。",
       "errorPoll": "无法查询作业状态。",
-      "errorStartSidecar": "无法启动 GeoLibre sidecar。",
+      "errorStartSidecar": "无法启动 GeoInt sidecar。",
       "errorStartTool": "无法启动栅格工具。"
     },
     "mapControl": {
@@ -2270,7 +2214,7 @@
       "terrain": "地形",
       "remoteSensing": "遥感",
       "projection": "投影",
-      "geolibre": "GeoLibre",
+      "geoint": "GeoInt",
       "subGroupGeometry": "几何",
       "subGroupOverlay": "叠加",
       "subGroupJoin": "连接",
@@ -2332,7 +2276,7 @@
       "webServices": "网络服务",
       "commandPalette": "命令面板",
       "openProjectFromUrl": "从 URL 打开项目",
-      "openProjectFromUrlDesc": "加载 `.geolibre.json` 项目并将其添加到最近项目。",
+      "openProjectFromUrlDesc": "加载 `.geoint.json` 项目并将其添加到最近项目。",
       "projectUrl": "项目 URL",
       "opening": "正在打开...",
       "open": "打开",
@@ -2347,7 +2291,7 @@
       "embedVectorReferenceButton": "保存文件引用",
       "embedVectorSkipButton": "不含数据保存",
       "saveProjectFileName": "文件名",
-      "saveProjectFileNamePlaceholder": "my-project.geolibre.json",
+      "saveProjectFileNamePlaceholder": "my-project.geoint.json",
       "exportHtmlAsTitle": "导出为交互式 HTML",
       "exportHtmlAsDesc": "请输入文件名。点击“保存”后，HTML 页面将下载到您浏览器的下载文件夹。",
       "exportHtmlFileName": "文件名",
@@ -2388,21 +2332,21 @@
       "maplibre-gl-annotations": "注释",
       "maplibre-gl-streetview": "街景",
       "maplibre-gl-time-slider": "时间滑块",
-      "geolibre-timelapse": "延时影像",
+      "geoint-timelapse": "延时影像",
       "maplibre-gl-esri-wayback": "历史影像",
       "maplibre-gl-openaerialmap": "OpenAerialMap",
-      "geolibre-stac-catalogs": "STAC 目录",
+      "geoint-stac-catalogs": "STAC 目录",
       "maplibre-gl-source-coop": "Source Cooperative",
       "maplibre-gl-natural-earth": "Natural Earth",
       "maplibre-gl-swipe": "图层滑动对比",
-      "geolibre-elevation-profile": "高程剖面",
+      "geoint-elevation-profile": "高程剖面",
       "maplibre-gl-basemap-control": "底图",
       "maplibre-layer-control": "图层控制",
       "maplibre-gl-huggingface": "Hugging Face",
       "carto-light": "Carto Light 底图",
-      "geolibre-flight-simulator": "飞行模拟器",
-      "geolibre-route-animation": "路线动画",
-      "geolibre-sun": "太阳模拟",
+      "geoint-flight-simulator": "飞行模拟器",
+      "geoint-route-animation": "路线动画",
+      "geoint-sun": "太阳模拟",
       "maplibre-atmosphere-effects": "大气效果",
       "maplibre-deckgl-viz": "Deck.gl 图层",
       "maplibre-gl-clouds": "云层",
@@ -2558,7 +2502,7 @@
     "summary": "已选择 {{selected}}/{{total}} 个要素（匹配 {{matched}} 个）。",
     "evaluationErrors": "{{count}} 个要素无法求值，未被匹配。",
     "unevaluableDisjoint": "{{count}} 个要素因几何无法求值而被排除。",
-    "tooManyPairs": "此比较需要 {{pairs}} 次要素对测试（上限 {{limit}}）。请改用“处理 → GeoLibre → 矢量 → 按位置选择”并选择边车引擎。",
+    "tooManyPairs": "此比较需要 {{pairs}} 次要素对测试（上限 {{limit}}）。请改用“处理 → GeoInt → 矢量 → 按位置选择”并选择边车引擎。",
     "exportedLayerName": "{{name}}（选择集）"
   },
   "loadEditorFeatures": {
@@ -2784,7 +2728,7 @@
     "filterWebMap": "Web 地图",
     "webMapAdded_other": "已从此 Web 地图添加 {{count}} 个图层。",
     "webMapAddedPartial": "已从此 Web 地图添加 {{total}} 个图层中的 {{added}} 个；其余无法访问。",
-    "webMapEmpty": "此 Web 地图没有 GeoLibre 可渲染的图层。",
+    "webMapEmpty": "此 Web 地图没有 GeoInt 可渲染的图层。",
     "add": "添加",
     "adding": "添加中…",
     "remove": "移除",
@@ -2866,7 +2810,7 @@
     "downloadTitle": "下载此文件",
     "copyUrlTitle": "复制此文件的 URL",
     "openProductTitle": "在 source.coop 上打开此产品",
-    "unsupportedTitle": "GeoLibre 无法渲染此格式 — 请改为下载。",
+    "unsupportedTitle": "GeoInt 无法渲染此格式 — 请改为下载。",
     "addError": "无法添加此文件：{{message}}",
     "largeFileWarning": "文件大小为 {{size}}。系统会从源端流式读取，仅加载视图内的部分。",
     "streamHint": "文件大小为 {{size}}。“添加”会将其完整复制到内存；“流式加载”仅读取视图内的部分。",
@@ -2910,7 +2854,7 @@
     "downloadTitle": "下载此文件",
     "copyUrlTitle": "复制此文件的 URL",
     "openDatasetTitle": "在 huggingface.co 上打开此数据集页面",
-    "unsupportedTitle": "GeoLibre 无法渲染此格式 — 请改为下载。",
+    "unsupportedTitle": "GeoInt 无法渲染此格式 — 请改为下载。",
     "addError": "无法添加此文件：{{message}}",
     "notRasterIndex": "此 JSON 文件未索引任何栅格，因此没有可放到地图上的内容。支持 MosaicJSON 和 STAC 集合。",
     "largeFileWarning": "文件大小为 {{size}}。系统会从源端流式读取，仅加载视图内的部分。",
@@ -2952,7 +2896,7 @@
     "clearSelection": "清空",
     "selectedFiles_other": "已选择 {{count}} 个文件（{{size}}）。",
     "commitMessageLabel": "提交信息（可选）",
-    "commitMessagePlaceholder": "通过 GeoLibre 上传",
+    "commitMessagePlaceholder": "通过 GeoInt 上传",
     "upload": "上传",
     "uploadPreparing": "正在准备上传…",
     "uploadHashing": "正在计算 {{name}} 的哈希（{{index}}/{{total}}）…",
@@ -3015,7 +2959,7 @@
     "runHint": "运行 (Ctrl/Cmd+Enter)",
     "completions": "自动补全",
     "placeholder": "在此输入 Python 代码 · Ctrl/Cmd+Enter 运行 · Tab 自动补全 · ↑/↓ 查看历史记录",
-    "intro": "Python 控制台已就绪。使用 `geolibre` 对象编写地图脚本，例如 geolibre.get_center()。Tab 自动补全，↑/↓ 调出历史命令，`await geolibre.load_package(\"numpy\")` 可添加包。",
+    "intro": "Python 控制台已就绪。使用 `geoint` 对象编写地图脚本，例如 geoint.get_center()。Tab 自动补全，↑/↓ 调出历史命令，`await geoint.load_package(\"numpy\")` 可添加包。",
     "loadFailed": "无法加载 Python 运行时。",
     "showEditor": "显示编辑器",
     "hideEditor": "隐藏编辑器",
@@ -3125,21 +3069,7 @@
     "stop": "停止",
     "placeholder": "询问您的数据，例如“显示人口超过 5000 万的国家” · Ctrl/Cmd+Enter 发送",
     "intro": "与您的数据对话。我可以运行空间 SQL、添加或移除图层、重新设置样式，以及移动地图 — 每项更改都可撤销。试试“按人口用渐变红色色阶给国家上色”。",
-    "setupTitle": "设置 AI 助手",
-    "setupStatus": "AI 助手需要一个 AI 提供方来进行思考。请在下方为任一提供方添加凭据，保存后面板将立即切换到聊天模式。",
-    "setupProviders": "为任一提供方添加凭据",
-    "setupOpenSettings": "打开“设置 → AI 提供方”",
-    "thinking": "正在处理…",
-    "toolError": "失败",
-    "provider": "LLM 提供方",
-    "profile": "AI 配置文件",
-    "deploymentProxy": "部署代理",
-    "model": "模型",
-    "codeApprovalTitle": "批准代码运行？",
-    "codeApprovalBody": "助手想要在应用中运行 {{language}} 代码。请先仔细查看 — 它可以更改地图并访问应用数据。",
-    "codeApprovalAlways": "本次会话允许助手运行代码",
-    "codeApprovalRun": "运行",
-    "codeApprovalDecline": "取消"
+    "thinking": "正在处理…"
   },
   "storymap": {
     "title": "故事地图",
@@ -3354,7 +3284,7 @@
       },
       "filterBySource": "按来源筛选",
       "allSources": "所有来源",
-      "geolibreTools": "GeoLibre 工具",
+      "geointTools": "GeoInt 工具",
       "whiteboxTools": "Whitebox 工具",
       "toolbox": "Whitebox 工具箱",
       "checkingRuntime": "正在检查运行时。",
@@ -3383,8 +3313,8 @@
       "errorConnect": "无法连接到 sidecar。",
       "errorPoll": "无法查询作业状态。",
       "errorStartTool": "无法启动 Whitebox 工具。",
-      "errorStartSidecar": "无法启动 GeoLibre sidecar。",
-      "errorStopSidecar": "无法停止 GeoLibre sidecar。",
+      "errorStartSidecar": "无法启动 GeoInt sidecar。",
+      "errorStopSidecar": "无法停止 GeoInt sidecar。",
       "noToolsFound": "未找到工具。",
       "noParameters": "此工具没有参数。",
       "noOutput": "暂无输出。",
@@ -3404,9 +3334,9 @@
       "runLocallyButton": "本地运行 (WASM)",
       "troubleshootingTitle": "仍想使用服务器？",
       "stepStartServerDesktop": "在工具列表面板中点击“启动服务器”以启动它，然后等待几秒钟使其上线。",
-      "stepStartServerBrowser": "服务器只能从 GeoLibre 桌面应用启动。在浏览器中，请继续启用“本地运行 (WASM)”。",
+      "stepStartServerBrowser": "服务器只能从 GeoInt 桌面应用启动。在浏览器中，请继续启用“本地运行 (WASM)”。",
       "stepCheckPort": "请确保防火墙、杀毒软件或网络策略未阻止本地端口 {{port}}。",
-      "stepRestart": "如果服务器意外停止，请重启 GeoLibre 桌面应用并重新打开此对话框。"
+      "stepRestart": "如果服务器意外停止，请重启 GeoInt 桌面应用并重新打开此对话框。"
     },
     "vectorTools": {
       "title": "矢量工具",
@@ -3440,13 +3370,13 @@
     "segment": "分割",
     "status": {
       "checking": "正在检查 AI 分割服务…",
-      "unavailableDesktop": "AI 分割服务尚未运行。请启动已启用 segment-geospatial 的 GeoLibre 服务器以使用此功能。",
-      "unavailableWeb": "AI 分割在浏览器中不可用。请使用 GeoLibre 桌面应用运行此功能。"
+      "unavailableDesktop": "AI 分割服务尚未运行。请启动已启用 segment-geospatial 的 GeoInt 服务器以使用此功能。",
+      "unavailableWeb": "AI 分割在浏览器中不可用。请使用 GeoInt 桌面应用运行此功能。"
     },
     "error": {
       "chooseImage": "请选择要分割的图像 (GeoTIFF)。",
       "enterPrompt": "请输入文本提示，例如“树木”或“建筑物”。",
-      "startServer": "无法启动 GeoLibre 边车服务。",
+      "startServer": "无法启动 GeoInt 边车服务。",
       "failed": "分割失败。"
     },
     "noObjects": "未找到任何对象。",
@@ -3457,7 +3387,7 @@
       "title": "无法启动 AI 分割服务器。",
       "intro": "AI 分割在本地辅助服务器（{{sidecarUrl}}）中运行，该服务器承载来自 segment-geospatial 的 SAM3 模型。它在后台运行 Python，与应用本身分离，且不属于浏览器构建版本。",
       "troubleshootingTitle": "如何启动服务器",
-      "stepInstall": "请确保 GeoLibre 服务器已安装并启用 segment-geospatial 后端，以便分割模型可用。",
+      "stepInstall": "请确保 GeoInt 服务器已安装并启用 segment-geospatial 后端，以便分割模型可用。",
       "stepStartServerDesktop": "点击上方的“启动服务器”以启动它，然后等待几秒钟使模型上线。"
     }
   },
@@ -3703,7 +3633,7 @@
     "import": "导入…",
     "export": "导出…",
     "importFilterName": "样式库 / QML / SLD",
-    "exportFilterName": "GeoLibre 样式库",
+    "exportFilterName": "GeoInt 样式库",
     "applied": "已将“{{name}}”应用到 {{layer}}。",
     "appliedRampHint": "已应用“{{name}}”。请将图层切换为分级或分类样式以查看色带。",
     "saved": "已将“{{name}}”保存到库中。",
@@ -4530,10 +4460,10 @@
   },
   "errorBoundary": {
     "title": "出错了",
-    "description": "GeoLibre 遇到意外错误，无法继续。您的工作可能尚未保存 — 请先尝试恢复，再重新加载。",
+    "description": "GeoInt 遇到意外错误，无法继续。您的工作可能尚未保存 — 请先尝试恢复，再重新加载。",
     "tryAgain": "重试",
     "reload": "重新加载应用",
-    "sectionFailed": "{{label}} 渲染失败。GeoLibre 的其余部分仍可使用。"
+    "sectionFailed": "{{label}} 渲染失败。GeoInt 的其余部分仍可使用。"
   },
   "commandPalette": {
     "title": "命令面板",
@@ -4578,7 +4508,7 @@
     "emptyNetworkError": "未捕获任何网络错误诊断信息。"
   },
   "shell": {
-    "workspaceTitle": "GeoLibre 地图工作区",
+    "workspaceTitle": "GeoInt 地图工作区",
     "section": {
       "toolbar": "工具栏",
       "sharedLeftSidebar": "共享左侧栏",
@@ -4722,6 +4652,6 @@
     "added": "已将 {{asset}} 添加到地图。",
     "addUnsupported": "只有 GeoTIFF/COG 和 GeoJSON 资源可以添加到地图",
     "addFailed": "无法添加资源",
-    "cogUnsupported": "此 GeoLibre 主机无法可视化远程 GeoTIFF 资源"
+    "cogUnsupported": "此 GeoInt 主机无法可视化远程 GeoTIFF 资源"
   }
 }

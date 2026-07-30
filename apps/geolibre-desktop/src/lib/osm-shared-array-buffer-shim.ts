@@ -4,7 +4,7 @@
 // ReferenceError, not a graceful `false`, when SharedArrayBuffer is undefined.
 //
 // SharedArrayBuffer is only defined on cross-origin-isolated pages (COOP/COEP
-// headers), which GeoLibre is not (and enabling COEP would break the many
+// headers), which GeoInt is not (and enabling COEP would break the many
 // cross-origin map tiles/images the app loads). Alias it to ArrayBuffer so
 // osmix builds on resizable ArrayBuffers instead. We never rely on shared
 // memory: the worker converts to plain GeoJSON and posts it back by copy.

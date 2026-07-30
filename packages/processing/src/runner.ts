@@ -1,15 +1,15 @@
 import type { FeatureCollection } from "geojson";
 import {
   DEFAULT_LAYER_STYLE,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type ProcessingModel,
   type ProcessingModelStep,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { DuckDbCapability, ProcessingAlgorithm, ProcessingContext } from "./types";
 import { getVectorTool } from "./vector-tools";
 
 /** Synthetic layer-id prefix for a pipeline step's chained input. */
-const PIPELINE_INPUT_ID_PREFIX = "__geolibre_pipeline_step_";
+const PIPELINE_INPUT_ID_PREFIX = "__geoint_pipeline_step_";
 
 /**
  * Host-level capabilities a run needs beyond a single step's parameters. The
@@ -19,7 +19,7 @@ const PIPELINE_INPUT_ID_PREFIX = "__geolibre_pipeline_step_";
  */
 export interface RunnerHost {
   /** Project layers, resolved by any layer-id parameter the tools read. */
-  layers: GeoLibreLayer[];
+  layers: GeoIntLayer[];
   /** Sink for tool log lines. */
   log: (message: string) => void;
   /** DuckDB-WASM capability for tools that need it (H3, DuckDB-backed ops). */
@@ -138,7 +138,7 @@ export async function runModel(
         break;
       }
       const inputLayerId = `${PIPELINE_INPUT_ID_PREFIX}${index}`;
-      const inputLayer: GeoLibreLayer = {
+      const inputLayer: GeoIntLayer = {
         id: inputLayerId,
         name: `Step ${index}`,
         type: "geojson",

@@ -1,8 +1,8 @@
 {
-  "name": "geolibre",
+  "name": "geoint",
   "version": "2.4.0",
   "private": true,
-  "description": "GeoLibre: a free and open-source, lightweight, cloud-native GIS platform for visualizing, exploring, and analyzing geospatial data. It runs in the web browser, on the desktop, on mobile, and inside Jupyter notebooks, all while keeping your data local and private",
+  "description": "GeoInt: a free and open-source, lightweight, cloud-native GIS platform for visualizing, exploring, and analyzing geospatial data. It runs in the web browser, on the desktop, on mobile, and inside Jupyter notebooks, all while keeping your data local and private",
   "workspaces": [
     "apps/*",
     "packages/*",
@@ -20,7 +20,7 @@
     "test:frontend:coverage": "node --import tsx --test --experimental-test-coverage --test-coverage-lines=78 --test-coverage-branches=78 --test-coverage-functions=63 --test-coverage-exclude=\"tests/**\" --test-coverage-exclude=\"e2e/**\" --test-coverage-exclude=\"**/*.config.*\" tests/*.test.ts",
     "test:backend": "python -m pytest backend/geolibre_server/tests",
     "test:backend:coverage": "python -m pytest backend/geolibre_server/tests --cov=geolibre_server --cov-report=term-missing --cov-fail-under=55",
-    "test:worker": "npm run typecheck -w geolibre-viewer-worker && npm run typecheck -w geolibre-collab-worker && npm run typecheck -w geolibre-tiles-worker && npm run typecheck -w geolibre-ai-proxy-worker",
+    "test:worker": "npm run typecheck -w geoint-viewer-worker && npm run typecheck -w geoint-collab-worker && npm run typecheck -w geoint-tiles-worker && npm run typecheck -w geoint-ai-proxy-worker",
     "test:e2e": "playwright test",
     "check:rust": "cargo check --manifest-path apps/geolibre-desktop/src-tauri/Cargo.toml",
     "ci": "npm run lint && npm run build && npm run test:frontend:coverage && npm run test:worker && npm run test:backend:coverage && npm run check:rust",
@@ -51,7 +51,6 @@
     "node": ">=22"
   },
   "allowScripts": {
-    "@google/genai": true,
     "core-js": true,
     "esbuild": true,
     "protobufjs": true,
@@ -59,7 +58,6 @@
     "workerd": true
   },
   "trustedDependencies": [
-    "@google/genai",
     "core-js",
     "esbuild",
     "protobufjs",

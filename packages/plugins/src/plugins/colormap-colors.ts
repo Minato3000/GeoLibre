@@ -1,4 +1,4 @@
-import { VECTOR_COLOR_RAMPS, getVectorColorRamp } from "@geolibre/core";
+import { VECTOR_COLOR_RAMPS, getVectorColorRamp } from "@geoint/core";
 import { sampleColormapStops } from "maplibre-gl-raster";
 
 // Anchor stops sampled from the renderer's colormap sprite -- enough to
@@ -10,14 +10,14 @@ const inflight = new Map<string, Promise<readonly string[] | null>>();
 
 const BUILT_IN_RAMP_NAMES = new Set(VECTOR_COLOR_RAMPS.map((ramp) => ramp.value));
 
-/** Whether GeoLibre ships exact JS anchor colors for this ramp (its curated set). */
+/** Whether GeoInt ships exact JS anchor colors for this ramp (its curated set). */
 function isBuiltInRamp(name: string): boolean {
   return BUILT_IN_RAMP_NAMES.has(name);
 }
 
 /**
  * Anchor colors for a colormap, used to build the classified stepped texture
- * and the Style-panel preview. Built-in GeoLibre ramps return their exact JS
+ * and the Style-panel preview. Built-in GeoInt ramps return their exact JS
  * colors synchronously; any other (sprite) colormap returns its cached sampled
  * colors, or null until {@link warmColormapColors} has sampled it.
  *

@@ -1,5 +1,5 @@
 // The wire protocol for the embed API: the versioned `postMessage` conversation
-// a host page (a portal, an ERP, a dashboard) has with a framed GeoLibre at
+// a host page (a portal, an ERP, a dashboard) has with a framed GeoInt at
 // runtime, instead of encoding everything in the initial URL (issue #1462).
 //
 // This module is deliberately pure — no window, no store, no map — so the
@@ -7,9 +7,9 @@
 // runtime wiring lives in `hooks/useEmbedApi.ts`.
 //
 // Relationship to the other bridges: `useEmbedBridge`/`useCommandBridge` speak an
-// unversioned, fully-trusted protocol with the GeoLibre Jupyter widget, which
+// unversioned, fully-trusted protocol with the GeoInt Jupyter widget, which
 // owns the page it embeds. The embed API is the opposite situation — a host that
-// GeoLibre does not control — so it is off unless the deployment names the
+// GeoInt does not control — so it is off unless the deployment names the
 // origins it trusts, and every message is checked against that list.
 
 import type { Feature, Geometry } from "geojson";
@@ -18,14 +18,14 @@ import type { Feature, Geometry } from "geojson";
 export const EMBED_API_VERSION = 1;
 
 /** Marks app → host messages so a host can filter its own postMessage traffic. */
-export const EMBED_API_SOURCE = "geolibre";
+export const EMBED_API_SOURCE = "geoint";
 
 /**
  * Deployment variable naming the origins allowed to drive a framed app.
  * Comma- or whitespace-separated, e.g. `https://erp.example.com,https://portal.example.com`.
  * A single `*` allows any origin and is only appropriate on a private network.
  */
-export const EMBED_ORIGINS_ENV = "VITE_GEOLIBRE_EMBED_ORIGINS";
+export const EMBED_ORIGINS_ENV = "VITE_GEOINT_EMBED_ORIGINS";
 
 /** Any-origin wildcard accepted in the allowlist. */
 export const EMBED_ORIGIN_WILDCARD = "*";
@@ -70,8 +70,8 @@ export function parseEmbedOrigins(raw: unknown): string[] {
 /**
  * Read the configured embed-API origin allowlist.
  *
- * Checks the Docker entrypoint's runtime config (`__GEOLIBRE_DEPLOYMENT_ENV__`,
- * so an operator can set it with `-e GEOLIBRE_EMBED_ORIGINS=...` without
+ * Checks the Docker entrypoint's runtime config (`__GEOINT_DEPLOYMENT_ENV__`,
+ * so an operator can set it with `-e GEOINT_EMBED_ORIGINS=...` without
  * rebuilding) before the build-time Vite env.
  *
  * @param viteEnv - Build-time env; defaults to `import.meta.env`.
@@ -84,8 +84,7 @@ export function readEmbedOrigins(viteEnv?: EnvRecord, deploymentEnv?: EnvRecord)
     deploymentEnv ??
     (typeof window === "undefined"
       ? undefined
-      : (window as unknown as { __GEOLIBRE_DEPLOYMENT_ENV__?: EnvRecord })
-          .__GEOLIBRE_DEPLOYMENT_ENV__);
+      : (window as unknown as { __GEOINT_DEPLOYMENT_ENV__?: EnvRecord }).__GEOINT_DEPLOYMENT_ENV__);
   const fromRuntime = parseEmbedOrigins(runtime?.[EMBED_ORIGINS_ENV]);
   if (fromRuntime.length > 0) return fromRuntime;
   const build = viteEnv ?? (import.meta.env as EnvRecord);

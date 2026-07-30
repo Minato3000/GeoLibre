@@ -5,7 +5,7 @@ import { removeTrailingJsonCommas } from "./expressions";
 /**
  * A data-driven color value for a vector paint property: either a plain CSS
  * color string, or a MapLibre expression array (e.g. a categorized `match` or
- * graduated `interpolate`). Typed maplibre-agnostically so `@geolibre/core`
+ * graduated `interpolate`). Typed maplibre-agnostically so `@geoint/core`
  * stays free of a maplibre-gl dependency; consumers cast to the concrete
  * `PropertyValueSpecification<string>` where the MapLibre types are in scope.
  */
@@ -24,7 +24,7 @@ export function isVectorColorExpression(value: VectorColorValue): value is unkno
  */
 export function isHexColor(value: unknown): boolean {
   // Guard the type: `stop.color`/`rule.color` are typed `string`, but the data
-  // can come from a hand-edited or imported .geolibre.json, so a missing/null
+  // can come from a hand-edited or imported .geoint.json, so a missing/null
   // value must return false rather than throw on `.trim()`.
   return typeof value === "string" && /^#[0-9a-f]{6}$/i.test(value.trim());
 }
@@ -717,7 +717,7 @@ export interface ProportionalSizeRange {
  * does not apply: disabled, no field chosen, non-finite or degenerate
  * (`maxValue <= minValue`) value range, or non-finite radii. This is the
  * single validation chain for every proportional consumer — circle radius,
- * line width, and marker icon-size (`@geolibre/map`) — so their notion of
+ * line width, and marker icon-size (`@geoint/map`) — so their notion of
  * "active" can never drift apart.
  *
  * @param style - The layer style.
@@ -795,7 +795,7 @@ export function vectorFillColorValue(style: LayerStyle): VectorColorValue {
 
 /**
  * Circle color value for a point layer. Intentionally identical to
- * `vectorFillColorValue`: GeoLibre has no separate point-fill color, so point
+ * `vectorFillColorValue`: GeoInt has no separate point-fill color, so point
  * circles share the polygon fill color (matching `circlePaint` in the map
  * package). Kept as its own function so the per-geometry callers read in
  * parallel and a future dedicated circle color stays a one-line change here.

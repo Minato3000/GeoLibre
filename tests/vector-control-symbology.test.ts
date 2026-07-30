@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import { removeLayerFromMap, syncLayer } from "../packages/map/src/layer-sync";
 
 // Records the maplibre calls a layer sync makes so a test can assert which
@@ -42,7 +42,7 @@ function makeVectorControlMapStub(layerId: string) {
   return { map, calls };
 }
 
-function vectorControlLayer(layerId: string, patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function vectorControlLayer(layerId: string, patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id: layerId,
     name: "us_cities",
@@ -82,7 +82,7 @@ function radiusCalls(calls: MapCall[], layerId: string): MapCall[] {
 }
 
 describe("vector-control point symbology overlay (#1311)", () => {
-  it("renders a GeoLibre marker symbol layer and hides the control's circle", () => {
+  it("renders a GeoInt marker symbol layer and hides the control's circle", () => {
     const { map, calls } = makeVectorControlMapStub("vecm");
     const layer = vectorControlLayer("vecm", {
       style: { ...DEFAULT_LAYER_STYLE, markerEnabled: true },
@@ -101,7 +101,7 @@ describe("vector-control point symbology overlay (#1311)", () => {
     assert.equal(spec.id, "layer-vecm-marker");
     assert.equal(spec.type, "symbol");
     assert.equal(spec.source, "vecm-source");
-    assert.match(String(spec.layout["icon-image"]), /^geolibre-marker-/);
+    assert.match(String(spec.layout["icon-image"]), /^geoint-marker-/);
 
     assert.ok(
       calls.some(

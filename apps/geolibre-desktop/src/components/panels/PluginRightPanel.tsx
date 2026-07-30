@@ -6,8 +6,8 @@ import {
   openRightPanel,
   type RightPanelDock,
   setActiveRightPanelDock,
-} from "@geolibre/plugins";
-import { Button } from "@geolibre/ui";
+} from "@geoint/plugins";
+import { Button } from "@geoint/ui";
 import {
   ArrowLeftToLine,
   ArrowRightToLine,

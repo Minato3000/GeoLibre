@@ -1,18 +1,18 @@
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 
-let layerControlPosition: GeoLibreMapControlPosition = "top-right";
+let layerControlPosition: GeoIntMapControlPosition = "top-right";
 
-export const maplibreLayerControlPlugin: GeoLibrePlugin = {
+export const maplibreLayerControlPlugin: GeoIntPlugin = {
   id: "maplibre-layer-control",
   name: "Layer Control",
   version: "0.16.0",
   activeByDefault: true,
-  activate: (app: GeoLibreAppAPI) => app.setBuiltInMapControlVisible("layer-control", true),
-  deactivate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => app.setBuiltInMapControlVisible("layer-control", true),
+  deactivate: (app: GeoIntAppAPI) => {
     app.setBuiltInMapControlVisible("layer-control", false);
   },
   getMapControlPosition: () => layerControlPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     layerControlPosition = position;
     return app.setBuiltInMapControlPosition("layer-control", position);
   },

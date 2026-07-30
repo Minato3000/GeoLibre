@@ -1,7 +1,7 @@
 // Run the OSS geospatial tools entirely in the browser via WebAssembly - a
 // drop-in alternative to the Python sidecar. `geolibre-wasm/tools` is a superset
 // of `whitebox-wasm/tools`: the same `wbtools_oss` engine (compiled to a WASI
-// binary) plus GeoLibre-authored tools, run through an in-memory WASI
+// binary) plus GeoInt-authored tools, run through an in-memory WASI
 // filesystem, so no server, no Python, and no native install is required. Same
 // algorithms and outputs as the sidecar; bounded by WASM's ~4 GiB memory and
 // single-threaded execution (use the sidecar for very large data).
@@ -60,14 +60,14 @@ interface ToolRunResult {
   files: Record<string, Uint8Array>;
 }
 
-/** One tool's manifest as emitted by `geolibre manifests` (geolibre-wasm). */
+/** One tool's manifest as emitted by `geoint manifests` (geolibre-wasm). */
 export interface ToolManifest {
   id: string;
   display_name?: string;
   summary?: string;
   category?: string;
   license_tier?: string;
-  /** "geolibre" for GeoLibre-authored tools, "whitebox" otherwise. */
+  /** "geoint" for GeoInt-authored tools, "whitebox" otherwise. */
   source?: string;
   /**
    * Per-parameter default values, keyed by parameter name. Dataset entries are
@@ -144,7 +144,7 @@ export async function listWhiteboxWasmTools(): Promise<string[]> {
  * leaving the 1028 genuinely-defaulted optional parameters.
  *
  * Dropping the whole map (what the dialog did before) is what surfaced as
- * GeoLibre#1458: `include_end` documents "default true" but rendered as an
+ * GeoInt#1458: `include_end` documents "default true" but rendered as an
  * unchecked box, so `--include_end=false` was sent and each line lost its
  * endpoint. The Whitebox catalog snapshot already carries the same defaults for
  * the tools it lists, so this only closes the gap for local (WASM) mode.
@@ -171,7 +171,7 @@ export function manifestScalarDefaults(manifest: ToolManifest): Record<string, u
  * flatten an enum schema's choices to `options` so the param renders as a
  * dropdown, and lift the manifest's scalar defaults onto each param so the
  * dialog opens with the values the tool documents ({@link manifestScalarDefaults}).
- * `source` is preserved only for GeoLibre-authored tools, matching how the
+ * `source` is preserved only for GeoInt-authored tools, matching how the
  * Whitebox catalog snapshot leaves Whitebox tools' `source` unset.
  */
 function manifestToWhiteboxTool(manifest: ToolManifest): WhiteboxTool {
@@ -182,7 +182,7 @@ function manifestToWhiteboxTool(manifest: ToolManifest): WhiteboxTool {
     summary: manifest.summary,
     category: manifest.category,
     license_tier: manifest.license_tier,
-    source: manifest.source?.toLowerCase() === "geolibre" ? "geolibre" : undefined,
+    source: manifest.source?.toLowerCase() === "geoint" ? "geoint" : undefined,
     params: (manifest.params ?? []).map((param) => {
       const mapped: WhiteboxToolParameter = {
         name: param.name,
@@ -229,14 +229,14 @@ export async function listWasmToolManifests(): Promise<WhiteboxTool[]> {
  * the parameter `dst_epsg`, causing a "parameter 'epsg' is required" failure).
  *
  * Every catalog tool that the WASM binary also implements keeps its catalog
- * metadata but takes the manifest's parameters; the GeoLibre-authored tools that
+ * metadata but takes the manifest's parameters; the GeoInt-authored tools that
  * never appear in the catalog are appended. A manifest that declares *no*
  * parameters at all is treated as missing metadata rather than as a
  * parameterless tool — see {@link mergeWasmToolManifests}.
  *
  * @param catalogTools - Tools from the Whitebox catalog snapshot.
  * @param wasmTools - Every WASM tool manifest ({@link listWasmToolManifests}).
- * @returns Catalog tools with WASM parameters, plus WASM-only GeoLibre tools.
+ * @returns Catalog tools with WASM parameters, plus WASM-only GeoInt tools.
  */
 /** Scalar catalog kinds trusted to correct a mislabeled WASM manifest param. */
 const CATALOG_SCALAR_KINDS = new Set(["string", "int", "double"]);
@@ -247,7 +247,7 @@ const CATALOG_SCALAR_KINDS = new Set(["string", "int", "double"]);
  * mislabels a free-form scalar parameter: `extract_by_attribute`'s `statement`
  * expression is typed `bool` (rendering a checkbox) and `field_calculator`'s
  * `expression` is typed as a vector input (rendering a second layer picker),
- * so neither exposes a text field to type the expression (GeoLibre#1073). When
+ * so neither exposes a text field to type the expression (GeoInt#1073). When
  * the Python sidecar's catalog types the same-named param as a plain scalar
  * (string/int/double) but the WASM manifest makes it a `bool` (any name) or a
  * dataset **input** whose *name* marks it as a free-text expression, we trust
@@ -311,7 +311,7 @@ function reconcileToolParams(
     const catalogKind = paramKind(catalogParam);
     // A WASM manifest with no `defaults` entry for this param falls back to the
     // catalog's documented default, so local (WASM) mode opens the tool with the
-    // same values the sidecar would (GeoLibre#1458). Dataset params are skipped:
+    // same values the sidecar would (GeoInt#1458). Dataset params are skipped:
     // the catalog leaves their default `null`, and a path default would be
     // meaningless on the user's machine anyway.
     const isDataset = wasmKind.endsWith("_in") || wasmKind.endsWith("_out");
@@ -341,10 +341,10 @@ export function mergeWasmToolManifests(
     // the tool's provenance; keep only the catalog's display metadata (name,
     // category, …). A manifest that declares no params at all keeps the
     // catalog's instead — see {@link reconcileToolParams}. Preserving `source`
-    // matters so a GeoLibre-authored tool that also has a catalog stub keeps its
-    // "geolibre" marker for the source filter. A same-named catalog param still
+    // matters so a GeoInt-authored tool that also has a catalog stub keeps its
+    // "geoint" marker for the source filter. A same-named catalog param still
     // corrects a WASM kind that mislabels a scalar expression as a dataset/bool
-    // (GeoLibre#1073).
+    // (GeoInt#1073).
     return {
       ...tool,
       params: reconcileToolParams(tool.params, wasm.params),
@@ -352,8 +352,8 @@ export function mergeWasmToolManifests(
     };
   });
   // Everything the WASM binary ships that the catalog snapshot does not list,
-  // whatever its provenance. This used to be filtered to `source === "geolibre"`
-  // on the assumption that only GeoLibre-authored tools were missing from the
+  // whatever its provenance. This used to be filtered to `source === "geoint"`
+  // on the assumption that only GeoInt-authored tools were missing from the
   // catalog, but the WASM also carries Whitebox-sourced tools the Whitebox Next
   // Gen snapshot has never listed (buffer_vector, the variogram/cokriging tools,
   // greater_than_or_equal_to, less_than_or_equal_to). Those are runnable — the
@@ -533,7 +533,7 @@ export function outputBaseName(toolId: string, paramName: string): string {
 }
 
 /**
- * GeoLibre-authored subset extractors whose single result COG is written to a
+ * GeoInt-authored subset extractors whose single result COG is written to a
  * plain-string `output` path (no typed `raster_out` param). Their produced file
  * is surfaced explicitly after the run; see the fallback in
  * {@link runWhiteboxToolWasm}.
@@ -639,7 +639,7 @@ export async function runWhiteboxToolWasm(request: RunWhiteboxToolRequest): Prom
       // Honor the extension of the user-chosen output path; fall back to CSV for
       // a tabular output, else an opaque ".dat". Hardcoding ".dat" here made
       // every such tool fail its own ".csv path" validation regardless of what
-      // the user typed (see GeoLibre#1074).
+      // the user typed (see GeoInt#1074).
       const ext =
         kind === "file_out" ? fileOutputTargetExtension(param, request.parameters[name]) : "tif";
       const file = `${outputBaseName(request.tool_id, name)}.${ext}`;
@@ -697,7 +697,7 @@ export async function runWhiteboxToolWasm(request: RunWhiteboxToolRequest): Prom
       // leave this output out
     }
   }
-  // The GeoLibre COG/WMS/XYZ subset extractors type their `output` as a plain
+  // The GeoInt COG/WMS/XYZ subset extractors type their `output` as a plain
   // string path (not a `raster_out`), so the loop above maps nothing. Surface
   // their single produced result COG as raw bytes so it still reaches the map
   // instead of being silently dropped. Scoped to those tool ids (not "any tool

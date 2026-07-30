@@ -19,10 +19,10 @@
  *     style, blanking the map.
  *
  * The control handles both itself when it applies a style (it passes a
- * `transformStyle`), but GeoLibre is store-driven: the basemap change is written
+ * `transformStyle`), but GeoInt is store-driven: the basemap change is written
  * to `basemapStyleUrl` and re-applied by {@link MapController}, and a reopened
  * project or a split-view pane applies the saved URL with no control involved at
- * all. So the rewrite has to live on GeoLibre's own style path, which is here.
+ * all. So the rewrite has to live on GeoInt's own style path, which is here.
  *
  * The access token is read back out of the style URL's `access_token` query
  * parameter, which is exactly where the control put it — that keeps this module
@@ -39,7 +39,7 @@ const MAPBOX_STYLE_PATH_PREFIX = "/styles/v1/";
  * Whether a basemap style URL points at a Mapbox-hosted style descriptor, and
  * therefore needs {@link loadMapboxStyle} rather than a plain `setStyle(url)`.
  *
- * @param styleUrl - The basemap style URL (or a GeoLibre sentinel, which never
+ * @param styleUrl - The basemap style URL (or a GeoInt sentinel, which never
  *   matches).
  * @returns True for `https://api.mapbox.com/styles/v1/…` URLs.
  */

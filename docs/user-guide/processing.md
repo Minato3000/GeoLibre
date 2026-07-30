@@ -1,11 +1,11 @@
 # Processing Tools
 
-The **Processing** menu collects GeoLibre's analysis and conversion tools: vector geometry and overlay tools, raster terrain and clipping tools, AI segmentation, format conversion, and the Whitebox toolbox. The [SQL Workspace](sql-workspace.md), [Python Console](python-console.md), [AI Assistant](ai-assistant.md), and [AI Segmentation](segmentation.md) also live here and have their own pages.
+The **Processing** menu collects GeoInt's analysis and conversion tools: vector geometry and overlay tools, raster terrain and clipping tools, AI segmentation, format conversion, and the Whitebox toolbox. The [SQL Workspace](sql-workspace.md), [Python Console](python-console.md), [AI Assistant](ai-assistant.md), and [AI Segmentation](segmentation.md) also live here and have their own pages.
 
 !!! note "Page order"
     This page groups the tools by theme. In the menu itself the items appear in a different order: AI Assistant (top), Whitebox, SQL Workspace, Python Console, Conversion, Vector, Raster, AI Segmentation, Planetary Computer, Earth Engine.
 
-![Vector tools dialog](https://data.geolibre.app/images/geolibre-processing-vector.webp)
+![Vector tools dialog](https://data.geolibre.app/images/geoint-processing-vector.webp)
 
 ## Vector
 

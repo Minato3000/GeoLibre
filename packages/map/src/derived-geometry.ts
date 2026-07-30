@@ -5,8 +5,8 @@ import centroid from "@turf/centroid";
 import convex from "@turf/convex";
 import mask from "@turf/mask";
 import type { Feature, FeatureCollection, MultiPolygon, Polygon } from "geojson";
-import type { GeometryGeneratorType, LayerStyle } from "@geolibre/core";
-import { styleValue } from "@geolibre/core";
+import type { GeometryGeneratorType, LayerStyle } from "@geoint/core";
+import { styleValue } from "@geoint/core";
 
 /**
  * Derived feature collections for the symbology pack (#1323): the inverted

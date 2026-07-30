@@ -7,9 +7,9 @@ import {
   persistedThreeDTilesRequestHeaders,
   resolveThreeDTilesRequestHeaders,
   stripGoogleMapsApiKeyHeader,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   useAppStore,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { Layer } from "@deck.gl/core";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import {
@@ -21,7 +21,7 @@ import {
   type ThreeDTilesControlOptions,
   type ThreeDTilesItemState,
 } from "maplibre-gl-3d-tiles";
-import type { GeoLibreAppAPI, GeoLibreDeckGL, GeoLibreMapControlPosition } from "../types";
+import type { GeoIntAppAPI, GeoIntDeckGL, GeoIntMapControlPosition } from "../types";
 import {
   acquireMercatorProjectionLock,
   releaseMercatorProjectionLock,
@@ -35,8 +35,8 @@ import {
   THREE_D_TILES_DECK_LOAD_OPTIONS,
 } from "./arcgis-i3s-tiles";
 
-const threeDTilesControlPosition: GeoLibreMapControlPosition = "top-left";
-const THREE_D_TILES_LAYER_ID = "geolibre-3d-tiles";
+const threeDTilesControlPosition: GeoIntMapControlPosition = "top-left";
+const THREE_D_TILES_LAYER_ID = "geoint-3d-tiles";
 // Keep in sync with the three.js version maplibre-gl-3d-tiles is built
 // against. Only used as a fallback when the control does not expose its own
 // decoder paths (see getThreeDTilesDecoderOptions).
@@ -50,7 +50,7 @@ const ARCGIS_I3S_SAMPLE_TILES_URL =
 const ARCGIS_I3S_SAMPLE_TILES_LABEL = "San Francisco Buildings (ArcGIS I3S)";
 const GOOGLE_MAPS_API_KEY_MASK = "********";
 const GOOGLE_PHOTOREALISTIC_SOURCE_KIND = "google-photorealistic-3d-tiles";
-const GOOGLE_PHOTOREALISTIC_LAYER_ID_PREFIX = "geolibre-google-photorealistic-3d-tiles";
+const GOOGLE_PHOTOREALISTIC_LAYER_ID_PREFIX = "geoint-google-photorealistic-3d-tiles";
 const GOOGLE_PHOTOREALISTIC_INITIAL_VIEW = {
   center: [14.42, 50.089] as [number, number],
   zoom: 16,
@@ -59,7 +59,7 @@ const GOOGLE_PHOTOREALISTIC_INITIAL_VIEW = {
 };
 
 const THREE_D_TILES_OPTIONS = {
-  className: "geolibre-3d-tiles-control",
+  className: "geoint-3d-tiles-control",
   collapsed: true,
   collapseOnClickOutside: false,
   layerId: THREE_D_TILES_LAYER_ID,
@@ -86,7 +86,7 @@ let threeDTilesPanelPinned = false;
 let threeDTilesStoreUnsubscribe: (() => void) | null = null;
 let threeDTilesStoreSyncSuspended = 0;
 let threeDTilesRuntimeEnvUnsubscribe: (() => void) | null = null;
-let activeThreeDTilesApp: GeoLibreAppAPI | null = null;
+let activeThreeDTilesApp: GeoIntAppAPI | null = null;
 const pendingThreeDTilesStyleRestores = new WeakSet<MapLibreMap>();
 
 // The Google tiles render through the shared interleaved deck overlay
@@ -95,8 +95,8 @@ const pendingThreeDTilesStyleRestores = new WeakSet<MapLibreMap>();
 // deck.gl's per-map Deck (see #1149). This module only builds the layer list;
 // the shared overlay owns the MapboxOverlay and its map binding.
 let googleTilesStoreUnsubscribe: (() => void) | null = null;
-let googleTilesDeckGL: GeoLibreDeckGL | null = null;
-let googleTilesApp: GeoLibreAppAPI | null = null;
+let googleTilesDeckGL: GeoIntDeckGL | null = null;
+let googleTilesApp: GeoIntAppAPI | null = null;
 let ensureGoogleTilesOverlayInFlight: Promise<void> | null = null;
 /** Ref-counted mercator lock key for this overlay (see map-projection-utils). */
 const GOOGLE_PROJECTION_LOCK_KEY = "google-photorealistic";
@@ -133,11 +133,11 @@ interface ThreeDTilesControlInternals {
   };
 }
 
-export function openThreeDTilesLayerPanel(app: GeoLibreAppAPI): void {
+export function openThreeDTilesLayerPanel(app: GeoIntAppAPI): void {
   openStandaloneThreeDTilesControl(app);
 }
 
-export function closeThreeDTilesLayerPanel(app: GeoLibreAppAPI): void {
+export function closeThreeDTilesLayerPanel(app: GeoIntAppAPI): void {
   if (threeDTilesControl && threeDTilesControlMounted) {
     app.removeMapControl(threeDTilesControl);
     return;
@@ -145,7 +145,7 @@ export function closeThreeDTilesLayerPanel(app: GeoLibreAppAPI): void {
   resetThreeDTilesControl(threeDTilesControl);
 }
 
-export function restoreThreeDTilesLayers(app: GeoLibreAppAPI): void {
+export function restoreThreeDTilesLayers(app: GeoIntAppAPI): void {
   restoreGooglePhotorealisticTilesLayers(app);
   restoreArcgisI3sTilesLayers(app);
 
@@ -174,7 +174,7 @@ export function restoreThreeDTilesLayers(app: GeoLibreAppAPI): void {
     hydrateThreeDTilesControlFromStore(control, { replaceExisting: true });
     syncThreeDTilesStoreFromControl(control);
   } catch (error) {
-    console.error("[GeoLibre] Failed to restore 3D Tiles layers", error);
+    console.error("[GeoInt] Failed to restore 3D Tiles layers", error);
   }
 }
 
@@ -207,7 +207,7 @@ export function deferThreeDTilesRestoreUntilMapIdle(
   return true;
 }
 
-function openStandaloneThreeDTilesControl(app: GeoLibreAppAPI): boolean {
+function openStandaloneThreeDTilesControl(app: GeoIntAppAPI): boolean {
   const control = ensureThreeDTilesControl(app);
   if (!control) return false;
 
@@ -219,14 +219,14 @@ function openStandaloneThreeDTilesControl(app: GeoLibreAppAPI): boolean {
       hydrateThreeDTilesControlFromStore(control);
       syncThreeDTilesStoreFromControl(control);
     } catch (error) {
-      console.error("[GeoLibre] Failed to open 3D Tiles layer panel", error);
+      console.error("[GeoInt] Failed to open 3D Tiles layer panel", error);
     }
   }, 0);
 
   return true;
 }
 
-function ensureThreeDTilesControl(app: GeoLibreAppAPI): ThreeDTilesControl | null {
+function ensureThreeDTilesControl(app: GeoIntAppAPI): ThreeDTilesControl | null {
   activeThreeDTilesApp = app;
   threeDTilesControl ??= createThreeDTilesControl();
 
@@ -347,7 +347,7 @@ function hydrateThreeDTilesControlFromStore(
 
 function restoreThreeDTilesMapLayer(
   control: ThreeDTilesControl,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   url: string,
 ): void {
   const map = control.getMap();
@@ -479,7 +479,7 @@ function createThreeDTilesStoreLayer(
   tileset: ThreeDTilesItemState,
   opacity = 1,
   panelCollapsed = true,
-): GeoLibreLayer {
+): GeoIntLayer {
   const layerName = tileset.layerName || layerNameFromUrl(tileset.tilesetUrl, tileset.id);
   const beforeId = tileset.beforeId;
 
@@ -525,10 +525,10 @@ function createThreeDTilesStoreLayer(
 }
 
 function createThreeDTilesLayerUpdate(
-  existingLayer: GeoLibreLayer,
-  layer: GeoLibreLayer,
-): Partial<GeoLibreLayer> | null {
-  const update: Partial<GeoLibreLayer> = {};
+  existingLayer: GeoIntLayer,
+  layer: GeoIntLayer,
+): Partial<GeoIntLayer> | null {
+  const update: Partial<GeoIntLayer> = {};
   const name = existingLayer.name || layer.name;
 
   if (existingLayer.name !== name) update.name = name;
@@ -572,7 +572,7 @@ function resetThreeDTilesControl(control: ThreeDTilesControl | null): void {
   threeDTilesStoreSyncSuspended = 0;
 }
 
-function isThreeDTilesControlLayer(layer: GeoLibreLayer): boolean {
+function isThreeDTilesControlLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "3d-tiles" &&
     layer.metadata.sourceKind === "3d-tiles-url" &&
@@ -599,7 +599,7 @@ function showThreeDTilesControl(control: ThreeDTilesControl | null): void {
 function installThreeDTilesPanelHandlers(control: ThreeDTilesControl | null): void {
   const panel = getThreeDTilesPanel(control);
   if (panel) {
-    panel.classList.add("geolibre-3d-tiles-panel");
+    panel.classList.add("geoint-3d-tiles-panel");
     installThreeDTilesCloseHandler(control, panel);
     if (control) {
       installGooglePhotorealisticTilesPanelHandlers(control, panel);
@@ -622,9 +622,9 @@ function addThreeDTilesRuntimeEnvListener(control: ThreeDTilesControl): void {
     renderGooglePhotorealisticTilesLayers();
   };
 
-  window.addEventListener("geolibre:runtime-env-change", handleRuntimeEnvChange);
+  window.addEventListener("geoint:runtime-env-change", handleRuntimeEnvChange);
   threeDTilesRuntimeEnvUnsubscribe = () => {
-    window.removeEventListener("geolibre:runtime-env-change", handleRuntimeEnvChange);
+    window.removeEventListener("geoint:runtime-env-change", handleRuntimeEnvChange);
   };
 }
 
@@ -632,8 +632,8 @@ function installGooglePhotorealisticTilesPanelHandlers(
   control: ThreeDTilesControl,
   panel: HTMLElement,
 ): void {
-  if (panel.dataset.geolibreGoogleTilesHandler === "true") return;
-  panel.dataset.geolibreGoogleTilesHandler = "true";
+  if (panel.dataset.geointGoogleTilesHandler === "true") return;
+  panel.dataset.geointGoogleTilesHandler = "true";
 
   const applyDefaults = () => applyGooglePhotorealisticTilesPanelDefaults(control);
   const deferApplyDefaults = () => window.setTimeout(applyDefaults, 0);
@@ -696,10 +696,10 @@ function applyGooglePhotorealisticTilesPanelDefaults(control: ThreeDTilesControl
       headersInput.placeholder = "";
     }
     googleTilesApiKeysByPanel.delete(panel);
-    panel.dataset.geolibreGoogleMapsApiKeyVisible = "false";
+    panel.dataset.geointGoogleMapsApiKeyVisible = "false";
     // Re-arm the one-shot altitude default so it applies again if the user
     // returns to a Google URL.
-    delete panel.dataset.geolibreGoogleAltitudeApplied;
+    delete panel.dataset.geointGoogleAltitudeApplied;
     setGooglePhotorealisticHeadersToggleVisible(panel, false);
     return;
   }
@@ -725,11 +725,11 @@ function applyGooglePhotorealisticTilesPanelDefaults(control: ThreeDTilesControl
   // (including -300, which is indistinguishable from the native default).
   if (
     altitudeInput &&
-    panel.dataset.geolibreGoogleAltitudeApplied !== "true" &&
+    panel.dataset.geointGoogleAltitudeApplied !== "true" &&
     (!altitudeInput.value.trim() || Number(altitudeInput.value) === -300)
   ) {
     altitudeInput.value = "0";
-    panel.dataset.geolibreGoogleAltitudeApplied = "true";
+    panel.dataset.geointGoogleAltitudeApplied = "true";
   }
 
   const headersInput = panel.querySelector<HTMLTextAreaElement>(
@@ -748,7 +748,7 @@ function applyGooglePhotorealisticTilesPanelDefaults(control: ThreeDTilesControl
   installGooglePhotorealisticHeadersToggle(panel, headersInput);
   headersInput.value = serializeGooglePhotorealisticPanelRequestHeaders(
     headers,
-    panel.dataset.geolibreGoogleMapsApiKeyVisible === "true",
+    panel.dataset.geointGoogleMapsApiKeyVisible === "true",
   );
   setGooglePhotorealisticHeadersToggleVisible(
     panel,
@@ -764,21 +764,21 @@ function installGooglePhotorealisticHeadersToggle(
   panel: HTMLElement,
   headersInput: HTMLTextAreaElement,
 ): void {
-  if (panel.querySelector(".geolibre-google-tiles-key-toggle")) return;
+  if (panel.querySelector(".geoint-google-tiles-key-toggle")) return;
 
-  panel.dataset.geolibreGoogleMapsApiKeyVisible = "false";
+  panel.dataset.geointGoogleMapsApiKeyVisible = "false";
 
   const toggle = document.createElement("button");
   toggle.type = "button";
-  toggle.className = "geolibre-google-tiles-key-toggle three-d-tiles-small-button";
+  toggle.className = "geoint-google-tiles-key-toggle three-d-tiles-small-button";
   toggle.textContent = "Show key";
   toggle.setAttribute("aria-label", "Show Google Maps API key");
   toggle.setAttribute("aria-pressed", "false");
   toggle.hidden = true;
 
   toggle.addEventListener("click", () => {
-    const visible = panel.dataset.geolibreGoogleMapsApiKeyVisible !== "true";
-    panel.dataset.geolibreGoogleMapsApiKeyVisible = visible ? "true" : "false";
+    const visible = panel.dataset.geointGoogleMapsApiKeyVisible !== "true";
+    panel.dataset.geointGoogleMapsApiKeyVisible = visible ? "true" : "false";
     updateGooglePhotorealisticHeadersToggle(toggle, visible);
 
     const rawHeaders = parseThreeDTilesRequestHeaders(headersInput.value);
@@ -796,7 +796,7 @@ function installGooglePhotorealisticHeadersToggle(
 }
 
 function setGooglePhotorealisticHeadersToggleVisible(panel: HTMLElement, visible: boolean): void {
-  const toggle = panel.querySelector<HTMLButtonElement>(".geolibre-google-tiles-key-toggle");
+  const toggle = panel.querySelector<HTMLButtonElement>(".geoint-google-tiles-key-toggle");
   if (toggle) toggle.hidden = !visible;
 }
 
@@ -826,7 +826,7 @@ async function addGooglePhotorealisticTilesFromPanel(
   const submittedUrl = getThreeDTilesUrlInput(panel)?.value.trim();
   if (submittedUrl && urlHasKeyQueryParam(submittedUrl)) {
     console.warn(
-      "[GeoLibre] Ignoring the `key` query parameter in the Google Photorealistic 3D Tiles URL; the API key is taken from VITE_GOOGLE_MAPS_API_KEY (or the X-GOOG-API-KEY request header) instead.",
+      "[GeoInt] Ignoring the `key` query parameter in the Google Photorealistic 3D Tiles URL; the API key is taken from VITE_GOOGLE_MAPS_API_KEY (or the X-GOOG-API-KEY request header) instead.",
     );
   }
 
@@ -873,8 +873,8 @@ async function addGooglePhotorealisticTilesFromPanel(
  * only handles OGC 3D Tiles. Mirrors the Google Photorealistic interception.
  */
 function installArcgisI3sTilesPanelHandlers(control: ThreeDTilesControl, panel: HTMLElement): void {
-  if (panel.dataset.geolibreI3sTilesHandler === "true") return;
-  panel.dataset.geolibreI3sTilesHandler = "true";
+  if (panel.dataset.geointI3sTilesHandler === "true") return;
+  panel.dataset.geointI3sTilesHandler = "true";
 
   const urlInput = getThreeDTilesUrlInput(panel);
   // Capture on the panel (an ancestor of the form) so this runs before
@@ -900,12 +900,12 @@ function installArcgisI3sTilesPanelHandlers(control: ThreeDTilesControl, panel: 
 function addArcgisI3sTilesFromPanel(control: ThreeDTilesControl, panel: HTMLElement): void {
   const app = activeThreeDTilesApp;
   if (!app) {
-    console.warn("[GeoLibre] ArcGIS I3S submit ignored: no active 3D Tiles app");
+    console.warn("[GeoInt] ArcGIS I3S submit ignored: no active 3D Tiles app");
     return;
   }
   const url = getThreeDTilesUrlInput(panel)?.value.trim();
   if (!url) {
-    console.warn("[GeoLibre] ArcGIS I3S submit ignored: empty URL");
+    console.warn("[GeoInt] ArcGIS I3S submit ignored: empty URL");
     return;
   }
 
@@ -924,14 +924,14 @@ function addArcgisI3sTilesFromPanel(control: ThreeDTilesControl, panel: HTMLElem
   control.collapse();
 }
 
-function restoreGooglePhotorealisticTilesLayers(app: GeoLibreAppAPI): void {
+function restoreGooglePhotorealisticTilesLayers(app: GeoIntAppAPI): void {
   if (useAppStore.getState().layers.some(isGooglePhotorealisticTilesLayer)) {
     void ensureGooglePhotorealisticTilesOverlay(app);
   }
 }
 
 function addGooglePhotorealisticTilesLayer(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: {
     name: string;
     altitudeOffset: number;
@@ -1008,8 +1008,8 @@ function updateGooglePhotorealisticTilesPanelList(control: ThreeDTilesControl | 
   // is updated by renderGooglePhotorealisticTilesLayers, so skipping the
   // rebuild when the ids are unchanged is safe.
   const idSignature = googleLayers.map((layer) => layer.id).join("|");
-  if (googleList.dataset.geolibreGoogleListIds === idSignature) return;
-  googleList.dataset.geolibreGoogleListIds = idSignature;
+  if (googleList.dataset.geointGoogleListIds === idSignature) return;
+  googleList.dataset.geointGoogleListIds = idSignature;
 
   googleList.replaceChildren();
   if (googleLayers.length === 0) return;
@@ -1020,11 +1020,11 @@ function updateGooglePhotorealisticTilesPanelList(control: ThreeDTilesControl | 
 }
 
 function ensureGooglePhotorealisticTilesPanelList(panel: HTMLElement): HTMLElement {
-  const existing = panel.querySelector<HTMLElement>(".geolibre-google-tiles-list");
+  const existing = panel.querySelector<HTMLElement>(".geoint-google-tiles-list");
   if (existing) return existing;
 
   const googleList = document.createElement("div");
-  googleList.className = "geolibre-google-tiles-list three-d-tiles-list";
+  googleList.className = "geoint-google-tiles-list three-d-tiles-list";
   googleList.hidden = true;
 
   const nativeList = panel.querySelector<HTMLElement>(".three-d-tiles-list");
@@ -1037,9 +1037,9 @@ function ensureGooglePhotorealisticTilesPanelList(panel: HTMLElement): HTMLEleme
   return googleList;
 }
 
-function createGooglePhotorealisticTilesPanelListItem(layer: GeoLibreLayer): HTMLElement {
+function createGooglePhotorealisticTilesPanelListItem(layer: GeoIntLayer): HTMLElement {
   const item = document.createElement("div");
-  item.className = "geolibre-google-tiles-list-item three-d-tiles-list-item active";
+  item.className = "geoint-google-tiles-list-item three-d-tiles-list-item active";
 
   const meta = document.createElement("div");
   meta.className = "three-d-tiles-list-meta";
@@ -1123,7 +1123,7 @@ function createGooglePhotorealisticTilesPanelSmallButton(label: string): HTMLBut
 }
 
 function flyToGooglePhotorealisticTiles(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   mapOverride?: ReturnType<ThreeDTilesControl["getMap"]>,
 ): void {
   forceGooglePhotorealisticMercatorProjection(app, mapOverride);
@@ -1146,7 +1146,7 @@ function flyToGooglePhotorealisticTiles(
 }
 
 function forceGooglePhotorealisticMercatorProjection(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   mapOverride?: ReturnType<ThreeDTilesControl["getMap"]>,
 ): void {
   acquireMercatorProjectionLock(GOOGLE_PROJECTION_LOCK_KEY, app, mapOverride ?? app.getMap?.());
@@ -1157,7 +1157,7 @@ function restoreGooglePhotorealisticPreviousProjection(): void {
   releaseMercatorProjectionLock(GOOGLE_PROJECTION_LOCK_KEY, googleTilesApp);
 }
 
-function isGooglePhotorealisticTilesLayer(layer: GeoLibreLayer): boolean {
+function isGooglePhotorealisticTilesLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "3d-tiles" &&
     (layer.metadata.sourceKind === GOOGLE_PHOTOREALISTIC_SOURCE_KIND ||
@@ -1165,7 +1165,7 @@ function isGooglePhotorealisticTilesLayer(layer: GeoLibreLayer): boolean {
   );
 }
 
-function ensureGooglePhotorealisticTilesOverlay(app: GeoLibreAppAPI): Promise<void> {
+function ensureGooglePhotorealisticTilesOverlay(app: GeoIntAppAPI): Promise<void> {
   if (ensureGoogleTilesOverlayInFlight) return ensureGoogleTilesOverlayInFlight;
   ensureGoogleTilesOverlayInFlight = runEnsureGooglePhotorealisticTilesOverlay(app).finally(() => {
     ensureGoogleTilesOverlayInFlight = null;
@@ -1173,7 +1173,7 @@ function ensureGooglePhotorealisticTilesOverlay(app: GeoLibreAppAPI): Promise<vo
   return ensureGoogleTilesOverlayInFlight;
 }
 
-async function runEnsureGooglePhotorealisticTilesOverlay(app: GeoLibreAppAPI): Promise<void> {
+async function runEnsureGooglePhotorealisticTilesOverlay(app: GeoIntAppAPI): Promise<void> {
   googleTilesApp = app;
   if (!app.getDeckGL) return;
   googleTilesDeckGL ??= await app.getDeckGL();
@@ -1213,9 +1213,9 @@ function addGoogleTilesRuntimeEnvListener(): void {
     lastGoogleTilesLayerSignature = null;
     renderGooglePhotorealisticTilesLayers();
   };
-  window.addEventListener("geolibre:runtime-env-change", handleRuntimeEnvChange);
+  window.addEventListener("geoint:runtime-env-change", handleRuntimeEnvChange);
   googleTilesRuntimeEnvUnsubscribe = () => {
-    window.removeEventListener("geolibre:runtime-env-change", handleRuntimeEnvChange);
+    window.removeEventListener("geoint:runtime-env-change", handleRuntimeEnvChange);
   };
 }
 
@@ -1256,7 +1256,7 @@ function renderGooglePhotorealisticTilesLayers(): void {
   setSharedDeckLayers("google-3d-tiles", deckLayers);
 }
 
-function googleTilesLayerSignature(layers: GeoLibreLayer[]): string {
+function googleTilesLayerSignature(layers: GeoIntLayer[]): string {
   return layers
     .map((layer) => {
       const headers = stringRecordValue(layer.source.requestHeaders);
@@ -1274,7 +1274,7 @@ function googleTilesLayerSignature(layers: GeoLibreLayer[]): string {
     .join("|");
 }
 
-function buildGooglePhotorealisticTilesDeckLayer(layer: GeoLibreLayer): Layer | null {
+function buildGooglePhotorealisticTilesDeckLayer(layer: GeoIntLayer): Layer | null {
   if (!googleTilesDeckGL) return null;
   const altitudeOffset = numberValue(layer.source.altitudeOffset, 0);
   const requestHeaders = resolveThreeDTilesRequestHeaders(
@@ -1361,7 +1361,7 @@ function isDeckLayerInstance(value: unknown): value is Layer & {
   return isRecord(value) && isRecord(value.props) && typeof value.clone === "function";
 }
 
-function googlePhotorealisticTilesDeckLayerId(layer: GeoLibreLayer): string {
+function googlePhotorealisticTilesDeckLayerId(layer: GeoIntLayer): string {
   const nativeLayerIds = layer.metadata.nativeLayerIds;
   if (Array.isArray(nativeLayerIds)) {
     const deckLayerId = nativeLayerIds.find(
@@ -1385,11 +1385,11 @@ function installThreeDTilesToggleHandler(control: ThreeDTilesControl | null): vo
   const toggleButton = control
     .getContainer()
     ?.querySelector<HTMLButtonElement>(".three-d-tiles-control-toggle");
-  if (!toggleButton || toggleButton.dataset.geolibreToggleHandler === "true") {
+  if (!toggleButton || toggleButton.dataset.geointToggleHandler === "true") {
     return;
   }
 
-  toggleButton.dataset.geolibreToggleHandler = "true";
+  toggleButton.dataset.geointToggleHandler = "true";
   toggleButton.addEventListener(
     "click",
     () => {
@@ -1407,11 +1407,11 @@ function installThreeDTilesCloseHandler(
   panel: HTMLElement | null,
 ): void {
   const closeButton = panel?.querySelector<HTMLButtonElement>(".three-d-tiles-control-close");
-  if (!closeButton || closeButton.dataset.geolibreCloseHandler === "true") {
+  if (!closeButton || closeButton.dataset.geointCloseHandler === "true") {
     return;
   }
 
-  closeButton.dataset.geolibreCloseHandler = "true";
+  closeButton.dataset.geointCloseHandler = "true";
   closeButton.addEventListener("click", () => {
     threeDTilesPanelPinned = false;
     window.setTimeout(() => hideThreeDTilesControl(control), 0);
@@ -1447,7 +1447,7 @@ function isThreeDTilesStoreSyncSuspended(): boolean {
   return threeDTilesStoreSyncSuspended > 0;
 }
 
-function threeDTilesPanelCollapsedFromLayers(layers: GeoLibreLayer[]): boolean {
+function threeDTilesPanelCollapsedFromLayers(layers: GeoIntLayer[]): boolean {
   const panelCollapsed = layers.find((layer) => typeof layer.metadata.panelCollapsed === "boolean")
     ?.metadata.panelCollapsed;
   // Default to collapsed to match the control's initial state, so projects
@@ -1463,7 +1463,7 @@ function validThreeDTilesBeforeId(
   return control.getMap()?.getLayer(beforeId) ? beforeId : undefined;
 }
 
-function restoredThreeDTilesLayerId(layer: GeoLibreLayer): string {
+function restoredThreeDTilesLayerId(layer: GeoIntLayer): string {
   const nativeLayerIds = layer.metadata.nativeLayerIds;
   if (Array.isArray(nativeLayerIds)) {
     const layerId = nativeLayerIds.find(
@@ -1480,7 +1480,7 @@ function getThreeDTilesControlLayers(
   const layers = (control as unknown as ThreeDTilesControlInternals)._layers;
   if (!(layers instanceof Map)) {
     console.warn(
-      "[GeoLibre] ThreeDTilesControl._layers unavailable; skipping 3D Tiles restore. The library internals may have changed.",
+      "[GeoInt] ThreeDTilesControl._layers unavailable; skipping 3D Tiles restore. The library internals may have changed.",
     );
     return null;
   }
@@ -1498,7 +1498,7 @@ function getThreeDTilesDecoderOptions(control: ThreeDTilesControl): {
     // version maplibre-gl-3d-tiles depends on (THREE_VERSION). This is a
     // network-dependent supply-chain fallback, so surface it for diagnosis.
     console.warn(
-      `[GeoLibre] ThreeDTilesControl decoder paths unavailable; falling back to unpkg three@${THREE_VERSION}. Compressed tilesets will fail offline.`,
+      `[GeoInt] ThreeDTilesControl decoder paths unavailable; falling back to unpkg three@${THREE_VERSION}. Compressed tilesets will fail offline.`,
     );
   }
   return {
@@ -1584,7 +1584,7 @@ function rememberGoogleMapsApiKeyFromHeaders(
   return googleTilesApiKeysByPanel.get(panel);
 }
 
-function isGooglePhotorealisticTilesetLayerUrl(layer: GeoLibreLayer): boolean {
+function isGooglePhotorealisticTilesetLayerUrl(layer: GeoIntLayer): boolean {
   const url = stringValue(layer.source.url) ?? layer.sourcePath;
   return url ? isGooglePhotorealisticTilesetUrl(url) : false;
 }

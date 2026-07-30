@@ -1,9 +1,4 @@
-import {
-  applyGroupEffects,
-  useAppStore,
-  type GeoLibreLayer,
-  type MapViewState,
-} from "@geolibre/core";
+import { applyGroupEffects, useAppStore, type GeoIntLayer, type MapViewState } from "@geoint/core";
 import type { Viewer } from "cesium";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { applyMapViewToCamera, isSameView, readMapViewFromCamera } from "./cesium-camera";
@@ -104,7 +99,7 @@ export const CesiumCanvas = memo(function CesiumCanvas({ viewId, ionToken }: Ces
   const layerVisibility = useAppStore(
     (s) => s.secondaryMapViews.find((p) => p.id === viewId)?.layerVisibility,
   );
-  const paneLayers = useMemo<GeoLibreLayer[]>(() => {
+  const paneLayers = useMemo<GeoIntLayer[]>(() => {
     const withOverrides = !layerVisibility
       ? layers
       : layers.map((layer) => {
@@ -163,13 +158,13 @@ export const CesiumCanvas = memo(function CesiumCanvas({ viewId, ionToken }: Ces
           fullscreenButton: false,
           // No default click popup / selection outline: clicking a GeoJSON
           // feature must not pop Cesium's unstyled InfoBox (it isn't wired to
-          // GeoLibre's identify UI and would overflow a small grid pane).
+          // GeoInt's identify UI and would overflow a small grid pane).
           infoBox: false,
           selectionIndicator: false,
           // Without an Ion token, fall back to keyless OpenStreetMap imagery so
           // the globe still renders (Ion's default imagery requires a token).
           // MapGrid only mounts this pane once a token is set, but CesiumCanvas
-          // is a public @geolibre/map export with an optional `ionToken`, so the
+          // is a public @geoint/map export with an optional `ionToken`, so the
           // no-token path stays supported for that direct use.
           baseLayer: token
             ? undefined
@@ -192,7 +187,7 @@ export const CesiumCanvas = memo(function CesiumCanvas({ viewId, ionToken }: Ces
 
         // Drop Cesium's default double-click "track entity" gesture: it flies to
         // and camera-locks a picked feature, which fights the store-driven camera
-        // sync and isn't wired to GeoLibre. Removing it also means every camera
+        // sync and isn't wired to GeoInt. Removing it also means every camera
         // move now comes through the pointer/wheel/touch input the moveEnd
         // handler watches, so a real move is never mistaken for an autonomous one.
         viewer.screenSpaceEventHandler.removeInputAction(

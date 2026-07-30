@@ -28,8 +28,8 @@
   },
   "about": {
     "trigger": "Over",
-    "title": "Over GeoLibre",
-    "description": "GeoLibre is een lichtgewicht, cloud-native GIS-platform.",
+    "title": "Over GeoInt",
+    "description": "GeoInt is een lichtgewicht, cloud-native GIS-platform.",
     "version": "Versie",
     "checkForUpdates": "Controleren op updates",
     "tryAgain": "Opnieuw proberen",
@@ -48,7 +48,7 @@
     "steps": {
       "download": "Download het installatieprogramma voor uw platform van de downloadpagina.",
       "install": "Voer het installatieprogramma uit. Uw lokale projecten, instellingen en API-sleutels blijven behouden.",
-      "reopen": "Open GeoLibre opnieuw om het bijwerken te voltooien."
+      "reopen": "Open GeoInt opnieuw om het bijwerken te voltooien."
     },
     "severity": {
       "major": "Grote release",
@@ -67,7 +67,7 @@
       "noTag": "De nieuwste release bevat geen versietag.",
       "network": "Kan GitHub niet bereiken. Controleer uw verbinding en probeer het opnieuw.",
       "viewDownloads": "Downloads bekijken",
-      "viewDownloadsHint": "Opent de GeoLibre-downloadpagina in uw browser zodat u handmatig de nieuwste versie kunt controleren."
+      "viewDownloadsHint": "Opent de GeoInt-downloadpagina in uw browser zodat u handmatig de nieuwste versie kunt controleren."
     },
     "startup": {
       "title": "Update beschikbaar",
@@ -95,7 +95,7 @@
       "title": "Plugins van dit project laden?",
       "description_one": "Dit project wil 1 externe plugin laden vanaf een URL die u niet hebt geïnstalleerd. Plugins voeren code uit met volledige toegang tot de app.",
       "description_other": "Dit project wil {{count}} externe plugins laden vanaf URL's die u niet hebt geïnstalleerd. Plugins voeren code uit met volledige toegang tot de app.",
-      "warning": "Laad alleen plugins van bronnen die u vertrouwt. Geladen plugins worden uitgevoerd met dezelfde rechten als GeoLibre zelf.",
+      "warning": "Laad alleen plugins van bronnen die u vertrouwt. Geladen plugins worden uitgevoerd met dezelfde rechten als GeoInt zelf.",
       "trustButton": "Vertrouwen en laden",
       "dismissButton": "Niet laden"
     },
@@ -114,7 +114,7 @@
     "openHomepageAria": "Homepage van {{name}} openen",
     "byAuthor": "van {{author}}",
     "updateAvailable": "update beschikbaar",
-    "requiresVersion": "vereist GeoLibre {{version}}+",
+    "requiresVersion": "vereist GeoInt {{version}}+",
     "install": "Installeren",
     "installAria": "{{name}} installeren",
     "removeConfirm": "Verwijderen?",
@@ -125,10 +125,10 @@
     "updateAria": "{{name}} bijwerken",
     "loading": "Laden…",
     "installed": "Geïnstalleerd",
-    "settingsIntro": "GeoLibre scant altijd zijn pluginmap in de app-gegevens. Installeer een verpakte plugin (.zip) vanuit een bestand, of voeg extra lokale mappen toe (alleen desktop). Manifest-URL's (inclusief marketplace-installaties) worden via het netwerk geladen; wijzigingen hier werken meteen.",
+    "settingsIntro": "GeoInt scant altijd zijn pluginmap in de app-gegevens. Installeer een verpakte plugin (.zip) vanuit een bestand, of voeg extra lokale mappen toe (alleen desktop). Manifest-URL's (inclusief marketplace-installaties) worden via het netwerk geladen; wijzigingen hier werken meteen.",
     "installFromFile": "Installeren vanuit bestand",
     "chooseZip": ".zip kiezen…",
-    "installFromFileHintDesktop": "Kopieert een verpakt pluginarchief naar de pluginmap van GeoLibre.",
+    "installFromFileHintDesktop": "Kopieert een verpakt pluginarchief naar de pluginmap van GeoInt.",
     "installFromFileHintWeb": "Laadt een verpakt pluginarchief; het wordt in uw browser opgeslagen en bij uw volgende bezoek opnieuw geladen.",
     "localDirectories": "Lokale mappen",
     "directoryAria": "Pluginmap",
@@ -143,7 +143,7 @@
     "errorDirectoryPicker": "Kon de mapkiezer niet openen.",
     "errorInstall": "Kon de plugin niet installeren.",
     "errorUninstall": "Kon de plugin niet verwijderen.",
-    "description": "Blader door externe GeoLibre-plugins en installeer, werk bij of verwijder ze. Plugins staan in het <registryLink>GeoLibre-pluginregister</registryLink>."
+    "description": "Blader door externe GeoInt-plugins en installeer, werk bij of verwijder ze. Plugins staan in het <registryLink>GeoInt-pluginregister</registryLink>."
   },
   "viewState": {
     "panelTitle": "Info"
@@ -214,7 +214,7 @@
     "add": "Toevoegen",
     "ok": "OK",
     "done": "Gereed",
-    "openWebApp": "Open de GeoLibre-webapp"
+    "openWebApp": "Open de GeoInt-webapp"
   },
   "addData": {
     "title": "Gegevens toevoegen",
@@ -257,7 +257,7 @@
       },
       "gdb": {
         "label": "File Geodatabase-laag toevoegen",
-        "description": "Voeg een laag toe uit een Esri File Geodatabase (.gdb-map). De laag wordt gelezen met de lokale GeoLibre-server en geherprojecteerd naar WGS84."
+        "description": "Voeg een laag toe uit een Esri File Geodatabase (.gdb-map). De laag wordt gelezen met de lokale GeoInt-server en geherprojecteerd naar WGS84."
       },
       "photos": {
         "label": "Foto's met geotag toevoegen",
@@ -481,8 +481,8 @@
       "layerPlaceholder": "Kies eerst een geodatabase",
       "readingLayers": "Lagen lezen...",
       "layerOption": "{{name}} ({{type}}, {{count}} features)",
-      "help": "Tabellen met alleen attributen worden niet weergegeven. De geselecteerde feature class wordt geladen via de lokale GeoLibre-server en geherprojecteerd naar WGS84.",
-      "desktopOnly": "File Geodatabase-lagen zijn alleen beschikbaar in GeoLibre Desktop. Deze functie leest een lokale .gdb-map via de lokale GeoLibre-server, waar de webapp geen toegang toe heeft.",
+      "help": "Tabellen met alleen attributen worden niet weergegeven. De geselecteerde feature class wordt geladen via de lokale GeoInt-server en geherprojecteerd naar WGS84.",
+      "desktopOnly": "File Geodatabase-lagen zijn alleen beschikbaar in GeoInt Desktop. Deze functie leest een lokale .gdb-map via de lokale GeoInt-server, waar de webapp geen toegang toe heeft.",
       "readError": "Kan deze File Geodatabase niet lezen.",
       "convertError": "Kan deze feature class niet laden.",
       "errorNotGdb": "Kies een map die eindigt op .gdb (een Esri File Geodatabase).",
@@ -563,7 +563,7 @@
     },
     "postgres": {
       "defaultName": "PostgreSQL-laag",
-      "errorDesktopOnly": "PostgreSQL-lagen vereisen GeoLibre Desktop.",
+      "errorDesktopOnly": "PostgreSQL-lagen vereisen GeoInt Desktop.",
       "errorConnectionString": "Voer een PostgreSQL-verbindingsreeks in.",
       "statusCheckingBinary": "Martin-programma controleren...",
       "statusDownloaded": "Martin gedownload. Lokale server wordt gestart...",
@@ -578,7 +578,7 @@
       "errorConnectFirst": "Maak eerst verbinding met PostgreSQL.",
       "errorNoVectorLayers": "De geselecteerde Martin-bron heeft geen vectorlagen.",
       "errorSelectSource": "Selecteer een Martin-bron om toe te voegen.",
-      "desktopOnlyNotice": "PostgreSQL-lagen zijn alleen beschikbaar in GeoLibre Desktop. Deze functie start een lokale Martin-tegelserver, die de webapp niet kan starten.",
+      "desktopOnlyNotice": "PostgreSQL-lagen zijn alleen beschikbaar in GeoInt Desktop. Deze functie start een lokale Martin-tegelserver, die de webapp niet kan starten.",
       "savedConnection": "Opgeslagen verbinding",
       "selectSavedConnection": "Opgeslagen verbinding selecteren",
       "connectionString": "PostgreSQL-verbindingsreeks",
@@ -599,7 +599,7 @@
       "editableTable": "Tabel",
       "tableReadOnly": "{{table}} (alleen-lezen: geen primaire sleutel)",
       "errorSelectTable": "Selecteer een tabel om te laden.",
-      "errorRuntimeMissing": "De verwerkingsserver heeft de PostGIS-runtime (psycopg) niet geïnstalleerd. Installeer de 'postgis'-extra van geolibre-server om bewerkbare lagen te laden."
+      "errorRuntimeMissing": "De verwerkingsserver heeft de PostGIS-runtime (psycopg) niet geïnstalleerd. Installeer de 'postgis'-extra van geoint-server om bewerkbare lagen te laden."
     },
     "video": {
       "defaultName": "Videolaag",
@@ -1078,7 +1078,7 @@
     "step1Title": "1. API-token ophalen",
     "step1Description": "Meld u aan bij share.geolibre.app en maak vervolgens een token aan onder Instellingen → API-tokens.",
     "getToken": "API-token ophalen",
-    "step2Title": "2. Token toevoegen aan GeoLibre",
+    "step2Title": "2. Token toevoegen aan GeoInt",
     "step2Description": "Plak het token in Instellingen → Omgevingsvariabelen op dit apparaat.",
     "configureToken": "Lokaal token configureren",
     "liveAt": "Uw project is live op:",
@@ -1100,7 +1100,7 @@
   },
   "gallery": {
     "title": "Projectgalerij",
-    "description": "Blader door openbare projecten die zijn gedeeld op share.geolibre.app en open er een in GeoLibre.",
+    "description": "Blader door openbare projecten die zijn gedeeld op share.geolibre.app en open er een in GeoInt.",
     "searchPlaceholder": "Filter geladen projecten op titel, auteur of label",
     "loading": "Projecten laden…",
     "loadingMore": "Meer laden…",
@@ -1186,7 +1186,7 @@
       "groupNavigation": "Noordpijl en schaalbalk groeperen",
       "footer": "Voettekst",
       "date": "Datum",
-      "attribution": "GeoLibre-attributie opnemen",
+      "attribution": "GeoInt-attributie opnemen",
       "pageBorder": "Paginarand",
       "infoBlock": "Infoblok (titelblok)",
       "colorbar": "Kleurenbalk",
@@ -1566,7 +1566,7 @@
     "noticeDesc": "Bij het openen van een kenniskaart worden de coördinaten van de plaats waarop u klikte (en de titel van een artikel in de buurt dat u opent) naar de openbare API van Wikipedia gestuurd om een samenvatting en foto op te halen — uw coördinaten verlaten uw apparaat voor deze verzoeken."
   },
   "onboarding": {
-    "title": "Welkom bij GeoLibre",
+    "title": "Welkom bij GeoInt",
     "description": "Kies uw ervaringsniveau om de interface aan te passen. U kunt dit op elk moment wijzigen via Instellingen → Interface.",
     "level": {
       "beginner": {
@@ -1579,7 +1579,7 @@
       },
       "advanced": {
         "title": "Gevorderd",
-        "description": "Toon alles wat GeoLibre te bieden heeft."
+        "description": "Toon alles wat GeoInt te bieden heeft."
       }
     },
     "showEverything": "Overslaan — alles weergeven"
@@ -1594,7 +1594,6 @@
       "appearance": "Weergave",
       "interface": "Interface",
       "geocoding": "Geocoderen",
-      "ai": "AI-providers",
       "environment": "Omgeving",
       "updates": "Updates"
     },
@@ -1604,7 +1603,6 @@
       "appearanceSettings": "Weergave-instellingen",
       "interfaceSettings": "Interface-instellingen",
       "geocoding": "Geocoderen",
-      "ai": "AI-providers",
       "environmentVariables": "Omgevingsvariabelen",
       "updates": "Update-instellingen",
       "managePlugins": "Plugins beheren",
@@ -1613,9 +1611,9 @@
     },
     "updates": {
       "title": "Software-updates",
-      "description": "Bepaal hoe GeoLibre controleert op nieuwe versies wanneer de desktopapp start.",
+      "description": "Bepaal hoe GeoInt controleert op nieuwe versies wanneer de desktopapp start.",
       "checkOnStartup": "Controleren op updates bij opstarten",
-      "checkOnStartupHint": "Indien ingeschakeld, controleert GeoLibre bij elke start van de app op een nieuwere versie. Schakel dit uit voor een volledig offline workflow.",
+      "checkOnStartupHint": "Indien ingeschakeld, controleert GeoInt bij elke start van de app op een nieuwere versie. Schakel dit uit voor een volledig offline workflow.",
       "notificationLevel": "Meldingen ontvangen voor",
       "notificationLevelHint": "Kies welke soorten releases een melding bij opstarten activeren.",
       "level": {
@@ -1698,7 +1696,7 @@
       "lockedNote": "Dit interfaceprofiel wordt beheerd door uw beheerder en kan niet worden gewijzigd."
     },
     "env": {
-      "tokenTitle": "Share.GeoLibre API-token",
+      "tokenTitle": "Share.GeoInt API-token",
       "tokenDescription": "Project > Delen gebruikt dit token om uw kaarten te uploaden naar share.geolibre.app. Open <tokenLink>share.geolibre.app/settings</tokenLink>, maak een token aan onder Instellingen > API-tokens en plak het vervolgens in het onderstaande veld.",
       "tokenStorageNote": "Lokaal opgeslagen op dit apparaat en alleen verzonden naar share.geolibre.app om uploads te verifiëren. In de webversie wordt dezelfde browseropslag gebruikt als voor andere sitegegevens; trek het token daarom in op share.geolibre.app als uw machine gecompromitteerd is.",
       "tokenPlaceholder": "glb_…",
@@ -1744,61 +1742,6 @@
       "emailHint": "Wordt alleen gebruikt door Nominatim, dat aanraadt dit op te geven zodat uw toepassing kan worden geïdentificeerd — wordt alleen verzonden indien opgegeven.",
       "secretsWarning": "Sleutels worden als platte tekst opgeslagen in het projectbestand en kunnen zichtbaar worden wanneer het project wordt gedeeld. Ze worden ook verzonden als queryparameters en verschijnen dus in geocoderingsverzoek-URL's die zichtbaar zijn in browser-DevTools en eventuele proxylogboeken.",
       "corsNote": "Google staat browserverzoeken naar zijn Geocoding API officieel niet toe, dus verzoeken kunnen worden geblokkeerd tenzij ze via een same-origin proxy worden verstuurd."
-    },
-    "ai": {
-      "title": "AI-assistentproviders",
-      "description": "Configureer inloggegevens voor de AI-assistent. Kies een provider, vul de vereiste velden in en klik op Opslaan. Er is slechts één geconfigureerde provider nodig om te beginnen met chatten.",
-      "providerLabel": "Provider",
-      "providerHint": "Kies een provider om de exacte vereiste velden te tonen.",
-      "configuredMark": "(geconfigureerd)",
-      "optionalMark": "(optioneel)",
-      "statusReady": "{{provider}} is geconfigureerd en klaar voor gebruik.",
-      "statusIncomplete": "Vul de onderstaande verplichte velden in om {{provider}} in te schakelen.",
-      "secretsNote": "Inloggegevens worden lokaal op dit apparaat opgeslagen, niet in het projectbestand dat u deelt, zodat ze bewaard blijven na herstarten. Iedereen met toegang tot dit apparaat kan ze lezen.",
-      "getCredentials": "Waar u inloggegevens voor {{provider}} kunt verkrijgen",
-      "showValue": "{{name}} tonen",
-      "hideValue": "{{name}} verbergen",
-      "osEnvNote": "De desktop-app leest ook overeenkomende API-sleutels uit uw systeemomgevingsvariabelen. Deze worden automatisch gebruikt en nooit in het projectbestand opgeslagen — laat een veld leeg om de omgevingswaarde te blijven gebruiken.",
-      "osEnvField": "Gelezen uit uw systeemomgevingsvariabele {{name}}.",
-      "osEnvPlaceholder": "Ingesteld in uw systeemomgeving",
-      "newProfile": "Nieuw profiel",
-      "cancel": "Annuleren",
-      "addProfile": "Profiel toevoegen",
-      "profileName": "Profielnaam",
-      "profileNamePlaceholder": "bijv. Gemini werk, Ollama lokaal",
-      "profileCount_one": "{{count}} profiel",
-      "profileCount_other": "{{count}} profielen",
-      "noProfiles": "Nog geen profielen. Voeg er hieronder een toe om de AI-assistent te configureren.",
-      "setDefault": "Als standaard instellen",
-      "defaultProfile": "Standaard",
-      "edit": "Bewerken",
-      "deleteProfile": "Profiel verwijderen",
-      "backToProfiles": "← Terug naar profielen",
-      "saveProfile": "Profiel opslaan",
-      "profileEditSaveHint": "Sla uw profielwijzigingen hierboven op of verwerp ze en klik daarna op ‘Instellingen opslaan’ om alle wijzigingen door te voeren.",
-      "field": {
-        "apiKey": "API-sleutel",
-        "baseUrl": "Basis-URL",
-        "model": "Model",
-        "region": "Regio",
-        "accessKeyId": "Access Key ID",
-        "secretAccessKey": "Secret Access Key",
-        "sessionToken": "Sessietoken"
-      },
-      "placeholder": {
-        "geminiKey": "AIza…",
-        "anthropicKey": "sk-ant-…",
-        "openaiKey": "sk-…",
-        "ollamaBaseUrl": "http://localhost:11434",
-        "ollamaModel": "llama3.2",
-        "awsAccessKey": "AKIA…",
-        "awsSecretKey": "wJalrXUtnFEMI…",
-        "awsRegion": "us-east-1",
-        "awsSessionToken": "FwoGZXIvYXdz… (bij gebruik van tijdelijke inloggegevens)",
-        "customBaseUrl": "https://api.example.com/v1",
-        "customModel": "model-id",
-        "customApiKey": "sk-… (indien vereist)"
-      }
     }
   },
   "toolbar": {
@@ -1908,7 +1851,7 @@
       "smartPaste": "Coördinaten plakken",
       "smartPasteInputLabel": "Coördinatentekst",
       "smartPastePlaceholder": "bijv. 51.5074, -0.1278 of 51°30'26\"N, 0°07'39\"W",
-      "smartPasteInfo": "Typ of plak een volledige coördinatentekst in DD, DMS of DDM en voer daarna Invoer verwerken uit. GeoLibre herkent het formaat en vult de velden voor lengtegraad en breedtegraad hieronder in. Pas zoomniveau, kanteling en richting apart aan voordat u verdergaat.",
+      "smartPasteInfo": "Typ of plak een volledige coördinatentekst in DD, DMS of DDM en voer daarna Invoer verwerken uit. GeoInt herkent het formaat en vult de velden voor lengtegraad en breedtegraad hieronder in. Pas zoomniveau, kanteling en richting apart aan voordat u verdergaat.",
       "smartPasteInfoLabel": "Over het plakken van coördinaten",
       "smartPasteInvalid": "Deze coördinaten konden niet worden gelezen. Voer een volledige lengte- en breedtegraad in DD, DMS of DDM in, bijvoorbeeld 51.5074, -0.1278. Een gedeeltelijke of onvolledige tekst kan niet worden verwerkt.",
       "processInput": "Invoer verwerken",
@@ -2037,8 +1980,8 @@
     },
     "conversion": {
       "vectorToVector": "Vector naar vector",
-      "zipInputBrowserError": "Gezipte Shapefiles kunnen alleen worden geconverteerd in de GeoLibre-desktopapp. Selecteer in de browser de uitgepakte .shp samen met de bijbehorende .dbf-, .shx- en .prj-bestanden.",
-      "browserOutputUnsupported": "In de browser kan de uitvoer GeoJSON, CSV, GeoParquet, GeoPackage of Shapefile (.zip) zijn. Uitvoer naar \".{{extension}}\" vereist de GeoLibre-desktopapp.",
+      "zipInputBrowserError": "Gezipte Shapefiles kunnen alleen worden geconverteerd in de GeoInt-desktopapp. Selecteer in de browser de uitgepakte .shp samen met de bijbehorende .dbf-, .shx- en .prj-bestanden.",
+      "browserOutputUnsupported": "In de browser kan de uitvoer GeoJSON, CSV, GeoParquet, GeoPackage of Shapefile (.zip) zijn. Uitvoer naar \".{{extension}}\" vereist de GeoInt-desktopapp.",
       "outputExtensionRequired": "Voeg een bestandsextensie toe aan de uitvoernaam om de indeling te kiezen.",
       "readingWithDuckDb": "{{name}} lezen met DuckDB-WASM",
       "readFeatures": "{{features}} features gelezen uit {{name}}",
@@ -2052,7 +1995,7 @@
       "vectorToPmtiles": "Vector naar PMTiles",
       "rasterToCog": "Raster naar COG",
       "rasterToPmtiles": "Raster naar PMTiles",
-      "needsDesktop": "Deze conversie vereist de GeoLibre-desktop-app of een actieve sidecar.",
+      "needsDesktop": "Deze conversie vereist de GeoInt-desktop-app of een actieve sidecar.",
       "runsInBrowserDuckDb": "De conversie draait in uw browser met DuckDB-WASM.",
       "runsInBrowserWriters": "De conversie draait in uw browser met DuckDB-WASM en de meegeleverde writers.",
       "runsInBrowserWasm": "De conversie draait in uw browser met geolibre-wasm. Geen sidecar nodig.",
@@ -2207,7 +2150,7 @@
       "noOutput": "Nog geen uitvoer.",
       "errorConnect": "Kon geen verbinding maken met de sidecar.",
       "errorPoll": "Kon de taak niet opvragen.",
-      "errorStartSidecar": "Kon de GeoLibre-sidecar niet starten.",
+      "errorStartSidecar": "Kon de GeoInt-sidecar niet starten.",
       "errorStartTool": "Kon het rastergereedschap niet starten."
     },
     "mapControl": {
@@ -2311,7 +2254,7 @@
       "terrain": "Terrein",
       "remoteSensing": "Remote sensing",
       "projection": "Projectie",
-      "geolibre": "GeoLibre",
+      "geoint": "GeoInt",
       "subGroupGeometry": "Geometrie",
       "subGroupOverlay": "Overlay",
       "subGroupJoin": "Join",
@@ -2373,7 +2316,7 @@
       "webServices": "Webservices",
       "commandPalette": "Opdrachtenpalet",
       "openProjectFromUrl": "Project openen vanuit URL",
-      "openProjectFromUrlDesc": "Laad een `.geolibre.json`-project en voeg het toe aan recente projecten.",
+      "openProjectFromUrlDesc": "Laad een `.geoint.json`-project en voeg het toe aan recente projecten.",
       "projectUrl": "Project-URL",
       "opening": "Openen...",
       "open": "Openen",
@@ -2388,7 +2331,7 @@
       "embedVectorReferenceButton": "Bestandsverwijzingen opslaan",
       "embedVectorSkipButton": "Opslaan zonder gegevens",
       "saveProjectFileName": "Bestandsnaam",
-      "saveProjectFileNamePlaceholder": "mijn-project.geolibre.json",
+      "saveProjectFileNamePlaceholder": "mijn-project.geoint.json",
       "exportHtmlAsTitle": "Exporteren als interactieve HTML",
       "exportHtmlAsDesc": "Voer een bestandsnaam in. De HTML-pagina wordt gedownload naar de downloadmap van uw browser wanneer u op Opslaan klikt.",
       "exportHtmlFileName": "Bestandsnaam",
@@ -2429,21 +2372,21 @@
       "maplibre-gl-annotations": "Annotaties",
       "maplibre-gl-streetview": "Straatbeeld",
       "maplibre-gl-time-slider": "Tijdschuif",
-      "geolibre-timelapse": "Timelapse",
+      "geoint-timelapse": "Timelapse",
       "maplibre-gl-esri-wayback": "Historische beelden",
       "maplibre-gl-openaerialmap": "OpenAerialMap",
-      "geolibre-stac-catalogs": "STAC-catalogi",
+      "geoint-stac-catalogs": "STAC-catalogi",
       "maplibre-gl-source-coop": "Source Cooperative",
       "maplibre-gl-natural-earth": "Natural Earth",
       "maplibre-gl-swipe": "Lagen vergelijken",
-      "geolibre-elevation-profile": "Hoogteprofiel",
+      "geoint-elevation-profile": "Hoogteprofiel",
       "maplibre-gl-basemap-control": "Basiskaarten",
       "maplibre-layer-control": "Laagbeheer",
       "maplibre-gl-huggingface": "Hugging Face",
       "carto-light": "Carto Light-basiskaart",
-      "geolibre-flight-simulator": "Vluchtsimulator",
-      "geolibre-route-animation": "Route-animatie",
-      "geolibre-sun": "Zonsimulatie",
+      "geoint-flight-simulator": "Vluchtsimulator",
+      "geoint-route-animation": "Route-animatie",
+      "geoint-sun": "Zonsimulatie",
       "maplibre-atmosphere-effects": "Atmosferische effecten",
       "maplibre-deckgl-viz": "Deck.gl-laag",
       "maplibre-gl-clouds": "Wolken",
@@ -2607,7 +2550,7 @@
     "summary": "{{selected}} van {{total}} object(en) geselecteerd ({{matched}} overeenkomsten).",
     "evaluationErrors": "{{count}} object(en) konden niet worden geëvalueerd en kwamen niet overeen.",
     "unevaluableDisjoint": "{{count}} object(en) zijn uitgesloten omdat hun geometrie niet kon worden geëvalueerd.",
-    "tooManyPairs": "Deze vergelijking vereist {{pairs}} object-paartests (limiet {{limit}}). Gebruik in plaats daarvan Verwerking → GeoLibre → Vector → Selecteren op locatie met de Sidecar-engine.",
+    "tooManyPairs": "Deze vergelijking vereist {{pairs}} object-paartests (limiet {{limit}}). Gebruik in plaats daarvan Verwerking → GeoInt → Vector → Selecteren op locatie met de Sidecar-engine.",
     "exportedLayerName": "{{name}} (selectie)"
   },
   "loadEditorFeatures": {
@@ -2834,7 +2777,7 @@
     "webMapAdded_one": "{{count}} laag toegevoegd uit deze webkaart.",
     "webMapAdded_other": "{{count}} lagen toegevoegd uit deze webkaart.",
     "webMapAddedPartial": "Lagen toegevoegd: {{added}} van {{total}} uit deze webkaart; de rest was niet bereikbaar.",
-    "webMapEmpty": "deze webkaart bevat geen lagen die GeoLibre kan weergeven.",
+    "webMapEmpty": "deze webkaart bevat geen lagen die GeoInt kan weergeven.",
     "add": "Toevoegen",
     "adding": "Toevoegen…",
     "remove": "Verwijderen",
@@ -2916,7 +2859,7 @@
     "downloadTitle": "Dit bestand downloaden",
     "copyUrlTitle": "De URL van dit bestand kopiëren",
     "openProductTitle": "De pagina van dit product openen op source.coop",
-    "unsupportedTitle": "GeoLibre kan dit formaat niet weergeven — download het in plaats daarvan",
+    "unsupportedTitle": "GeoInt kan dit formaat niet weergeven — download het in plaats daarvan",
     "addError": "Kan dit bestand niet toevoegen: {{message}}",
     "largeFileWarning": "Dit bestand is {{size}}. Het streamt vanaf de bron, dus alleen de delen in beeld worden gelezen.",
     "streamHint": "Dit bestand is {{size}}. Toevoegen kopieert het naar het geheugen; Streamen leest alleen de delen in beeld.",
@@ -2961,7 +2904,7 @@
     "downloadTitle": "Dit bestand downloaden",
     "copyUrlTitle": "De URL van dit bestand kopiëren",
     "openDatasetTitle": "De pagina van deze dataset openen op huggingface.co",
-    "unsupportedTitle": "GeoLibre kan dit formaat niet weergeven — download het in plaats daarvan",
+    "unsupportedTitle": "GeoInt kan dit formaat niet weergeven — download het in plaats daarvan",
     "addError": "Kan dit bestand niet toevoegen: {{message}}",
     "notRasterIndex": "Dit JSON-bestand indexeert geen rasters, dus er valt niets op de kaart te zetten. MosaicJSON en STAC-collecties worden ondersteund.",
     "largeFileWarning": "Dit bestand is {{size}}. Het streamt vanaf de bron, dus alleen de delen in beeld worden gelezen.",
@@ -3005,7 +2948,7 @@
     "selectedFiles_one": "{{count}} bestand geselecteerd ({{size}}).",
     "selectedFiles_other": "{{count}} bestanden geselecteerd ({{size}}).",
     "commitMessageLabel": "Commit-bericht (optioneel)",
-    "commitMessagePlaceholder": "Geüpload met GeoLibre",
+    "commitMessagePlaceholder": "Geüpload met GeoInt",
     "upload": "Uploaden",
     "uploadPreparing": "Upload voorbereiden…",
     "uploadHashing": "{{name}} hashen ({{index}}/{{total}})…",
@@ -3070,7 +3013,7 @@
     "runHint": "Uitvoeren (Ctrl/Cmd+Enter)",
     "completions": "Suggesties",
     "placeholder": "Python hier · Ctrl/Cmd+Enter om uit te voeren · Tab voor automatisch aanvullen · ↑/↓ voor geschiedenis",
-    "intro": "Python-console gereed. Gebruik het `geolibre`-object om de kaart te scripten, bijv. geolibre.get_center(). Tab vult automatisch aan, ↑/↓ roept eerdere opdrachten op, en `await geolibre.load_package(\"numpy\")` voegt packages toe.",
+    "intro": "Python-console gereed. Gebruik het `geoint`-object om de kaart te scripten, bijv. geoint.get_center(). Tab vult automatisch aan, ↑/↓ roept eerdere opdrachten op, en `await geoint.load_package(\"numpy\")` voegt packages toe.",
     "loadFailed": "Kan de Python-runtime niet laden.",
     "showEditor": "Editor tonen",
     "hideEditor": "Editor verbergen",
@@ -3183,21 +3126,7 @@
     "stop": "Stoppen",
     "placeholder": "Stel een vraag over uw gegevens, bijv. \"toon landen met een bevolking van meer dan 50 miljoen\" · Ctrl/Cmd+Enter om te verzenden",
     "intro": "Chat met uw gegevens. Ik kan ruimtelijke SQL uitvoeren, lagen toevoegen of verwijderen, ze herstijlen en de kaart verplaatsen — elke wijziging kan ongedaan worden gemaakt. Probeer \"kleur de landen naar bevolking met een gegradueerde rode kleurschaal\".",
-    "setupTitle": "AI-assistent instellen",
-    "setupStatus": "De assistent heeft een AI-provider nodig om het denkwerk te doen. Voeg hieronder inloggegevens toe voor een van de providers en het paneel schakelt over naar chatmodus zodra u opslaat.",
-    "setupProviders": "Voeg inloggegevens toe voor een van de providers",
-    "setupOpenSettings": "Open Instellingen → AI-providers",
-    "thinking": "Bezig…",
-    "toolError": "mislukt",
-    "provider": "LLM-provider",
-    "profile": "AI-profiel",
-    "deploymentProxy": "Deployment-proxy",
-    "model": "Model",
-    "codeApprovalTitle": "Assistent-code uitvoeren?",
-    "codeApprovalBody": "De assistent wil {{language}}-code in de app uitvoeren. Controleer deze eerst — deze kan de kaart wijzigen en toegang krijgen tot app-gegevens.",
-    "codeApprovalAlways": "Assistent-code toestaan voor de rest van deze sessie",
-    "codeApprovalRun": "Uitvoeren",
-    "codeApprovalDecline": "Annuleren"
+    "thinking": "Bezig…"
   },
   "storymap": {
     "title": "Verhaalkaart",
@@ -3413,7 +3342,7 @@
       },
       "filterBySource": "Filteren op bron",
       "allSources": "Alle bronnen",
-      "geolibreTools": "GeoLibre-hulpmiddelen",
+      "geointTools": "GeoInt-hulpmiddelen",
       "whiteboxTools": "Whitebox-hulpmiddelen",
       "toolbox": "Whitebox-toolbox",
       "checkingRuntime": "Runtime controleren.",
@@ -3443,8 +3372,8 @@
       "errorConnect": "Kon geen verbinding maken met de sidecar.",
       "errorPoll": "Kon de taak niet opvragen.",
       "errorStartTool": "Kon het Whitebox-gereedschap niet starten.",
-      "errorStartSidecar": "Kon de GeoLibre-sidecar niet starten.",
-      "errorStopSidecar": "Kon de GeoLibre-sidecar niet stoppen.",
+      "errorStartSidecar": "Kon de GeoInt-sidecar niet starten.",
+      "errorStopSidecar": "Kon de GeoInt-sidecar niet stoppen.",
       "noToolsFound": "Geen gereedschappen gevonden.",
       "noParameters": "Dit gereedschap heeft geen parameters.",
       "noOutput": "Nog geen uitvoer.",
@@ -3464,9 +3393,9 @@
       "runLocallyButton": "Lokaal uitvoeren (WASM)",
       "troubleshootingTitle": "Wilt u toch de server gebruiken?",
       "stepStartServerDesktop": "Klik op \"Server starten\" in het hulpmiddelenpaneel om deze te starten en wacht daarna enkele seconden tot deze online komt.",
-      "stepStartServerBrowser": "De server kan alleen worden gestart vanuit de GeoLibre desktop-app. Houd in de browser in plaats daarvan \"Lokaal uitvoeren (WASM)\" ingeschakeld.",
+      "stepStartServerBrowser": "De server kan alleen worden gestart vanuit de GeoInt desktop-app. Houd in de browser in plaats daarvan \"Lokaal uitvoeren (WASM)\" ingeschakeld.",
       "stepCheckPort": "Zorg dat een firewall, antivirusprogramma of netwerkbeleid lokale poort {{port}} niet blokkeert.",
-      "stepRestart": "Als de server onverwacht is gestopt, start dan de GeoLibre desktop-app opnieuw en open dit dialoogvenster opnieuw."
+      "stepRestart": "Als de server onverwacht is gestopt, start dan de GeoInt desktop-app opnieuw en open dit dialoogvenster opnieuw."
     },
     "vectorTools": {
       "title": "Vectorgereedschappen",
@@ -3500,13 +3429,13 @@
     "segment": "Segmenteren",
     "status": {
       "checking": "De AI-segmentatieservice wordt gecontroleerd…",
-      "unavailableDesktop": "De AI-segmentatieservice is nog niet actief. Start de GeoLibre-server met segment-geospatial ingeschakeld om deze te gebruiken.",
-      "unavailableWeb": "AI-segmentatie is niet beschikbaar in de browser. Gebruik de GeoLibre desktop-app om dit uit te voeren."
+      "unavailableDesktop": "De AI-segmentatieservice is nog niet actief. Start de GeoInt-server met segment-geospatial ingeschakeld om deze te gebruiken.",
+      "unavailableWeb": "AI-segmentatie is niet beschikbaar in de browser. Gebruik de GeoInt desktop-app om dit uit te voeren."
     },
     "error": {
       "chooseImage": "Kies een afbeelding (GeoTIFF) om te segmenteren.",
       "enterPrompt": "Voer een tekstprompt in, bijv. “bomen” of “gebouwen”.",
-      "startServer": "De GeoLibre-sidecar kon niet worden gestart.",
+      "startServer": "De GeoInt-sidecar kon niet worden gestart.",
       "failed": "Segmentatie is mislukt."
     },
     "noObjects": "Geen objecten gevonden.",
@@ -3517,7 +3446,7 @@
       "title": "De AI-segmentatieserver kon niet worden gestart.",
       "intro": "AI-segmentatie draait in een lokale hulpserver ({{sidecarUrl}}) die het SAM3-model van segment-geospatial host. Deze voert Python uit op de achtergrond, los van de app, en maakt geen deel uit van de browserversie.",
       "troubleshootingTitle": "Zo krijgt u de server aan de praat",
-      "stepInstall": "Zorg dat de GeoLibre-server is geïnstalleerd met de segment-geospatial-backend ingeschakeld, zodat het segmentatiemodel beschikbaar is.",
+      "stepInstall": "Zorg dat de GeoInt-server is geïnstalleerd met de segment-geospatial-backend ingeschakeld, zodat het segmentatiemodel beschikbaar is.",
       "stepStartServerDesktop": "Klik hierboven op \"Server starten\" om deze te starten en wacht daarna enkele seconden tot het model online komt."
     }
   },
@@ -3766,7 +3695,7 @@
     "import": "Importeren…",
     "export": "Exporteren…",
     "importFilterName": "Stijlbibliotheek / QML / SLD",
-    "exportFilterName": "GeoLibre-stijlbibliotheek",
+    "exportFilterName": "GeoInt-stijlbibliotheek",
     "applied": "\"{{name}}\" toegepast op {{layer}}.",
     "appliedRampHint": "\"{{name}}\" toegepast. Schakel de laag over naar gegradeerde of gecategoriseerde stijl om het verloop te zien.",
     "saved": "\"{{name}}\" opgeslagen in de bibliotheek.",
@@ -4597,10 +4526,10 @@
   },
   "errorBoundary": {
     "title": "Er is iets misgegaan",
-    "description": "GeoLibre liep tegen een onverwachte fout aan en kon niet verder. Uw werk is mogelijk niet opgeslagen — probeer het te herstellen voordat u herlaadt.",
+    "description": "GeoInt liep tegen een onverwachte fout aan en kon niet verder. Uw werk is mogelijk niet opgeslagen — probeer het te herstellen voordat u herlaadt.",
     "tryAgain": "Opnieuw proberen",
     "reload": "App herladen",
-    "sectionFailed": "{{label}} kon niet worden weergegeven. De rest van GeoLibre is nog beschikbaar."
+    "sectionFailed": "{{label}} kon niet worden weergegeven. De rest van GeoInt is nog beschikbaar."
   },
   "commandPalette": {
     "title": "Opdrachtenpalet",
@@ -4650,7 +4579,7 @@
     "emptyNetworkError": "Geen netwerkfoutdiagnostiek vastgelegd."
   },
   "shell": {
-    "workspaceTitle": "GeoLibre-kaartwerkruimte",
+    "workspaceTitle": "GeoInt-kaartwerkruimte",
     "section": {
       "toolbar": "Werkbalk",
       "sharedLeftSidebar": "Gedeelde linkerzijbalk",
@@ -4794,6 +4723,6 @@
     "added": "{{asset}} toegevoegd aan de kaart.",
     "addUnsupported": "Alleen GeoTIFF/COG- en GeoJSON-assets kunnen aan de kaart worden toegevoegd",
     "addFailed": "Kan asset niet toevoegen",
-    "cogUnsupported": "Deze GeoLibre-host kan externe GeoTIFF-assets niet weergeven"
+    "cogUnsupported": "Deze GeoInt-host kan externe GeoTIFF-assets niet weergeven"
   }
 }

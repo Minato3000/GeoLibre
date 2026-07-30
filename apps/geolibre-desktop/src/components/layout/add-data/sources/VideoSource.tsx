@@ -1,4 +1,4 @@
-import { Input, Label } from "@geolibre/ui";
+import { Input, Label } from "@geoint/ui";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {

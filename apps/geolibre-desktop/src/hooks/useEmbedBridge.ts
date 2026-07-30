@@ -1,6 +1,6 @@
-import { parseProject, serializeProject, useAppStore, type GeoLibreProject } from "@geolibre/core";
+import { parseProject, serializeProject, useAppStore, type GeoIntProject } from "@geoint/core";
 import { type RefObject, useEffect } from "react";
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import { buildProjectSnapshot } from "../lib/build-project-snapshot";
 import { getEmbedHost, isEmbedded } from "./embedHost";
 
@@ -10,27 +10,27 @@ import { getEmbedHost, isEmbedded } from "./embedHost";
 const STATE_DEBOUNCE_MS = 250;
 
 interface LoadProjectMessage {
-  type: "geolibre:load-project";
-  project: GeoLibreProject | string;
+  type: "geoint:load-project";
+  project: GeoIntProject | string;
   seq?: number;
 }
 
 interface RequestStateMessage {
-  type: "geolibre:request-state";
+  type: "geoint:request-state";
 }
 
 type InboundMessage = LoadProjectMessage | RequestStateMessage;
 
 /**
- * Bridges the running app with an embedding host (the GeoLibre Python widget)
+ * Bridges the running app with an embedding host (the GeoInt Python widget)
  * over `window.postMessage`.
  *
  * When embedded, the hook:
- * - applies a `geolibre:load-project` message by replacing the current project,
- * - posts a debounced `geolibre:state` snapshot whenever the store changes, so
+ * - applies a `geoint:load-project` message by replacing the current project,
+ * - posts a debounced `geoint:state` snapshot whenever the store changes, so
  *   the host (and Python) sees map view, layer, and basemap edits,
- * - answers a `geolibre:request-state` with an immediate snapshot, and
- * - announces `geolibre:ready` on mount so the host can flush queued messages.
+ * - answers a `geoint:request-state` with an immediate snapshot, and
+ * - announces `geoint:ready` on mount so the host can flush queued messages.
  *
  * Loop prevention lives on the host side: the host does not echo a project it
  * received from the app back into the iframe. Outside an embedding host the
@@ -39,7 +39,7 @@ type InboundMessage = LoadProjectMessage | RequestStateMessage;
  * Trust model: the embedding host is fully trusted and receives the entire
  * project state. Project snapshots are not broadcast until the host sends its
  * first message (which is also when the bridge learns its origin and scopes
- * subsequent posts to it); only the version-only `geolibre:ready` ping precedes
+ * subsequent posts to it); only the version-only `geoint:ready` ping precedes
  * the handshake and is the single message sent to `"*"`. Any page that frames
  * the app (not just the Jupyter widget) therefore becomes that trusted host, so
  * `?embed=1` standalone exports should only be served from a trusted context.
@@ -63,7 +63,7 @@ export function useEmbedBridge(mapControllerRef: RefObject<MapController | null>
     let lastLoadedSeq = 0;
     let lastPostedContent: string | null = null;
 
-    const buildProject = (): GeoLibreProject => buildProjectSnapshot(mapControllerRef);
+    const buildProject = (): GeoIntProject => buildProjectSnapshot(mapControllerRef);
 
     const postState = () => {
       if (disposed) return;
@@ -78,19 +78,19 @@ export function useEmbedBridge(mapControllerRef: RefObject<MapController | null>
       lastPostedContent = content;
       try {
         // Post the JSON-parsed snapshot (not the raw store object) so the wire
-        // payload exactly matches the serialized `.geolibre.json` form and is
+        // payload exactly matches the serialized `.geoint.json` form and is
         // guaranteed structured-clone-safe even if a layer's free-form metadata
         // ever holds a non-clone value. Scoped to the host origin once known.
         host.postMessage(
           {
-            type: "geolibre:state",
+            type: "geoint:state",
             seq: lastLoadedSeq,
-            project: JSON.parse(content) as GeoLibreProject,
+            project: JSON.parse(content) as GeoIntProject,
           },
           targetOrigin(),
         );
       } catch (error) {
-        console.error("[GeoLibre] Failed to post embed state", error);
+        console.error("[GeoInt] Failed to post embed state", error);
       }
     };
 
@@ -124,7 +124,7 @@ export function useEmbedBridge(mapControllerRef: RefObject<MapController | null>
       } catch (error) {
         host.postMessage(
           {
-            type: "geolibre:error",
+            type: "geoint:error",
             message: error instanceof Error ? error.message : String(error),
           },
           targetOrigin(),
@@ -141,9 +141,9 @@ export function useEmbedBridge(mapControllerRef: RefObject<MapController | null>
       if (!hostChannel.note(event)) return;
       const data = event.data as Partial<InboundMessage> | null;
       if (!data || typeof data !== "object") return;
-      if (data.type === "geolibre:load-project") {
+      if (data.type === "geoint:load-project") {
         applyLoad(data as LoadProjectMessage);
-      } else if (data.type === "geolibre:request-state") {
+      } else if (data.type === "geoint:request-state") {
         // Force a snapshot regardless of the dedupe cache.
         lastPostedContent = null;
         postState();
@@ -157,7 +157,7 @@ export function useEmbedBridge(mapControllerRef: RefObject<MapController | null>
     // the version, and goes to "*" unless the deployment configured an origin
     // allowlist, in which case it is sent to those origins instead.
     for (const target of hostChannel.broadcastTargets()) {
-      host.postMessage({ type: "geolibre:ready", version: __GEOLIBRE_VERSION__ }, target);
+      host.postMessage({ type: "geoint:ready", version: __GEOINT_VERSION__ }, target);
     }
 
     return () => {

@@ -1,4 +1,4 @@
-import { type GeoLibreLayer, lineWidthValue, styleValue, useAppStore } from "@geolibre/core";
+import { type GeoIntLayer, lineWidthValue, styleValue, useAppStore } from "@geoint/core";
 import { Geoman, defaultLayerStyles } from "@geoman-io/maplibre-geoman-free";
 import type { Feature, FeatureCollection } from "geojson";
 import type maplibregl from "maplibre-gl";
@@ -20,7 +20,7 @@ import {
   captureViewImportBaseline,
   tagViewFeaturesForImport,
 } from "./geo-editor-view-import";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 
 export { canEditLayerGeometry, SKETCHES_SOURCE_KIND } from "./geo-editor-geometry";
 
@@ -28,7 +28,7 @@ const SKETCHES_LAYER_NAME = "Sketches";
 const SKETCHES_SOURCE_PATH = "geoeditor://sketches";
 const GEOMAN_TEXT_PROPERTY = "__gm_text";
 
-let geoEditorPosition: GeoLibreMapControlPosition = "top-left";
+let geoEditorPosition: GeoIntMapControlPosition = "top-left";
 
 const GEO_EDITOR_OPTIONS = {
   collapsed: false,
@@ -74,7 +74,7 @@ let geoEditorStoreUnsubscribe: (() => void) | null = null;
 let pluginActive = false;
 let restoringSketchesToEditor = false;
 let pushingSketchesToStore = false;
-let appApi: GeoLibreAppAPI | null = null;
+let appApi: GeoIntAppAPI | null = null;
 /** Map-only hide of Sketches while GeoEditor interacts; does not touch store.visible. */
 let sketchesMapLayerSuppressed = false;
 /** After a draw completes, show Sketches even if draw mode stays active for another shape. */
@@ -124,11 +124,11 @@ const GEOMAN_EDIT_SYNC_EVENTS = ["gm:dragend", "gm:editend", "gm:rotateend"] as 
 
 export const GEO_EDITOR_PLUGIN_ID = "maplibre-gl-geo-editor";
 
-export const maplibreGeoEditorPlugin: GeoLibrePlugin = {
+export const maplibreGeoEditorPlugin: GeoIntPlugin = {
   id: GEO_EDITOR_PLUGIN_ID,
   name: "GeoEditor",
   version: "0.9.0",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     pluginActive = true;
     appApi = app;
 
@@ -157,7 +157,7 @@ export const maplibreGeoEditorPlugin: GeoLibrePlugin = {
     void restoreSketchesLayerToEditor();
     setTimeout(() => geoEditorControl?.expand(), 0);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     // Persist any in-progress geometry edit and restore the editor to Sketches
     // mode before tearing the control down. The write-back is synchronous; only
     // the sketches restore is async, which is moot since the control is removed
@@ -180,7 +180,7 @@ export const maplibreGeoEditorPlugin: GeoLibrePlugin = {
     geomanInstance = null;
   },
   getMapControlPosition: () => geoEditorPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     geoEditorPosition = position;
     if (!geoEditorControl) return;
     app.removeMapControl(geoEditorControl);
@@ -313,11 +313,11 @@ function textFontForMapStyle(map: maplibregl.Map): string[] {
   return ["Noto Sans Regular"];
 }
 
-function isSketchesLayer(layer: GeoLibreLayer): boolean {
+function isSketchesLayer(layer: GeoIntLayer): boolean {
   return layer.metadata.sourceKind === SKETCHES_SOURCE_KIND;
 }
 
-function findSketchesLayer(layers: GeoLibreLayer[]): GeoLibreLayer | undefined {
+function findSketchesLayer(layers: GeoIntLayer[]): GeoIntLayer | undefined {
   if (sketchesLayerId) {
     const tracked = layers.find((layer) => layer.id === sketchesLayerId);
     if (tracked) return tracked;
@@ -331,7 +331,7 @@ function findSketchesLayer(layers: GeoLibreLayer[]): GeoLibreLayer | undefined {
  * helpers resolve through this so they suppress/style whichever layer the editor
  * is showing, without duplicating the suppression logic per mode.
  */
-function activeEditableLayer(layers: GeoLibreLayer[]): GeoLibreLayer | undefined {
+function activeEditableLayer(layers: GeoIntLayer[]): GeoIntLayer | undefined {
   if (editTargetLayerId) {
     return layers.find((layer) => layer.id === editTargetLayerId);
   }
@@ -597,14 +597,14 @@ function syncEditTargetToStore(): void {
 }
 
 /** Source id of an Add-Vector-Layer geojson-mode layer, or null. */
-function vectorSourceIdForLayer(layer: GeoLibreLayer): string | null {
+function vectorSourceIdForLayer(layer: GeoIntLayer): string | null {
   if (layer.metadata.sourceKind !== "maplibre-gl-vector") return null;
   const sourceIds = layer.metadata.sourceIds;
   const sourceId = Array.isArray(sourceIds) ? sourceIds[0] : undefined;
   return typeof sourceId === "string" ? sourceId : null;
 }
 
-function writeBackToVectorSource(layer: GeoLibreLayer, collection: FeatureCollection): void {
+function writeBackToVectorSource(layer: GeoIntLayer, collection: FeatureCollection): void {
   const sourceId = vectorSourceIdForLayer(layer);
   if (!sourceId) return;
   const source = appApi?.getMap?.()?.getSource(sourceId) as
@@ -648,7 +648,7 @@ async function ensureGeomanReady(): Promise<void> {
  * not used: this function operates through the module-level `appApi`/store.
  */
 export async function startLayerGeometryEdit(
-  _app: GeoLibreAppAPI,
+  _app: GeoIntAppAPI,
   layerId: string,
 ): Promise<boolean> {
   if (!pluginActive || !geoEditorControl) return false;
@@ -759,7 +759,7 @@ function disableActiveEditModes(): void {
  * editor is returned to Sketches mode either way.
  */
 export async function endLayerGeometryEdit(
-  _app: GeoLibreAppAPI,
+  _app: GeoIntAppAPI,
   { save }: { save: boolean },
 ): Promise<void> {
   if (!editTargetLayerId) return;
@@ -1071,7 +1071,7 @@ function setSketchesMapLayerSuppressed(suppress: boolean): void {
   setSketchesMapLayersVisibility(layer);
 }
 
-function setSketchesMapLayersVisibility(layer: GeoLibreLayer): void {
+function setSketchesMapLayersVisibility(layer: GeoIntLayer): void {
   const map = appApi?.getMap?.();
   if (!map) return;
 
@@ -1131,7 +1131,7 @@ function showGeomanDisplayLayers(): void {
  * `metadata.nativeLayerIds`; plain geojson layers use the conventional
  * `layer-<id>-*` ids. Only ids that actually exist on the map are returned.
  */
-function geoEditorTargetAnchorLayerIds(map: maplibregl.Map, layer: GeoLibreLayer): string[] {
+function geoEditorTargetAnchorLayerIds(map: maplibregl.Map, layer: GeoIntLayer): string[] {
   const nativeLayerIds = layer.metadata.nativeLayerIds;
   // Filter to strings first, then fall back: a non-empty `nativeLayerIds` that
   // holds only non-string entries must still fall back to the conventional ids.
@@ -1187,7 +1187,7 @@ function positionGeoEditorOverlayLayers(): void {
   }
 }
 
-function applyGeomanSketchesStyle(map: maplibregl.Map, sketchesLayer: GeoLibreLayer): void {
+function applyGeomanSketchesStyle(map: maplibregl.Map, sketchesLayer: GeoIntLayer): void {
   const style = map.getStyle();
   if (!style?.layers) return;
 
@@ -1232,7 +1232,7 @@ function applyGeomanSketchesStyle(map: maplibregl.Map, sketchesLayer: GeoLibreLa
 function applyGeomanDisplayLayerWidth(
   map: maplibregl.Map,
   layer: maplibregl.LayerSpecification,
-  style: GeoLibreLayer["style"],
+  style: GeoIntLayer["style"],
 ): void {
   if (layer.type !== "line") return;
   const id = layer.id.toLowerCase();

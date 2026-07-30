@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    geolibre_desktop_lib::run()
+    geoint_desktop_lib::run()
 }

@@ -1,11 +1,11 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 
 import { normalizeSubdomains, rasterSubsetKind, type RasterSubsetKind } from "./raster-subset-kind";
 import { fetchableUrl } from "./url-utils";
 
 /**
- * The GeoLibre-authored subset extractors whose `url` parameter can be filled
- * from a compatible raster layer already loaded in the map (GeoLibre#1271).
+ * The GeoInt-authored subset extractors whose `url` parameter can be filled
+ * from a compatible raster layer already loaded in the map (GeoInt#1271).
  * Each tool maps to the raster family whose layers can supply its `url`: the COG
  * extractor reads an HTTP COG by byte range, the WMS extractor calls an endpoint,
  * and the XYZ extractor walks a tile template. Matching by kind keeps a picked
@@ -21,7 +21,7 @@ const SUBSET_URL_TOOL_KIND: Record<string, RasterSubsetKind> = {
  * The raster family whose loaded layers can populate the given subset tool's
  * `url` field, or `null` when the tool is not a url-populatable subset extractor.
  *
- * @param toolId - The Whitebox/GeoLibre tool id.
+ * @param toolId - The Whitebox/GeoInt tool id.
  * @returns The matching {@link RasterSubsetKind}, or `null`.
  */
 export function subsetUrlToolKind(toolId: string): RasterSubsetKind | null {
@@ -54,7 +54,7 @@ function httpUrl(value: unknown): string | null {
  * @param layers - The store's current layers.
  * @returns The subset of `layers` that can fill this tool's `url` field.
  */
-export function layersForSubsetUrl(toolId: string, layers: GeoLibreLayer[]): GeoLibreLayer[] {
+export function layersForSubsetUrl(toolId: string, layers: GeoIntLayer[]): GeoIntLayer[] {
   const kind = subsetUrlToolKind(toolId);
   if (!kind) return [];
   return layers.filter(
@@ -78,7 +78,7 @@ export function layersForSubsetUrl(toolId: string, layers: GeoLibreLayer[]): Geo
  */
 export function subsetUrlFieldValues(
   toolId: string,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
 ): Record<string, string> | null {
   const kind = subsetUrlToolKind(toolId);
   const source = layer.source as Record<string, unknown>;

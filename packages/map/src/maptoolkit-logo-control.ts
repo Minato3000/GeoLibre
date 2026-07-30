@@ -49,10 +49,10 @@ export class MaptoolkitLogoControl implements maplibregl.IControl {
     const container = document.createElement("div");
     // Reuse maplibregl-ctrl so the logo inherits MapLibre's control margins and
     // sits in the chosen corner like the built-in logo does.
-    container.className = "maplibregl-ctrl geolibre-maptoolkit-logo-ctrl";
+    container.className = "maplibregl-ctrl geoint-maptoolkit-logo-ctrl";
 
     const link = document.createElement("a");
-    link.className = "geolibre-maptoolkit-logo";
+    link.className = "geoint-maptoolkit-logo";
     link.href = MAPTOOLKIT_URL;
     link.target = "_blank";
     // noopener/nofollow match MapLibre's own logo link hygiene for an external,

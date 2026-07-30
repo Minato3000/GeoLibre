@@ -6,7 +6,7 @@
  * the control corners, and inclusion in Record Video's on-map panel capture,
  * which rasterizes elements inside the map container.
  */
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import type { ControlPosition, IControl } from "maplibre-gl";
 import { useEffect, useState, type RefObject } from "react";
 

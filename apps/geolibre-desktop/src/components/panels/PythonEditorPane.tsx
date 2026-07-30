@@ -1,4 +1,4 @@
-import { Button, Textarea } from "@geolibre/ui";
+import { Button, Textarea } from "@geoint/ui";
 import { Eraser, FilePlus, FolderOpen, Loader2, Play, Save, SaveAll } from "lucide-react";
 import {
   type ChangeEvent as ReactChangeEvent,

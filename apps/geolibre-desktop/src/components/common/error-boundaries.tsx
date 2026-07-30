@@ -1,4 +1,4 @@
-import { Button, ErrorBoundary, type ErrorBoundaryFallbackProps } from "@geolibre/ui";
+import { Button, ErrorBoundary, type ErrorBoundaryFallbackProps } from "@geoint/ui";
 import { AlertTriangle, RefreshCw, X } from "lucide-react";
 import type { ErrorInfo, ReactNode } from "react";
 import { useTranslation } from "react-i18next";

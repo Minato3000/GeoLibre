@@ -20,11 +20,11 @@ import {
   unregisterFloatingPanel,
 } from "../packages/plugins/src/floating-panel-registry";
 import type {
-  GeoLibreFloatingPanelRegistration,
-  GeoLibreToolbarMenu,
+  GeoIntFloatingPanelRegistration,
+  GeoIntToolbarMenu,
 } from "../packages/plugins/src/types";
 
-function testMenu(patch: Partial<GeoLibreToolbarMenu> = {}): GeoLibreToolbarMenu {
+function testMenu(patch: Partial<GeoIntToolbarMenu> = {}): GeoIntToolbarMenu {
   return {
     id: "tools",
     label: "Tools",
@@ -34,8 +34,8 @@ function testMenu(patch: Partial<GeoLibreToolbarMenu> = {}): GeoLibreToolbarMenu
 }
 
 function testPanel(
-  patch: Partial<GeoLibreFloatingPanelRegistration> = {},
-): GeoLibreFloatingPanelRegistration {
+  patch: Partial<GeoIntFloatingPanelRegistration> = {},
+): GeoIntFloatingPanelRegistration {
   return {
     id: "card",
     title: "Card",
@@ -79,7 +79,7 @@ describe("toolbar-menu registry", () => {
       registerToolbarMenu({
         id: "x",
         label: "x",
-      } as unknown as GeoLibreToolbarMenu),
+      } as unknown as GeoIntToolbarMenu),
     );
   });
 

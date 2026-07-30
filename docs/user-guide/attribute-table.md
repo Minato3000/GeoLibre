@@ -2,7 +2,7 @@
 
 The **Attribute table** shows the records of the selected vector or DuckDB layer. Expand it from the **Attribute table** button on the status bar at the bottom of the window, then select a layer in the [Layers panel](layers.md) to populate it.
 
-![Attribute table](https://data.geolibre.app/images/geolibre-attribute-table.webp)
+![Attribute table](https://data.geolibre.app/images/geoint-attribute-table.webp)
 
 ## Reading and navigating
 

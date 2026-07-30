@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
-import type { GeoLibreExternalNativeLayerRegistration } from "@geolibre/plugins";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
+import type { GeoIntExternalNativeLayerRegistration } from "@geoint/plugins";
 import { createExternalNativeStoreLayer } from "../apps/geolibre-desktop/src/lib/external-native-layer";
 
 const baseRegistration = (
-  overrides: Partial<GeoLibreExternalNativeLayerRegistration> = {},
-): GeoLibreExternalNativeLayerRegistration => ({
+  overrides: Partial<GeoIntExternalNativeLayerRegistration> = {},
+): GeoIntExternalNativeLayerRegistration => ({
   id: "plugin-layer",
   name: "Plugin Layer",
   nativeLayerIds: ["plugin-layer-fill", "plugin-layer-outline"],
@@ -17,7 +17,7 @@ describe("createExternalNativeStoreLayer", () => {
   it("keeps the registration style over an existing default-seeded style", () => {
     // addGeoJsonLayer seeds the layer with the full DEFAULT_LAYER_STYLE before
     // the plugin registers its own colors, so the registration must win.
-    const existing: GeoLibreLayer = {
+    const existing: GeoIntLayer = {
       id: "plugin-layer",
       name: "Plugin Layer",
       type: "geojson",
@@ -39,7 +39,7 @@ describe("createExternalNativeStoreLayer", () => {
   });
 
   it("preserves user-edited existing style for keys the registration omits", () => {
-    const existing: GeoLibreLayer = {
+    const existing: GeoIntLayer = {
       id: "plugin-layer",
       name: "Plugin Layer",
       type: "geojson",
@@ -62,7 +62,7 @@ describe("createExternalNativeStoreLayer", () => {
   it("lets the registration own overlapping style keys over a user edit", () => {
     // External native layers are plugin-owned: a re-registration's style wins
     // even over a non-default user value on the same key, not just over defaults.
-    const existing: GeoLibreLayer = {
+    const existing: GeoIntLayer = {
       id: "plugin-layer",
       name: "Plugin Layer",
       type: "geojson",
@@ -82,7 +82,7 @@ describe("createExternalNativeStoreLayer", () => {
   });
 
   it("keeps the registration opacity over an existing default-seeded opacity", () => {
-    const existing: GeoLibreLayer = {
+    const existing: GeoIntLayer = {
       id: "plugin-layer",
       name: "Plugin Layer",
       type: "geojson",
@@ -99,7 +99,7 @@ describe("createExternalNativeStoreLayer", () => {
   });
 
   it("falls back to existing opacity when the registration omits opacity", () => {
-    const existing: GeoLibreLayer = {
+    const existing: GeoIntLayer = {
       id: "plugin-layer",
       name: "Plugin Layer",
       type: "geojson",
@@ -116,7 +116,7 @@ describe("createExternalNativeStoreLayer", () => {
   });
 
   it("lets the registration own opacity over a non-default user-edited value", () => {
-    const existing: GeoLibreLayer = {
+    const existing: GeoIntLayer = {
       id: "plugin-layer",
       name: "Plugin Layer",
       type: "geojson",
@@ -144,7 +144,7 @@ describe("createExternalNativeStoreLayer", () => {
   });
 
   it("preserves existing visibility when false", () => {
-    const existing: GeoLibreLayer = {
+    const existing: GeoIntLayer = {
       id: "plugin-layer",
       name: "Plugin Layer",
       type: "geojson",

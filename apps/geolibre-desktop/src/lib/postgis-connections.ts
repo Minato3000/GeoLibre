@@ -1,4 +1,4 @@
-import { useAppStore, type GeoLibreLayer } from "@geolibre/core";
+import { useAppStore, type GeoIntLayer } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import {
   readSavedPostgresConnections,
@@ -10,7 +10,7 @@ import {
  * string it was loaded with.
  *
  * Connection strings carry credentials, so they are deliberately kept out of
- * the layer metadata (which is serialized into `.geolibre.json` projects).
+ * the layer metadata (which is serialized into `.geoint.json` projects).
  * The layer instead persists only a password-masked label
  * (`postgisConnectionLabel`); after a project reload the connection is
  * recovered by matching that label against the saved connections in
@@ -63,7 +63,7 @@ export function unregisterPostgisConnection(layerId: string): void {
  * Sent with a save so the sidecar scopes deletions to rows this session
  * actually read, leaving concurrently inserted rows alone.
  */
-export function postgisBaselineKeys(layer: GeoLibreLayer): Array<string | number> | undefined {
+export function postgisBaselineKeys(layer: GeoIntLayer): Array<string | number> | undefined {
   const keys = layer.metadata.postgisBaselineKeys;
   if (!Array.isArray(keys)) return undefined;
   return keys.filter(
@@ -89,7 +89,7 @@ export function postgisFeatureKeys(geojson: FeatureCollection): Array<string | n
  * write-back keeps working after a project reload without persisting
  * credentials in the project file).
  */
-export function resolvePostgisConnection(layer: GeoLibreLayer): string | null {
+export function resolvePostgisConnection(layer: GeoIntLayer): string | null {
   const registered = connectionsByLayerId.get(layer.id);
   if (registered) return registered;
   const label =

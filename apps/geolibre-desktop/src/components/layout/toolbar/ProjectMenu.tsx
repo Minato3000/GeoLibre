@@ -1,4 +1,4 @@
-import { projectPathLabel, useAppStore } from "@geolibre/core";
+import { projectPathLabel, useAppStore } from "@geoint/core";
 import {
   Button,
   DropdownMenu,
@@ -10,7 +10,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   BookOpen,
   Bookmark,

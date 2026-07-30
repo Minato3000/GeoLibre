@@ -3,10 +3,10 @@ import {
   extrusionColorValue,
   extrusionHeightValue,
   styleValue,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type MapProjection,
   type StoryMap,
-} from "@geolibre/core";
+} from "@geoint/core";
 import { sanitizeStoryHtml } from "./sanitize-html";
 import {
   STORY_END_STEP_ID,
@@ -20,7 +20,7 @@ export interface StoryMapExportOptions {
   /** MapLibre style URL used as the story basemap. */
   basemapStyleUrl: string;
   /** Project layers; only in-memory GeoJSON layers are inlined into the export. */
-  layers: GeoLibreLayer[];
+  layers: GeoIntLayer[];
   /**
    * Map projection the exported page renders in. Mirrors the in-app projection
    * so a globe story stays a globe (and not 2D Mercator) once exported (#917).
@@ -39,7 +39,7 @@ interface InlineLayerExport {
   /** MapLibre source spec (a GeoJSON source, or a raster tile source). */
   source: Record<string, unknown>;
   layerSpec: Record<string, unknown>;
-  /** GeoLibre layer-level opacity, combined with the style's per-geometry one. */
+  /** GeoInt layer-level opacity, combined with the style's per-geometry one. */
   layerOpacity: number;
   /**
    * Absolute opacity chapter 0 assigns this layer, or undefined when chapter 0
@@ -139,7 +139,7 @@ export function buildStoryMapHtml(options: StoryMapExportOptions): string {
       source: built.source,
       layerSpec: built.layerSpec,
       // Hidden layers export fully transparent so the export matches what
-      // GeoLibre renders (the opacity slider value alone ignores visibility).
+      // GeoInt renders (the opacity slider value alone ignores visibility).
       layerOpacity: layer.visible ? layer.opacity : 0,
       // Absolute opacity chapter 0 sets for this layer, if any. When present it
       // overrides the natural opacity below so the first frame matches the app.
@@ -218,7 +218,7 @@ export function buildStoryMapHtml(options: StoryMapExportOptions): string {
       // Seed every opacity paint property the layer type fades. When chapter 0
       // assigns this layer an opacity, start there (matching the in-app first
       // frame, #950); otherwise use the style's per-property opacity scaled by
-      // the layer opacity so the export matches what GeoLibre renders. A chapter
+      // the layer opacity so the export matches what GeoInt renders. A chapter
       // 0 opacity wins outright, including over a hidden layer's 0, exactly as
       // the in-app presenter's setLayerOpacity overwrites the live value. Circles
       // carry both fill and stroke opacity so a faded point hides fully (#934).
@@ -277,10 +277,10 @@ function opacityProperties(type: string): string[] {
  *
  * Handles in-memory GeoJSON layers and raster tile layers (XYZ basemaps and
  * services). Returns `null` for layer types the export cannot reproduce
- * stand-alone (e.g. PMTiles or MBTiles that need GeoLibre's own protocols).
+ * stand-alone (e.g. PMTiles or MBTiles that need GeoInt's own protocols).
  */
 function buildInlineLayer(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
 ): { source: Record<string, unknown>; layerSpec: Record<string, unknown> } | null {
   if (layer.type === "geojson" && layer.geojson) {
     const layerSpec = buildLayerSpec(layer);
@@ -324,7 +324,7 @@ function buildInlineLayer(
  * provider whose url or tile template is itself pre-signed still expires with
  * its credential — the export can only embed what the source exposes.
  */
-function buildRasterTileSource(layer: GeoLibreLayer): Record<string, unknown> | null {
+function buildRasterTileSource(layer: GeoIntLayer): Record<string, unknown> | null {
   if (
     layer.type !== "raster" &&
     layer.type !== "xyz" &&
@@ -334,7 +334,7 @@ function buildRasterTileSource(layer: GeoLibreLayer): Record<string, unknown> | 
     return null;
   }
   // Only http(s) tile templates and TileJSON URLs can load in a standalone
-  // page; app-internal protocols (blob:, pmtiles:, geolibre:, …) have no
+  // page; app-internal protocols (blob:, pmtiles:, geoint:, …) have no
   // handler there.
   const isHttpUrl = (value: unknown): value is string =>
     typeof value === "string" && /^https?:\/\//i.test(value);
@@ -413,8 +413,8 @@ function classifyGeometry(geometry: Geometry | null): "polygon" | "line" | "poin
   }
 }
 
-/** Convert a GeoLibre GeoJSON layer to a minimal MapLibre layer spec. */
-function buildLayerSpec(layer: GeoLibreLayer): Record<string, unknown> | null {
+/** Convert a GeoInt GeoJSON layer to a minimal MapLibre layer spec. */
+function buildLayerSpec(layer: GeoIntLayer): Record<string, unknown> | null {
   if (!layer.geojson) return null;
   const kind = geometryKind(layer.geojson);
   if (!kind) return null;
@@ -727,7 +727,7 @@ function renderTemplate(config: Record<string, unknown>, inlineLayerScript: stri
         if (maplibregl.getRTLTextPluginStatus?.() === 'unavailable') {
             // MapLibre GL v4+ signature is (url, lazy?) returning a Promise; the
             // lazy flag is the SECOND arg, and the Promise must be caught.
-            maplibregl.setRTLTextPlugin('https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.4.0/dist/mapbox-gl-rtl-text.js', true).catch(function (e) { console.error('[GeoLibre] RTL plugin failed', e); });
+            maplibregl.setRTLTextPlugin('https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.4.0/dist/mapbox-gl-rtl-text.js', true).catch(function (e) { console.error('[GeoInt] RTL plugin failed', e); });
         }
 
         // For a global start slide, open the map (and inset/markers) at the
@@ -778,7 +778,7 @@ function renderTemplate(config: Record<string, unknown>, inlineLayerScript: stri
             try {
                 map.setProjection({ type: config.projection || 'globe' });
             } catch (e) {
-                console.error('[GeoLibre] projection failed', e);
+                console.error('[GeoInt] projection failed', e);
             }
 ${inlineLayerScript}
 

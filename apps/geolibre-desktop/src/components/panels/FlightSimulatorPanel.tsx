@@ -14,8 +14,8 @@ import {
   subscribeFlightHud,
   subscribeFlightSimulatorPanel,
   toggleFlying,
-} from "@geolibre/plugins";
-import { Button, Select, Slider } from "@geolibre/ui";
+} from "@geoint/plugins";
+import { Button, Select, Slider } from "@geoint/ui";
 import { ChevronDown, ChevronUp, Pause, Plane, Play, TriangleAlert, X } from "lucide-react";
 import { type PointerEvent as ReactPointerEvent, useState, useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";

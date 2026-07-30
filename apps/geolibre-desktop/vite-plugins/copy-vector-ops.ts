@@ -39,7 +39,7 @@ export function copyVectorOps(sourcePath: string, destPath: string): Plugin {
   };
 
   return {
-    name: "geolibre:copy-vector-ops",
+    name: "geoint:copy-vector-ops",
     // buildStart runs for both `vite` (dev) and `vite build`, before any module
     // in the graph is resolved, so the `?raw` import always sees a fresh copy.
     buildStart() {
@@ -56,7 +56,7 @@ export function copyVectorOps(sourcePath: string, destPath: string): Plugin {
         try {
           sync();
         } catch (err) {
-          server.config.logger.error(`[geolibre:copy-vector-ops] ${err}`);
+          server.config.logger.error(`[geoint:copy-vector-ops] ${err}`);
         }
       };
       server.watcher.on("change", onChange);

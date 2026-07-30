@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
-import { layerToSequencedPoints } from "@geolibre/processing";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
+import { layerToSequencedPoints } from "@geoint/processing";
 import type { Feature, FeatureCollection } from "geojson";
 
-function pointLayer(features: Feature[]): GeoLibreLayer {
+function pointLayer(features: Feature[]): GeoIntLayer {
   return {
     id: "layer-a",
     name: "Points",

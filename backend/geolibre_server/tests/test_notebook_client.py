@@ -1,4 +1,4 @@
-"""Tests for the kernel-side ``geolibre`` client's transport choice (issue #1442).
+"""Tests for the kernel-side ``geoint`` client's transport choice (issue #1442).
 
 ``notebook_client.py`` has to reach the live map from three very different
 kernels: the desktop Notebook panel, an external frontend attached to the same
@@ -33,7 +33,7 @@ class FakeResponse(io.BytesIO):
 @pytest.fixture
 def relay(monkeypatch):
     """Point the client at a relay and record what it posts."""
-    monkeypatch.setenv(notebook_client._RELAY_URL_ENV, "http://127.0.0.1:8766/geolibre/relay")
+    monkeypatch.setenv(notebook_client._RELAY_URL_ENV, "http://127.0.0.1:8766/geoint/relay")
     monkeypatch.setenv(notebook_client._RELAY_TOKEN_ENV, "s3cret")
 
     class Relay:
@@ -72,9 +72,9 @@ def test_uses_the_relay_and_stays_quiet_when_a_window_receives_it(relay, display
 
     assert len(relay.calls) == 1
     request = relay.calls[0]
-    assert request.full_url == "http://127.0.0.1:8766/geolibre/relay/command"
+    assert request.full_url == "http://127.0.0.1:8766/geoint/relay/command"
     assert json.loads(request.data) == {
-        "type": "geolibre:command",
+        "type": "geoint:command",
         "requestId": "",
         "method": "flyTo",
         "params": {"center": [-122.4, 37.8], "zoom": 11.0},
@@ -93,7 +93,7 @@ def test_authenticates_with_the_server_token(relay, displays):
 def test_warns_when_no_window_is_listening(relay, displays):
     relay.listeners = 0
 
-    with pytest.warns(notebook_client.GeoLibreNotConnectedWarning, match="no GeoLibre window"):
+    with pytest.warns(notebook_client.GeoIntNotConnectedWarning, match="no GeoInt window"):
         notebook_client.HostMap().fly_to(0, 0)
 
     # Still tries the embedded-panel transport rather than dropping the command.
@@ -103,7 +103,7 @@ def test_warns_when_no_window_is_listening(relay, displays):
 def test_warns_when_the_relay_cannot_be_reached(relay, displays):
     relay.error = urllib.error.URLError("connection refused")
 
-    with pytest.warns(notebook_client.GeoLibreNotConnectedWarning, match="could not be reached"):
+    with pytest.warns(notebook_client.GeoIntNotConnectedWarning, match="could not be reached"):
         notebook_client.HostMap().fly_to(0, 0)
 
     assert len(displays) == 1
@@ -112,7 +112,7 @@ def test_warns_when_the_relay_cannot_be_reached(relay, displays):
 def test_connect_warns_up_front_when_nothing_is_listening(relay):
     relay.listeners = 0
 
-    with pytest.warns(notebook_client.GeoLibreNotConnectedWarning):
+    with pytest.warns(notebook_client.GeoIntNotConnectedWarning):
         notebook_client.connect()
 
 
@@ -153,7 +153,7 @@ def test_warns_on_a_plain_kernel_with_no_relay(monkeypatch, displays):
     monkeypatch.setattr(notebook_client.sys, "platform", "linux")
 
     with pytest.warns(
-        notebook_client.GeoLibreNotConnectedWarning, match="not running on a GeoLibre Jupyter"
+        notebook_client.GeoIntNotConnectedWarning, match="not running on a GeoInt Jupyter"
     ):
         notebook_client.HostMap().fly_to(0, 0)
 

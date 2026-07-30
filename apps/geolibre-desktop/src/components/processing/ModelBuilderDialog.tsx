@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
 import {
   useAppStore,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type ProcessingModel,
   type ProcessingModelStep,
-} from "@geolibre/core";
-import { detectGeometryProfile, type MapController } from "@geolibre/map";
+} from "@geoint/core";
+import { detectGeometryProfile, type MapController } from "@geoint/map";
 import {
   VECTOR_TOOLS,
   getVectorTool,
@@ -15,7 +15,7 @@ import {
   type GeometryFamily,
   type ProcessingAlgorithm,
   type RunnerHost,
-} from "@geolibre/processing";
+} from "@geoint/processing";
 import { createDuckDbCapability } from "../../lib/duckdb-processing";
 import {
   Button,
@@ -30,7 +30,7 @@ import {
   Select,
   Separator,
   cn,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { ParameterField } from "./ParameterField";
 import {
   ArrowDown,
@@ -94,7 +94,7 @@ function ToolOptions(): ReactElement {
 }
 
 /** GeoJSON layers usable as inputs, optionally filtered by geometry family. */
-function geojsonLayers(layers: GeoLibreLayer[], filter?: GeometryFamily[]): GeoLibreLayer[] {
+function geojsonLayers(layers: GeoIntLayer[], filter?: GeometryFamily[]): GeoIntLayer[] {
   return layers.filter((layer) => {
     if (layer.type !== "geojson" || !layer.geojson) return false;
     if (!filter?.length) return true;
@@ -127,7 +127,7 @@ function isParamVisible(param: AlgorithmParameter, params: Record<string, unknow
 }
 
 /** Attribute field names per GeoJSON layer, sampled for schemaless data. */
-function useFieldsByLayer(layers: GeoLibreLayer[], enabled: boolean): Map<string, string[]> {
+function useFieldsByLayer(layers: GeoIntLayer[], enabled: boolean): Map<string, string[]> {
   return useMemo(() => {
     const map = new Map<string, string[]>();
     if (!enabled) return map;
@@ -729,7 +729,7 @@ interface StepCardProps {
   step: ProcessingModelStep;
   index: number;
   total: number;
-  layers: GeoLibreLayer[];
+  layers: GeoIntLayer[];
   fieldsByLayer: Map<string, string[]>;
   onParamChange: (paramId: string, value: unknown) => void;
   onRemove: () => void;

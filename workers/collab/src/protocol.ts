@@ -2,7 +2,7 @@
 //
 // This is the worker-side copy. The frontend keeps a parallel copy in
 // `apps/geolibre-desktop/src/lib/collab-protocol.ts` with the `project` field
-// typed as the concrete `GeoLibreProject`. The relay never inspects a project's
+// typed as the concrete `GeoIntProject`. The relay never inspects a project's
 // contents — it only stores and forwards the opaque JSON — so here `project` is
 // `unknown`. Keep the two `type` discriminants and field names in sync.
 

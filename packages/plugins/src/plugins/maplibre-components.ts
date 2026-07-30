@@ -1,11 +1,11 @@
 import {
   clearExternalNativePaintBridge,
   DEFAULT_LAYER_STYLE,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   interpolateRampColors,
   setExternalNativePaintBridge,
   useAppStore,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type {
   QueryGeometry,
   QueryOptions,
@@ -72,7 +72,7 @@ import type {
 } from "maplibre-gl-components";
 import type { GaussianSplatControl, GaussianSplatLayerAdapter } from "maplibre-gl-splat";
 import type { LidarControlEventHandler, PointCloudInfo } from "maplibre-gl-lidar";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 import { ensureMercatorProjection } from "./map-projection-utils";
 import { attachTerrainMeasure, measurePanelElement, type TerrainMapLike } from "./terrain-measure";
 import { INTERNAL_HELPER_LAYER_PATTERNS } from "./internal-layers";
@@ -145,24 +145,24 @@ interface ComponentsConstructors {
   ZarrLayerControl: ZarrLayerControlConstructor;
 }
 
-let componentsControlPosition: GeoLibreMapControlPosition = "top-right";
-const cogRasterControlPosition: GeoLibreMapControlPosition = "top-left";
-const flatGeobufControlPosition: GeoLibreMapControlPosition = "top-left";
-const pmtilesControlPosition: GeoLibreMapControlPosition = "top-left";
-const searchControlPosition: GeoLibreMapControlPosition = "top-right";
-const spinGlobeControlPosition: GeoLibreMapControlPosition = "top-right";
-const measureControlPosition: GeoLibreMapControlPosition = "top-left";
-const bookmarkControlPosition: GeoLibreMapControlPosition = "top-left";
-const minimapControlPosition: GeoLibreMapControlPosition = "bottom-left";
-const viewStateControlPosition: GeoLibreMapControlPosition = "bottom-right";
-const printControlPosition: GeoLibreMapControlPosition = "top-left";
-const stacSearchControlPosition: GeoLibreMapControlPosition = "top-left";
-const zarrControlPosition: GeoLibreMapControlPosition = "top-left";
-const colorbarControlPosition: GeoLibreMapControlPosition = "top-left";
-const legendControlPosition: GeoLibreMapControlPosition = "top-left";
-const htmlControlPosition: GeoLibreMapControlPosition = "top-left";
-const lidarControlPosition: GeoLibreMapControlPosition = "top-left";
-const splattingControlPosition: GeoLibreMapControlPosition = "top-left";
+let componentsControlPosition: GeoIntMapControlPosition = "top-right";
+const cogRasterControlPosition: GeoIntMapControlPosition = "top-left";
+const flatGeobufControlPosition: GeoIntMapControlPosition = "top-left";
+const pmtilesControlPosition: GeoIntMapControlPosition = "top-left";
+const searchControlPosition: GeoIntMapControlPosition = "top-right";
+const spinGlobeControlPosition: GeoIntMapControlPosition = "top-right";
+const measureControlPosition: GeoIntMapControlPosition = "top-left";
+const bookmarkControlPosition: GeoIntMapControlPosition = "top-left";
+const minimapControlPosition: GeoIntMapControlPosition = "bottom-left";
+const viewStateControlPosition: GeoIntMapControlPosition = "bottom-right";
+const printControlPosition: GeoIntMapControlPosition = "top-left";
+const stacSearchControlPosition: GeoIntMapControlPosition = "top-left";
+const zarrControlPosition: GeoIntMapControlPosition = "top-left";
+const colorbarControlPosition: GeoIntMapControlPosition = "top-left";
+const legendControlPosition: GeoIntMapControlPosition = "top-left";
+const htmlControlPosition: GeoIntMapControlPosition = "top-left";
+const lidarControlPosition: GeoIntMapControlPosition = "top-left";
+const splattingControlPosition: GeoIntMapControlPosition = "top-left";
 
 const FLATGEOBUF_SAMPLE_URL = "https://flatgeobuf.org/test/data/UScounties.fgb";
 const BUILDING_COUNT_H3_PMTILES_SAMPLE_URL =
@@ -187,7 +187,7 @@ const ZARR_TIME_SERIES_SAMPLE_URL =
   "https://data.source.coop/giswqs/opengeos/noaa-oisst-v2-monthly.zarr";
 const LIDAR_SAMPLE_URL = "https://s3.amazonaws.com/hobu-lidar/autzen-classified.copc.laz";
 const SPLATTING_SAMPLE_URL = "https://maplibre.org/maplibre-gl-js/docs/assets/34M_17/34M_17.gltf";
-const RASTER_PROXY_PATH = "/__geolibre_raster_proxy";
+const RASTER_PROXY_PATH = "/__geoint_raster_proxy";
 const GUI_PANEL_VIEWPORT_MARGIN = 16;
 // Poll interval / cap for re-measuring a just-expanded GUI panel while its
 // layout settles (see constrainGuiPanelToViewport).
@@ -226,7 +226,7 @@ const COMPONENT_CONTROL_NAMES = [
 ] satisfies DefaultControlName[];
 
 const COMPONENTS_OPTIONS = {
-  className: "geolibre-components-control",
+  className: "geoint-components-control",
   collapsed: false,
   columns: 5,
   defaultControls: COMPONENT_CONTROL_NAMES,
@@ -240,7 +240,7 @@ const COMPONENTS_OPTIONS = {
 
 const ADD_VECTOR_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-flatgeobuf-control",
+  className: "geoint-flatgeobuf-control",
   collapsed: false,
   defaultFormat: "flatgeobuf",
   defaultPickable: false,
@@ -250,7 +250,7 @@ const ADD_VECTOR_OPTIONS = {
 
 const COG_RASTER_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-cog-raster-control",
+  className: "geoint-cog-raster-control",
   collapsed: true,
   defaultBands: "1",
   defaultColormap: "none",
@@ -264,7 +264,7 @@ const COG_RASTER_OPTIONS = {
 
 const PMTILES_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-pmtiles-control",
+  className: "geoint-pmtiles-control",
   collapsed: false,
   defaultCircleColor: DEFAULT_LAYER_STYLE.fillColor,
   defaultFillColor: DEFAULT_LAYER_STYLE.fillColor,
@@ -280,7 +280,7 @@ const PMTILES_OPTIONS = {
 
 const SEARCH_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-search-control",
+  className: "geoint-search-control",
   collapsed: false,
   fontColor: "hsl(var(--popover-foreground))",
   maxResults: 8,
@@ -298,7 +298,7 @@ const SPIN_GLOBE_OPTIONS = {
 
 const MEASURE_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-measure-control",
+  className: "geoint-measure-control",
   collapsed: false,
   fontColor: "hsl(var(--popover-foreground))",
   maxHeight: 520,
@@ -377,13 +377,13 @@ function restoreVisibleLayers(extra: Record<string, unknown> | undefined): void 
 
 const BOOKMARK_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-bookmark-control",
+  className: "geoint-bookmark-control",
   collapsed: false,
   fontColor: "hsl(var(--popover-foreground))",
   maxHeight: 520,
   panelWidth: 280,
   position: bookmarkControlPosition,
-  storageKey: "geolibre-bookmarks",
+  storageKey: "geoint-bookmarks",
   // Resizable panel and drag reordering are on by default upstream; enable
   // per-bookmark export selection and visible-layer capture here. Labels and
   // the capture tooltip are applied per-instance in createBookmarkControl so
@@ -403,7 +403,7 @@ const BOOKMARK_OPTIONS = {
 } satisfies BookmarkControlOptions;
 
 const MINIMAP_OPTIONS = {
-  className: "geolibre-minimap-control",
+  className: "geoint-minimap-control",
   collapsed: false,
   height: 180,
   interactive: true,
@@ -414,7 +414,7 @@ const MINIMAP_OPTIONS = {
 
 const VIEW_STATE_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-view-state-control",
+  className: "geoint-view-state-control",
   collapsed: false,
   enableBBox: true,
   fontColor: "hsl(var(--popover-foreground))",
@@ -445,7 +445,7 @@ export function setViewStateLabels(labels: Partial<typeof viewStateLabels>): voi
 
 const PRINT_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-print-control",
+  className: "geoint-print-control",
   collapsed: false,
   fontColor: "hsl(var(--popover-foreground))",
   maxHeight: 520,
@@ -457,7 +457,7 @@ const PRINT_OPTIONS = {
 
 const STAC_SEARCH_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-stac-search-control",
+  className: "geoint-stac-search-control",
   collapsed: false,
   defaultColormap: "viridis",
   defaultRescaleMax: 10000,
@@ -471,7 +471,7 @@ const STAC_SEARCH_OPTIONS = {
 
 const COLORBAR_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-colorbar-control",
+  className: "geoint-colorbar-control",
   collapsed: false,
   fontColor: "hsl(var(--popover-foreground))",
   // Omit maxHeight so the control auto-fits the available viewport height
@@ -484,7 +484,7 @@ const COLORBAR_OPTIONS = {
 
 const LEGEND_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-legend-control",
+  className: "geoint-legend-control",
   collapsed: false,
   fontColor: "hsl(var(--popover-foreground))",
   // Omit maxHeight so the control auto-fits the available viewport height
@@ -495,7 +495,7 @@ const LEGEND_OPTIONS = {
 
 const HTML_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-html-control",
+  className: "geoint-html-control",
   collapsed: false,
   fontColor: "hsl(var(--popover-foreground))",
   // Omit maxHeight so the control auto-fits the available viewport height
@@ -506,7 +506,7 @@ const HTML_OPTIONS = {
 } satisfies HtmlGuiControlOptions;
 
 const STAC_COLOR_RAMP_MODULE = {
-  name: "geolibre-stac-color-ramp",
+  name: "geoint-stac-color-ramp",
   inject: {
     "fs:DECKGL_FILTER_COLOR": `
       float v = clamp(color.r, 0.0, 1.0);
@@ -615,7 +615,7 @@ function getStacColorRampModule(colormap: string): typeof STAC_COLOR_RAMP_MODULE
   });
 
   return {
-    name: `geolibre-stac-color-ramp-${colormap.toLowerCase()}`,
+    name: `geoint-stac-color-ramp-${colormap.toLowerCase()}`,
     inject: {
       "fs:DECKGL_FILTER_COLOR": `
         float v = clamp(color.r, 0.0, 1.0);
@@ -634,7 +634,7 @@ const ZARR_COLORMAP_STOPS = 9;
 
 const ZARR_OPTIONS = {
   backgroundColor: "hsl(var(--popover))",
-  className: "geolibre-zarr-control",
+  className: "geoint-zarr-control",
   collapsed: false,
   defaultClim: [0, 300],
   defaultColormap: [
@@ -675,7 +675,7 @@ const ZARR_OPTIONS = {
 const LIDAR_OPTIONS = {
   title: "Add LiDAR Layer",
   collapsed: false,
-  className: "geolibre-lidar-layer-control",
+  className: "geoint-lidar-layer-control",
   panelWidth: 365,
   // Omit maxHeight so the panel (maplibre-gl-lidar >= 0.16.2) sizes to its
   // content, grows up to the available vertical space within the map, and
@@ -695,7 +695,7 @@ const LIDAR_OPTIONS = {
 } satisfies ConstructorParameters<LidarControlConstructor>[0];
 
 const SPLATTING_OPTIONS = {
-  className: "geolibre-splatting-control",
+  className: "geoint-splatting-control",
   collapsed: false,
   defaultAltitude: 0,
   defaultLatitude: -35.39847,
@@ -776,7 +776,7 @@ interface PendingLidarRestore {
   name: string;
   visible: boolean;
   opacity: number;
-  style: GeoLibreLayer["style"];
+  style: GeoIntLayer["style"];
   groupId: string | undefined;
   beforeLayerId: string | null;
 }
@@ -824,7 +824,7 @@ interface ComponentColorbarGuiEntryState {
   label: string;
   units: string;
   orientation: "horizontal" | "vertical";
-  colorbarPosition: GeoLibreMapControlPosition;
+  colorbarPosition: GeoIntMapControlPosition;
 }
 
 interface ComponentColorbarGuiState extends ComponentColorbarGuiEntryState {
@@ -847,7 +847,7 @@ interface ComponentLegendItem {
 interface ComponentLegendGuiEntryState {
   title: string;
   items: ComponentLegendItem[];
-  legendPosition: GeoLibreMapControlPosition;
+  legendPosition: GeoIntMapControlPosition;
 }
 
 interface ComponentLegendGuiState extends ComponentLegendGuiEntryState {
@@ -861,7 +861,7 @@ interface ComponentLegendGuiState extends ComponentLegendGuiEntryState {
 interface ComponentHtmlGuiEntryState {
   title: string;
   html: string;
-  htmlPosition: GeoLibreMapControlPosition;
+  htmlPosition: GeoIntMapControlPosition;
   collapsible: boolean;
 }
 
@@ -891,7 +891,7 @@ type GuiControlStateInternals<TState> = {
   setState?: (state: TState) => unknown;
 };
 
-const CONTROL_POSITIONS = new Set<GeoLibreMapControlPosition>([
+const CONTROL_POSITIONS = new Set<GeoIntMapControlPosition>([
   "top-left",
   "top-right",
   "bottom-left",
@@ -1327,13 +1327,13 @@ export const getComponentsConstructors = (): Promise<ComponentsConstructors> => 
   return componentsConstructorsPromise;
 };
 
-const createComponentsControl = async (app: GeoLibreAppAPI): Promise<ControlGrid | null> => {
+const createComponentsControl = async (app: GeoIntAppAPI): Promise<ControlGrid | null> => {
   const { ControlGrid: ControlGridClass } = await getComponentsConstructors();
   if (!pluginActive) return null;
   return new ControlGridClass(getComponentsOptions(app));
 };
 
-const createAndMountComponentsControl = (app: GeoLibreAppAPI): void => {
+const createAndMountComponentsControl = (app: GeoIntAppAPI): void => {
   const revision = ++componentsControlRevision;
   void createComponentsControl(app).then((control) => {
     if (!pluginActive || componentsControl || !control || revision !== componentsControlRevision) {
@@ -1344,7 +1344,7 @@ const createAndMountComponentsControl = (app: GeoLibreAppAPI): void => {
   });
 };
 
-const mountComponentsControl = (app: GeoLibreAppAPI): boolean => {
+const mountComponentsControl = (app: GeoIntAppAPI): boolean => {
   if (!componentsControl) return false;
   const added = app.addMapControl(componentsControl, componentsControlPosition);
   if (!added) {
@@ -1358,16 +1358,16 @@ const mountComponentsControl = (app: GeoLibreAppAPI): boolean => {
 /** Stable id of the Components plugin. */
 export const COMPONENTS_PLUGIN_ID = "maplibre-gl-components";
 
-export const maplibreComponentsPlugin: GeoLibrePlugin = {
+export const maplibreComponentsPlugin: GeoIntPlugin = {
   id: COMPONENTS_PLUGIN_ID,
   name: "Components",
   version: "0.18.2",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     pluginActive = true;
     if (componentsControl) return mountComponentsControl(app);
     createAndMountComponentsControl(app);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     pluginActive = false;
     componentsControlRevision += 1;
     teardownCogRasterControl(app);
@@ -1393,7 +1393,7 @@ export const maplibreComponentsPlugin: GeoLibrePlugin = {
     componentsControl = null;
   },
   getMapControlPosition: () => componentsControlPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     componentsControlPosition = position;
     if (!componentsControl) return;
     app.removeMapControl(componentsControl);
@@ -1401,7 +1401,7 @@ export const maplibreComponentsPlugin: GeoLibrePlugin = {
     createAndMountComponentsControl(app);
   },
   getProjectState: () => componentsProjectStateSnapshot(),
-  applyProjectState: (app: GeoLibreAppAPI, state: unknown) => {
+  applyProjectState: (app: GeoIntAppAPI, state: unknown) => {
     applyComponentsProjectState(app, state);
   },
 };
@@ -1421,7 +1421,7 @@ function componentsProjectStateSnapshot(): ComponentsProjectState | undefined {
   return Object.keys(state).length > 0 ? state : undefined;
 }
 
-function applyComponentsProjectState(app: GeoLibreAppAPI, state: unknown): void {
+function applyComponentsProjectState(app: GeoIntAppAPI, state: unknown): void {
   const normalized = normalizeComponentsProjectState(state);
   if (normalized?.colorbar?.visible) {
     void restoreColorbarPanel(app, normalized.colorbar);
@@ -1443,7 +1443,7 @@ function applyComponentsProjectState(app: GeoLibreAppAPI, state: unknown): void 
 }
 
 async function restoreColorbarPanel(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   state: ComponentColorbarGuiState,
 ): Promise<void> {
   const restored = await openStandaloneColorbarControl(app);
@@ -1461,7 +1461,7 @@ async function restoreColorbarPanel(
 }
 
 async function restoreLegendPanel(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   state: ComponentLegendGuiState,
 ): Promise<void> {
   const restored = await openStandaloneLegendControl(app);
@@ -1478,7 +1478,7 @@ async function restoreLegendPanel(
   }, 0);
 }
 
-async function restoreHtmlPanel(app: GeoLibreAppAPI, state: ComponentHtmlGuiState): Promise<void> {
+async function restoreHtmlPanel(app: GeoIntAppAPI, state: ComponentHtmlGuiState): Promise<void> {
   const restored = await openStandaloneHtmlControl(app);
   if (!restored) return;
   setTimeout(() => {
@@ -1661,10 +1661,10 @@ function isLegendItemShape(value: unknown): value is ComponentLegendItem["shape"
 
 function normalizeControlPosition(
   value: unknown,
-  fallback: GeoLibreMapControlPosition,
-): GeoLibreMapControlPosition {
-  return typeof value === "string" && CONTROL_POSITIONS.has(value as GeoLibreMapControlPosition)
-    ? (value as GeoLibreMapControlPosition)
+  fallback: GeoIntMapControlPosition,
+): GeoIntMapControlPosition {
+  return typeof value === "string" && CONTROL_POSITIONS.has(value as GeoIntMapControlPosition)
+    ? (value as GeoIntMapControlPosition)
     : fallback;
 }
 
@@ -1679,12 +1679,12 @@ function finiteNumber(value: unknown, fallback: number): number {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
 
-export function openFlatGeobufAddVectorLayerPanel(app: GeoLibreAppAPI): void {
+export function openFlatGeobufAddVectorLayerPanel(app: GeoIntAppAPI): void {
   void openStandaloneFlatGeobufControl(app);
 }
 
 export async function addCogRasterLayer(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: CogRasterLayerOptions,
 ): Promise<string> {
   if (options.data || shouldUseGenericGeoTiffRenderer(options.url)) {
@@ -1705,7 +1705,7 @@ export async function addCogRasterLayer(
   }
 }
 
-export function openPMTilesLayerPanel(app: GeoLibreAppAPI): void {
+export function openPMTilesLayerPanel(app: GeoIntAppAPI): void {
   void openStandalonePMTilesControl(app);
 }
 
@@ -1725,12 +1725,12 @@ export function openPMTilesLayerPanel(app: GeoLibreAppAPI): void {
  * surface a map button the user never asked for; a panel the user already has
  * open is left alone.
  *
- * @param app - The GeoLibre app API.
+ * @param app - The GeoInt app API.
  * @param url - An http(s) URL to a `.pmtiles` archive.
  * @returns True when the archive was added.
  * @throws If the archive could not be loaded (unreachable, not PMTiles, 403).
  */
-export async function addPMTilesLayerFromUrl(app: GeoLibreAppAPI, url: string): Promise<boolean> {
+export async function addPMTilesLayerFromUrl(app: GeoIntAppAPI, url: string): Promise<boolean> {
   const { PMTilesLayerControl: PMTilesLayerControlClass } = await getComponentsConstructors();
 
   pmtilesControl ??= createPMTilesControl(PMTilesLayerControlClass);
@@ -1762,7 +1762,7 @@ export async function addPMTilesLayerFromUrl(app: GeoLibreAppAPI, url: string): 
 
 // The standalone Search panel is intentionally independent from the
 // ControlGrid search sub-control so it can be used from the Controls menu.
-export function openSearchPlacesPanel(app: GeoLibreAppAPI): void {
+export function openSearchPlacesPanel(app: GeoIntAppAPI): void {
   void openStandaloneSearchControl(app);
 }
 
@@ -1782,11 +1782,11 @@ export function subscribeSearchPlacesPanel(listener: () => void): () => void {
 // Standalone Spinning Globe control, toggled from the Controls menu. It mirrors
 // the spinGlobe sub-control of the Components plugin's ControlGrid, but lives on
 // its own so it can be opened independently from the Controls menu.
-export function openSpinGlobePanel(app: GeoLibreAppAPI): void {
+export function openSpinGlobePanel(app: GeoIntAppAPI): void {
   void openStandaloneSpinGlobeControl(app);
 }
 
-export function closeSpinGlobePanel(app: GeoLibreAppAPI): void {
+export function closeSpinGlobePanel(app: GeoIntAppAPI): void {
   teardownSpinGlobeControl(app);
 }
 
@@ -1800,11 +1800,11 @@ export function subscribeSpinGlobePanel(listener: () => void): () => void {
 }
 
 // Standalone Measure panel, opened on demand from the Controls menu.
-export function openMeasurePanel(app: GeoLibreAppAPI): void {
+export function openMeasurePanel(app: GeoIntAppAPI): void {
   void openStandaloneMeasureControl(app);
 }
 
-export function closeMeasurePanel(app: GeoLibreAppAPI): void {
+export function closeMeasurePanel(app: GeoIntAppAPI): void {
   teardownMeasureControl(app);
 }
 
@@ -1818,11 +1818,11 @@ export function subscribeMeasurePanel(listener: () => void): () => void {
 }
 
 // Standalone Bookmark panel, opened on demand from the Controls menu.
-export function openBookmarkPanel(app: GeoLibreAppAPI): void {
+export function openBookmarkPanel(app: GeoIntAppAPI): void {
   void openStandaloneBookmarkControl(app);
 }
 
-export function closeBookmarkPanel(app: GeoLibreAppAPI): void {
+export function closeBookmarkPanel(app: GeoIntAppAPI): void {
   teardownBookmarkControl(app);
 }
 
@@ -1836,11 +1836,11 @@ export function subscribeBookmarkPanel(listener: () => void): () => void {
 }
 
 // Standalone Minimap control, toggled from the Controls menu.
-export function openMinimapPanel(app: GeoLibreAppAPI): void {
+export function openMinimapPanel(app: GeoIntAppAPI): void {
   void openStandaloneMinimapControl(app);
 }
 
-export function closeMinimapPanel(app: GeoLibreAppAPI): void {
+export function closeMinimapPanel(app: GeoIntAppAPI): void {
   teardownMinimapControl(app);
 }
 
@@ -1854,11 +1854,11 @@ export function subscribeMinimapPanel(listener: () => void): () => void {
 }
 
 // Standalone View State panel, toggled from the Controls menu.
-export function openViewStatePanel(app: GeoLibreAppAPI): void {
+export function openViewStatePanel(app: GeoIntAppAPI): void {
   void openStandaloneViewStateControl(app);
 }
 
-export function closeViewStatePanel(app: GeoLibreAppAPI): void {
+export function closeViewStatePanel(app: GeoIntAppAPI): void {
   teardownViewStateControl(app);
 }
 
@@ -1873,7 +1873,7 @@ export function subscribeViewStatePanel(listener: () => void): () => void {
 
 // The standalone Print panel exports the map via the maplibre-gl-components
 // PrintControl. It is opened on demand from the Project menu.
-export function openPrintPanel(app: GeoLibreAppAPI): void {
+export function openPrintPanel(app: GeoIntAppAPI): void {
   void openStandalonePrintControl(app);
 }
 
@@ -1894,11 +1894,11 @@ export function subscribePrintPanel(listener: () => void): () => void {
   return () => printPanelListeners.delete(listener);
 }
 
-export function openColorbarPanel(app: GeoLibreAppAPI): void {
+export function openColorbarPanel(app: GeoIntAppAPI): void {
   void openStandaloneColorbarControl(app);
 }
 
-export function closeColorbarPanel(app: GeoLibreAppAPI): void {
+export function closeColorbarPanel(app: GeoIntAppAPI): void {
   teardownColorbarControl(app);
 }
 
@@ -1911,7 +1911,7 @@ export function subscribeColorbarPanel(listener: () => void): () => void {
   return () => colorbarPanelListeners.delete(listener);
 }
 
-export function openLegendPanel(app: GeoLibreAppAPI): void {
+export function openLegendPanel(app: GeoIntAppAPI): void {
   void openStandaloneLegendControl(app);
 }
 
@@ -1934,11 +1934,11 @@ export function openLegendPanel(app: GeoLibreAppAPI): void {
  * @returns Whether the control was opened and populated.
  */
 export async function openLegendPanelWithItems(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: {
     title: string;
     items: ComponentLegendItem[];
-    legendPosition?: GeoLibreMapControlPosition;
+    legendPosition?: GeoIntMapControlPosition;
     signal?: AbortSignal;
   },
 ): Promise<boolean> {
@@ -1998,7 +1998,7 @@ export async function openLegendPanelWithItems(
         // panel to the viewport) never re-fires for this now-taller, populated
         // panel. Run the constraint directly so a many-class legend doesn't
         // overflow under the status bar.
-        constrainGuiPanelToViewport(".geolibre-legend-control .legend-gui-panel");
+        constrainGuiPanelToViewport(".geoint-legend-control .legend-gui-panel");
         resolve(true);
       } catch {
         resolve(false);
@@ -2007,7 +2007,7 @@ export async function openLegendPanelWithItems(
   });
 }
 
-export function closeLegendPanel(app: GeoLibreAppAPI): void {
+export function closeLegendPanel(app: GeoIntAppAPI): void {
   teardownLegendControl(app);
 }
 
@@ -2020,15 +2020,15 @@ export function subscribeLegendPanel(listener: () => void): () => void {
   return () => legendPanelListeners.delete(listener);
 }
 
-export function openHtmlPanel(app: GeoLibreAppAPI): void {
+export function openHtmlPanel(app: GeoIntAppAPI): void {
   void openStandaloneHtmlControl(app);
 }
 
-export function closeHtmlPanel(app: GeoLibreAppAPI): void {
+export function closeHtmlPanel(app: GeoIntAppAPI): void {
   teardownHtmlControl(app);
 }
 
-export function closeMaplibreComponentControls(app: GeoLibreAppAPI): void {
+export function closeMaplibreComponentControls(app: GeoIntAppAPI): void {
   teardownCogRasterControl(app);
   teardownGeoTiffRasterOverlay(app);
   teardownFlatGeobufControl(app);
@@ -2058,11 +2058,11 @@ export function subscribeHtmlPanel(listener: () => void): () => void {
   return () => htmlPanelListeners.delete(listener);
 }
 
-export function openStacSearchLayerPanel(app: GeoLibreAppAPI): void {
+export function openStacSearchLayerPanel(app: GeoIntAppAPI): void {
   void openStandaloneStacSearchControl(app);
 }
 
-export function openZarrLayerPanel(app: GeoLibreAppAPI): void {
+export function openZarrLayerPanel(app: GeoIntAppAPI): void {
   void openStandaloneZarrControl(app);
 }
 
@@ -2167,12 +2167,12 @@ export interface CloudNetcdfLayerOptions {
  * `ZarrLayerControl.addLayer(url, variable, { store })`. The resulting layer is
  * tracked in the store like any other Zarr layer.
  *
- * @param app The GeoLibre app API.
+ * @param app The GeoInt app API.
  * @param options Reference URL, variable, and optional styling/selector.
  * @throws If the Zarr control cannot be mounted or the reference fails to load.
  */
 export async function addCloudNetcdfLayer(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: CloudNetcdfLayerOptions,
 ): Promise<void> {
   const { ZarrLayerControl: ZarrLayerControlClass } = await getComponentsConstructors();
@@ -2259,7 +2259,7 @@ export interface ZarrRasterLayerOptions {
   /** Color limits `[min, max]`. */
   clim?: [number, number];
   /**
-   * A named GeoLibre ramp (e.g. `"viridis"`) or an explicit list of hex colors.
+   * A named GeoInt ramp (e.g. `"viridis"`) or an explicit list of hex colors.
    * An unrecognized name falls back to the default ramp, as `addCogLayer` does.
    */
   colormap?: string | string[];
@@ -2308,7 +2308,7 @@ export interface ZarrReadableStore {
 export type ZarrTimeAttributesReader = (dimension: string) => Promise<ZarrTimeAttributes | null>;
 
 /**
- * Add a Zarr layer through GeoLibre's own `@carbonplan/zarr-layer` instance and
+ * Add a Zarr layer through GeoInt's own `@carbonplan/zarr-layer` instance and
  * mirror it into the layer store, without opening the Zarr panel.
  *
  * This is the Zarr counterpart of {@link addCogRasterLayer}: the host owns the
@@ -2325,14 +2325,14 @@ export type ZarrTimeAttributesReader = (dimension: string) => Promise<ZarrTimeAt
  * user does not get a map button they never asked for; a panel they already
  * opened is left alone.
  *
- * @param app The GeoLibre app API.
+ * @param app The GeoInt app API.
  * @param options Store URL, variable, and optional styling/CRS/selector.
  * @returns The new layer's id (the Layers-panel entry and the native layer id).
  * @throws If the control cannot be mounted, `variable` is missing, or the store
  *   fails to load.
  */
 export async function addZarrRasterLayer(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: ZarrRasterLayerOptions,
 ): Promise<string> {
   const url = options.url?.trim();
@@ -2377,7 +2377,7 @@ function queueZarrAdd<T>(run: () => Promise<T>): Promise<T> {
 }
 
 async function addZarrLayerExclusively(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: ZarrRasterLayerOptions,
   url: string,
   variable: string,
@@ -2460,7 +2460,7 @@ async function addZarrLayerExclusively(
   // reference the renderer resolved, so only the fields the caller alone knows
   // are left to apply.
   const store = useAppStore.getState();
-  const patch: Partial<GeoLibreLayer> = {};
+  const patch: Partial<GeoIntLayer> = {};
   const name = options.name?.trim();
   if (name) patch.name = name;
   if (options.beforeLayerId) patch.beforeId = options.beforeLayerId;
@@ -2735,7 +2735,7 @@ function registerZarrTemporalAdapter(
 }
 
 // The control takes an explicit list of hex colors; the public option also
-// accepts a named GeoLibre ramp so a JS plugin need not spell out the stops.
+// accepts a named GeoInt ramp so a JS plugin need not spell out the stops.
 // `interpolateRampColors` falls back to the first built-in ramp for an unknown
 // name, mirroring how addCogLayer treats an unrecognized colormap.
 function resolveZarrColormap(colormap: string | string[] | undefined): string[] | undefined {
@@ -2746,15 +2746,15 @@ function resolveZarrColormap(colormap: string | string[] | undefined): string[] 
   return interpolateRampColors(name, ZARR_COLORMAP_STOPS);
 }
 
-export function openLidarLayerPanel(app: GeoLibreAppAPI): void {
+export function openLidarLayerPanel(app: GeoIntAppAPI): void {
   void openStandaloneLidarControl(app);
 }
 
-export function openSplattingLayerPanel(app: GeoLibreAppAPI): void {
+export function openSplattingLayerPanel(app: GeoIntAppAPI): void {
   void openStandaloneSplattingControl(app);
 }
 
-function getComponentsOptions(app: GeoLibreAppAPI): ControlGridOptions {
+function getComponentsOptions(app: GeoIntAppAPI): ControlGridOptions {
   return {
     ...COMPONENTS_OPTIONS,
     basemapStyleUrl: app.getActiveBasemap(),
@@ -2762,7 +2762,7 @@ function getComponentsOptions(app: GeoLibreAppAPI): ControlGridOptions {
   };
 }
 
-async function openStandaloneFlatGeobufControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneFlatGeobufControl(app: GeoIntAppAPI): Promise<boolean> {
   const { AddVectorControl: AddVectorControlClass } = await getComponentsConstructors();
 
   flatGeobufControl ??= createFlatGeobufControl(AddVectorControlClass);
@@ -2783,7 +2783,7 @@ async function openStandaloneFlatGeobufControl(app: GeoLibreAppAPI): Promise<boo
   return true;
 }
 
-async function ensureCogRasterControl(app: GeoLibreAppAPI): Promise<CogLayerControl | null> {
+async function ensureCogRasterControl(app: GeoIntAppAPI): Promise<CogLayerControl | null> {
   const { CogLayerControl: CogLayerControlClass } = await getComponentsConstructors();
 
   cogRasterControl ??= createCogRasterControl(CogLayerControlClass);
@@ -2804,7 +2804,7 @@ async function ensureCogRasterControl(app: GeoLibreAppAPI): Promise<CogLayerCont
   return cogRasterControl;
 }
 
-async function openStandalonePMTilesControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandalonePMTilesControl(app: GeoIntAppAPI): Promise<boolean> {
   const { PMTilesLayerControl: PMTilesLayerControlClass } = await getComponentsConstructors();
 
   pmtilesControl ??= createPMTilesControl(PMTilesLayerControlClass);
@@ -2825,7 +2825,7 @@ async function openStandalonePMTilesControl(app: GeoLibreAppAPI): Promise<boolea
   return true;
 }
 
-async function openStandalonePrintControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandalonePrintControl(app: GeoIntAppAPI): Promise<boolean> {
   const { PrintControl: PrintControlClass } = await getComponentsConstructors();
 
   printControl ??= createPrintControl(PrintControlClass);
@@ -2852,7 +2852,7 @@ async function openStandalonePrintControl(app: GeoLibreAppAPI): Promise<boolean>
   return true;
 }
 
-async function openStandaloneSearchControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneSearchControl(app: GeoIntAppAPI): Promise<boolean> {
   const { SearchControl: SearchControlClass } = await getComponentsConstructors();
 
   searchControl ??= createSearchControl(SearchControlClass);
@@ -2874,7 +2874,7 @@ async function openStandaloneSearchControl(app: GeoLibreAppAPI): Promise<boolean
   return true;
 }
 
-async function openStandaloneMeasureControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneMeasureControl(app: GeoIntAppAPI): Promise<boolean> {
   const { MeasureControl: MeasureControlClass } = await getComponentsConstructors();
 
   measureControl ??= createMeasureControl(MeasureControlClass);
@@ -2907,7 +2907,7 @@ async function openStandaloneMeasureControl(app: GeoLibreAppAPI): Promise<boolea
   return true;
 }
 
-async function openStandaloneBookmarkControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneBookmarkControl(app: GeoIntAppAPI): Promise<boolean> {
   const { BookmarkControl: BookmarkControlClass } = await getComponentsConstructors();
 
   bookmarkControl ??= createBookmarkControl(BookmarkControlClass, app);
@@ -2930,7 +2930,7 @@ async function openStandaloneBookmarkControl(app: GeoLibreAppAPI): Promise<boole
   return true;
 }
 
-async function openStandaloneSpinGlobeControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneSpinGlobeControl(app: GeoIntAppAPI): Promise<boolean> {
   const { SpinGlobeControl: SpinGlobeControlClass } = await getComponentsConstructors();
 
   spinGlobeControl ??= createSpinGlobeControl(SpinGlobeControlClass);
@@ -2963,7 +2963,7 @@ function createSpinGlobeControl(
   return new SpinGlobeControlClass(SPIN_GLOBE_OPTIONS);
 }
 
-function teardownSpinGlobeControl(app: GeoLibreAppAPI): void {
+function teardownSpinGlobeControl(app: GeoIntAppAPI): void {
   if (spinGlobeControl && spinGlobeControlMounted) {
     // Stop the rotation before removing so a torn-down control can't keep
     // drifting the map center via a still-running animation frame.
@@ -2983,7 +2983,7 @@ function setSpinGlobePanelVisible(visible: boolean): void {
   }
 }
 
-async function openStandaloneMinimapControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneMinimapControl(app: GeoIntAppAPI): Promise<boolean> {
   const { MinimapControl: MinimapControlClass } = await getComponentsConstructors();
 
   minimapControl ??= createMinimapControl(MinimapControlClass, app.getActiveBasemap());
@@ -3015,7 +3015,7 @@ async function openStandaloneMinimapControl(app: GeoLibreAppAPI): Promise<boolea
 // Swap the mounted minimap for a fresh instance built with the current
 // basemap. MinimapControl bakes the style in at construction and exposes no
 // style setter, so a rebuild is the only way to follow a basemap change.
-async function refreshMinimapBasemap(app: GeoLibreAppAPI): Promise<void> {
+async function refreshMinimapBasemap(app: GeoIntAppAPI): Promise<void> {
   if (!minimapControl || !minimapControlMounted) return;
   const controlAtStart = minimapControl;
   const { MinimapControl: MinimapControlClass } = await getComponentsConstructors();
@@ -3052,7 +3052,7 @@ async function refreshMinimapBasemap(app: GeoLibreAppAPI): Promise<void> {
   }, 0);
 }
 
-async function openStandaloneViewStateControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneViewStateControl(app: GeoIntAppAPI): Promise<boolean> {
   const { ViewStateControl: ViewStateControlClass } = await getComponentsConstructors();
 
   viewStateControl ??= createViewStateControl(ViewStateControlClass);
@@ -3075,7 +3075,7 @@ async function openStandaloneViewStateControl(app: GeoLibreAppAPI): Promise<bool
   return true;
 }
 
-async function openStandaloneStacSearchControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneStacSearchControl(app: GeoIntAppAPI): Promise<boolean> {
   const { StacSearchControl: StacSearchControlClass } = await getComponentsConstructors();
 
   stacSearchControl ??= createStacSearchControl(StacSearchControlClass);
@@ -3096,7 +3096,7 @@ async function openStandaloneStacSearchControl(app: GeoLibreAppAPI): Promise<boo
   return true;
 }
 
-async function openStandaloneZarrControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneZarrControl(app: GeoIntAppAPI): Promise<boolean> {
   const { ZarrLayerControl: ZarrLayerControlClass } = await getComponentsConstructors();
 
   zarrControl ??= createZarrControl(ZarrLayerControlClass);
@@ -3117,7 +3117,7 @@ async function openStandaloneZarrControl(app: GeoLibreAppAPI): Promise<boolean> 
   return true;
 }
 
-async function openStandaloneColorbarControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneColorbarControl(app: GeoIntAppAPI): Promise<boolean> {
   const { ColorbarGuiControl: ColorbarGuiControlClass } = await getComponentsConstructors();
 
   colorbarControl ??= createColorbarControl(ColorbarGuiControlClass);
@@ -3141,7 +3141,7 @@ async function openStandaloneColorbarControl(app: GeoLibreAppAPI): Promise<boole
   return true;
 }
 
-async function openStandaloneLegendControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneLegendControl(app: GeoIntAppAPI): Promise<boolean> {
   const { LegendGuiControl: LegendGuiControlClass } = await getComponentsConstructors();
 
   legendControl ??= createLegendControl(LegendGuiControlClass);
@@ -3163,7 +3163,7 @@ async function openStandaloneLegendControl(app: GeoLibreAppAPI): Promise<boolean
   return true;
 }
 
-async function openStandaloneHtmlControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneHtmlControl(app: GeoIntAppAPI): Promise<boolean> {
   const { HtmlGuiControl: HtmlGuiControlClass } = await getComponentsConstructors();
 
   htmlControl ??= createHtmlControl(HtmlGuiControlClass);
@@ -3186,7 +3186,7 @@ async function openStandaloneHtmlControl(app: GeoLibreAppAPI): Promise<boolean> 
 }
 
 async function openStandaloneLidarControl(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: { reveal?: boolean } = {},
 ): Promise<boolean> {
   // `reveal` shows and expands the panel (the default, for the Add LiDAR Layer
@@ -3226,7 +3226,7 @@ async function openStandaloneLidarControl(
  * Read the source URL of a `lidar-url` layer, preferring the dedicated
  * `sourcePath` and falling back to `source.url`.
  */
-function lidarLayerUrl(layer: GeoLibreLayer): string | null {
+function lidarLayerUrl(layer: GeoIntLayer): string | null {
   if (typeof layer.sourcePath === "string" && layer.sourcePath) {
     return layer.sourcePath;
   }
@@ -3235,7 +3235,7 @@ function lidarLayerUrl(layer: GeoLibreLayer): string | null {
 }
 
 /** Whether a restore is already queued or in flight for this specific layer. */
-function isLidarRestorePending(layer: GeoLibreLayer): boolean {
+function isLidarRestorePending(layer: GeoIntLayer): boolean {
   for (const queue of pendingLidarRestores.values()) {
     if (queue.some((pending) => pending.layerId === layer.id)) return true;
   }
@@ -3250,7 +3250,7 @@ function isLidarRestorePending(layer: GeoLibreLayer): boolean {
  * layer in {@link createLidarLoadHandler}, preserving its visibility, opacity,
  * style, name, and position.
  */
-export async function restoreLidarLayers(app: GeoLibreAppAPI): Promise<void> {
+export async function restoreLidarLayers(app: GeoIntAppAPI): Promise<void> {
   if (lidarRestoreInFlight) return;
 
   const pending = useAppStore
@@ -3311,7 +3311,7 @@ export async function restoreLidarLayers(app: GeoLibreAppAPI): Promise<void> {
   }
 }
 
-async function openStandaloneSplattingControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneSplattingControl(app: GeoIntAppAPI): Promise<boolean> {
   const {
     GaussianSplatControl: GaussianSplatControlClass,
     GaussianSplatLayerAdapter: GaussianSplatLayerAdapterClass,
@@ -3414,7 +3414,7 @@ function createCogRasterControl(CogLayerControlClass: CogLayerControlConstructor
 }
 
 // --- Layer Swipe COG integration -------------------------------------------
-// GeoLibre renders COG rasters (Vantor Open Data, STAC "Visualize", etc.)
+// GeoInt renders COG rasters (Vantor Open Data, STAC "Visualize", etc.)
 // through the CogLayerControl deck.gl overlay, so they are MapLibre custom
 // layers that Layer Swipe cannot see through getStyle(). These helpers let the
 // swipe plugin's layerProvider list them and render each per its side
@@ -3460,7 +3460,7 @@ function notifySwipeCogChange(): void {
     try {
       listener();
     } catch (error) {
-      console.warn("[GeoLibre] swipe COG change listener", error);
+      console.warn("[GeoInt] swipe COG change listener", error);
     }
   }
 }
@@ -3471,7 +3471,7 @@ function notifySwipeCogChange(): void {
  * unrelated layer changed. Cheaper than the refreshLayers()/reconcile pass it
  * guards.
  */
-function swipeCogFingerprint(layers: GeoLibreLayer[]): string {
+function swipeCogFingerprint(layers: GeoIntLayer[]): string {
   const parts: unknown[][] = [];
   for (const layer of layers) {
     if (!isCogRasterControlLayer(layer)) continue;
@@ -3664,7 +3664,7 @@ export async function mirrorAddCogLayer(
   await control.addLayer(snapshot.url);
   const newId = control.getLayerIds().find((id) => !before.has(id)) ?? null;
   if (!newId) {
-    console.debug("[GeoLibre] swipe COG mirror: no new layer id after addLayer", snapshot.url);
+    console.debug("[GeoInt] swipe COG mirror: no new layer id after addLayer", snapshot.url);
   }
   return newId;
 }
@@ -3920,7 +3920,7 @@ function makeMeasurePanelResizable(control: MeasureControl): void {
 
 function createBookmarkControl(
   BookmarkControlClass: BookmarkControlConstructor,
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
 ): BookmarkControl {
   const control = new BookmarkControlClass({
     ...BOOKMARK_OPTIONS,
@@ -3944,7 +3944,7 @@ function createBookmarkControl(
  * used instead. Falls back to the control's originals if the host does not
  * provide the helpers.
  */
-function routeBookmarkFileIoThroughHost(control: BookmarkControl, app: GeoLibreAppAPI): void {
+function routeBookmarkFileIoThroughHost(control: BookmarkControl, app: GeoIntAppAPI): void {
   // `_exportToFile`/`_importFromFile` are private (underscore-prefixed) members
   // of BookmarkControl as of maplibre-gl-components@0.21.0. If a future version
   // renames them, the overrides below silently stop being called and file I/O
@@ -4047,7 +4047,7 @@ function createViewStateControl(
 }
 
 /**
- * Read the current GeoLibre theme from the `dark` class that the desktop app
+ * Read the current GeoInt theme from the `dark` class that the desktop app
  * toggles on the document element so the PrintControl panel can be forced to
  * match it (rather than following the system `prefers-color-scheme`, which may
  * differ from the in-app theme).
@@ -4136,7 +4136,7 @@ function createColorbarControl(
 ): ColorbarGuiControl {
   const control = new ColorbarGuiControlClass(COLORBAR_OPTIONS);
   control.on("expand", () => {
-    constrainGuiPanelToViewport(".geolibre-colorbar-control .colorbar-gui-panel");
+    constrainGuiPanelToViewport(".geoint-colorbar-control .colorbar-gui-panel");
     setColorbarPanelVisible(true);
   });
   return control;
@@ -4145,7 +4145,7 @@ function createColorbarControl(
 function createLegendControl(LegendGuiControlClass: LegendGuiControlConstructor): LegendGuiControl {
   const control = new LegendGuiControlClass(LEGEND_OPTIONS);
   control.on("expand", () => {
-    constrainGuiPanelToViewport(".geolibre-legend-control .legend-gui-panel");
+    constrainGuiPanelToViewport(".geoint-legend-control .legend-gui-panel");
     setLegendPanelVisible(true);
   });
   return control;
@@ -4154,7 +4154,7 @@ function createLegendControl(LegendGuiControlClass: LegendGuiControlConstructor)
 function createHtmlControl(HtmlGuiControlClass: HtmlGuiControlConstructor): HtmlGuiControl {
   const control = new HtmlGuiControlClass(HTML_OPTIONS);
   control.on("expand", () => {
-    constrainGuiPanelToViewport(".geolibre-html-control .html-gui-panel");
+    constrainGuiPanelToViewport(".geoint-html-control .html-gui-panel");
     setHtmlPanelVisible(true);
   });
   return control;
@@ -4191,7 +4191,7 @@ function createStacSearchControl(
   return control;
 }
 
-function teardownFlatGeobufControl(app: GeoLibreAppAPI): void {
+function teardownFlatGeobufControl(app: GeoIntAppAPI): void {
   flatGeobufStoreUnsubscribe?.();
   flatGeobufStoreUnsubscribe = null;
   if (flatGeobufControl && flatGeobufControlMounted) {
@@ -4201,7 +4201,7 @@ function teardownFlatGeobufControl(app: GeoLibreAppAPI): void {
   flatGeobufControlMounted = false;
 }
 
-function teardownCogRasterControl(app: GeoLibreAppAPI): void {
+function teardownCogRasterControl(app: GeoIntAppAPI): void {
   cogRasterStoreUnsubscribe?.();
   cogRasterStoreUnsubscribe = null;
   if (cogRasterControl && cogRasterControlMounted) {
@@ -4211,7 +4211,7 @@ function teardownCogRasterControl(app: GeoLibreAppAPI): void {
   cogRasterControlMounted = false;
 }
 
-function teardownGeoTiffRasterOverlay(app: GeoLibreAppAPI): void {
+function teardownGeoTiffRasterOverlay(app: GeoIntAppAPI): void {
   geoTiffRasterStoreUnsubscribe?.();
   geoTiffRasterStoreUnsubscribe = null;
   geoTiffRasterLayerProps.clear();
@@ -4224,7 +4224,7 @@ function teardownGeoTiffRasterOverlay(app: GeoLibreAppAPI): void {
   geoTiffRasterOverlayMounted = false;
 }
 
-function teardownPMTilesControl(app: GeoLibreAppAPI): void {
+function teardownPMTilesControl(app: GeoIntAppAPI): void {
   pmtilesStoreUnsubscribe?.();
   pmtilesStoreUnsubscribe = null;
   if (pmtilesControl && pmtilesControlMounted) {
@@ -4234,7 +4234,7 @@ function teardownPMTilesControl(app: GeoLibreAppAPI): void {
   pmtilesControlMounted = false;
 }
 
-function teardownSearchControl(app: GeoLibreAppAPI): void {
+function teardownSearchControl(app: GeoIntAppAPI): void {
   if (searchControl && searchControlMounted) {
     app.removeMapControl(searchControl);
   }
@@ -4243,7 +4243,7 @@ function teardownSearchControl(app: GeoLibreAppAPI): void {
   setSearchPlacesPanelVisible(false);
 }
 
-function teardownPrintControl(app: GeoLibreAppAPI): void {
+function teardownPrintControl(app: GeoIntAppAPI): void {
   stopPrintThemeSync();
   if (printControl && printControlMounted) {
     app.removeMapControl(printControl);
@@ -4266,7 +4266,7 @@ function setPrintPanelVisible(visible: boolean): void {
   }
 }
 
-function teardownStacSearchControl(app: GeoLibreAppAPI): void {
+function teardownStacSearchControl(app: GeoIntAppAPI): void {
   stacSearchStoreUnsubscribe?.();
   stacSearchStoreUnsubscribe = null;
   if (stacSearchControl && stacSearchControlMounted) {
@@ -4289,7 +4289,7 @@ function setSearchPlacesPanelVisible(visible: boolean): void {
   }
 }
 
-function teardownMeasureControl(app: GeoLibreAppAPI): void {
+function teardownMeasureControl(app: GeoIntAppAPI): void {
   measureTerrainDetach?.();
   measureTerrainDetach = null;
   if (measureControl && measureControlMounted) {
@@ -4308,7 +4308,7 @@ function setMeasurePanelVisible(visible: boolean): void {
   }
 }
 
-function teardownBookmarkControl(app: GeoLibreAppAPI): void {
+function teardownBookmarkControl(app: GeoIntAppAPI): void {
   if (bookmarkControl && bookmarkControlMounted) {
     app.removeMapControl(bookmarkControl);
   }
@@ -4325,7 +4325,7 @@ function setBookmarkPanelVisible(visible: boolean): void {
   }
 }
 
-function teardownMinimapControl(app: GeoLibreAppAPI): void {
+function teardownMinimapControl(app: GeoIntAppAPI): void {
   minimapBasemapUnsubscribe?.();
   minimapBasemapUnsubscribe = null;
   if (minimapControl && minimapControlMounted) {
@@ -4344,7 +4344,7 @@ function setMinimapPanelVisible(visible: boolean): void {
   }
 }
 
-function teardownViewStateControl(app: GeoLibreAppAPI): void {
+function teardownViewStateControl(app: GeoIntAppAPI): void {
   if (viewStateControl && viewStateControlMounted) {
     app.removeMapControl(viewStateControl);
   }
@@ -4361,7 +4361,7 @@ function setViewStatePanelVisible(visible: boolean): void {
   }
 }
 
-function teardownZarrControl(app: GeoLibreAppAPI): void {
+function teardownZarrControl(app: GeoIntAppAPI): void {
   zarrStoreUnsubscribe?.();
   zarrStoreUnsubscribe = null;
   if (zarrControl && zarrControlMounted) {
@@ -4371,7 +4371,7 @@ function teardownZarrControl(app: GeoLibreAppAPI): void {
   zarrControlMounted = false;
 }
 
-function teardownColorbarControl(app: GeoLibreAppAPI): void {
+function teardownColorbarControl(app: GeoIntAppAPI): void {
   if (colorbarControl && colorbarControlMounted) {
     app.removeMapControl(colorbarControl);
   }
@@ -4388,7 +4388,7 @@ function setColorbarPanelVisible(visible: boolean): void {
   }
 }
 
-function teardownLegendControl(app: GeoLibreAppAPI): void {
+function teardownLegendControl(app: GeoIntAppAPI): void {
   if (legendControl && legendControlMounted) {
     app.removeMapControl(legendControl);
   }
@@ -4405,7 +4405,7 @@ function setLegendPanelVisible(visible: boolean): void {
   }
 }
 
-function teardownHtmlControl(app: GeoLibreAppAPI): void {
+function teardownHtmlControl(app: GeoIntAppAPI): void {
   if (htmlControl && htmlControlMounted) {
     app.removeMapControl(htmlControl);
   }
@@ -4422,7 +4422,7 @@ function setHtmlPanelVisible(visible: boolean): void {
   }
 }
 
-function teardownLidarControl(app: GeoLibreAppAPI): void {
+function teardownLidarControl(app: GeoIntAppAPI): void {
   stopLidarThemeSync();
   // Clear restore bookkeeping so a teardown mid-restore (project reload, map
   // re-init) cannot strand the in-flight guard and block later restores.
@@ -4439,7 +4439,7 @@ function teardownLidarControl(app: GeoLibreAppAPI): void {
   lidarControlMounted = false;
 }
 
-function teardownSplattingControl(app: GeoLibreAppAPI): void {
+function teardownSplattingControl(app: GeoIntAppAPI): void {
   splattingStoreUnsubscribe?.();
   splattingStoreUnsubscribe = null;
   splattingLayerAdapter?.destroy();
@@ -4469,7 +4469,7 @@ function createLidarLoadHandler(): LidarControlEventHandler {
       if (restoreQueue && restoreQueue.length === 0) {
         pendingLidarRestores.delete(restoreKey);
       }
-      const restored: GeoLibreLayer = {
+      const restored: GeoIntLayer = {
         ...layer,
         name: restore.name || layer.name,
         visible: restore.visible,
@@ -4737,7 +4737,7 @@ function addLayerWithCogRasterControl(
 }
 
 async function addGeoTiffRasterLayer(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: CogRasterLayerOptions,
   cause: unknown = undefined,
 ): Promise<string> {
@@ -4774,7 +4774,7 @@ async function addGeoTiffRasterLayer(
   return id;
 }
 
-async function ensureGeoTiffRasterOverlay(app: GeoLibreAppAPI): Promise<MapboxOverlay | null> {
+async function ensureGeoTiffRasterOverlay(app: GeoIntAppAPI): Promise<MapboxOverlay | null> {
   const { MapboxOverlay: MapboxOverlayClass } = await import("@deck.gl/mapbox");
   geoTiffRasterOverlay ??= new MapboxOverlayClass({
     interleaved: false,
@@ -4822,7 +4822,7 @@ async function ensureGeoTiffRasterOverlay(app: GeoLibreAppAPI): Promise<MapboxOv
 }
 
 async function fetchGeoTiffRasterInput(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: CogRasterLayerOptions,
   url: string,
   cause: unknown,
@@ -5124,7 +5124,7 @@ function createFlatGeobufStoreLayer(
   id: string,
   layerInfo: AddVectorLayerInfo,
   control: AddVectorControl,
-): GeoLibreLayer {
+): GeoIntLayer {
   const nativeLayerIds = control
     .getLayerIds()
     .filter((layerId) => layerInfo.layerIds.includes(layerId));
@@ -5164,7 +5164,7 @@ function createCogRasterStoreLayer(
   id: string,
   layerInfo: CogLayerInfo,
   options?: CogRasterLayerOptions,
-): GeoLibreLayer {
+): GeoIntLayer {
   const url = options?.url ?? layerInfo.url;
   const bands = options?.bands?.trim() || layerInfo.bands || "1";
   const colormap = options?.colormap ?? layerInfo.colormap;
@@ -5210,7 +5210,7 @@ function createCogRasterStoreLayer(
   };
 }
 
-function createGeoTiffRasterStoreLayer(state: GeoTiffRasterLayerState): GeoLibreLayer {
+function createGeoTiffRasterStoreLayer(state: GeoTiffRasterLayerState): GeoIntLayer {
   const bands = state.options.bands?.trim() || "1";
   const colormap = state.options.colormap ?? "none";
   const rescaleMin = state.options.rescaleMin ?? 0;
@@ -5257,7 +5257,7 @@ function createGeoTiffRasterStoreLayer(state: GeoTiffRasterLayerState): GeoLibre
   };
 }
 
-function createPMTilesStoreLayer(id: string, layerInfo: PMTilesLayerInfo): GeoLibreLayer {
+function createPMTilesStoreLayer(id: string, layerInfo: PMTilesLayerInfo): GeoIntLayer {
   const firstSourceLayer = layerInfo.sourceLayers[0];
   const fillColor =
     (firstSourceLayer && layerInfo.sourceLayerColors?.[firstSourceLayer]) ??
@@ -5296,7 +5296,7 @@ function createPMTilesStoreLayer(id: string, layerInfo: PMTilesLayerInfo): GeoLi
   };
 }
 
-function createZarrStoreLayer(id: string, layerInfo: ZarrLayerInfo): GeoLibreLayer {
+function createZarrStoreLayer(id: string, layerInfo: ZarrLayerInfo): GeoIntLayer {
   const name =
     layerInfo.name ||
     [layerNameFromUrl(layerInfo.url, id), layerInfo.variable].filter(Boolean).join(" - ");
@@ -5356,7 +5356,7 @@ function createStacSearchStoreLayer(
   item?: StacSearchItem | null,
   collectionId?: string,
   catalogUrl?: string,
-): GeoLibreLayer {
+): GeoIntLayer {
   const rasterLayerInfo = getStacSearchRasterLayerInfo(snapshot.layer);
   const deckLayerProps = "props" in snapshot.layer ? snapshot.layer.props : {};
   const sourceKind = rasterLayerInfo ? "stac-search-raster" : "stac-search-cog";
@@ -5405,7 +5405,7 @@ function createStacSearchStoreLayer(
   };
 }
 
-function createLidarStoreLayer(pointCloud: PointCloudInfo): GeoLibreLayer {
+function createLidarStoreLayer(pointCloud: PointCloudInfo): GeoIntLayer {
   return {
     id: pointCloud.id,
     name: pointCloud.name || layerNameFromUrl(pointCloud.source, pointCloud.id),
@@ -5444,7 +5444,7 @@ function createSplattingStoreLayer(
   id: string,
   url: string,
   assetType: "model" | "splat",
-): GeoLibreLayer {
+): GeoIntLayer {
   return {
     id,
     name: layerNameFromUrl(url, id),
@@ -5470,7 +5470,7 @@ function createSplattingStoreLayer(
   };
 }
 
-function isFlatGeobufControlLayer(layer: GeoLibreLayer): boolean {
+function isFlatGeobufControlLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "flatgeobuf" &&
     layer.metadata.sourceKind === "flatgeobuf-url" &&
@@ -5478,7 +5478,7 @@ function isFlatGeobufControlLayer(layer: GeoLibreLayer): boolean {
   );
 }
 
-function isCogRasterControlLayer(layer: GeoLibreLayer): boolean {
+function isCogRasterControlLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "cog" &&
     layer.metadata.sourceKind === "cog-url" &&
@@ -5486,7 +5486,7 @@ function isCogRasterControlLayer(layer: GeoLibreLayer): boolean {
   );
 }
 
-function isGeoTiffRasterLayer(layer: GeoLibreLayer): boolean {
+function isGeoTiffRasterLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "cog" &&
     layer.metadata.sourceKind === "geotiff-url" &&
@@ -5494,7 +5494,7 @@ function isGeoTiffRasterLayer(layer: GeoLibreLayer): boolean {
   );
 }
 
-function isPMTilesControlLayer(layer: GeoLibreLayer): boolean {
+function isPMTilesControlLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "pmtiles" &&
     layer.metadata.sourceKind === "pmtiles-url" &&
@@ -5502,7 +5502,7 @@ function isPMTilesControlLayer(layer: GeoLibreLayer): boolean {
   );
 }
 
-function isZarrControlLayer(layer: GeoLibreLayer): boolean {
+function isZarrControlLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "zarr" &&
     layer.metadata.sourceKind === "zarr-url" &&
@@ -5510,7 +5510,7 @@ function isZarrControlLayer(layer: GeoLibreLayer): boolean {
   );
 }
 
-function isStacSearchControlLayer(layer: GeoLibreLayer): boolean {
+function isStacSearchControlLayer(layer: GeoIntLayer): boolean {
   return (
     (layer.type === "cog" || layer.type === "raster") &&
     (layer.metadata.sourceKind === "stac-search-cog" ||
@@ -5519,7 +5519,7 @@ function isStacSearchControlLayer(layer: GeoLibreLayer): boolean {
   );
 }
 
-function isLidarControlLayer(layer: GeoLibreLayer): boolean {
+function isLidarControlLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "lidar" &&
     layer.metadata.sourceKind === "lidar-url" &&
@@ -5527,7 +5527,7 @@ function isLidarControlLayer(layer: GeoLibreLayer): boolean {
   );
 }
 
-function isSplattingControlLayer(layer: GeoLibreLayer): boolean {
+function isSplattingControlLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "gaussian-splat" &&
     layer.metadata.sourceKind === "splatting-url" &&

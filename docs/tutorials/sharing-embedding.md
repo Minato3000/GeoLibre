@@ -7,7 +7,7 @@ Once you have a map you like, you can publish it as a public link and embed it i
 Sharing uploads to `share.geolibre.app` using a personal API token.
 
 1. Open **Settings → Environment Variables**.
-2. Paste your token into the **Share.GeoLibre API token** field. Create one under Settings → API tokens at [share.geolibre.app/settings](https://share.geolibre.app/settings).
+2. Paste your token into the **Share.GeoInt API token** field. Create one under Settings → API tokens at [share.geolibre.app/settings](https://share.geolibre.app/settings).
 
 You only need to do this once.
 
@@ -15,9 +15,9 @@ You only need to do this once.
 
 1. Build your map: add layers, style them, and set the map view you want viewers to land on.
 2. Open **Project → Share...**.
-3. Confirm the project title and upload. GeoLibre returns a public URL to a `.geolibre.json` file, for example:
+3. Confirm the project title and upload. GeoInt returns a public URL to a `.geoint.json` file, for example:
    ```text
-   https://share.geolibre.app/you/my-map.geolibre.json
+   https://share.geolibre.app/you/my-map.geoint.json
    ```
 
 The shared file captures the same layers, styles, plugin state, and map view as a local save.
@@ -27,7 +27,7 @@ The shared file captures the same layers, styles, plugin state, and map view as 
 Anyone can open the shared project in the live viewer by passing it as the `url` parameter:
 
 ```text
-https://web.geolibre.app/?url=https://share.geolibre.app/you/my-map.geolibre.json
+https://web.geolibre.app/?url=https://share.geolibre.app/you/my-map.geoint.json
 ```
 
 ## 4. Embed it in a page
@@ -36,8 +36,8 @@ Use an `<iframe>` and the embed parameters to control the chrome. For a clean, m
 
 ```html
 <iframe
-  src="https://web.geolibre.app/?url=https://share.geolibre.app/you/my-map.geolibre.json&amp;maponly"
-  title="GeoLibre map"
+  src="https://web.geolibre.app/?url=https://share.geolibre.app/you/my-map.geoint.json&amp;maponly"
+  title="GeoInt map"
   width="100%"
   height="600"
   style="border: 0;"

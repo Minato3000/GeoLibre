@@ -1,6 +1,6 @@
 """Pure vector geometry operations (GeoPandas/Shapely), framework-free.
 
-This module is the single source of truth for the GeoLibre vector tools. It has
+This module is the single source of truth for the GeoInt vector tools. It has
 **no FastAPI dependency** so the exact same code runs in two places:
 
 * the FastAPI sidecar (``app/vector.py`` wraps :func:`run_vector_tool` and maps
@@ -607,7 +607,7 @@ def _reproject(
 ) -> tuple[dict, list[str]]:
     """Reinterpret a layer's coordinates as a source CRS and transform to WGS84.
 
-    GeoLibre stores and displays every vector layer as WGS84 GeoJSON, so the
+    GeoInt stores and displays every vector layer as WGS84 GeoJSON, so the
     only reprojection that yields a *displayable* result is mapping data that is
     really in some other CRS back to longitude/latitude. The common case is data
     whose coordinates are in a projected CRS (e.g. Web Mercator EPSG:3857) but

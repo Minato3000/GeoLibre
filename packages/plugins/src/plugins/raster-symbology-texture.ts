@@ -1,4 +1,4 @@
-import { type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { type GeoIntLayer, useAppStore } from "@geoint/core";
 import { createColormapTexture } from "@developmentseed/deck.gl-raster/gpu-modules";
 import { type AutoStats, computeAutoStats, loadGeoTIFF } from "maplibre-gl-raster";
 import {
@@ -38,7 +38,7 @@ type RasterLayerManager = {
   _colormapTexture?: unknown;
   _renderTileFor?: (layer: RasterLayerLike) => RenderTileFn;
   _rebuild?: () => void;
-  _deps?: { geolibreClassifiedPatched?: boolean };
+  _deps?: { geointClassifiedPatched?: boolean };
 };
 type ControlWithManager = {
   _layerManager?: RasterLayerManager;
@@ -64,7 +64,7 @@ function hasCustomColors(symbology: RasterSymbology): boolean {
 }
 
 /**
- * Whether a single-band layer needs a GeoLibre-injected colormap texture: a
+ * Whether a single-band layer needs a GeoInt-injected colormap texture: a
  * stepped lookup when classified, or a smooth gradient when a custom ramp is
  * applied to a continuous layer. A built-in continuous ramp renders through
  * the upstream sprite (including its native `reversed`), so it needs no texture.
@@ -74,7 +74,7 @@ function needsTexture(symbology: RasterSymbology): boolean {
 }
 
 /** Reads `rasterState.reversed` from a store layer's metadata. */
-function readRasterReversed(layer: GeoLibreLayer): boolean {
+function readRasterReversed(layer: GeoIntLayer): boolean {
   const raw = layer.metadata.rasterState;
   return (
     !!raw &&
@@ -108,7 +108,7 @@ function symbologyKey(symbology: RasterSymbology, reversed: boolean): string {
  * Installs the per-layer symbology injection on a raster control. Wraps the
  * LayerManager's `_renderTileFor` so a single-band layer renders through the
  * unchanged upstream pipeline (composite / nodata / rescale / stretch) but,
- * when classified or using a custom ramp, samples a GeoLibre-built colormap
+ * when classified or using a custom ramp, samples a GeoInt-built colormap
  * texture instead of the shared named-colormap sprite (reversal baked in).
  * Built-in continuous ramps -- including their reversal via
  * `rasterState.reversed` -- render through the upstream control untouched.
@@ -125,13 +125,13 @@ export function installRasterClassification(control: unknown): void {
     typeof createColormapTexture !== "function"
   ) {
     console.warn(
-      "[GeoLibre] Raster classification unavailable: maplibre-gl-raster internals not found (re-verify on dependency bump).",
+      "[GeoInt] Raster classification unavailable: maplibre-gl-raster internals not found (re-verify on dependency bump).",
     );
     return;
   }
 
   manager._deps ??= {};
-  if (!manager._deps.geolibreClassifiedPatched) {
+  if (!manager._deps.geointClassifiedPatched) {
     const originalRenderTileFor = manager._renderTileFor.bind(manager);
     manager._renderTileFor = (layer: RasterLayerLike): RenderTileFn => {
       const renderTile = originalRenderTileFor(layer);
@@ -175,7 +175,7 @@ export function installRasterClassification(control: unknown): void {
         return { ...result, renderPipeline: patched };
       };
     };
-    manager._deps.geolibreClassifiedPatched = true;
+    manager._deps.geointClassifiedPatched = true;
   }
 
   subscribeToStore();
@@ -218,7 +218,7 @@ function ensureTexture(manager: RasterLayerManager, entry: ClassificationEntry):
     entry.key = key;
     return entry.texture;
   } catch (error) {
-    console.error("[GeoLibre] Failed to build raster classification texture", error);
+    console.error("[GeoInt] Failed to build raster classification texture", error);
     entry.texture = undefined;
     return null;
   }
@@ -424,7 +424,7 @@ export async function getRasterBandStats(
     return bandStatsFromAuto(auto, band);
   } catch (error) {
     if (!controller.signal.aborted) {
-      console.warn(`[GeoLibre] Failed to compute raster statistics for layer "${layerId}"`, error);
+      console.warn(`[GeoInt] Failed to compute raster statistics for layer "${layerId}"`, error);
     }
     return null;
   } finally {

@@ -1,16 +1,16 @@
 import type { Popup, PopupOptions } from "maplibre-gl";
 
 /** JS-observable marker for occluded popups; visual hiding is applied inline. */
-export const GLOBE_POPUP_OCCLUDED_CLASS = "geolibre-globe-popup-occluded";
+export const GLOBE_POPUP_OCCLUDED_CLASS = "geoint-globe-popup-occluded";
 
 const DEFAULT_OCCLUDED_OPACITY = 0;
 const ZERO_OPACITY_STRING = /^[+-]?(?:0+(?:\.0*)?|\.(?:0+))$/;
 
 // Registered with Symbol.for so a second copy of this module (a duplicated
-// @geolibre/map inside a plugin bundle) recognizes the first copy's work and
+// @geoint/map inside a plugin bundle) recognizes the first copy's work and
 // does not wrap `addTo` — or a popup's `_updateOpacity` — twice.
-const PATCHED_PROTOTYPE = Symbol.for("geolibre.globePopupOcclusion.patchedPrototype");
-const INSTRUMENTED_POPUP = Symbol.for("geolibre.globePopupOcclusion.instrumentedPopup");
+const PATCHED_PROTOTYPE = Symbol.for("geoint.globePopupOcclusion.patchedPrototype");
+const INSTRUMENTED_POPUP = Symbol.for("geoint.globePopupOcclusion.instrumentedPopup");
 
 type PopupConstructor = new (options?: PopupOptions) => Popup;
 

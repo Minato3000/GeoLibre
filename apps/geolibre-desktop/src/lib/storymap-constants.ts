@@ -1,4 +1,4 @@
-import type { StoryActiveSlideMode } from "@geolibre/core";
+import type { StoryActiveSlideMode } from "@geoint/core";
 
 /** Basemap style for the story-map inset minimap (in-app and export). */
 export const STORY_INSET_STYLE_URL =

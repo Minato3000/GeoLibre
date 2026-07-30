@@ -14,8 +14,8 @@ describe("plugin asset URLs", () => {
     );
 
     assert.equal(
-      withPluginAssetCacheToken(assetUrl, 'geolibre-nasa-opera|0.3.0|W/"abc"'),
-      "https://example.com/plugins/nasa-opera/dist/index.js?__geolibre_plugin_cache=geolibre-nasa-opera%7C0.3.0%7CW%2F%22abc%22",
+      withPluginAssetCacheToken(assetUrl, 'geoint-nasa-opera|0.3.0|W/"abc"'),
+      "https://example.com/plugins/nasa-opera/dist/index.js?__geoint_plugin_cache=geoint-nasa-opera%7C0.3.0%7CW%2F%22abc%22",
     );
   });
 

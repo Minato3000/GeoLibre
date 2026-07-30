@@ -8,9 +8,9 @@
  * `watchPosition` subscription, map markers/sources, and store wiring and
  * delegates the data shaping to these functions.
  *
- * A saved track/capture layer is an ordinary `geojson` GeoLibreLayer tagged via
+ * A saved track/capture layer is an ordinary `geojson` GeoIntLayer tagged via
  * `metadata` (see {@link GPS_TRACK_FLAG} / {@link GPS_CAPTURE_FLAG}), so it
- * rides through `.geolibre.json` save/load like any other inline layer.
+ * rides through `.geoint.json` save/load like any other inline layer.
  */
 import type {
   Feature,
@@ -357,7 +357,7 @@ function gpxTrkpt(fix: GpsFix, indent: string): string {
   if (fix.satellites != null) lines.push(`${indent}  <sat>${fix.satellites}</sat>`);
   lines.push(
     `${indent}  <extensions>`,
-    `${indent}    <geolibre:accuracy_m>${exportAccuracy(fix.accuracy)}</geolibre:accuracy_m>`,
+    `${indent}    <geoint:accuracy_m>${exportAccuracy(fix.accuracy)}</geoint:accuracy_m>`,
     `${indent}  </extensions>`,
     `${indent}</trkpt>`,
   );
@@ -367,7 +367,7 @@ function gpxTrkpt(fix: GpsFix, indent: string): string {
 /**
  * Serialize a recorded track to a GPX 1.1 document: one `<trk>` with a
  * `<trkseg>` per continuous segment (pause/resume boundaries), per-point
- * elevation, timestamps, standard GPX satellite counts, and a GeoLibre
+ * elevation, timestamps, standard GPX satellite counts, and a GeoInt
  * extension for horizontal accuracy. The complement of the reader in
  * `gpx.ts`, which is import-only.
  */
@@ -377,7 +377,7 @@ export function buildTrackGpx(segments: GpsTrackSegments, name: string): string 
   );
   return [
     `<?xml version="1.0" encoding="UTF-8"?>`,
-    `<gpx version="1.1" creator="GeoLibre" xmlns="http://www.topografix.com/GPX/1/1" xmlns:geolibre="https://geolibre.org/xmlschemas/GpxExtensions/v1">`,
+    `<gpx version="1.1" creator="GeoInt" xmlns="http://www.topografix.com/GPX/1/1" xmlns:geoint="https://geoint.org/xmlschemas/GpxExtensions/v1">`,
     `  <trk>`,
     `    <name>${escapeXml(name)}</name>`,
     segs.join("\n"),

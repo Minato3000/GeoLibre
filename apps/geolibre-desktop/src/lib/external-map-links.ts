@@ -64,7 +64,7 @@ export function googleMapsUrl(
  * camera distance that matches the given web-mercator zoom. Mercator
  * metres-per-pixel shrink with cos(latitude), so the distance does too —
  * without the correction a high-latitude view would open far more zoomed out
- * in Google Earth than it looks in GeoLibre.
+ * in Google Earth than it looks in GeoInt.
  */
 export function googleEarthUrl(lat: number, lng: number, zoom: number): string {
   const clampedLat = clamp(lat, -90, 90);

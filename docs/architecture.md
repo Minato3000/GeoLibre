@@ -1,8 +1,8 @@
-# GeoLibre Architecture
+# GeoInt Architecture
 
 ## Overview
 
-GeoLibre is a free and open-source, lightweight, cloud-native GIS platform that runs in the web browser, on the desktop, on mobile, and inside Jupyter notebooks, all from a single npm workspaces monorepo. The UI is a React app that ships as a native desktop app hosted by Tauri v2 and as a browser-based web app, adapting responsively to mobile and small screens. Map rendering uses MapLibre GL JS in the browser webview, with deck.gl used for advanced raster, point cloud, and 3D overlays, and an optional [CesiumJS](https://cesium.com/platform/cesiumjs/) 3D-globe view (see [3D globe view (CesiumJS)](#3d-globe-view-cesiumjs)) offered as a split pane. Application state lives in a Zustand store (`@geolibre/core`).
+GeoInt is a free and open-source, lightweight, cloud-native GIS platform that runs in the web browser, on the desktop, on mobile, and inside Jupyter notebooks, all from a single npm workspaces monorepo. The UI is a React app that ships as a native desktop app hosted by Tauri v2 and as a browser-based web app, adapting responsively to mobile and small screens. Map rendering uses MapLibre GL JS in the browser webview, with deck.gl used for advanced raster, point cloud, and 3D overlays, and an optional [CesiumJS](https://cesium.com/platform/cesiumjs/) 3D-globe view (see [3D globe view (CesiumJS)](#3d-globe-view-cesiumjs)) offered as a split pane. Application state lives in a Zustand store (`@geoint/core`).
 
 ```mermaid
 flowchart LR
@@ -21,32 +21,32 @@ flowchart LR
 
 | Package | Responsibility |
 |---------|----------------|
-| `@geolibre/core` | Domain types, project JSON schema, global store |
-| `@geolibre/map` | MapLibre lifecycle, layer sync, GeoJSON, raster, tile, MBTiles, control, and selection styling |
-| `@geolibre/ui` | Shared UI primitives (shadcn-style) |
-| `@geolibre/processing` | Client-side algorithm registry |
-| `@geolibre/plugins` | Plugin interface and built-in plugins |
+| `@geoint/core` | Domain types, project JSON schema, global store |
+| `@geoint/map` | MapLibre lifecycle, layer sync, GeoJSON, raster, tile, MBTiles, control, and selection styling |
+| `@geoint/ui` | Shared UI primitives (shadcn-style) |
+| `@geoint/processing` | Client-side algorithm registry |
+| `@geoint/plugins` | Plugin interface and built-in plugins |
 | `geolibre-desktop` | Shell layout, Tauri I/O, composition |
 
 ## State flow
 
 1. User adds data through the Add Data menu, the Tauri dialog, browser file picker, drag and drop, or a built-in plugin control.
 2. Local vector data is parsed directly or converted to GeoJSON with DuckDB-WASM Spatial, then passed to `addGeoJsonLayer` in the store.
-3. Tile, service, raster, ArcGIS, MBTiles, and plugin-backed layers create `GeoLibreLayer` records with source metadata and native MapLibre layer ids when applicable.
+3. Tile, service, raster, ArcGIS, MBTiles, and plugin-backed layers create `GeoIntLayer` records with source metadata and native MapLibre layer ids when applicable.
 4. `MapCanvas` subscribes to `layers`, then `MapController.syncLayers` updates MapLibre sources and layers and keeps the layer control in sync.
 5. Style panel and layer panel updates change layer state, then map sync updates paint, visibility, opacity, ordering, and removal.
 6. Attribute table selections update the highlighted feature source and can zoom the map to the selected feature.
-7. Desktop save uses `projectFromStore` and writes `.geolibre.json` to disk.
+7. Desktop save uses `projectFromStore` and writes `.geoint.json` to disk.
 
 ## 3D globe view (CesiumJS)
 
-The 2D MapLibre map can be joined by a 3D globe rendered with [CesiumJS](https://cesium.com/platform/cesiumjs/), offered as a **split pane** rather than a whole-app engine swap. Because the store (`@geolibre/core`) is engine-agnostic — it holds plain `GeoLibreLayer` records and a `MapViewState`, not MapLibre objects — a second renderer plugs in by subscribing to the same store, exactly as the 2D `SecondaryMapCanvas` panes do. There is no engine abstraction layer: MapLibre stays the default and the primary map, and Cesium is a first-party view mode (not a plugin — the plugin API is MapLibre-typed).
+The 2D MapLibre map can be joined by a 3D globe rendered with [CesiumJS](https://cesium.com/platform/cesiumjs/), offered as a **split pane** rather than a whole-app engine swap. Because the store (`@geoint/core`) is engine-agnostic — it holds plain `GeoIntLayer` records and a `MapViewState`, not MapLibre objects — a second renderer plugs in by subscribing to the same store, exactly as the 2D `SecondaryMapCanvas` panes do. There is no engine abstraction layer: MapLibre stays the default and the primary map, and Cesium is a first-party view mode (not a plugin — the plugin API is MapLibre-typed).
 
-- **Enabling it.** Each secondary pane in the map grid carries a 2D/3D toggle. The globe is only offered when a Cesium Ion token is configured — Cesium World Imagery and Terrain require one — so without a token the toggle is hidden and a project saved with a globe pane opens as the 2D map. The token is resolved through `getCesiumIonToken()` (`@geolibre/core`), which reads `VITE_CESIUM_TOKEN`/`CESIUM_TOKEN` from the build **or** from a runtime override, so it can be set at build time (`CESIUM_TOKEN`; see [Optional 3D globe credentials](getting-started.md#optional-3d-globe-credentials-cesium-ion)) or at runtime with no rebuild. Settings → Environment Variables has a dedicated masked **Cesium Ion token** field backed by device-local `DesktopSettings` (localStorage, never the shared project file); `useRuntimeEnvironmentVariables` projects it into `VITE_CESIUM_TOKEN` on the `window.__GEOLIBRE_RUNTIME_ENV__` global (empty values are not projected, so they cannot blank a build-time token). `MapGrid` re-resolves the token on the `geolibre:runtime-env-change` event, so the toggle appears as soon as one is entered.
+- **Enabling it.** Each secondary pane in the map grid carries a 2D/3D toggle. The globe is only offered when a Cesium Ion token is configured — Cesium World Imagery and Terrain require one — so without a token the toggle is hidden and a project saved with a globe pane opens as the 2D map. The token is resolved through `getCesiumIonToken()` (`@geoint/core`), which reads `VITE_CESIUM_TOKEN`/`CESIUM_TOKEN` from the build **or** from a runtime override, so it can be set at build time (`CESIUM_TOKEN`; see [Optional 3D globe credentials](getting-started.md#optional-3d-globe-credentials-cesium-ion)) or at runtime with no rebuild. Settings → Environment Variables has a dedicated masked **Cesium Ion token** field backed by device-local `DesktopSettings` (localStorage, never the shared project file); `useRuntimeEnvironmentVariables` projects it into `VITE_CESIUM_TOKEN` on the `window.__GEOINT_RUNTIME_ENV__` global (empty values are not projected, so they cannot blank a build-time token). `MapGrid` re-resolves the token on the `geoint:runtime-env-change` event, so the toggle appears as soon as one is entered.
 - **Lazy loading.** The whole Cesium engine (~4.8 MB) is `import()`-ed only when a pane switches to the globe, kept in its own build chunk (`manualChunks`) and off the 2D boot path. A Vite plugin (`vite-plugins/copy-cesium-assets.ts`) stages Cesium's runtime Workers/Assets/Widgets into `public/cesium/` and the canvas sets `window.CESIUM_BASE_URL` so the engine finds them.
 - **Camera sync.** `packages/map/src/cesium-camera.ts` converts between MapLibre's Web-Mercator `MapViewState` (zoom, nadir-referenced pitch, bearing) and Cesium's camera (metric range, horizon-referenced pitch, heading), matched by **ground resolution** (metres per pixel) so the on-screen scale stays in step even when the panes differ in height. `CesiumCanvas` seeds its camera from the shared `mapView`, applies store changes to the globe, and writes the globe's own moves back — bidirectional, like the 2D panes — with a tolerance check that suppresses the apply→`moveEnd` echo so there is no jitter loop.
-- **Layer sync.** `CesiumLayerSync` (`packages/map/src/cesium-layer-sync.ts`) reconciles the store's `GeoLibreLayer[]` onto the globe the way `MapController.syncLayers` does for MapLibre, reusing the same per-pane visibility overrides and group effects as `SecondaryMapCanvas`. It renders the kinds where Cesium is the natural fit — GeoJSON (a draped `GeoJsonDataSource` styled from the layer's fill/stroke/opacity), XYZ/raster/WMTS and WMS (as `ImageryLayer`s), and 3D Tiles (a `Cesium3DTileset` primitive that consumes the layer's tileset URL, request headers, and altitude offset directly) — with live visibility/opacity, rebuild-on-source-change, and removal. Other layer kinds (PMTiles, MBTiles, Zarr, LiDAR, splats, deck.gl viz, …) are skipped on the globe and still render in the 2D panes; the exported `isCesiumSupportedLayerType` predicate lets the pane's layer menu tag those "2D only". COG/imagery-from-raster is a candidate for a later pass.
-- **Persistence.** A pane's `viewKind` is part of `SecondaryMapView` and round-trips through the `.geolibre.json` project format (`normalizeSecondaryMapViews`), so a project saved with a globe pane reopens as the globe — provided a token is available, otherwise it falls back to the 2D map.
+- **Layer sync.** `CesiumLayerSync` (`packages/map/src/cesium-layer-sync.ts`) reconciles the store's `GeoIntLayer[]` onto the globe the way `MapController.syncLayers` does for MapLibre, reusing the same per-pane visibility overrides and group effects as `SecondaryMapCanvas`. It renders the kinds where Cesium is the natural fit — GeoJSON (a draped `GeoJsonDataSource` styled from the layer's fill/stroke/opacity), XYZ/raster/WMTS and WMS (as `ImageryLayer`s), and 3D Tiles (a `Cesium3DTileset` primitive that consumes the layer's tileset URL, request headers, and altitude offset directly) — with live visibility/opacity, rebuild-on-source-change, and removal. Other layer kinds (PMTiles, MBTiles, Zarr, LiDAR, splats, deck.gl viz, …) are skipped on the globe and still render in the 2D panes; the exported `isCesiumSupportedLayerType` predicate lets the pane's layer menu tag those "2D only". COG/imagery-from-raster is a candidate for a later pass.
+- **Persistence.** A pane's `viewKind` is part of `SecondaryMapView` and round-trips through the `.geoint.json` project format (`normalizeSecondaryMapViews`), so a project saved with a globe pane reopens as the globe — provided a token is available, otherwise it falls back to the 2D map.
 
 ## DuckDB-WASM
 
@@ -61,7 +61,7 @@ GeoParquet is read with DuckDB's Parquet reader after loading Spatial. Other loc
 
 ## Advanced Add Data workflows
 
-The v1.0 Add Data surface includes native dialogs for XYZ, WMS, WFS, vector files (via the Add Vector dialog backed by `maplibre-gl-vector`), GeoJSON URLs, vector tile sources, delimited text, raster tile templates, COG and GeoTIFF rasters (via the Add Raster dialog backed by `maplibre-gl-raster`), MBTiles, ArcGIS FeatureServer or VectorTileServer layers, and GPX waypoints, tracks, and routes. It also supports 3D Tiles layers, WFS and GeoJSON URL refresh, text marker labels, and multiple DuckDB SQL query-result layers with identify, selection, and attribute table support. The Components plugin wraps `maplibre-gl-components` panels for FlatGeobuf, PMTiles, Zarr, LiDAR, and Gaussian splats, then mirrors added layers into the GeoLibre store so the Layer panel, project format, and layer control can reason about them. Additional data sources are available through the Planetary Computer and Earth Engine panels, the Overture Maps plugin, and the federal Web Services plugins. The Time Slider plugin, backed by `maplibre-gl-time-slider`, animates time series raster and vector data (COG, XYZ/WMTS, WMS-Time, and time-filtered GeoJSON) through a docked timeline, mirroring each source it adds into the GeoLibre store as an external native layer.
+The v1.0 Add Data surface includes native dialogs for XYZ, WMS, WFS, vector files (via the Add Vector dialog backed by `maplibre-gl-vector`), GeoJSON URLs, vector tile sources, delimited text, raster tile templates, COG and GeoTIFF rasters (via the Add Raster dialog backed by `maplibre-gl-raster`), MBTiles, ArcGIS FeatureServer or VectorTileServer layers, and GPX waypoints, tracks, and routes. It also supports 3D Tiles layers, WFS and GeoJSON URL refresh, text marker labels, and multiple DuckDB SQL query-result layers with identify, selection, and attribute table support. The Components plugin wraps `maplibre-gl-components` panels for FlatGeobuf, PMTiles, Zarr, LiDAR, and Gaussian splats, then mirrors added layers into the GeoInt store so the Layer panel, project format, and layer control can reason about them. Additional data sources are available through the Planetary Computer and Earth Engine panels, the Overture Maps plugin, and the federal Web Services plugins. The Time Slider plugin, backed by `maplibre-gl-time-slider`, animates time series raster and vector data (COG, XYZ/WMTS, WMS-Time, and time-filtered GeoJSON) through a docked timeline, mirroring each source it adds into the GeoInt store as an external native layer.
 
 Local MBTiles tiles are read through a custom MapLibre protocol backed by Tauri commands. Remote rasters are fetched through the desktop backend when needed, and the local development server includes a raster proxy for selected release assets that need CORS handling.
 
@@ -79,7 +79,7 @@ Future processing releases are expected to expand the same sidecar pattern for G
 
 ## Offline support (PWA)
 
-The standalone web build is an installable Progressive Web App. `vite-plugin-pwa` (configured in `apps/geolibre-desktop/vite.config.ts`) emits a web manifest plus a Workbox service worker, and `src/main.tsx` registers it next to `installStaleChunkReload` so the two coordinate. The service worker is built only for the web build; it is disabled for the Tauri desktop build (already offline via bundled assets) and the embedded Jupyter wheel (`GEOLIBRE_EMBED=1`), where `registerSW` resolves to a no-op.
+The standalone web build is an installable Progressive Web App. `vite-plugin-pwa` (configured in `apps/geolibre-desktop/vite.config.ts`) emits a web manifest plus a Workbox service worker, and `src/main.tsx` registers it next to `installStaleChunkReload` so the two coordinate. The service worker is built only for the web build; it is disabled for the Tauri desktop build (already offline via bundled assets) and the embedded Jupyter wheel (`GEOINT_EMBED=1`), where `registerSW` resolves to a no-op.
 
 Caching is split to keep the first visit light:
 
@@ -87,7 +87,7 @@ Caching is split to keep the first visit light:
 - **Runtime cache, CacheFirst.** The content-hashed build assets the precache skips (everything under `/assets/`) are cached on first use: the **MapLibre** bundle, **DuckDB-WASM and its spatial extension**, and the MapLibre feature-plugin chunks. Hashed filenames make CacheFirst safe — a redeploy mints new URLs, so a stale entry is never served as current. This is what makes local-file workflows (DuckDB Spatial conversion) work offline after they have run online once. Self-hosting the spatial extension via `VITE_DUCKDB_SPATIAL_EXTENSION_PATH` keeps it same-origin so it is cached too. **PGlite/PostGIS** is **not** in this list: it is fetched from the jsDelivr CDN (cross-origin) to keep it out of the build — ~25 MB raw, and ~22 MB of otherwise-incompressible weight in the Tauri binary — so the PostGIS SQL engine needs network on first use (see the Pyodide note below).
 - **Basemaps.** Tiles and styles from the CORS-friendly default hosts (OpenFreeMap, CARTO) are runtime-cached. Other remote tiles, services, and ArcGIS/WMS/WFS sources stay network-only by design and are unavailable offline.
 
-The **Pyodide** vector engine and the **PGlite/PostGIS** SQL engine are **not** offline-capable in the default configuration: both are loaded from the jsDelivr CDN (cross-origin), which the service worker does not cache. Point `VITE_PYODIDE_INDEX_URL` at a same-origin mirror to make Pyodide cacheable for offline use; build with `GEOLIBRE_PGLITE_CDN=0` to vendor PGlite/PostGIS back into the build (this re-adds ~22 MB to the Tauri binary). The same CDN dependency applies to the desktop build — it loads both from jsDelivr too.
+The **Pyodide** vector engine and the **PGlite/PostGIS** SQL engine are **not** offline-capable in the default configuration: both are loaded from the jsDelivr CDN (cross-origin), which the service worker does not cache. Point `VITE_PYODIDE_INDEX_URL` at a same-origin mirror to make Pyodide cacheable for offline use; build with `GEOINT_PGLITE_CDN=0` to vendor PGlite/PostGIS back into the build (this re-adds ~22 MB to the Tauri binary). The same CDN dependency applies to the desktop build — it loads both from jsDelivr too.
 
 A new deploy is picked up via `registerType: "autoUpdate"`: the new service worker installs in the background and takes control (`skipWaiting` + `clientsClaim`), so its fresh precache serves subsequent requests. Workbox's default force-reload-on-activation is deliberately suppressed via `onNeedReload` in `src/main.tsx` — on the relative-base `/demo/` subpath that reload fired spuriously and discarded in-progress map state. Page recovery is delegated to `installStaleChunkReload`, which reloads on-demand only when an orphaned lazy chunk 404s (cooldown-guarded; if `sessionStorage` is blocked it skips the reload and lets the preload error surface). Precached chunks are served from cache and never 404, so the page is no longer reloaded out from under the user.
 
@@ -97,7 +97,7 @@ The root Dockerfile packages the browser version of the app. It uses a Node buil
 
 The `Publish Container Image` GitHub Actions workflow builds the image for pull requests and publishes it to GitHub Container Registry for pushes to `main`, version tags, and manual runs. The upstream image name is `ghcr.io/opengeos/geolibre`.
 
-The image also bundles the optional Python sidecar (uvicorn) and reverse-proxies it at `/sidecar`, so the browser reaches it same-origin with no CORS; set `GEOLIBRE_DISABLE_SIDECAR=1` to run nginx alone. The container does not run the Tauri desktop shell, so workflows that depend on desktop filesystem access still require the installed desktop app. See [Run with Docker](getting-started.md#run-with-docker) for what the bundled sidecar does and does not back.
+The image also bundles the optional Python sidecar (uvicorn) and reverse-proxies it at `/sidecar`, so the browser reaches it same-origin with no CORS; set `GEOINT_DISABLE_SIDECAR=1` to run nginx alone. The container does not run the Tauri desktop shell, so workflows that depend on desktop filesystem access still require the installed desktop app. See [Run with Docker](getting-started.md#run-with-docker) for what the bundled sidecar does and does not back.
 
 ## Security
 
@@ -119,9 +119,9 @@ a client certificate with environment variables:
 
 | Variable | Purpose |
 | --- | --- |
-| `GEOLIBRE_HTTP_CA_CERT` | Path to a PEM bundle of extra CA certificate(s) to trust, on top of the OS store (for a private CA not installed system-wide). |
-| `GEOLIBRE_HTTP_CLIENT_CERT` | Path to the client certificate to present. A `.pem` file (certificate chain plus an **unencrypted** PKCS#8 private key) or a PKCS#12 bundle (`.p12`/`.pfx`). |
-| `GEOLIBRE_HTTP_CLIENT_CERT_PASSWORD` | Passphrase for a PKCS#12 client certificate. Its presence also forces the PKCS#12 code path. |
+| `GEOINT_HTTP_CA_CERT` | Path to a PEM bundle of extra CA certificate(s) to trust, on top of the OS store (for a private CA not installed system-wide). |
+| `GEOINT_HTTP_CLIENT_CERT` | Path to the client certificate to present. A `.pem` file (certificate chain plus an **unencrypted** PKCS#8 private key) or a PKCS#12 bundle (`.p12`/`.pfx`). |
+| `GEOINT_HTTP_CLIENT_CERT_PASSWORD` | Passphrase for a PKCS#12 client certificate. Its presence also forces the PKCS#12 code path. |
 
 A `.p12`/`.pfx` extension (or a supplied passphrase) selects PKCS#12; any other
 path is read as PEM. PEM identities use the default rustls backend; PKCS#12
@@ -158,7 +158,7 @@ here. Each tile-integration render cycle measured ~125 ms wall-clock in
 WebKitGTK versus a few ms in Chromium. The gap is in WebKitGTK's WebGL
 implementation and compositor pipeline (driver command-stream flush, TextureMapper
 GL surface composition), not solely its JavaScriptCore JS engine. This is a
-WebView-engine limitation, not a bug in GeoLibre, and it does not affect the
+WebView-engine limitation, not a bug in GeoInt, and it does not affect the
 browser build or (untested) the macOS/Windows WebViews.
 
 Ruled out during diagnosis (so future investigation does not repeat them):

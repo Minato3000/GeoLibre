@@ -1,17 +1,17 @@
 import {
   collectTransitiveJoinSourceIds,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerJoin,
   useAppStore,
-} from "@geolibre/core";
-import { Button, Input, Label, Select } from "@geolibre/ui";
+} from "@geoint/core";
+import { Button, Input, Label, Select } from "@geoint/ui";
 import { AlertTriangle, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getAttributePropertyNames } from "../../lib/expression-inputs";
 
 interface LayerJoinsSectionProps {
-  layer: GeoLibreLayer;
+  layer: GeoIntLayer;
 }
 
 function newJoinId(): string {

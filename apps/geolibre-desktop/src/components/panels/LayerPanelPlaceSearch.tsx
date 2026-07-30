@@ -16,9 +16,9 @@ import {
   geocoderMinIntervalMs,
   resolveGeocoderConfig,
   useAppStore,
-} from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
-import { Input } from "@geolibre/ui";
+} from "@geoint/core";
+import type { MapController } from "@geoint/map";
+import { Input } from "@geoint/ui";
 import { Hexagon, Loader2, LocateFixed, MapPin, Search, X } from "lucide-react";
 import { formatLatLon, parseLatLon } from "../../lib/coordinates";
 import { type H3CellMatch, parseH3Cell } from "../../lib/h3-search";
@@ -34,9 +34,9 @@ const MAX_RESULTS = 6;
 /** Don't search until the query is at least this many characters. */
 const MIN_QUERY_LENGTH = 2;
 /** Ephemeral map ids for the outline drawn around a searched H3 cell. */
-const H3_SOURCE_ID = "geolibre-h3-search-cell";
-const H3_FILL_LAYER_ID = "geolibre-h3-search-cell-fill";
-const H3_LINE_LAYER_ID = "geolibre-h3-search-cell-line";
+const H3_SOURCE_ID = "geoint-h3-search-cell";
+const H3_FILL_LAYER_ID = "geoint-h3-search-cell-fill";
+const H3_LINE_LAYER_ID = "geoint-h3-search-cell-line";
 /** Highlight color for the H3 cell, matching the place-search marker. */
 const H3_HIGHLIGHT_COLOR = "#ef4444";
 

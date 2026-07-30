@@ -1,5 +1,5 @@
-import { redo, undo, useAppStore } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+import { redo, undo, useAppStore } from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import {
   Button,
   DropdownMenu,
@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   FilePlus2,
   Locate,

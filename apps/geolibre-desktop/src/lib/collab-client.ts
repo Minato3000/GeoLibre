@@ -7,7 +7,7 @@
 // are both derived from this one base.
 
 import type { ClientMessage, ServerMessage } from "./collab-protocol";
-import type { CollaborationMode } from "@geolibre/core";
+import type { CollaborationMode } from "@geoint/core";
 
 export interface CreateSessionResult {
   sessionId: string;
@@ -28,11 +28,11 @@ const RECONNECT_MAX_MS = 10_000;
  * mirroring `resolveShareBaseUrl`: parse the URL and match the hostname exactly
  * so a value like `ws://localhost.evil.com` is rejected.
  *
- * @param configured - The raw env value; defaults to `VITE_GEOLIBRE_COLLAB_URL`.
+ * @param configured - The raw env value; defaults to `VITE_GEOINT_COLLAB_URL`.
  * @returns The trimmed base URL without a trailing slash, or `null`.
  */
 export function resolveCollabBaseUrl(
-  configured: unknown = import.meta.env?.VITE_GEOLIBRE_COLLAB_URL,
+  configured: unknown = import.meta.env?.VITE_GEOINT_COLLAB_URL,
 ): string | null {
   if (typeof configured !== "string" || !configured.trim()) return null;
   const trimmed = configured.trim().replace(/\/+$/, "");
@@ -111,7 +111,7 @@ export async function createSession(
     resolvedMode = payload.mode;
   } else if (payload.mode !== undefined) {
     console.warn(
-      `[GeoLibre] Unexpected collaboration mode "${payload.mode}"; defaulting to "co-edit".`,
+      `[GeoInt] Unexpected collaboration mode "${payload.mode}"; defaulting to "co-edit".`,
     );
   }
   return {

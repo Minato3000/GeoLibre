@@ -6,11 +6,11 @@ import {
   isDiagramStyleEnabled,
   styleValue,
   type DiagramData,
-  type GeoLibreLayer,
-} from "@geolibre/core";
+  type GeoIntLayer,
+} from "@geoint/core";
 import type { Layer } from "@deck.gl/core";
 import type { FeatureCollection } from "geojson";
-import type { GeoLibreDeckGL } from "../../types";
+import type { GeoIntDeckGL } from "../../types";
 
 /**
  * Diagram symbology (per-feature pie/donut/bar charts) for ordinary vector
@@ -19,7 +19,7 @@ import type { GeoLibreDeckGL } from "../../types";
  * once into a single icon atlas canvas (cached per FeatureCollection + style
  * signature) and drawn with one IconLayer, so pan/zoom and the per-frame
  * overlay rebuilds stay cheap. The pure data extraction lives in
- * `@geolibre/core`'s diagram.ts; this module owns the canvas drawing and the
+ * `@geoint/core`'s diagram.ts; this module owns the canvas drawing and the
  * deck.gl layer.
  */
 
@@ -50,7 +50,7 @@ const STACKED_BAR_WIDTH_RATIO = 0.45;
  *
  * @param layer - The store layer to test.
  */
-export function isDiagramLayer(layer: GeoLibreLayer): boolean {
+export function isDiagramLayer(layer: GeoIntLayer): boolean {
   return (
     !!layer.geojson &&
     // Deck-viz dataset layers have their own renderer (this also covers
@@ -104,7 +104,7 @@ interface DiagramCacheValue {
 // other layers, animation frames).
 const atlasCache = new WeakMap<FeatureCollection, DiagramCacheValue>();
 
-function diagramSignature(layer: GeoLibreLayer): string {
+function diagramSignature(layer: GeoIntLayer): string {
   const style = layer.style;
   return JSON.stringify([
     styleValue(style, "diagramType"),
@@ -277,7 +277,7 @@ function deviceMaxTextureSize(): number {
 /** Atlas-pixel content box sizes for every datum, in datum order. */
 function diagramCellSizes(
   diagramData: DiagramData,
-  style: GeoLibreLayer["style"],
+  style: GeoIntLayer["style"],
 ): { width: number; height: number }[] {
   const type = styleValue(style, "diagramType");
   return diagramData.data.map((datum) => {
@@ -299,7 +299,7 @@ function diagramCellSizes(
  *   ran {@link collectDiagramData} does not scan the features twice.
  */
 export function countAtlasDroppedDiagrams(
-  layer: Pick<GeoLibreLayer, "geojson" | "style">,
+  layer: Pick<GeoIntLayer, "geojson" | "style">,
   diagramData?: DiagramData,
 ): number {
   if (!layer.geojson) return 0;
@@ -316,7 +316,7 @@ export function countAtlasDroppedDiagrams(
  * (cells laid out left-to-right in rows). Returns null when no feature has
  * drawable data.
  */
-function buildAtlas(layer: GeoLibreLayer, diagramData: DiagramData): DiagramAtlas | null {
+function buildAtlas(layer: GeoIntLayer, diagramData: DiagramData): DiagramAtlas | null {
   if (diagramData.data.length === 0) return null;
   if (typeof document === "undefined") return null;
   const style = layer.style;
@@ -380,7 +380,7 @@ function buildAtlas(layer: GeoLibreLayer, diagramData: DiagramData): DiagramAtla
   return { atlasUrl: canvas.toDataURL("image/png"), mapping, entries };
 }
 
-function getAtlas(layer: GeoLibreLayer): DiagramAtlas | null {
+function getAtlas(layer: GeoIntLayer): DiagramAtlas | null {
   const geojson = layer.geojson as FeatureCollection;
   const signature = diagramSignature(layer);
   const cached = atlasCache.get(geojson);
@@ -395,13 +395,13 @@ function getAtlas(layer: GeoLibreLayer): DiagramAtlas | null {
   // style edits (each of which rebuilds the atlas) don't spam the console.
   if (diagramData.truncated && !cached?.truncated) {
     console.info(
-      `[GeoLibre] diagrams: layer exceeds ${MAX_DIAGRAM_FEATURES} features; ` +
+      `[GeoInt] diagrams: layer exceeds ${MAX_DIAGRAM_FEATURES} features; ` +
         `only the first ${MAX_DIAGRAM_FEATURES} are charted`,
     );
   }
   if (dropped > 0 && dropped !== cached?.dropped) {
     console.info(
-      `[GeoLibre] diagrams: atlas full, dropped ${dropped} of ` +
+      `[GeoInt] diagrams: atlas full, dropped ${dropped} of ` +
         `${diagramData.data.length} feature diagrams (reduce the diagram size ` +
         `to fit more)`,
     );
@@ -504,8 +504,8 @@ function viewSignature(project: (position: [number, number]) => { x: number; y: 
 }
 
 export function buildDiagramLayers(
-  deckGL: GeoLibreDeckGL,
-  layer: GeoLibreLayer,
+  deckGL: GeoIntDeckGL,
+  layer: GeoIntLayer,
   options: {
     zoom?: number;
     project?: ((position: [number, number]) => { x: number; y: number }) | null;

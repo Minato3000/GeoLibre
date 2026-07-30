@@ -122,7 +122,7 @@ jobs:
         if: github.event.action != 'closed'
         run: npm run build -w geolibre-desktop
         env:
-          GEOLIBRE_APP_BASE: ./
+          GEOINT_APP_BASE: ./
           # All empty on a fork run -- see the header. Mapillary additionally
           # falls back to a public repository variable, so that one basemap
           # does survive into fork previews.
@@ -131,7 +131,7 @@ jobs:
           VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
           VITE_MAPILLARY_ACCESS_TOKEN: ${{ secrets.VITE_MAPILLARY_ACCESS_TOKEN || vars.VITE_MAPILLARY_ACCESS_TOKEN }}
-          VITE_GEOLIBRE_COLLAB_URL: wss://collab.geolibre.app
+          VITE_GEOINT_COLLAB_URL: wss://collab.geolibre.app
 
       - name: Build documentation
         if: github.event.action != 'closed'

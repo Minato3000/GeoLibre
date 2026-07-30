@@ -1,7 +1,7 @@
 /**
  * Shared scale-bar unit maths.
  *
- * The on-screen scale bar (`PlanetaryScaleControl` in `@geolibre/map`) and the
+ * The on-screen scale bar (`PlanetaryScaleControl` in `@geoint/map`) and the
  * Print Layout scale bar (`apps/geolibre-desktop/src/lib/print-layout.ts`) both
  * need to pick a "nice" round distance in the user's chosen unit system
  * (metric / imperial / nautical). Keeping that logic in one place here means the

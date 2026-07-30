@@ -2,7 +2,7 @@
 
 The **Style panel** on the right edits the appearance of the layer selected in the [Layers panel](layers.md). Vector and raster layers each get their own set of controls.
 
-![Style panel showing categorized styling](https://data.geolibre.app/images/geolibre-styling.webp)
+![Style panel showing categorized styling](https://data.geolibre.app/images/geoint-styling.webp)
 
 ## Vector styling
 
@@ -39,7 +39,7 @@ The **Style type** control chooses how feature values map to color:
 | **Categorized** | Assign a color per unique category value of a field. |
 | **Expression** | Drive styling with a custom MapLibre expression for full control. |
 
-For graduated and categorized styles, GeoLibre generates the class breaks or category stops and shows them in the panel, where you can fine-tune individual colors before applying.
+For graduated and categorized styles, GeoInt generates the class breaks or category stops and shows them in the panel, where you can fine-tune individual colors before applying.
 
 !!! tip "Choropleth maps"
     To make a choropleth, select **Graduated**, pick a numeric attribute, choose a colormap, and click **Apply style type**. See the [Your First Map tutorial](../tutorials/first-map.md).

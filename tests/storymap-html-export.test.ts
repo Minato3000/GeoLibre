@@ -3,9 +3,9 @@ import { describe, it } from "node:test";
 import {
   DEFAULT_LAYER_STYLE,
   DEFAULT_STORY_MAP,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type StoryMap,
-} from "@geolibre/core";
+} from "@geoint/core";
 import { buildStoryMapHtml } from "../apps/geolibre-desktop/src/lib/storymap-export";
 
 function story(overrides: Partial<StoryMap> = {}): StoryMap {
@@ -45,8 +45,8 @@ function story(overrides: Partial<StoryMap> = {}): StoryMap {
 function rasterLayer(
   id: string,
   source: Record<string, unknown>,
-  patch: Partial<GeoLibreLayer> = {},
-): GeoLibreLayer {
+  patch: Partial<GeoIntLayer> = {},
+): GeoIntLayer {
   return {
     id,
     name: id,
@@ -112,7 +112,7 @@ describe("buildStoryMapHtml raster sources", () => {
     for (const url of [
       "blob:https://app.example/1234",
       "pmtiles://https://example.com/a.pmtiles",
-      "geolibre://offline-basemap",
+      "geoint://offline-basemap",
     ]) {
       const html = buildStoryMapHtml({
         storymap: story(),
@@ -128,7 +128,7 @@ describe("buildStoryMapHtml raster sources", () => {
     for (const tile of [
       "blob:https://app.example/1234",
       "pmtiles://https://example.com/a.pmtiles/{z}/{x}/{y}",
-      "geolibre://local/{z}/{x}/{y}.png",
+      "geoint://local/{z}/{x}/{y}.png",
     ]) {
       const html = buildStoryMapHtml({
         storymap: story(),

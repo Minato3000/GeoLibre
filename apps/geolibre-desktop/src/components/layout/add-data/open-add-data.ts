@@ -1,7 +1,7 @@
 import type { AddDataKind } from "./types";
 
 /** Window event letting any panel open the Add Data dialog at a given kind. */
-export const OPEN_ADD_DATA_EVENT = "geolibre:open-add-data";
+export const OPEN_ADD_DATA_EVENT = "geoint:open-add-data";
 
 /**
  * Optional prefill payload for the PostgreSQL source, so the Browser panel can

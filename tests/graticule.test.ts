@@ -15,7 +15,7 @@ import {
   utmZoneDesignation,
   utmZoneForLon,
 } from "../packages/plugins/src/plugins/maplibre-graticule";
-import type { GeoLibreAppAPI } from "../packages/plugins/src/types";
+import type { GeoIntAppAPI } from "../packages/plugins/src/types";
 
 describe("normalizeGraticuleSettings", () => {
   it("returns the defaults for undefined/empty input", () => {
@@ -188,7 +188,7 @@ describe("UTM grid helpers", () => {
 describe("UTM settings project round-trip", () => {
   // getProjectState/applyProjectState read/write the module settings and only
   // touch the map when one is attached, so they run headless here.
-  const noopApp = {} as GeoLibreAppAPI;
+  const noopApp = {} as GeoIntAppAPI;
 
   it("persists and restores the UTM grid type and metre interval", () => {
     setGraticuleSettings({ gridType: "geographic" }); // reset to a known state

@@ -1,4 +1,4 @@
-name = "geolibre-tiles"
+name = "geoint-tiles"
 main = "src/index.ts"
 compatibility_date = "2025-03-01"
 

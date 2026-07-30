@@ -1,11 +1,11 @@
 import {
-  type GeoLibreLayer,
+  type GeoIntLayer,
   createEqualIntervalBreaks,
   getVectorColorRamp,
   interpolateColors,
   normalizeHexColor,
   parseHexColor,
-} from "@geolibre/core";
+} from "@geoint/core";
 
 /**
  * The classification methods offered for single-band pseudocolor rasters.
@@ -15,7 +15,7 @@ import {
 export type RasterClassificationMethod = "equal-interval" | "quantile" | "manual";
 
 /**
- * GeoLibre-owned raster symbology, stored at `metadata.rasterSymbology`. The
+ * GeoInt-owned raster symbology, stored at `metadata.rasterSymbology`. The
  * upstream `maplibre-gl-raster` control owns the continuous render state
  * (`metadata.rasterState`: mode/bands/colormap/reversed/rescale/…); this record
  * adds what the control cannot express: discrete classification and custom
@@ -268,7 +268,7 @@ export function buildContinuousColormapRgba(
  * @param layer - A store layer created by `createRasterStoreLayer`.
  * @returns The validated symbology, or null when absent / malformed.
  */
-export function savedRasterSymbology(layer: GeoLibreLayer): RasterSymbology | null {
+export function savedRasterSymbology(layer: GeoIntLayer): RasterSymbology | null {
   const raw = layer.metadata.rasterSymbology;
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
   const candidate = raw as Record<string, unknown>;

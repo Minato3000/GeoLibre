@@ -10,8 +10,8 @@ import {
   type DeckVizFieldMapping,
   type DeckVizScenegraphConfig,
   type DeckVizStyle,
-} from "@geolibre/plugins";
-import { Button, ColorField, Input, Label, Select } from "@geolibre/ui";
+} from "@geoint/plugins";
+import { Button, ColorField, Input, Label, Select } from "@geoint/ui";
 import { Columns3, FileUp, Globe2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -159,7 +159,7 @@ export function DeckVizSource({ initialDeckVizKind }: DeckVizSourceProps) {
     }
     if (result.text.length > DECK_VIZ_SIZE_WARN_BYTES) {
       console.warn(
-        "[GeoLibre] deck-viz: large payload stored inline in the project",
+        "[GeoInt] deck-viz: large payload stored inline in the project",
         result.text.length,
         "bytes",
       );

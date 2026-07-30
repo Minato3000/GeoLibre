@@ -1,4 +1,4 @@
-import type { GeoLibrePlugin } from "../types";
+import type { GeoIntPlugin } from "../types";
 import { activateDeckViz, deactivateDeckViz } from "./deckgl-viz/overlay";
 
 export const DECK_VIZ_PLUGIN_ID = "maplibre-deckgl-viz";
@@ -13,7 +13,7 @@ export const DECK_VIZ_PLUGIN_ID = "maplibre-deckgl-viz";
  * driven idempotently from the desktop shell via `restoreDeckViz`, because the
  * plugin manager marks default plugins active without calling activate().
  */
-export const maplibreDeckGlVizPlugin: GeoLibrePlugin = {
+export const maplibreDeckGlVizPlugin: GeoIntPlugin = {
   id: DECK_VIZ_PLUGIN_ID,
   name: "Deck.gl Layer",
   version: "0.1.0",

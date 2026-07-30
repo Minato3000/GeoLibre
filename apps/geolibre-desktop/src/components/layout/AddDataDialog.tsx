@@ -1,6 +1,6 @@
-import { useAppStore } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@geolibre/ui";
+import { useAppStore } from "@geoint/core";
+import type { MapController } from "@geoint/map";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@geoint/ui";
 import { Database } from "lucide-react";
 import { useCallback, useMemo, useState, type RefObject } from "react";
 import { useTranslation } from "react-i18next";

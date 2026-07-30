@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Feature, FeatureCollection } from "geojson";
 import maplibregl from "maplibre-gl";
-import type { MapController } from "@geolibre/map";
-import { useAppStore } from "@geolibre/core";
+import type { MapController } from "@geoint/map";
+import { useAppStore } from "@geoint/core";
 import {
   Button,
   Dialog,
@@ -15,7 +15,7 @@ import {
   Label,
   ScrollArea,
   Separator,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   Circle,
   Download,
@@ -70,7 +70,7 @@ const GPS_COLOR = "#2563eb";
 /** Live track-log line red, matching the field-collection draw color. */
 const TRACK_COLOR = "#ef4444";
 
-const GPS_SETTINGS_STORAGE_KEY = "geolibre.gpsTracking.settings";
+const GPS_SETTINGS_STORAGE_KEY = "geoint.gpsTracking.settings";
 
 const EMPTY_FC: FeatureCollection = {
   type: "FeatureCollection",

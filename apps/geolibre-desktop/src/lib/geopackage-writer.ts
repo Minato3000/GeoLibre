@@ -12,7 +12,7 @@ import { loadSqlJs } from "./gpkg-ogr-contents";
  * bundled GDAL has no working GeoPackage write driver, so the file is assembled
  * directly here. Output carries one feature layer in WGS84 (EPSG:4326) with the
  * required `gpkg_*` metadata tables plus `gpkg_ogr_contents`, so it reopens in
- * GeoLibre, QGIS, and ArcGIS.
+ * GeoInt, QGIS, and ArcGIS.
  */
 
 // SQLite "application_id" for a GeoPackage: ASCII "GPKG" as a big-endian int32.

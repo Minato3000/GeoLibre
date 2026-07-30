@@ -17,11 +17,11 @@ import { dirname, join, resolve } from "node:path";
 const SNAPSHOT_URL =
   "https://raw.githubusercontent.com/opengeos/Whitebox-Next-Gen-ArcGIS/main/WNG/data/catalog_snapshot.json";
 
-// Subcategory label for the GeoLibre-authored WASM tools. They carry bare
+// Subcategory label for the GeoInt-authored WASM tools. They carry bare
 // categories (e.g. "Raster") and are not in the Whitebox snapshot, so we group
 // them under their own heading within each top-level category instead of mixing
 // them into the long "General" list.
-const GEOLIBRE_SUBCATEGORY = "GeoLibre";
+const GEOINT_SUBCATEGORY = "GeoInt";
 
 const OUT = resolve(
   dirname(fileURLToPath(import.meta.url)),
@@ -42,9 +42,9 @@ const SNAPSHOT_OUT = resolve(
 const GROUPS = [
   ["conversion", "toolbar.item.conversion", (c) => c.startsWith("Conversion")],
   ["hydrology", "toolbar.item.hydrology", (c) => c.startsWith("Hydrology")],
-  // Whitebox catalog tools use "LiDAR"; GeoLibre-authored WASM tools carry the
+  // Whitebox catalog tools use "LiDAR"; GeoInt-authored WASM tools carry the
   // bare `ToolCategory::Lidar` form "Lidar" (e.g. assign_projection_lidar), so
-  // match both or the geolibre-authored LiDAR tools drop out of the menu.
+  // match both or the geoint-authored LiDAR tools drop out of the menu.
   ["lidar", "toolbar.item.lidar", (c) => c.startsWith("LiDAR") || c === "Lidar"],
   ["network", "toolbar.item.network", (c) => c === "Vector - Network Analysis"],
   ["projection", "toolbar.item.projection", (c) => c.startsWith("Projection")],
@@ -63,7 +63,7 @@ const esc = (s) => s.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 // Returns [] if the package or wasm is unavailable, so the generator still
 // produces a snapshot-only menu.
 //
-// Deliberately NOT filtered to `source === "geolibre"`. The WASM also carries
+// Deliberately NOT filtered to `source === "geoint"`. The WASM also carries
 // Whitebox-sourced tools that the Whitebox Next Gen snapshot does not list
 // (buffer_vector, the variogram/cokriging tools, greater_than_or_equal_to...).
 // Those used to fall through both halves of the merge — absent from the
@@ -126,21 +126,21 @@ async function main() {
   );
 
   const wasmTools = await loadWasmTools();
-  const geolibre = wasmTools.filter((t) => t.source === "geolibre");
-  const geolibreIds = new Set(geolibre.map((t) => t.id));
+  const geoint = wasmTools.filter((t) => t.source === "geoint");
+  const geointIds = new Set(geoint.map((t) => t.id));
   // Whitebox-sourced WASM tools the snapshot has never heard of. They belong in
-  // the menu under their own category's regular subheading (not the "GeoLibre"
-  // one — they are not GeoLibre-authored), and they are the reason the menu
+  // the menu under their own category's regular subheading (not the "GeoInt"
+  // one — they are not GeoInt-authored), and they are the reason the menu
   // could list fewer tools than the WASM actually ships.
   const snapshotIds = new Set(tools.map((t) => t.id));
-  const wasmOnly = wasmTools.filter((t) => t.source !== "geolibre" && !snapshotIds.has(t.id));
+  const wasmOnly = wasmTools.filter((t) => t.source !== "geoint" && !snapshotIds.has(t.id));
 
   // Only free tools: locked/"pro"-tier Whitebox tools cannot run, so omit them
   // from the menu entirely (the dialog hides them too). Also drop any snapshot
-  // tool whose id is a GeoLibre WASM tool: the dialog replaces the snapshot
-  // entry with the GeoLibre one on an id collision, so listing both would point
+  // tool whose id is a GeoInt WASM tool: the dialog replaces the snapshot
+  // entry with the GeoInt one on an id collision, so listing both would point
   // two menu leaves at the same loaded tool.
-  const free = tools.filter((t) => !t.locked && !geolibreIds.has(t.id));
+  const free = tools.filter((t) => !t.locked && !geointIds.has(t.id));
 
   const cats = [];
   let total = 0;
@@ -155,16 +155,16 @@ async function main() {
       if (!bySub.has(label)) bySub.set(label, []);
       bySub.get(label).push({ id: t.id, name: t.display_name || t.name || t.id });
     }
-    // GeoLibre-authored tools whose bare category falls in this group go under
-    // the dedicated GeoLibre heading.
-    const glHere = geolibre.filter((t) => pred(t.category));
+    // GeoInt-authored tools whose bare category falls in this group go under
+    // the dedicated GeoInt heading.
+    const glHere = geoint.filter((t) => pred(t.category));
     for (const t of glHere) {
-      if (!bySub.has(GEOLIBRE_SUBCATEGORY)) bySub.set(GEOLIBRE_SUBCATEGORY, []);
-      bySub.get(GEOLIBRE_SUBCATEGORY).push({ id: t.id, name: t.name });
+      if (!bySub.has(GEOINT_SUBCATEGORY)) bySub.set(GEOINT_SUBCATEGORY, []);
+      bySub.get(GEOINT_SUBCATEGORY).push({ id: t.id, name: t.name });
     }
-    // GeoLibre first, then "General" (bare category), then named subcategories
+    // GeoInt first, then "General" (bare category), then named subcategories
     // alphabetically.
-    const rank = (s) => (s === GEOLIBRE_SUBCATEGORY ? 0 : s === "General" ? 1 : 2);
+    const rank = (s) => (s === GEOINT_SUBCATEGORY ? 0 : s === "General" ? 1 : 2);
     const subLabels = [...bySub.keys()].sort((a, b) => {
       const ra = rank(a);
       const rb = rank(b);
@@ -188,8 +188,8 @@ async function main() {
   L.push("// AUTO-GENERATED for the Processing menu's Whitebox tool categories.");
   L.push("// Whitebox tools come from the Whitebox Next Gen catalog snapshot");
   L.push("// (opengeos/Whitebox-Next-Gen-ArcGIS WNG/data/catalog_snapshot.json);");
-  L.push("// GeoLibre-authored WASM tools come from the geolibre-wasm manifests and");
-  L.push('// are grouped under a "GeoLibre" subheading. Tool ids match the');
+  L.push("// GeoInt-authored WASM tools come from the geolibre-wasm manifests and");
+  L.push('// are grouped under a "GeoInt" subheading. Tool ids match the');
   L.push("// runtime/sidecar/WASM catalog used by ProcessingDialog.");
   L.push("// Regenerate with scripts/gen-whitebox-menu-catalog.mjs; do not hand-edit.");
   L.push("// Tool/subcategory names are catalog data and are intentionally not");

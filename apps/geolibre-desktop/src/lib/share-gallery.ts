@@ -1,6 +1,6 @@
 // Lists publicly shared projects from share.geolibre.app's `GET /api/projects`
 // endpoint so the Project Gallery can browse and open them. This is the read
-// counterpart to share-geolibre.ts (which uploads via `POST /api/projects`).
+// counterpart to share-geoint.ts (which uploads via `POST /api/projects`).
 //
 // `fetchSharedProjects` reads the public listing (`GET /api/projects`, no
 // token) with `limit` + `offset` pagination. `fetchMyProjects` authenticates
@@ -8,7 +8,7 @@
 // `private` projects.
 
 import { getShareFetch } from "./share-fetch";
-import { resolveShareBaseUrl } from "./share-geolibre";
+import { resolveShareBaseUrl } from "./share-geoint";
 
 /**
  * Machine-readable cause for a gallery fetch failure. This module is a non-React
@@ -57,7 +57,7 @@ export interface SharedProject {
   createdAt: string;
   updatedAt: string;
   tags: string[];
-  /** Absolute URL to the raw `.geolibre.json`, used to load the project. */
+  /** Absolute URL to the raw `.geoint.json`, used to load the project. */
   rawJsonUrl: string;
   /** Absolute URL to the project page on the website. */
   projectUrl: string;
@@ -248,7 +248,7 @@ export interface FetchMyProjectsOptions {
  * The token to open `project`'s raw JSON with, or undefined to fetch it
  * anonymously.
  *
- * Only private projects need auth — public and unlisted raw `.geolibre.json` is
+ * Only private projects need auth — public and unlisted raw `.geoint.json` is
  * served to anonymous callers with `Access-Control-Allow-Origin: *`. Attaching
  * `Authorization` when it is not needed is actively harmful: it makes the
  * request CORS-preflighted, and the share host answers `OPTIONS` on `/api/*`

@@ -1,12 +1,12 @@
-import { getRoutingConfig, useAppStore } from "@geolibre/core";
-import { detectGeometryProfile, type MapController } from "@geolibre/map";
+import { getRoutingConfig, useAppStore } from "@geoint/core";
+import { detectGeometryProfile, type MapController } from "@geoint/map";
 import {
   NETWORK_TOOLS,
   getNetworkTool,
   type AlgorithmParameter,
   type GeometryFamily,
   type ProcessingContext,
-} from "@geolibre/processing";
+} from "@geoint/processing";
 import {
   Button,
   Dialog,
@@ -16,7 +16,7 @@ import {
   DialogTitle,
   ScrollArea,
   cn,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import type { FeatureCollection } from "geojson";
 import { Loader2, Play } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from "react";

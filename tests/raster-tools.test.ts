@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { RASTER_TOOLS, getRasterTool } from "@geolibre/processing";
+import { RASTER_TOOLS, getRasterTool } from "@geoint/processing";
 
 const EXPECTED_IDS = [
   "hillshade",

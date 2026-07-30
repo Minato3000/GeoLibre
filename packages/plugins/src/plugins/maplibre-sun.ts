@@ -1,8 +1,8 @@
 import type { CanvasSource, LightSpecification, Map as MapLibreMap } from "maplibre-gl";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 
 /**
- * GeoLibre sun-position simulation plugin.
+ * GeoInt sun-position simulation plugin.
  *
  * Reproduces the core of Google Earth's "sun" feature: pick a date and time and
  * the map shades its night hemisphere, with the day/night terminator sweeping
@@ -19,12 +19,12 @@ import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
  * same ones used by the well-known Leaflet.Terminator plugin.
  */
 
-export const SUN_PLUGIN_ID = "geolibre-sun";
+export const SUN_PLUGIN_ID = "geoint-sun";
 
-const NIGHT_SOURCE_ID = "geolibre-sun-night-source";
-const NIGHT_LAYER_ID = "geolibre-sun-night-layer";
+const NIGHT_SOURCE_ID = "geoint-sun-night-source";
+const NIGHT_LAYER_ID = "geoint-sun-night-layer";
 // Legacy layer ids used by the first polygon-band renderer.
-const NIGHT_LAYER_PREFIX = "geolibre-sun-night-layer-";
+const NIGHT_LAYER_PREFIX = "geoint-sun-night-layer-";
 const NIGHT_CANVAS_WIDTH = 960;
 const NIGHT_CANVAS_HEIGHT = 480;
 const NIGHT_CANVAS_NORTH = 85;
@@ -482,7 +482,7 @@ function notifyState(): void {
   for (const listener of stateListeners) listener();
 }
 
-function attachEngine(app: GeoLibreAppAPI): boolean {
+function attachEngine(app: GeoIntAppAPI): boolean {
   const map = app.getMap?.();
   if (!map) return false;
   if (engine && engine.getMapInstance() !== map) detachEngine();
@@ -496,7 +496,7 @@ function detachEngine(): void {
 }
 
 /** Open the sun panel and start shading the map. Idempotent. */
-export function openSunPanel(app: GeoLibreAppAPI): void {
+export function openSunPanel(app: GeoIntAppAPI): void {
   if (!panelVisible) {
     panelVisible = true;
     notifyPanel();
@@ -505,7 +505,7 @@ export function openSunPanel(app: GeoLibreAppAPI): void {
 }
 
 /** Close the sun panel, stop the animation, and clear the shading. */
-export function closeSunPanel(_app?: GeoLibreAppAPI): void {
+export function closeSunPanel(_app?: GeoIntAppAPI): void {
   if (settings.playing) {
     settings = { ...settings, playing: false };
   }
@@ -590,7 +590,7 @@ export function advanceSunClock(deltaMs: number): void {
  * allowed to change open/closed state from stored data. Returns whether
  * anything changed. See {@link reattachSun} for the map-reinit path.
  */
-export function restoreSun(app: GeoLibreAppAPI, state?: unknown): boolean {
+export function restoreSun(app: GeoIntAppAPI, state?: unknown): boolean {
   const next = normalizeSunSettings(state, DEFAULT_SUN_SETTINGS);
   const shouldOpen = Boolean(
     state && typeof state === "object" && (state as { open?: unknown }).open,
@@ -615,18 +615,18 @@ export function restoreSun(app: GeoLibreAppAPI, state?: unknown): boolean {
  * locally-opened Sun panel. The project-load case is handled by
  * {@link restoreSun} via applyProjectState.
  */
-export function reattachSun(app: GeoLibreAppAPI): void {
+export function reattachSun(app: GeoIntAppAPI): void {
   if (panelVisible) attachEngine(app);
   else detachEngine();
 }
 
-export const maplibreSunPlugin: GeoLibrePlugin = {
+export const maplibreSunPlugin: GeoIntPlugin = {
   id: SUN_PLUGIN_ID,
   name: "Sun Simulation",
   version: "1.0.0",
   activeByDefault: false,
-  activate: (app: GeoLibreAppAPI) => openSunPanel(app),
-  deactivate: (app: GeoLibreAppAPI) => closeSunPanel(app),
+  activate: (app: GeoIntAppAPI) => openSunPanel(app),
+  deactivate: (app: GeoIntAppAPI) => closeSunPanel(app),
   // Persist the panel-open flag plus settings so a saved project reopens with
   // the same sun state. Nothing is stored while the panel is closed and the
   // settings match defaults.
@@ -636,5 +636,5 @@ export const maplibreSunPlugin: GeoLibrePlugin = {
     }
     return { open: panelVisible, ...settings };
   },
-  applyProjectState: (app: GeoLibreAppAPI, state: unknown) => restoreSun(app, state),
+  applyProjectState: (app: GeoIntAppAPI, state: unknown) => restoreSun(app, state),
 };

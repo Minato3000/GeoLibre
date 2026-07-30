@@ -171,7 +171,7 @@ jobs:
     runs-on: ubuntu-latest
     # The primary cask is in the official homebrew/homebrew-cask repo, which
     # BrewTestBot auto-bumps via livecheck. This job only updates the self-hosted
-    # tap (opengeos/homebrew-geolibre), kept as a fallback.
+    # tap (opengeos/homebrew-geoint), kept as a fallback.
     # Serialise tap pushes so two close releases can't race on a non-fast-forward.
     concurrency:
       group: homebrew-tap-update
@@ -191,8 +191,8 @@ jobs:
           TAG: ${{ github.event.release.tag_name }}
         run: |
           version="${TAG#v}"
-          arm="GeoLibre.Desktop_${version}_aarch64.dmg"
-          intel="GeoLibre.Desktop_${version}_x64.dmg"
+          arm="GeoInt.Desktop_${version}_aarch64.dmg"
+          intel="GeoInt.Desktop_${version}_x64.dmg"
           gh release download "$TAG" --repo "$GITHUB_REPOSITORY" \
             --pattern "$arm" --pattern "$intel" --dir dmgs
           {
@@ -204,7 +204,7 @@ jobs:
       - name: Check out Homebrew tap
         uses: actions/checkout@v7
         with:
-          repository: opengeos/homebrew-geolibre
+          repository: opengeos/homebrew-geoint
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
           path: tap
           persist-credentials: false
@@ -217,18 +217,18 @@ jobs:
           HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
         run: |
           mkdir -p tap/Casks
-          scripts/render-homebrew-cask.sh > tap/Casks/geolibre.rb
+          scripts/render-homebrew-cask.sh > tap/Casks/geoint.rb
           cd tap
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Casks/geolibre.rb
+          git add Casks/geoint.rb
           # --cached so an initially untracked cask (fresh tap) is still detected.
           if git diff --cached --quiet; then
             echo "Cask already up to date for ${VERSION}."
             exit 0
           fi
-          git commit -m "geolibre ${VERSION}"
-          git push "https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/opengeos/homebrew-geolibre.git" HEAD:main
+          git commit -m "geoint ${VERSION}"
+          git push "https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/opengeos/homebrew-geoint.git" HEAD:main
 
   aur:
     name: Publish AUR package
@@ -261,7 +261,7 @@ jobs:
           TAG: ${{ github.event.release.tag_name }}
         run: |
           version="${TAG#v}"
-          deb="GeoLibre.Desktop_${version}_amd64.deb"
+          deb="GeoInt.Desktop_${version}_amd64.deb"
           gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "$deb" --dir debs
           sha="$(sha256sum "debs/$deb" | awk '{print $1}')"
           mkdir -p aur
@@ -276,7 +276,7 @@ jobs:
         # the AUR SSH private key. Update deliberately when bumping the version.
         uses: KSXGitHub/github-actions-deploy-aur@084b0d9b15415bf9cdb65d44dad1efe37a354050 # v4.2.0
         with:
-          pkgname: geolibre-bin
+          pkgname: geoint-bin
           pkgbuild: aur/PKGBUILD
           commit_username: github-actions[bot]
           commit_email: github-actions[bot]@users.noreply.github.com
@@ -310,7 +310,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.event.release.tag_name }}
-          COPR_PROJECT: giswqs/geolibre
+          COPR_PROJECT: giswqs/geoint
         run: |
           version="${TAG#v}"
           # Release date (YYYY-MM-DD) for the metainfo <release> and %changelog.
@@ -330,24 +330,24 @@ jobs:
 
           mkdir -p ~/rpmbuild/SPECS ~/rpmbuild/SOURCES
           VERSION="$version" DATE="$release_date" \
-            scripts/render-linux-metainfo.sh > ~/rpmbuild/SOURCES/org.geolibre.desktop.metainfo.xml
+            scripts/render-linux-metainfo.sh > ~/rpmbuild/SOURCES/org.geoint.desktop.metainfo.xml
           VERSION="$version" DATE="$release_date" REPO="$GITHUB_REPOSITORY" \
-            scripts/render-copr-spec.sh > ~/rpmbuild/SPECS/geolibre.spec
+            scripts/render-copr-spec.sh > ~/rpmbuild/SPECS/geoint.spec
           # The spec ships the project license as Source2.
           cp LICENSE ~/rpmbuild/SOURCES/
 
           # Validate the metainfo in CI, independently of COPR's mock build.
-          appstreamcli validate --no-net ~/rpmbuild/SOURCES/org.geolibre.desktop.metainfo.xml
+          appstreamcli validate --no-net ~/rpmbuild/SOURCES/org.geoint.desktop.metainfo.xml
 
           # The upstream RPM is Source0; rpmbuild needs it locally to build the
           # SRPM (it does not fetch URLs).
           gh release download "$TAG" --repo "$GITHUB_REPOSITORY" \
-            --pattern "GeoLibre.Desktop-${version}-1.x86_64.rpm" --dir ~/rpmbuild/SOURCES
+            --pattern "GeoInt.Desktop-${version}-1.x86_64.rpm" --dir ~/rpmbuild/SOURCES
           # Log the checksum of the repackaged RPM for auditability.
-          sha256sum ~/rpmbuild/SOURCES/"GeoLibre.Desktop-${version}-1.x86_64.rpm" \
+          sha256sum ~/rpmbuild/SOURCES/"GeoInt.Desktop-${version}-1.x86_64.rpm" \
             | tee -a "$GITHUB_STEP_SUMMARY"
 
-          srpm="$(rpmbuild -bs ~/rpmbuild/SPECS/geolibre.spec \
+          srpm="$(rpmbuild -bs ~/rpmbuild/SPECS/geoint.spec \
             --define "_topdir $HOME/rpmbuild" | sed -n 's/^Wrote: //p')"
           [[ -n "$srpm" ]] || { echo "::error::rpmbuild produced no SRPM path"; exit 1; }
           echo "Built SRPM: $srpm"
@@ -370,14 +370,14 @@ jobs:
     env:
       WINGET_TOKEN: ${{ secrets.WINGET_TOKEN }}
     steps:
-      - name: Submit OpenGeos.GeoLibre to winget-pkgs
+      - name: Submit OpenGeos.GeoInt to winget-pkgs
         if: ${{ env.WINGET_TOKEN != '' }}
         # Pinned to a commit SHA (not the mutable v2 tag) because this step
         # receives a token with access to the winget-pkgs fork. winget-releaser
         # derives the version from the release tag and uses komac under the hood.
         uses: vedantmgoyal9/winget-releaser@4ffc7888bffd451b357355dc214d43bb9f23917e # v2
         with:
-          identifier: OpenGeos.GeoLibre
+          identifier: OpenGeos.GeoInt
           installers-regex: '_x64-setup\.exe$'
           fork-user: giswqs
           token: ${{ env.WINGET_TOKEN }}

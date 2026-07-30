@@ -5,7 +5,7 @@
 // the external-plugin loader. Kept free of other imports so it stays a thin,
 // self-contained wrapper around IndexedDB.
 
-import type { GeoLibreExternalPluginManifest } from "@geolibre/plugins";
+import type { GeoIntExternalPluginManifest } from "@geoint/plugins";
 
 export interface StoredPluginArchive {
   // The plugin id, used as the IndexedDB key so a reinstall overwrites the
@@ -13,13 +13,13 @@ export interface StoredPluginArchive {
   id: string;
   // The original uploaded file name, kept only for display in the UI.
   archiveName: string;
-  manifest: GeoLibreExternalPluginManifest;
+  manifest: GeoIntExternalPluginManifest;
   entrySource: string;
   styleSource: string | null;
   installedAt: number;
 }
 
-const DB_NAME = "geolibre-plugins";
+const DB_NAME = "geoint-plugins";
 const DB_VERSION = 1;
 const STORE_NAME = "archives";
 

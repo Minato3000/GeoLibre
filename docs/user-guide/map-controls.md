@@ -2,7 +2,7 @@
 
 The **Controls** menu toggles two kinds of on-map helpers: the built-in MapLibre map controls, and the component panels that add tools like Measure and Bookmark. A check mark next to an item means it is currently shown.
 
-![Controls menu](https://data.geolibre.app/images/geolibre-controls-menu.webp)
+![Controls menu](https://data.geolibre.app/images/geoint-controls-menu.webp)
 
 ## Map controls
 

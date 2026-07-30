@@ -1,6 +1,6 @@
 // Data-quality vector tools: geometry validity (DuckDB-WASM Spatial / GEOS)
 // and rule-based topology checking (the wbtopology engine inside
-// geolibre-wasm). See GeoLibre#1290.
+// geolibre-wasm). See GeoInt#1290.
 //
 // Engines:
 // - `check-validity` / `fix-geometries` run on DuckDB-WASM Spatial
@@ -15,13 +15,13 @@
 //   has no automatic fix, so `fix-topology` does not offer it (see
 //   FIXABLE_TOPOLOGY_RULES).
 import type { Feature, FeatureCollection, Geometry, Position } from "geojson";
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import type { DuckDbCapability, ProcessingAlgorithm, ProcessingContext } from "./types";
 
 // Mirrors the same helper in vector-tools.ts, h3-tools.ts and registry.ts;
 // intentionally duplicated because vector-tools.ts imports from this file, so
 // importing the other direction would create a cycle. Keep the copies in sync.
-function getLayer(ctx: ProcessingContext, paramId = "layer"): GeoLibreLayer | undefined {
+function getLayer(ctx: ProcessingContext, paramId = "layer"): GeoIntLayer | undefined {
   const id = ctx.parameters[paramId] as string | undefined;
   return ctx.layers.find((l) => l.id === id);
 }
@@ -86,7 +86,7 @@ function firstPositionIn(node: unknown): Position | null {
  * ST_Read does not guarantee row order, so each feature is tagged with its
  * index before registration and the query selects the tag back out.
  */
-export const IDX_PROPERTY = "__geolibre_topo_idx";
+export const IDX_PROPERTY = "__geoint_topo_idx";
 
 /**
  * Copy `fc` with each feature's index stored under {@link IDX_PROPERTY}.

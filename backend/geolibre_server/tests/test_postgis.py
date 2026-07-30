@@ -4,7 +4,7 @@ Two tiers:
 
 - Validation and status tests that need only psycopg installed (no server).
 - Live round-trip tests against a real PostGIS database, enabled by setting
-  ``GEOLIBRE_TEST_POSTGIS_DSN`` to a connection string with rights to create
+  ``GEOINT_TEST_POSTGIS_DSN`` to a connection string with rights to create
   and drop tables. Without it they skip, mirroring how the other optional
   engines (geopandas/rasterio/sedona) gate their suites.
 """
@@ -38,15 +38,15 @@ requires_psycopg = pytest.mark.skipif(
     not HAS_PSYCOPG, reason="psycopg optional extra not installed"
 )
 
-LIVE_DSN = os.environ.get("GEOLIBRE_TEST_POSTGIS_DSN", "")
+LIVE_DSN = os.environ.get("GEOINT_TEST_POSTGIS_DSN", "")
 
 requires_live_postgis = pytest.mark.skipif(
     not (HAS_PSYCOPG and LIVE_DSN),
-    reason="GEOLIBRE_TEST_POSTGIS_DSN not set",
+    reason="GEOINT_TEST_POSTGIS_DSN not set",
 )
 
-TABLE = "geolibre_writeback_test"
-NO_PK_TABLE = "geolibre_writeback_nopk"
+TABLE = "geoint_writeback_test"
+NO_PK_TABLE = "geoint_writeback_nopk"
 
 
 def _collection(features: list[dict]) -> dict:
@@ -336,7 +336,7 @@ def test_write_null_pk_property_falls_back_to_feature_id(live_table) -> None:
 @requires_live_postgis
 def test_write_keyless_insert_needs_pk_default(live_table) -> None:
     """Fail fast when the key column cannot generate a value for an insert."""
-    table = "geolibre_writeback_nodefault"
+    table = "geoint_writeback_nodefault"
     with psycopg.connect(LIVE_DSN) as conn:
         with conn.cursor() as cur:
             cur.execute(f"DROP TABLE IF EXISTS {table}")
@@ -398,7 +398,7 @@ def test_read_excludes_secondary_geometry_columns(live_table) -> None:
 @requires_live_postgis
 def test_write_diffs_correctly_with_uuid_primary_key(live_table) -> None:
     """Non-integer keys must diff by value, not delete-and-recreate rows."""
-    table = "geolibre_writeback_uuid"
+    table = "geoint_writeback_uuid"
     with psycopg.connect(LIVE_DSN) as conn:
         with conn.cursor() as cur:
             cur.execute(f"DROP TABLE IF EXISTS {table}")
@@ -519,7 +519,7 @@ def test_write_rejects_tables_beyond_feature_cap(live_table, monkeypatch) -> Non
 @requires_live_postgis
 def test_native_array_and_jsonb_columns_round_trip(live_table) -> None:
     """text[] binds as an array and jsonb as JSON on write-back."""
-    table = "geolibre_writeback_arrays"
+    table = "geoint_writeback_arrays"
     with psycopg.connect(LIVE_DSN) as conn:
         with conn.cursor() as cur:
             cur.execute(f"DROP TABLE IF EXISTS {table}")

@@ -1,5 +1,5 @@
-import { useAppStore } from "@geolibre/core";
-import { detectGeometryProfile, type MapController } from "@geolibre/map";
+import { useAppStore } from "@geoint/core";
+import { detectGeometryProfile, type MapController } from "@geoint/map";
 import {
   VECTOR_TOOLS,
   getVectorTool,
@@ -11,7 +11,7 @@ import {
   type ProcessingContext,
   type VectorToolRequest,
   type VectorToolResult,
-} from "@geolibre/processing";
+} from "@geoint/processing";
 import { onPyodideProgress, runVectorToolInPyodide } from "../../lib/pyodide/pyodide-vector-loader";
 import { createDuckDbCapability } from "../../lib/duckdb-processing";
 import { beginProcessingRun, type ProcessingRunTracker } from "../../lib/processing-history";
@@ -26,7 +26,7 @@ import {
   ScrollArea,
   Select,
   cn,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { ParameterField } from "./ParameterField";
 import { Loader2, Play, Server } from "lucide-react";
 import type { FeatureCollection } from "geojson";

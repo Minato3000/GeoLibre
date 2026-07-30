@@ -7,7 +7,7 @@ import {
 
 describe("isFieldParameterName", () => {
   it("matches the field/attribute suffixes tools use for a column name", () => {
-    // points_to_line (GeoLibre#1459) plus the shapes seen across the catalog.
+    // points_to_line (GeoInt#1459) plus the shapes seen across the catalog.
     for (const name of [
       "line_field",
       "sort_field",

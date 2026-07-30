@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
-import type { GeoLibreLayer } from "../packages/core/src/types";
+import type { GeoIntLayer } from "../packages/core/src/types";
 import { CesiumLayerSync, isCesiumSupportedLayerType } from "../packages/map/src/cesium-layer-sync";
 
 // Verifies the store → Cesium reconciler against a fake Cesium namespace + viewer
@@ -135,7 +135,7 @@ function makeFakes() {
   return { calls, viewer, Cesium, flush };
 }
 
-function mkLayer(over: Partial<GeoLibreLayer>): GeoLibreLayer {
+function mkLayer(over: Partial<GeoIntLayer>): GeoIntLayer {
   return {
     id: "l1",
     name: "layer",
@@ -146,7 +146,7 @@ function mkLayer(over: Partial<GeoLibreLayer>): GeoLibreLayer {
     style: {},
     metadata: {},
     ...over,
-  } as GeoLibreLayer;
+  } as GeoIntLayer;
 }
 
 function newSync(f: ReturnType<typeof makeFakes>) {

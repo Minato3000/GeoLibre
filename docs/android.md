@@ -1,17 +1,17 @@
 # Android
 
-GeoLibre runs as a native Android app built from the same React codebase via
+GeoInt runs as a native Android app built from the same React codebase via
 **Tauri v2 mobile** — no separate app. The webview UI is bundled in the APK, so
 the app shell works offline; map tiles and the heavier engines are fetched on
 demand (same as the desktop build).
 
 ## Install
 
-GeoLibre is published on
+GeoInt is published on
 [Google Play](https://play.google.com/store/apps/details?id=org.geolibre.app).
 The Play build is signed and updates automatically:
 
-[Get GeoLibre on Google Play](https://play.google.com/store/apps/details?id=org.geolibre.app){ .md-button .md-button--primary }
+[Get GeoInt on Google Play](https://play.google.com/store/apps/details?id=org.geolibre.app){ .md-button .md-button--primary }
 
 Prefer to sideload? Every [release](https://github.com/opengeos/GeoLibre/releases)
 attaches signed, per-ABI APKs — see [Downloads](downloads.md#android-installation).
@@ -123,7 +123,7 @@ npx tauri android build --aab                    # universal AAB for Google Play
 - Google Play path: the universal **AAB** (Play generates per-device splits from
   it). Don't `--split-per-abi` the AAB — Play wants the one bundle.
 
-The app is named **GeoLibre** on Android (the desktop build is "GeoLibre
+The app is named **GeoInt** on Android (the desktop build is "GeoInt
 Desktop") and uses the package id **`org.geolibre.app`**, both set via
 `src-tauri/tauri.android.conf.json`, which also drops the Python backend from
 the Android bundle.
@@ -132,7 +132,7 @@ The Android id is overridden there rather than in `tauri.conf.json` on purpose:
 `identifier` is shared by every platform and also determines the macOS bundle ID,
 the Linux AppStream id, and the webview data directory. Changing it globally
 would orphan existing desktop users' settings and break the Linux/COPR/Homebrew
-packaging, all of which still key off `org.geolibre.desktop`.
+packaging, all of which still key off `org.geoint.desktop`.
 
 ## Signing
 
@@ -147,13 +147,13 @@ KS="$HOME/.android/debug.keystore"   # auto-created by Android tooling; or make 
 "$BT/zipalign" -P 16 -f 4 app-arm64-release-unsigned.apk aligned.apk
 "$BT/apksigner" sign --ks "$KS" --ks-pass pass:android \
   --ks-key-alias androiddebugkey --key-pass pass:android \
-  --out geolibre-arm64.apk aligned.apk
-"$BT/apksigner" verify geolibre-arm64.apk
+  --out geoint-arm64.apk aligned.apk
+"$BT/apksigner" verify geoint-arm64.apk
 ```
 
 The example signs the arm64 APK. Substitute the ABI you need throughout —
-`app-x86_64-release-unsigned.apk` → `geolibre-x86_64.apk`, and likewise for
-`armeabi-v7a` / `x86`. The emulator section below installs `geolibre-x86_64.apk`,
+`app-x86_64-release-unsigned.apk` → `geoint-x86_64.apk`, and likewise for
+`armeabi-v7a` / `x86`. The emulator section below installs `geoint-x86_64.apk`,
 which is this same walkthrough with `arm64` swapped for `x86_64`.
 
 For a real upload/release key:
@@ -167,7 +167,7 @@ keytool -genkeypair -v -keystore upload.jks -alias upload -keyalg RSA \
 
 `.github/workflows/android.yml` builds **signed**, per-ABI release APKs on each
 published GitHub release (and on demand via the "Run workflow" button) and
-uploads them as the `geolibre-android-release-apks` artifact. It signs with your release keystore when these repository secrets are
+uploads them as the `geoint-android-release-apks` artifact. It signs with your release keystore when these repository secrets are
 set, and otherwise falls back to a throwaway debug key so the artifact is still
 installable for testing:
 
@@ -177,7 +177,7 @@ installable for testing:
 - `ANDROID_KEY_PASSWORD`
 
 It also builds a universal **AAB** and uploads it as the separate
-`geolibre-android-play-aab` artifact — but *only* on runs that have the real
+`geoint-android-play-aab` artifact — but *only* on runs that have the real
 release keystore, since Play rejects a debug-signed bundle. Without the keystore
 the AAB build is skipped entirely rather than built and discarded. The AAB is
 not attached to the GitHub Release (an `.aab` is not user-installable).
@@ -189,7 +189,7 @@ not attached to the GitHub Release (an `.aab` is not user-installable).
 1. Enable **Developer options** (tap Build number 7×) and **USB debugging**.
 2. Sideload the signed APK:
    ```bash
-   adb install -r geolibre-arm64.apk
+   adb install -r geoint-arm64.apk
    ```
    Or copy the APK to the phone and tap it (allow "install unknown apps").
 
@@ -201,12 +201,12 @@ For live development with hot reload, connect the device and run
 ```bash
 sdkmanager --sdk_root="$ANDROID_HOME" \
   "emulator" "system-images;android-36;google_apis_playstore;x86_64"
-avdmanager create avd -n geolibre \
+avdmanager create avd -n geoint \
   -k "system-images;android-36;google_apis_playstore;x86_64" -d pixel_7
-emulator -avd geolibre
+emulator -avd geoint
 # x86_64 APK to match the x86_64 system image — the emulator can translate the
 # arm64 build, but far slower, and it would not exercise the x86_64 libraries.
-adb install -r geolibre-x86_64.apk
+adb install -r geoint-x86_64.apk
 ```
 
 > If you ever rebuild with a **different** signing key, uninstall the old copy
@@ -217,7 +217,7 @@ adb install -r geolibre-x86_64.apk
 
 ## Publishing to Google Play
 
-GeoLibre is live on Play as
+GeoInt is live on Play as
 [`org.geolibre.app`](https://play.google.com/store/apps/details?id=org.geolibre.app);
 this section records the onboarding for reference and for anyone publishing a
 fork. Only step 3 recurs per release: build the AAB with the upload key and bump
@@ -233,7 +233,7 @@ is one-time Play Console onboarding.
    the actual app signing key and re-signs each bundle. The repository's
    `ANDROID_KEYSTORE_*` secrets are that upload key — keep the keystore backed
    up, since losing it requires a Play support reset.
-3. **Upload the AAB** from the `geolibre-android-play-aab` CI artifact. The
+3. **Upload the AAB** from the `geoint-android-play-aab` CI artifact. The
    `versionCode` is derived from the version in `tauri.conf.json` and must
    increase on every upload.
 4. **Store listing assets:** 512×512 icon, a **1024×500 feature graphic**, and
@@ -243,7 +243,7 @@ is one-time Play Console onboarding.
 5. **Privacy policy URL** — point at the published [privacy policy](privacy.md).
 6. **Data safety form.** Declare each network destination honestly: geocoding,
    the AI assistant, basemap/tile fetches, and Google OAuth for Earth Engine.
-   Note which are *transmitted* versus *collected* — GeoLibre does not operate a
+   Note which are *transmitted* versus *collected* — GeoInt does not operate a
    backend that retains user data, but the form asks per-purpose.
 7. **Content rating** questionnaire and target audience.
 

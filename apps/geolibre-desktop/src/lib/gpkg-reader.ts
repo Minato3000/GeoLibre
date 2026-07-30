@@ -193,7 +193,7 @@ function readLayerFeatures(
           // feature with a null geometry and warn so the loss is diagnosable
           // rather than silent.
           console.warn(
-            `[GeoLibre] Skipped an unreadable geometry in GeoPackage layer "${layer.table}":`,
+            `[GeoInt] Skipped an unreadable geometry in GeoPackage layer "${layer.table}":`,
             error,
           );
         }

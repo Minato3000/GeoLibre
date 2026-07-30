@@ -3,18 +3,18 @@ import { afterEach, describe, it } from "node:test";
 import {
   clearExternalNativePaintBridge,
   DEFAULT_LAYER_STYLE,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   getExternalNativePaintBridge,
   pluginOwnsPaint,
   setExternalNativePaintBridge,
   supportsBridgedOpacity,
-} from "@geolibre/core";
-import type { GeoLibreExternalNativeLayerRegistration } from "@geolibre/plugins";
+} from "@geoint/core";
+import type { GeoIntExternalNativeLayerRegistration } from "@geoint/plugins";
 import { syncLayer } from "../packages/map/src/layer-sync";
 import { createExternalNativeStoreLayer } from "../apps/geolibre-desktop/src/lib/external-native-layer";
 
 // A plugin's MapLibre CustomLayerInterface layer has no paint properties, so
-// GeoLibre must not offer (or apply) MapLibre paint for it, and the panel's
+// GeoInt must not offer (or apply) MapLibre paint for it, and the panel's
 // generic controls only reach it through the setters the registration supplied
 // (opengeos/GeoLibre#1445).
 
@@ -45,7 +45,7 @@ function makeMapStub(nativeLayerId: string, nativeType: string) {
   return { map, calls };
 }
 
-function customLayer(id: string, patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function customLayer(id: string, patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id,
     name: "Zarr (plugin rendered)",
@@ -64,8 +64,8 @@ function customLayer(id: string, patch: Partial<GeoLibreLayer> = {}): GeoLibreLa
 }
 
 const registration = (
-  overrides: Partial<GeoLibreExternalNativeLayerRegistration> = {},
-): GeoLibreExternalNativeLayerRegistration => ({
+  overrides: Partial<GeoIntExternalNativeLayerRegistration> = {},
+): GeoIntExternalNativeLayerRegistration => ({
   id: "plugin-zarr",
   name: "Plugin Zarr",
   nativeLayerIds: ["plugin-zarr"],
@@ -95,7 +95,7 @@ describe("plugin-owned paint registration", () => {
   });
 
   it("infers plugin-owned paint from a supplied bridge", () => {
-    // A bridge is only meaningful for a layer GeoLibre cannot paint, so it must
+    // A bridge is only meaningful for a layer GeoInt cannot paint, so it must
     // not require the plugin to also spell out paintMode.
     const layer = createExternalNativeStoreLayer(
       registration({ paintBridge: { setOpacity: () => {} } }),
@@ -103,7 +103,7 @@ describe("plugin-owned paint registration", () => {
     assert.equal(layer.metadata.paintMode, "plugin");
   });
 
-  it("leaves an ordinary registration painted by GeoLibre", () => {
+  it("leaves an ordinary registration painted by GeoInt", () => {
     const layer = createExternalNativeStoreLayer(registration());
     assert.equal(layer.metadata.paintMode, undefined);
     assert.equal(pluginOwnsPaint(layer), false);
@@ -215,7 +215,7 @@ describe("layer-sync paint bridge", () => {
       !calls.some((call) => call.method === "setPaintProperty"),
       "expected the plugin's paint to be left untouched",
     );
-    // Visibility and ordering are still GeoLibre's to apply: MapLibre honors
+    // Visibility and ordering are still GeoInt's to apply: MapLibre honors
     // both on a custom layer.
     assert.ok(calls.some((call) => call.method === "setLayoutProperty"));
     assert.ok(calls.some((call) => call.method === "moveLayer"));

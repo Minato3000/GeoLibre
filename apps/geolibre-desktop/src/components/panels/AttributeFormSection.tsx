@@ -6,9 +6,9 @@ import {
   valueMapToText,
   type AttributeFormFieldConfig,
   type AttributeFormWidget,
-  type GeoLibreLayer,
-} from "@geolibre/core";
-import { Button, Input, Label, Select, Textarea } from "@geolibre/ui";
+  type GeoIntLayer,
+} from "@geoint/core";
+import { Button, Input, Label, Select, Textarea } from "@geoint/ui";
 import { Pencil, Plus, SquareFunction, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,7 +20,7 @@ import { getSchema } from "../../lib/field-collection";
 import { ExpressionBuilderDialog } from "../expressions/ExpressionBuilderDialog";
 
 interface AttributeFormSectionProps {
-  layer: GeoLibreLayer;
+  layer: GeoIntLayer;
 }
 
 const WIDGETS: AttributeFormWidget[] = ["text", "number", "range", "checkbox", "date", "valueMap"];

@@ -1,9 +1,9 @@
 import type { Map as MapLibreMap } from "maplibre-gl";
-import { getActiveEllipsoid } from "@geolibre/core";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import { getActiveEllipsoid } from "@geoint/core";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 
 /**
- * GeoLibre atmosphere & particle effects plugin.
+ * GeoInt atmosphere & particle effects plugin.
  *
  * Stacks transparent Canvas 2D layers behind the MapLibre globe to give it a
  * sense of place in space: a deep-space backdrop, tiled parallax starfield,
@@ -17,7 +17,7 @@ import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
  * https://leoneljdias.github.io/posts/globe-atmosphere-halo-comets/
  * — specifically the layered Canvas 2D approach, the halo gradient stops and
  * "screen" blend, and the starfield/comet parameters. Re-implemented for
- * GeoLibre's plugin lifecycle (background canvases behind the MapLibre canvas
+ * GeoInt's plugin lifecycle (background canvases behind the MapLibre canvas
  * so the effects show through the globe projection's transparent space without
  * masking the map).
  */
@@ -60,8 +60,8 @@ export const HALO_EXTENT_MAX = 4;
 export const HALO_OPACITY_MIN = 0;
 export const HALO_OPACITY_MAX = 1;
 
-const EFFECTS_MAP_CLASS = "geolibre-effects-map";
-const EFFECTS_OVERLAY_STYLE_ID = "geolibre-effects-maplibre-overlays";
+const EFFECTS_MAP_CLASS = "geoint-effects-map";
+const EFFECTS_OVERLAY_STYLE_ID = "geoint-effects-maplibre-overlays";
 const MAP_CANVAS_Z_INDEX = "4";
 const CONTROL_CONTAINER_Z_INDEX = "5";
 const MAPLIBRE_OVERLAY_Z_INDEX = "6";
@@ -560,7 +560,7 @@ class EffectsEngine {
 
   private createCanvas(zIndex: number): HTMLCanvasElement {
     const canvas = document.createElement("canvas");
-    canvas.className = "geolibre-effects-canvas";
+    canvas.className = "geoint-effects-canvas";
     canvas.style.position = "absolute";
     canvas.style.top = "0";
     canvas.style.left = "0";
@@ -847,7 +847,7 @@ let engine: EffectsEngine | null = null;
 // the engine exists.
 let currentSettings: EffectsSettings = { ...DEFAULT_EFFECTS_SETTINGS };
 
-function attachEngine(app: GeoLibreAppAPI): boolean {
+function attachEngine(app: GeoIntAppAPI): boolean {
   const map = app.getMap?.();
   if (!map) return false;
   // A map re-init hands back a different MapLibreMap instance; tear down the
@@ -892,7 +892,7 @@ function detachEngine(): void {
  * after restoring plugin state — mirroring `restoreRasterLayers` — to bridge
  * that gap. Idempotent: safe to call on every project load / map reinit.
  */
-export function restoreEffects(app: GeoLibreAppAPI, active: boolean, settings?: unknown): void {
+export function restoreEffects(app: GeoIntAppAPI, active: boolean, settings?: unknown): void {
   // Apply the project's saved appearance (or defaults when absent) before
   // attaching. restoreProjectState only invokes applyProjectState when the
   // project actually carries effects settings, so a project saved with the
@@ -907,20 +907,20 @@ export function restoreEffects(app: GeoLibreAppAPI, active: boolean, settings?: 
   else detachEngine();
 }
 
-export const maplibreEffectsPlugin: GeoLibrePlugin = {
+export const maplibreEffectsPlugin: GeoIntPlugin = {
   id: EFFECTS_PLUGIN_ID,
   name: "Atmospheric Effects",
   version: "1.0.0",
   activeByDefault: true,
-  activate: (app: GeoLibreAppAPI) => attachEngine(app),
-  deactivate: (_app: GeoLibreAppAPI) => detachEngine(),
+  activate: (app: GeoIntAppAPI) => attachEngine(app),
+  deactivate: (_app: GeoIntAppAPI) => detachEngine(),
   // Persist the appearance only when it differs from the defaults, so untouched
   // projects don't carry an effects settings blob.
   getProjectState: () =>
     effectsSettingsEqual(currentSettings, DEFAULT_EFFECTS_SETTINGS)
       ? undefined
       : { ...currentSettings },
-  applyProjectState: (_app: GeoLibreAppAPI, state: unknown) => {
+  applyProjectState: (_app: GeoIntAppAPI, state: unknown) => {
     // A project without saved settings (state === undefined) resets to defaults,
     // matching how applyProjectState is invoked with resetMissingSettings.
     const next = normalizeEffectsSettings(state, DEFAULT_EFFECTS_SETTINGS);

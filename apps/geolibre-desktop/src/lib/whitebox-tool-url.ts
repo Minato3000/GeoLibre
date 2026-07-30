@@ -37,7 +37,7 @@ const RESERVED_PARAMS: ReadonlySet<string> = new Set([
 
 /**
  * Every tool id present in the checked-in Whitebox menu catalog — the Whitebox
- * catalog snapshot tools plus the GeoLibre-authored WASM tools. Built once at
+ * catalog snapshot tools plus the GeoInt-authored WASM tools. Built once at
  * module load and used to validate a `?tool=` deep link before it opens the
  * dialog. This is the union across engines; a given runtime (WASM in the
  * browser, the Python sidecar under Tauri) may not expose every one, which the
@@ -119,19 +119,19 @@ export function whiteboxToolFromLocation(): WhiteboxToolUrlTarget | null {
  * `tauri://…` origin that recipients can't open. The web build shares its own
  * origin instead (see `whiteboxToolShareBase`).
  */
-export const GEOLIBRE_WEB_APP_URL = "https://web.geolibre.app/";
+export const GEOINT_WEB_APP_URL = "https://web.geolibre.app/";
 
 /**
  * The base URL a "Copy link" share should build on.
  *
  * @param desktop - Whether the app is the desktop (Tauri) build, whose
  *   `window.location` is not shareable.
- * @returns `GEOLIBRE_WEB_APP_URL` on desktop; otherwise the current app's
+ * @returns `GEOINT_WEB_APP_URL` on desktop; otherwise the current app's
  *   origin + path (so a self-hosted web deployment links to itself), falling
  *   back to the canonical URL when there is no window.
  */
 export function whiteboxToolShareBase(desktop: boolean): string {
-  if (desktop || typeof window === "undefined") return GEOLIBRE_WEB_APP_URL;
+  if (desktop || typeof window === "undefined") return GEOINT_WEB_APP_URL;
   return `${window.location.origin}${window.location.pathname}`;
 }
 

@@ -2,9 +2,9 @@ import {
   DEFAULT_LAYER_STYLE,
   ruleBasedVisibilityFilter,
   styleValue,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerStyle,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import type { ExpressionSpecification, LayerSpecification, StyleSpecification } from "maplibre-gl";
 import { detectGeometryProfile } from "./geojson-loader";
@@ -50,10 +50,10 @@ export interface MapboxStyleExportResult {
 
 /**
  * The layer fields the exporter reads. Kept structural (rather than the full
- * {@link GeoLibreLayer}) so it is easy to unit-test with a minimal fixture.
+ * {@link GeoIntLayer}) so it is easy to unit-test with a minimal fixture.
  */
 export type ExportableLayer = Pick<
-  GeoLibreLayer,
+  GeoIntLayer,
   "id" | "name" | "type" | "style" | "opacity" | "visible"
 >;
 
@@ -177,7 +177,7 @@ function buildLabelLayer(
   if (labels.dedupe !== "off" && pointOnly && labels.field) {
     warnings.push(
       "Duplicate-label handling (unique/concatenate) is applied live in " +
-        "GeoLibre and is not carried into the exported style; every feature is " +
+        "GeoInt and is not carried into the exported style; every feature is " +
         "labeled.",
     );
   }
@@ -228,10 +228,10 @@ function buildLabelLayer(
 }
 
 /**
- * Serialize a vector layer's GeoLibre symbology into a self-contained Mapbox GL
+ * Serialize a vector layer's GeoInt symbology into a self-contained Mapbox GL
  * / MapLibre style document. The render layers reuse the exact same paint
  * builders the live map uses ({@link fillPaint}, {@link linePaint},
- * {@link circlePaint}, ...), so an exported style reproduces what GeoLibre draws
+ * {@link circlePaint}, ...), so an exported style reproduces what GeoInt draws
  * for the single/categorized/graduated/expression/rule-based renderers and
  * labels. Features that rely on generated sprite images (fill patterns, custom
  * markers, heatmap density beyond the built-in ramp) degrade gracefully and are
@@ -284,7 +284,7 @@ export function buildMapboxStyle(
   // A rule-based layer whose else rule is switched off hides features matching
   // no rule; the live map does that with a per-feature filter, so fold the same
   // filter into every exported render layer or the exported style would draw
-  // features GeoLibre hides.
+  // features GeoInt hides.
   const ruleFilter = ruleBasedVisibilityFilter(style);
   const withRuleVisibility = (geometryFilter: ExpressionSpecification): ExpressionSpecification =>
     ruleFilter
@@ -392,7 +392,7 @@ export function buildMapboxStyle(
 
   // The live map suppresses labels on extruded and heatmap layers, so the
   // export must too (otherwise an extruded/heatmap layer gains labels it never
-  // shows in GeoLibre).
+  // shows in GeoInt).
   const labelLayer =
     style.extrusionEnabled || effectiveRenderer === "heatmap"
       ? null

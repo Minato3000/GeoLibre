@@ -5,7 +5,7 @@ import {
   lineWidthValue,
   metersWidthExpression,
   type LayerStyle,
-} from "@geolibre/core";
+} from "@geoint/core";
 import { linePaint } from "../packages/map/src/style-mapper";
 
 function style(patch: Partial<LayerStyle> = {}): LayerStyle {

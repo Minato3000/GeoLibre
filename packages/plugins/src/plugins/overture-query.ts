@@ -7,7 +7,7 @@ import {
 } from "maplibre-gl-overture-maps";
 import { PbfReader } from "pbf";
 import { PMTiles } from "pmtiles";
-import type { GeoLibreOvertureQuery, GeoLibreOvertureQueryResult } from "../types";
+import type { GeoIntOvertureQuery, GeoIntOvertureQueryResult } from "../types";
 
 const WEB_MERCATOR_MAX_LAT = 85.05112878;
 const DEFAULT_ZOOM = 12;
@@ -390,8 +390,8 @@ export function overtureZoomForBBox(bbox: BBox, preferredZoom: number, maxTiles:
  * polygons can span tile boundaries.
  */
 export async function queryOvertureFeatures(
-  query: GeoLibreOvertureQuery,
-): Promise<GeoLibreOvertureQueryResult> {
+  query: GeoIntOvertureQuery,
+): Promise<GeoIntOvertureQueryResult> {
   assertBBox(query.bbox);
   const maxTiles = boundedPositiveInteger(query.maxTiles, DEFAULT_MAX_TILES, MAX_TILES);
   const maxFeatures = boundedPositiveInteger(query.maxFeatures, DEFAULT_MAX_FEATURES, MAX_FEATURES);

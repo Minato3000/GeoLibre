@@ -31,7 +31,7 @@ describe("buildDedupedLabelFeatures", () => {
     const result = buildDedupedLabelFeatures(collection, "name", "unique");
     assert.ok(result);
     assert.equal(result.features.length, 2);
-    const labels = result.features.map((f) => f.properties?.__geolibre_label).sort();
+    const labels = result.features.map((f) => f.properties?.__geoint_label).sort();
     assert.deepEqual(labels, ["Antenna 1", "Other"]);
   });
 
@@ -45,7 +45,7 @@ describe("buildDedupedLabelFeatures", () => {
     const result = buildDedupedLabelFeatures(collection, "name", "concatenate");
     assert.ok(result);
     assert.equal(result.features.length, 1);
-    assert.equal(result.features[0].properties?.__geolibre_label, "A\nB");
+    assert.equal(result.features[0].properties?.__geoint_label, "A\nB");
     assert.deepEqual(result.features[0].geometry, {
       type: "Point",
       coordinates: [10, 20],
@@ -61,7 +61,7 @@ describe("buildDedupedLabelFeatures", () => {
     const result = buildDedupedLabelFeatures(collection, "name", "unique");
     assert.ok(result);
     assert.equal(result.features.length, 1);
-    assert.equal(result.features[0].properties?.__geolibre_label, "Keep");
+    assert.equal(result.features[0].properties?.__geoint_label, "Keep");
   });
 
   it("ignores non-point geometries", () => {
@@ -88,6 +88,6 @@ describe("buildDedupedLabelFeatures", () => {
     const collection = fc([{ coords: [5, 5], props: { id: 42 } }]);
     const result = buildDedupedLabelFeatures(collection, "id", "unique");
     assert.ok(result);
-    assert.equal(result.features[0].properties?.__geolibre_label, "42");
+    assert.equal(result.features[0].properties?.__geoint_label, "42");
   });
 });

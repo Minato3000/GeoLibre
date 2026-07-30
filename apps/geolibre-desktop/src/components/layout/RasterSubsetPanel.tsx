@@ -1,6 +1,6 @@
-import { type GeoLibreLayer, useAppStore } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
-import { Button, Input, Label, Textarea } from "@geolibre/ui";
+import { type GeoIntLayer, useAppStore } from "@geoint/core";
+import type { MapController } from "@geoint/map";
+import { Button, Input, Label, Textarea } from "@geoint/ui";
 import {
   ChevronDown,
   ChevronRight,
@@ -57,7 +57,7 @@ const EMPTY_COORDS: CoordFields = { west: "", south: "", east: "", north: "" };
 
 interface RasterSubsetPanelProps {
   /** The layer being extracted, or `null` when the panel is closed. */
-  layer: GeoLibreLayer | null;
+  layer: GeoIntLayer | null;
   onClose: () => void;
   mapControllerRef: RefObject<MapController | null>;
 }

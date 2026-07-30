@@ -1,7 +1,7 @@
 /**
  * Celestial-body ellipsoids and the planetary basemaps that pair with them.
  *
- * GeoLibre is Earth-centric by construction: MapLibre only renders Web Mercator
+ * GeoInt is Earth-centric by construction: MapLibre only renders Web Mercator
  * and all vector data is kept as WGS84 lon/lat GeoJSON. This module does *not*
  * change that — MapLibre still treats the planet as a unit sphere and there is
  * no true multi-CRS rendering (see maplibre-gl-js#168). What it adds is a
@@ -173,7 +173,7 @@ export function getActiveSemiMajorAxisMeters(): number {
  * A raster basemap for a celestial body — the Moon and Mars mosaics, plus the
  * Earth satellite imagery the planet switcher pairs with Earth. The tiles are
  * XYZ (or TMS, see {@link scheme}) images in that body's Web-Mercator scheme, so
- * MapLibre renders them directly. The `styleUrl` is a `geolibre://basemap/<id>`
+ * MapLibre renders them directly. The `styleUrl` is a `geoint://basemap/<id>`
  * sentinel; the map controller expands it into a raster style at apply time (it
  * is not a fetchable URL).
  */
@@ -199,19 +199,19 @@ export interface PlanetaryBasemap {
   ellipsoidId: EllipsoidId;
 }
 
-export const PLANETARY_BASEMAP_SENTINEL_PREFIX = "geolibre://basemap/";
+export const PLANETARY_BASEMAP_SENTINEL_PREFIX = "geoint://basemap/";
 
 const OPM_ATTRIBUTION = '<a href="https://www.openplanetary.org/opm">OpenPlanetaryMap</a>';
 
 /** Data-source credit joined with the OpenPlanetaryMap attribution. */
 const opmCredit = (source: string) => `${source} · ${OPM_ATTRIBUTION}`;
 
-// The GeoLibre tiles Worker (workers/tiles), which adds CORS to the OPM S3
+// The GeoInt tiles Worker (workers/tiles), which adds CORS to the OPM S3
 // mosaics that lack it. Its dataset keys mirror the DATASETS map in that Worker.
 // Tile path: `${TILE_PROXY_BASE}/<dataset>/{z}/{x}/{y}.png`.
 const TILE_PROXY_BASE = "https://tiles.geolibre.app/opm";
 
-// The GeoLibre tiles Worker's reprojection endpoint, which warps the USGS
+// The GeoInt tiles Worker's reprojection endpoint, which warps the USGS
 // Astrogeology equirectangular WMS layers to Web Mercator so MapLibre can render
 // them (the USGS server offers no EPSG:3857 for these bodies). Its dataset keys
 // mirror the WMS_DATASETS map in that Worker (workers/tiles/src/index.ts).
@@ -239,7 +239,7 @@ const usgsCredit = (source: string) => `${source} · ${USGS_ASTRO_ATTRIBUTION}`;
 // The CARTO `opmbuilder` named maps send `Access-Control-Allow-Origin: *`, so
 // they are referenced directly. The single-layer OPM mosaics are served from S3
 // buckets that send NO CORS header, so the browser blocks them — those go
-// through the GeoLibre tiles Worker (workers/tiles, tiles.geolibre.app), which
+// through the GeoInt tiles Worker (workers/tiles, tiles.geolibre.app), which
 // re-emits each tile with CORS and edge-caches it. See TILE_PROXY_BASE.
 export const PLANETARY_BASEMAPS: readonly PlanetaryBasemap[] = [
   // --- Mars ---------------------------------------------------------------
@@ -532,7 +532,7 @@ const LEGACY_PLANETARY_BASEMAP_IDS: Record<string, string> = {
   "moon-lroc": "moon-basemap-v0-1",
 };
 
-/** Resolve a `geolibre://basemap/<id>` sentinel to its planetary basemap. */
+/** Resolve a `geoint://basemap/<id>` sentinel to its planetary basemap. */
 export function getPlanetaryBasemapByStyleUrl(
   styleUrl: string | undefined,
 ): PlanetaryBasemap | undefined {

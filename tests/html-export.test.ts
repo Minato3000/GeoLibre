@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { GeoLibreProject } from "@geolibre/core";
+import type { GeoIntProject } from "@geoint/core";
 import {
   buildProjectHtml,
   DEFAULT_VIEWER_BASE_URL,
@@ -12,7 +12,7 @@ const PROJECT = {
   version: "1.0.0",
   name: "My Map",
   layers: [],
-} as unknown as GeoLibreProject;
+} as unknown as GeoIntProject;
 
 describe("buildProjectHtml", () => {
   it("frames the viewer with embed=1 and welcome=0 and inlines the project", () => {
@@ -25,15 +25,15 @@ describe("buildProjectHtml", () => {
     // "&" is HTML-escaped to "&amp;" in the attribute (decoded back by browsers).
     assert.match(
       html,
-      /<iframe id="geolibre-frame" src="https:\/\/web\.geolibre\.app\/\?embed=1&amp;welcome=0"/,
+      /<iframe id="geoint-frame" src="https:\/\/web\.geolibre\.app\/\?embed=1&amp;welcome=0"/,
     );
     // The project rides in a JSON <script> block and is replayed over the bridge.
-    assert.match(html, /id="geolibre-project"/);
-    assert.match(html, /"geolibre:load-project"/);
-    assert.match(html, /"geolibre:ready"/);
+    assert.match(html, /id="geoint-project"/);
+    assert.match(html, /"geoint:load-project"/);
+    assert.match(html, /"geoint:ready"/);
     // The inlined JSON round-trips back to the original project.
     const json = html.match(
-      /<script type="application\/json" id="geolibre-project">([\s\S]*?)<\/script>/,
+      /<script type="application\/json" id="geoint-project">([\s\S]*?)<\/script>/,
     );
     assert.ok(json);
     // JSON.parse decodes the < escapes natively, so the parsed object
@@ -51,7 +51,7 @@ describe("buildProjectHtml", () => {
       version: "1.0.0",
       name: "x</script><img>",
       layers: [],
-    } as unknown as GeoLibreProject;
+    } as unknown as GeoIntProject;
     const html = buildProjectHtml({ project, title: "T" });
     assert.ok(!html.includes("x</script>"));
     // Only "<" is escaped (">" is harmless inside a script element).
@@ -113,7 +113,7 @@ describe("buildProjectHtml", () => {
       version: "1.0.0",
       name: "a > b",
       layers: [],
-    } as unknown as GeoLibreProject;
+    } as unknown as GeoIntProject;
     const html = buildProjectHtml({ project, title: "T" });
     assert.match(html, /"name":"a > b"/);
   });

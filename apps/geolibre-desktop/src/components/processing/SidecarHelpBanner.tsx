@@ -1,4 +1,4 @@
-import { Button } from "@geolibre/ui";
+import { Button } from "@geoint/ui";
 import { AlertTriangle, ChevronDown, ChevronRight, Zap } from "lucide-react";
 import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";

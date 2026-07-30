@@ -16,7 +16,7 @@ export interface RelayCommand {
 }
 
 /** URL path the relay's endpoints are mounted under, mirroring `RELAY_PATH`. */
-const RELAY_PATH = "geolibre/relay";
+const RELAY_PATH = "geoint/relay";
 
 /**
  * Build the app-side WebSocket URL for a running Jupyter server.
@@ -40,7 +40,7 @@ export function relaySocketUrl(info: JupyterServerInfo): string {
  *
  * @param data - The raw WebSocket payload.
  * @returns The command, or null for a non-command frame (e.g. the relay's
- *   `geolibre:relay-ready` greeting) or an unparseable one.
+ *   `geoint:relay-ready` greeting) or an unparseable one.
  */
 export function parseRelayMessage(data: unknown): RelayCommand | null {
   if (typeof data !== "string") return null;
@@ -52,7 +52,7 @@ export function parseRelayMessage(data: unknown): RelayCommand | null {
   }
   if (!payload || typeof payload !== "object") return null;
   const message = payload as { type?: unknown; method?: unknown; params?: unknown };
-  if (message.type !== "geolibre:command") return null;
+  if (message.type !== "geoint:command") return null;
   if (typeof message.method !== "string" || !message.method) return null;
   const params =
     message.params && typeof message.params === "object" && !Array.isArray(message.params)

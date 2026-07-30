@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import type { FeatureCollection } from "geojson";
-import type { GeoLibreLayer } from "../packages/core/src/types";
+import type { GeoIntLayer } from "../packages/core/src/types";
 import {
   GEOMAN_SHAPE_PROPERTIES,
   GEOMETRY_EDIT_FID_PROPERTY,
@@ -13,7 +13,7 @@ import {
   tagFeatureKeys,
 } from "../packages/plugins/src/plugins/geo-editor-geometry";
 
-function makeLayer(overrides: Partial<GeoLibreLayer>): GeoLibreLayer {
+function makeLayer(overrides: Partial<GeoIntLayer>): GeoIntLayer {
   return {
     id: "layer-1",
     name: "Layer 1",
@@ -25,7 +25,7 @@ function makeLayer(overrides: Partial<GeoLibreLayer>): GeoLibreLayer {
     metadata: {},
     geojson: { type: "FeatureCollection", features: [] },
     ...overrides,
-  } as unknown as GeoLibreLayer;
+  } as unknown as GeoIntLayer;
 }
 
 function point(id: string | number | undefined, properties: Record<string, unknown> = {}) {

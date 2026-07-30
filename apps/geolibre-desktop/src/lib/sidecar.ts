@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { setSidecarAuthToken } from "@geolibre/processing";
+import { setSidecarAuthToken } from "@geoint/processing";
 import { isTauri } from "./tauri-io";
 
 export interface SidecarServerInfo {
@@ -9,23 +9,23 @@ export interface SidecarServerInfo {
   token: string;
 }
 
-export async function startGeoLibreSidecar(): Promise<SidecarServerInfo> {
+export async function startGeoIntSidecar(): Promise<SidecarServerInfo> {
   assertTauri();
-  const info = await invoke<SidecarServerInfo>("start_geolibre_sidecar");
+  const info = await invoke<SidecarServerInfo>("start_geoint_sidecar");
   // Hand the per-launch token to the sidecar client so all subsequent requests
   // (which resolve the base URL themselves) are authenticated.
   setSidecarAuthToken(info.token);
   return info;
 }
 
-export async function stopGeoLibreSidecar(): Promise<void> {
+export async function stopGeoIntSidecar(): Promise<void> {
   assertTauri();
-  await invoke("stop_geolibre_sidecar");
+  await invoke("stop_geoint_sidecar");
   setSidecarAuthToken(null);
 }
 
 function assertTauri(): void {
   if (!isTauri()) {
-    throw new Error("Starting the processing server requires GeoLibre Desktop.");
+    throw new Error("Starting the processing server requires GeoInt Desktop.");
   }
 }

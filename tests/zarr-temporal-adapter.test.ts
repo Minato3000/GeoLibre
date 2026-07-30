@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import {
   __setComponentsModuleLoaderForTests,
   addCloudNetcdfLayer,
@@ -12,7 +12,7 @@ import {
   getTemporalLayerAdapter,
 } from "../packages/plugins/src/plugins/temporal-layers.ts";
 import { __resetZarrTimeAttributeCacheForTests } from "../packages/plugins/src/plugins/zarr-time-axis.ts";
-import type { GeoLibreAppAPI } from "../packages/plugins/src/types";
+import type { GeoIntAppAPI } from "../packages/plugins/src/types";
 
 // A Zarr cube's time is an internal dimension, so `addZarrLayer` registers a
 // temporal adapter that the Time Slider drives through `setSelector`
@@ -124,7 +124,7 @@ const app = {
   addMapControl: () => true,
   removeMapControl: () => {},
   getMap: () => null,
-} as unknown as GeoLibreAppAPI;
+} as unknown as GeoIntAppAPI;
 
 function installStubModule(): void {
   __setComponentsModuleLoaderForTests(

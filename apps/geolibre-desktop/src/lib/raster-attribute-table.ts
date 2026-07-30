@@ -1,11 +1,11 @@
 import {
-  type GeoLibreLayer,
+  type GeoIntLayer,
   getVectorColorRamp,
   interpolateColors,
   normalizeHexColor,
   rgbToHex,
-} from "@geolibre/core";
-import type { RasterSymbology } from "@geolibre/plugins";
+} from "@geoint/core";
+import type { RasterSymbology } from "@geoint/plugins";
 
 import { csvCell, spreadsheetSafeText } from "./csv";
 
@@ -59,7 +59,7 @@ export const MAX_RAT_ROWS = 1024;
 /**
  * Upper bound on classes "apply as symbology" supports: the injected colormap
  * lookup texture is 256 texels wide, so more classes cannot be told apart.
- * Mirrors `RASTER_MAX_STORED_CLASSES` in `@geolibre/plugins` — not imported
+ * Mirrors `RASTER_MAX_STORED_CLASSES` in `@geoint/plugins` — not imported
  * because a value import of that package would pull its browser-only renderer
  * deps into this pure module's `node --test` run; a unit test pins the two
  * constants equal so they cannot drift.
@@ -350,7 +350,7 @@ export function seedRatRows(
  * @param layer - A raster store layer.
  * @returns The validated record, or null when absent / malformed.
  */
-export function savedRasterAttributeTable(layer: GeoLibreLayer): RasterAttributeTableRecord | null {
+export function savedRasterAttributeTable(layer: GeoIntLayer): RasterAttributeTableRecord | null {
   const raw = layer.metadata.rasterAttributeTable;
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
   const candidate = raw as Record<string, unknown>;

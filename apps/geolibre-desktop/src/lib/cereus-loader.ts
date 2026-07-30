@@ -13,11 +13,11 @@
 // inside the published package.
 //
 // By default this module is NOT used: a Vite alias swaps it for
-// `cereus-loader.cdn.ts` (see vite.config.ts, gated on GEOLIBRE_CEREUS_CDN) so
+// `cereus-loader.cdn.ts` (see vite.config.ts, gated on GEOINT_CEREUS_CDN) so
 // the ~40 MB `?url` wasm is dropped from the graph and never embedded into the
 // Tauri binary (it was ~8.6 MB brotli — the whole 27 → 36 MB v1.3 installer
 // growth). This bundled variant is reached only for a fully offline build
-// (GEOLIBRE_CEREUS_CDN=0). A bundler emits the asset for every `?url` import it
+// (GEOINT_CEREUS_CDN=0). A bundler emits the asset for every `?url` import it
 // parses regardless of reachability, so the CDN/bundled choice must be a module
 // swap, not an `if` inside one module.
 

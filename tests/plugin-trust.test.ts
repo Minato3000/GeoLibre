@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { partitionProjectPluginManifestUrls } from "../apps/geolibre-desktop/src/lib/plugin-trust";
 
-// Security regression coverage for #1062: a `.geolibre.json` project is opened
+// Security regression coverage for #1062: a `.geoint.json` project is opened
 // as data, so its plugin manifest URLs must never be fetched or imported until
 // the user makes an explicit trust decision. The load path only ever scans the
 // TRUSTED set (installed settings URLs + bundled drop-ins), so verifying that a

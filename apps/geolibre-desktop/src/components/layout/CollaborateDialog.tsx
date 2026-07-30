@@ -1,4 +1,4 @@
-import { useAppStore, type CollaborationMode } from "@geolibre/core";
+import { useAppStore, type CollaborationMode } from "@geoint/core";
 import {
   Button,
   Dialog,
@@ -9,7 +9,7 @@ import {
   Input,
   Label,
   Select,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { ArrowRight, Check, Copy, Loader2, LogOut, Users } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -126,7 +126,7 @@ export function CollaborateDialog({ open, onOpenChange, api }: CollaborateDialog
     } catch (err) {
       // Show a localized message; keep the raw error in the console for
       // diagnostics (collab-client throws human-readable English strings).
-      console.error("[GeoLibre] Collaboration error", err);
+      console.error("[GeoInt] Collaboration error", err);
       setError(t("collaborate.connectFailed"));
     } finally {
       setBusy(false);
@@ -149,7 +149,7 @@ export function CollaborateDialog({ open, onOpenChange, api }: CollaborateDialog
     } catch (err) {
       // Show a localized message; keep the raw error in the console for
       // diagnostics (collab-client throws human-readable English strings).
-      console.error("[GeoLibre] Collaboration error", err);
+      console.error("[GeoInt] Collaboration error", err);
       setError(t("collaborate.connectFailed"));
       // The invite link could not connect (e.g. an expired or invalid code), so
       // reveal the full layout and let the user fix the code or host instead.

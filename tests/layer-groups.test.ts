@@ -11,13 +11,13 @@ import {
   projectFromStore,
   serializeProject,
   useAppStore,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerGroup,
-} from "@geolibre/core";
+} from "@geoint/core";
 import { setHistoryCoalesceMs } from "../packages/core/src/history";
 import { redo, undo } from "../packages/core/src/store";
 
-function layer(id: string, patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function layer(id: string, patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id,
     name: id,

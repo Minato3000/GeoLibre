@@ -1,5 +1,5 @@
 import type { FeatureCollection } from "geojson";
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import { parseGeoRssLayer } from "./georss";
 // Light import (types and metadata checks only); the DuckDB engine behind a
 // query-layer refresh is loaded dynamically inside sql-query-layer.ts, so this
@@ -9,8 +9,8 @@ import { isSqlQueryLayer } from "./sql-query-layer";
 // Keep in sync with WFS_PROXY_PATH / GPX_PROXY_PATH in vite.config.ts (the dev
 // proxy binds them there). The GPX path is a generic feed CORS proxy reused for
 // GeoRSS refreshes; the name is historical.
-const WFS_PROXY_PATH = "/__geolibre_wfs_proxy";
-const GPX_PROXY_PATH = "/__geolibre_gpx_proxy";
+const WFS_PROXY_PATH = "/__geoint_wfs_proxy";
+const GPX_PROXY_PATH = "/__geoint_gpx_proxy";
 const FETCH_TIMEOUT_MS = 30_000;
 // Feature cap for refreshing an OGC API - Features layer whose stored request
 // carries no `maxFeatures` (added before it was persisted, or hand-edited).
@@ -249,7 +249,7 @@ export interface GeoJsonRefreshResult {
   metadata?: Record<string, unknown>;
 }
 
-export async function refreshGeoJsonLayer(layer: GeoLibreLayer): Promise<GeoJsonRefreshResult> {
+export async function refreshGeoJsonLayer(layer: GeoIntLayer): Promise<GeoJsonRefreshResult> {
   const sourceUrl = refreshSourceUrl(layer);
   if (!sourceUrl) {
     throw new Error("This layer does not have a refreshable GeoJSON URL.");
@@ -290,7 +290,7 @@ export async function refreshGeoJsonLayer(layer: GeoLibreLayer): Promise<GeoJson
  * @param layer - The OGC API - Features layer to reload.
  * @returns The reloaded features, their count, and the refreshed paging metadata.
  */
-async function refreshOgcFeaturesLayer(layer: GeoLibreLayer): Promise<GeoJsonRefreshResult> {
+async function refreshOgcFeaturesLayer(layer: GeoIntLayer): Promise<GeoJsonRefreshResult> {
   const source = layer.source as {
     url?: unknown;
     baseUrl?: unknown;
@@ -368,7 +368,7 @@ async function refreshGeoRssLayer(
  * @param layer - The store layer to test.
  * @returns Whether the layer refreshes through the vector control.
  */
-export function isVectorControlRefreshLayer(layer: GeoLibreLayer): boolean {
+export function isVectorControlRefreshLayer(layer: GeoIntLayer): boolean {
   return (
     layer.metadata.sourceKind === VECTOR_CONTROL_SOURCE_KIND &&
     layer.metadata.externalNativeLayer === true &&
@@ -376,7 +376,7 @@ export function isVectorControlRefreshLayer(layer: GeoLibreLayer): boolean {
   );
 }
 
-export function isRefreshableLayer(layer: GeoLibreLayer): boolean {
+export function isRefreshableLayer(layer: GeoIntLayer): boolean {
   return (
     Boolean(refreshSourceUrl(layer)) ||
     isVectorControlRefreshLayer(layer) ||
@@ -386,7 +386,7 @@ export function isRefreshableLayer(layer: GeoLibreLayer): boolean {
   );
 }
 
-export function getLayerRefreshConfig(layer: GeoLibreLayer): LayerRefreshConfig {
+export function getLayerRefreshConfig(layer: GeoIntLayer): LayerRefreshConfig {
   const refresh = layer.metadata.refresh;
   if (!refresh || typeof refresh !== "object" || Array.isArray(refresh)) {
     return { enabled: false, intervalMs: 0 };
@@ -409,9 +409,9 @@ export function getLayerRefreshConfig(layer: GeoLibreLayer): LayerRefreshConfig 
 }
 
 export function setLayerRefreshConfig(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   config: LayerRefreshConfig,
-): Partial<GeoLibreLayer> {
+): Partial<GeoIntLayer> {
   const enabled = config.enabled && config.intervalMs > 0;
   // Omit the refresh key entirely when disabled so saved projects do not
   // accumulate meaningless { enabled: false, intervalMs: 0 } entries.
@@ -453,14 +453,14 @@ function parseGeoJsonFeatureCollection(value: unknown): FeatureCollection {
   return value as FeatureCollection;
 }
 
-function layerHttpUrl(layer: GeoLibreLayer): string | null {
+function layerHttpUrl(layer: GeoIntLayer): string | null {
   const sourcePath = typeof layer.sourcePath === "string" ? layer.sourcePath.trim() : "";
   const sourceUrl = typeof layer.source.url === "string" ? layer.source.url.trim() : "";
   const url = sourceUrl || sourcePath;
   return isHttpUrl(url) ? url : null;
 }
 
-function refreshSourceUrl(layer: GeoLibreLayer): string | null {
+function refreshSourceUrl(layer: GeoIntLayer): string | null {
   if (layer.type !== "geojson") return null;
 
   const url = layerHttpUrl(layer);
@@ -481,7 +481,7 @@ function refreshSourceUrl(layer: GeoLibreLayer): string | null {
   return url;
 }
 
-function isWfsLayer(layer: GeoLibreLayer): boolean {
+function isWfsLayer(layer: GeoIntLayer): boolean {
   return (
     layer.metadata.sourceKind === "wfs-getfeature" ||
     layer.metadata.service === "wfs" ||
@@ -489,11 +489,11 @@ function isWfsLayer(layer: GeoLibreLayer): boolean {
   );
 }
 
-function isGeoRssLayer(layer: GeoLibreLayer): boolean {
+function isGeoRssLayer(layer: GeoIntLayer): boolean {
   return layer.metadata.sourceKind === GEORSS_SOURCE_KIND;
 }
 
-function isOgcFeaturesLayer(layer: GeoLibreLayer): boolean {
+function isOgcFeaturesLayer(layer: GeoIntLayer): boolean {
   return (
     layer.metadata.sourceKind === OGC_FEATURES_SOURCE_KIND ||
     layer.metadata.service === "ogc-features" ||

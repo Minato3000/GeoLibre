@@ -3,8 +3,8 @@ import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
-import { getVectorTool, runAlgorithmCapture } from "@geolibre/processing";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
+import { getVectorTool, runAlgorithmCapture } from "@geoint/processing";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 
 /**
@@ -180,7 +180,7 @@ function assertMatch(name: string, result: FeatureCollection, expect: Expectatio
 
 // --- the test -------------------------------------------------------------
 
-function makeLayer(id: string, geojson: FeatureCollection): GeoLibreLayer {
+function makeLayer(id: string, geojson: FeatureCollection): GeoIntLayer {
   return {
     id,
     name: id,
@@ -207,7 +207,7 @@ describe("vector golden fixtures (client engine)", () => {
 
     it(testCase.name, { skip: clientDefers }, async () => {
       assert.ok(tool, `${testCase.name}: unknown tool ${testCase.tool}`);
-      const layers: GeoLibreLayer[] = [];
+      const layers: GeoIntLayer[] = [];
       if (testCase.input) layers.push(makeLayer("input", testCase.input));
       if (testCase.overlay) layers.push(makeLayer("overlay", testCase.overlay));
 

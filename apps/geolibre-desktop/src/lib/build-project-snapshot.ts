@@ -1,10 +1,10 @@
-import { projectFromStore, useAppStore, type GeoLibreProject } from "@geolibre/core";
+import { projectFromStore, useAppStore, type GeoIntProject } from "@geoint/core";
 import type { RefObject } from "react";
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import { getPluginManager } from "../hooks/usePlugins";
 
 /**
- * Build a `GeoLibreProject` snapshot from the live store and map controller.
+ * Build a `GeoIntProject` snapshot from the live store and map controller.
  *
  * This is the single definition shared by the embed bridge (postMessage) and the
  * live-collaboration adapter (WebSocket), so both broadcast byte-identical
@@ -18,7 +18,7 @@ import { getPluginManager } from "../hooks/usePlugins";
  */
 export function buildProjectSnapshot(
   mapControllerRef: RefObject<MapController | null>,
-): GeoLibreProject {
+): GeoIntProject {
   const state = useAppStore.getState();
   return projectFromStore({
     projectName: state.projectName,

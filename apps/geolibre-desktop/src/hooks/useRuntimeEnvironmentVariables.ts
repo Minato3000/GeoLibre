@@ -1,13 +1,5 @@
-import { normalizeGeocodingProviderId, useAppStore } from "@geolibre/core";
-import { useEffect, useRef, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
-import {
-  mergeRuntimeEnv,
-  readBuildTimeAssistantEnv,
-  readDeploymentAssistantEnv,
-  type RuntimeEnv,
-} from "../lib/assistant/provider";
-import { loadOsEnvVars, readOsEnv } from "../lib/assistant/os-env";
+import { normalizeGeocodingProviderId, useAppStore } from "@geoint/core";
+import { useEffect, useRef } from "react";
 import { useDesktopSettingsStore } from "./useDesktopSettings";
 
 export function useRuntimeEnvironmentVariables() {
@@ -16,30 +8,8 @@ export function useRuntimeEnvironmentVariables() {
   // Device-local Cesium Ion token (Settings → Environment). Projected below so
   // getCesiumIonToken() picks it up as a runtime override without a rebuild.
   const cesiumIonToken = useDesktopSettingsStore((s) => s.desktopSettings.cesiumIonToken);
-  // Device-local AI Assistant provider credentials (Settings → AI Providers).
-  // Projected below so the assistant picks them up after a restart without the
-  // keys ever living in the shared project file. See useDesktopSettings.ts.
-  // useShallow keeps the reference stable across unrelated setDesktopSettings
-  // updates (e.g. dragging the accent-color picker), which normalizeDesktopSettings
-  // would otherwise churn into a fresh object every time — needlessly re-running
-  // this effect and re-rendering the host.
-  const aiProfiles = useDesktopSettingsStore(useShallow((s) => s.desktopSettings.aiProfiles));
   const lastSerializedEnv = useRef<string | null>(null);
   const isFirstRender = useRef(true);
-
-  // AI provider keys sourced from the user's OS environment (desktop only).
-  // Loaded once at startup; feeding it through state re-runs the merge below so
-  // the runtime env picks up the values once the async read resolves.
-  const [osEnv, setOsEnv] = useState<RuntimeEnv>(() => readOsEnv());
-  useEffect(() => {
-    let cancelled = false;
-    loadOsEnvVars().then((env) => {
-      if (!cancelled) setOsEnv(env);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -66,18 +36,6 @@ export function useRuntimeEnvironmentVariables() {
         .map((variable) => [variable.key.trim(), variable.value]),
     );
 
-    // Device-local AI provider credentials, keyed by env var name. Empty values
-    // are dropped so a blank entry never blanks out a build-time or OS value.
-    // Credentials from all profiles are projected so any profile can be selected
-    // at runtime without re-projecting.
-    const aiEnv: Record<string, string> = {};
-    for (const profile of aiProfiles) {
-      for (const [key, value] of Object.entries(profile.fieldValues)) {
-        const name = key.trim();
-        if (name && value) aiEnv[name] = value;
-      }
-    }
-
     // Only inject the Cesium token when set: an empty value would override (and
     // so blank out) a build-time VITE_CESIUM_TOKEN via getRuntimeEnvironment's
     // spread. A free-form env-var row of the same name still wins over this.
@@ -85,25 +43,17 @@ export function useRuntimeEnvironmentVariables() {
       ? { VITE_CESIUM_TOKEN: cesiumIonToken.trim() }
       : {};
 
-    // Precedence (low -> high): OS env < device AI keys < geocoder < cesium <
-    // explicit project Environment variables. See mergeRuntimeEnv for details.
-    const runtimeEnv = mergeRuntimeEnv({
-      // Build-time keys are the lowest-precedence defaults. OS, saved profile,
-      // and project values can all override them without requiring a rebuild.
-      osEnv: {
-        ...readBuildTimeAssistantEnv(),
-        ...readDeploymentAssistantEnv(),
-        ...osEnv,
-      },
-      aiEnv,
-      geocoderEnv,
-      cesiumEnv,
-      projectEnv,
-    });
+    // Precedence (low -> high): geocoder < cesium < explicit project
+    // Environment variables.
+    const runtimeEnv: Record<string, string> = {
+      ...geocoderEnv,
+      ...cesiumEnv,
+      ...projectEnv,
+    };
 
     // Always keep the global env in sync so plugins can read it when they
     // activate, even before the first change event.
-    window.__GEOLIBRE_RUNTIME_ENV__ = runtimeEnv;
+    window.__GEOINT_RUNTIME_ENV__ = runtimeEnv;
 
     // Skip the change event on the initial mount: plugins read the global
     // directly when they activate, so dispatching here would only trigger a
@@ -122,6 +72,6 @@ export function useRuntimeEnvironmentVariables() {
     if (serializedEnv === lastSerializedEnv.current) return;
     lastSerializedEnv.current = serializedEnv;
 
-    window.dispatchEvent(new CustomEvent("geolibre:runtime-env-change", { detail: runtimeEnv }));
-  }, [environmentVariables, geocoding, cesiumIonToken, aiProfiles, osEnv]);
+    window.dispatchEvent(new CustomEvent("geoint:runtime-env-change", { detail: runtimeEnv }));
+  }, [environmentVariables, geocoding, cesiumIonToken]);
 }

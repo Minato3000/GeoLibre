@@ -161,7 +161,7 @@ jobs:
           # collisions when forks use the same source branch name.
           command: >-
             pages deploy ${{ github.workspace }}/site
-            --project-name=geolibre-preview
+            --project-name=geoint-preview
             --branch="pr-${{ needs.resolve.outputs.number }}"
             --commit-hash="${{ github.event.workflow_run.head_sha }}"
             --commit-dirty=true
@@ -224,7 +224,7 @@ jobs:
           # pages-preview is shared across opengeos repositories and the action
           # composes the path as "<umbrella-dir>/pr-<number>", so this namespaces
           # our previews against every other repository's.
-          umbrella-dir: GeoLibre
+          umbrella-dir: GeoInt
           # There is no pull_request payload under `workflow_run`, so the PR
           # number and the deploy/remove decision have to be passed explicitly;
           # the action would otherwise read them off the event and do nothing.

@@ -3,8 +3,8 @@ import {
   listPostgisTables,
   readPostgisTable,
   type PostgisTableInfo,
-} from "@geolibre/processing";
-import { Button, Input, Label, Select } from "@geolibre/ui";
+} from "@geoint/processing";
+import { Button, Input, Label, Select } from "@geoint/ui";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -16,7 +16,7 @@ import {
   stopMartinServer,
 } from "../../../../lib/martin";
 import { postgisFeatureKeys, registerPostgisConnection } from "../../../../lib/postgis-connections";
-import { startGeoLibreSidecar } from "../../../../lib/sidecar";
+import { startGeoIntSidecar } from "../../../../lib/sidecar";
 import { isTauri } from "../../../../lib/tauri-io";
 import {
   createBaseLayer,
@@ -141,7 +141,7 @@ export function PostgresSource({ initialPostgres }: PostgresSourceProps) {
       try {
         // Best-effort: the sidecar may already be running (or be started
         // externally in dev); a failed start still lets the list call try.
-        await startGeoLibreSidecar();
+        await startGeoIntSidecar();
       } catch {
         // Ignored: the status check below surfaces the real error.
       }

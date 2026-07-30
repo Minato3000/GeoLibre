@@ -1,10 +1,10 @@
-import { featureSelectionId, type SelectionMode, useAppStore } from "@geolibre/core";
+import { featureSelectionId, type SelectionMode, useAppStore } from "@geoint/core";
 import {
   MAX_CLIENT_PAIRS,
   matchFeaturesByLocation,
   type SelectLocationPredicate,
-} from "@geolibre/processing";
-import { Button, Label, Select } from "@geolibre/ui";
+} from "@geoint/processing";
+import { Button, Label, Select } from "@geoint/ui";
 import type { ParseKeys } from "i18next";
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 import { useTranslation } from "react-i18next";

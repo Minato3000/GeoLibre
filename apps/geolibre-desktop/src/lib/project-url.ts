@@ -1,13 +1,13 @@
-import { parseProject, type GeoLibreProject } from "@geolibre/core";
+import { parseProject, type GeoIntProject } from "@geoint/core";
 import { normalizeProjectUrl } from "./urls";
 import { WHITEBOX_TOOL_PARAM } from "./whitebox-tool-url";
 
-// Query parameters that carry a `.geolibre.json` project URL deep link. A bare
+// Query parameters that carry a `.geoint.json` project URL deep link. A bare
 // `?https://...` query (no key) is also accepted by `projectUrlFromLocation`.
 export const PROJECT_URL_PARAMS = ["url", "project", "projectUrl", "project_url"];
 
 /**
- * Reads a `.geolibre.json` project URL from the current `window.location` query
+ * Reads a `.geoint.json` project URL from the current `window.location` query
  * string, if one is present.
  *
  * Accepts any of {@link PROJECT_URL_PARAMS} or a bare `?https://...` query, and
@@ -24,7 +24,7 @@ export function projectUrlFromLocation(): string | null {
   // tool input (e.g. a COG to subset), not a project to load (see
   // `whitebox-tool-url.ts`). Suppress the project loader so the two features
   // don't both claim `url` — otherwise the loader would try to parse a raster as
-  // a `.geolibre.json` project and surface an error.
+  // a `.geoint.json` project and surface an error.
   if (params.get(WHITEBOX_TOOL_PARAM)?.trim()) return null;
   for (const key of PROJECT_URL_PARAMS) {
     const value = params.get(key);
@@ -37,7 +37,7 @@ export function projectUrlFromLocation(): string | null {
 }
 
 /**
- * Fetches and parses a `.geolibre.json` project from a URL, turning every
+ * Fetches and parses a `.geoint.json` project from a URL, turning every
  * failure mode into a message that names the URL and the likely cause.
  *
  * A bare `fetch` rejects with an unhelpful `TypeError` ("Failed to fetch" in
@@ -58,7 +58,7 @@ export function projectUrlFromLocation(): string | null {
 export async function fetchProjectFromUrl(
   projectUrl: string,
   options: { signal?: AbortSignal; fetchImpl?: typeof fetch } = {},
-): Promise<GeoLibreProject> {
+): Promise<GeoIntProject> {
   const fetchImpl = options.fetchImpl ?? fetch;
   const signal = options.signal;
 
@@ -77,7 +77,7 @@ export async function fetchProjectFromUrl(
 
   // A caller-initiated abort (dialog close / unmount) surfaces as an
   // `AbortError`; let it propagate untouched so the caller can ignore it,
-  // matching the abort handling in `share-geolibre.ts`.
+  // matching the abort handling in `share-geoint.ts`.
   const isAbort = (error: unknown) => error instanceof DOMException && error.name === "AbortError";
 
   let response: Response;
@@ -128,15 +128,15 @@ export async function fetchProjectFromUrl(
     return parseProject(text);
   } catch (error) {
     // The fetch succeeded but the body is not a usable project: malformed JSON
-    // or a file missing the required GeoLibre fields. Name the URL and the
+    // or a file missing the required GeoInt fields. Name the URL and the
     // underlying reason rather than leaking a bare JSON.parse SyntaxError. Strip
-    // parseProject's own "Invalid GeoLibre project:" prefix so the wrapper does
+    // parseProject's own "Invalid GeoInt project:" prefix so the wrapper does
     // not repeat the noun it already states, but fall back to the full message
     // if stripping would leave nothing (so the colon never dangles).
     const raw = error instanceof Error ? error.message : String(error);
-    const detail = raw.replace(/^Invalid GeoLibre project:\s*/i, "") || raw;
+    const detail = raw.replace(/^Invalid GeoInt project:\s*/i, "") || raw;
     throw new Error(
-      `The file at ${projectUrl} is not a valid GeoLibre project ` + `(.geolibre.json): ${detail}`,
+      `The file at ${projectUrl} is not a valid GeoInt project ` + `(.geoint.json): ${detail}`,
       { cause: error },
     );
   }

@@ -208,7 +208,7 @@ def test_runtime_python_caches_after_first_call(monkeypatch) -> None:
         import_calls += 1
 
     monkeypatch.setattr(conversion, "_CHECKED_RUNTIME_PYTHON", None)
-    monkeypatch.setenv("GEOLIBRE_CONVERSION_PYTHON", sys.executable)
+    monkeypatch.setenv("GEOINT_CONVERSION_PYTHON", sys.executable)
     monkeypatch.setattr(conversion, "_check_runtime_import", fake_check)
 
     assert conversion._runtime_python() == sys.executable

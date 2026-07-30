@@ -1,14 +1,14 @@
 # Acknowledgements
 
-GeoLibre stands on the shoulders of the open-source geospatial and web
+GeoInt stands on the shoulders of the open-source geospatial and web
 communities. This page recognizes the projects, organizations, and individuals
-whose work makes GeoLibre possible. If we have inadvertently left someone out,
+whose work makes GeoInt possible. If we have inadvertently left someone out,
 please [open an issue](https://github.com/opengeos/GeoLibre/issues) so we can
 correct it.
 
 ## Open-source projects
 
-GeoLibre is built almost entirely on free and open-source software. We are
+GeoInt is built almost entirely on free and open-source software. We are
 grateful to the maintainers and contributors of the following projects (and the
 many transitive dependencies they rely on).
 
@@ -38,7 +38,7 @@ many transitive dependencies they rely on).
 - [WhiteboxTools](https://www.whiteboxgeo.com/) — the Whitebox geoprocessing toolbox.
 - [segment-geospatial (SamGeo)](https://github.com/opengeos/segment-geospatial) and Meta AI's [Segment Anything](https://segment-anything.com/) — AI segmentation.
 - [Jupyter](https://jupyter.org/), [JupyterLite](https://jupyterlite.readthedocs.io/), [Pyodide](https://pyodide.org/), and [anywidget](https://anywidget.dev/) — the embedded notebook experience.
-- [leafmap](https://leafmap.org/) — the API style and inspiration for the `geolibre` Python package.
+- [leafmap](https://leafmap.org/) — the API style and inspiration for the `geoint` Python package.
 
 ### App framework and UI
 
@@ -58,9 +58,9 @@ parameters.
 
 ## Community contributors
 
-GeoLibre is shaped by the people who try it, report bugs, request features, and
+GeoInt is shaped by the people who try it, report bugs, request features, and
 help others get started. Thank you to everyone who has opened an issue, started
-a discussion, or shared GeoLibre with their community.
+a discussion, or shared GeoInt with their community.
 
 - [**Ryanphoenix**](https://github.com/Ryanphoenix) — for many valued
   contributions to the project, including issue reports, feedback, and
@@ -69,7 +69,7 @@ a discussion, or shared GeoLibre with their community.
 ### Beta testers
 
 - [**René van der Velde**](https://github.com/renevandervelde), Netherlands — an experienced QGIS practitioner who has
-  championed GeoLibre as an approachable entry-level to mid-tier GIS option and
+  championed GeoInt as an approachable entry-level to mid-tier GIS option and
   contributed thoughtful, detailed bug reports and feature requests during early
   testing.
 

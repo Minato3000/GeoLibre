@@ -1,5 +1,5 @@
-import { isAllowedPluginManifestUrl } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+import { isAllowedPluginManifestUrl } from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import {
   Button,
   Dialog,
@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   Input,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   AlertTriangle,
   ArrowUpCircle,
@@ -66,7 +66,7 @@ type RegistryState =
   | { status: "error"; message: string }
   | { status: "ready"; entries: PluginRegistryEntry[] };
 
-const APP_VERSION = __GEOLIBRE_VERSION__;
+const APP_VERSION = __GEOINT_VERSION__;
 
 // Stable empty reference so the visibleEntries memo doesn't churn on every
 // render while the registry is loading or errored.
@@ -314,7 +314,7 @@ export function ManagePluginsDialog({
         // Desktop: pick a path and let the backend validate and copy the zip
         // into the app-data plugins directory (persisted via the startup scan).
         const path = await pickLocalPathWithFallback({
-          filters: [{ name: "GeoLibre plugin", extensions: ["zip"] }],
+          filters: [{ name: "GeoInt plugin", extensions: ["zip"] }],
         });
         if (!path) return;
         setInstalling(true);
@@ -325,7 +325,7 @@ export function ManagePluginsDialog({
         // persist the bundle in IndexedDB so it reloads on the next visit.
         const picked = await openLocalDataFileWithFallback({
           accept: ".zip",
-          filters: [{ name: "GeoLibre plugin", extensions: ["zip"] }],
+          filters: [{ name: "GeoInt plugin", extensions: ["zip"] }],
           readBinary: true,
         });
         if (!picked?.data) return;
@@ -554,7 +554,7 @@ export function ManagePluginsDialog({
                 {registry.status === "ready" &&
                   visibleEntries.map((entry) => {
                     const installed = isInstalled(entry);
-                    const compatible = satisfiesMinVersion(APP_VERSION, entry.minGeoLibreVersion);
+                    const compatible = satisfiesMinVersion(APP_VERSION, entry.minGeoIntVersion);
                     const updateAvailable = isUpgradeable(entry);
                     const loadPending = isLoadPending(entry);
                     const loadIssue = externalLoadIssues.get(entry.manifestUrl);
@@ -609,7 +609,7 @@ export function ManagePluginsDialog({
                             {!compatible ? (
                               <span className="text-destructive">
                                 {t("managePlugins.requiresVersion", {
-                                  version: entry.minGeoLibreVersion,
+                                  version: entry.minGeoIntVersion,
                                 })}
                               </span>
                             ) : null}
@@ -852,7 +852,7 @@ function SettingsTab({
         <div className="flex items-center gap-2">
           <Input
             aria-label={t("managePlugins.directoryAria")}
-            placeholder="/path/to/geolibre-plugin"
+            placeholder="/path/to/geoint-plugin"
             value={newDirectory}
             onChange={(event) => onNewDirectoryChange(event.target.value)}
             onKeyDown={(event) => {

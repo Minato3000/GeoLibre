@@ -1,5 +1,5 @@
 /*
- * GeoLibre Pyodide vector worker (classic Web Worker).
+ * GeoInt Pyodide vector worker (classic Web Worker).
  *
  * Runs the GeoPandas/Shapely vector tools entirely in the browser. This is a
  * plain JS file served from public/ (NOT bundled by Vite) on purpose: Pyodide

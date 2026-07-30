@@ -21,13 +21,13 @@
  * this plugin owns their visibility/paint by subscribing to the store.
  */
 
-import { DEFAULT_LAYER_STYLE, useAppStore, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, useAppStore, type GeoIntLayer } from "@geoint/core";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import type {
-  GeoLibreAppAPI,
-  GeoLibreFloatingPanelRegistration,
-  GeoLibreMapControlPosition,
-  GeoLibrePlugin,
+  GeoIntAppAPI,
+  GeoIntFloatingPanelRegistration,
+  GeoIntMapControlPosition,
+  GeoIntPlugin,
 } from "../types";
 import {
   CANVAS_VIDEO_BITS_PER_SECOND,
@@ -50,10 +50,10 @@ import {
   type TimelapseProvider,
 } from "./timelapse-providers";
 
-export const TIMELAPSE_PLUGIN_ID = "geolibre-timelapse";
+export const TIMELAPSE_PLUGIN_ID = "geoint-timelapse";
 
 /** Floating-panel card id (registered with the host's panel registry). */
-export const TIMELAPSE_PANEL_ID = "geolibre-timelapse-panel";
+export const TIMELAPSE_PANEL_ID = "geoint-timelapse-panel";
 
 /** Tags the plugin's own store layer so it can find and prune only its own. */
 export const TIMELAPSE_SOURCE_KIND = "timelapse";
@@ -182,7 +182,7 @@ export function setTimelapseLabels(next: Partial<TimelapseLabels>): void {
 
 /**
  * Theme a native `<select>` so its text/border track the app theme. Inline (not
- * just the index.css `.geolibre-timelapse-panel` block, which themes the option
+ * just the index.css `.geoint-timelapse-panel` block, which themes the option
  * popup): rules from other control stylesheets can outrank a class selector.
  * The `important` color is required — with the app's global `transition: all`
  * on form controls, Chromium otherwise keeps reporting the pre-theme (black)
@@ -215,7 +215,7 @@ function stylePillButton(button: HTMLButtonElement): void {
 function createTimelapseStoreLayer(
   provider: TimelapseProvider,
   frames: readonly TimelapseFrame[],
-): GeoLibreLayer {
+): GeoIntLayer {
   return {
     id: timelapseStoreLayerId(provider.id),
     name: `Timelapse: ${provider.name}`,
@@ -797,7 +797,7 @@ export class TimelapseControl {
     container.innerHTML = "";
     // Tag the panel so index.css can theme its native form controls (the
     // select's option popup cannot be styled inline).
-    container.classList.add("geolibre-timelapse-panel");
+    container.classList.add("geoint-timelapse-panel");
     container.style.display = "flex";
     container.style.flexDirection = "column";
     container.style.gap = "8px";
@@ -1005,7 +1005,7 @@ export class TimelapseControl {
     const container = this.map?.getContainer?.();
     if (!container) return;
     const badge = document.createElement("div");
-    badge.className = "geolibre-timelapse-badge";
+    badge.className = "geoint-timelapse-badge";
     badge.style.position = "absolute";
     // Clear MapLibre's bottom attribution bar.
     badge.style.bottom = "72px";
@@ -1324,13 +1324,13 @@ async function saveTimelapseRecording(
 // Plugin
 // ---------------------------------------------------------------------------
 
-let timelapsePosition: GeoLibreMapControlPosition = "top-left";
+let timelapsePosition: GeoIntMapControlPosition = "top-left";
 let timelapseControl: TimelapseControl | null = null;
 let savedState: TimelapseProjectState | null = null;
 let unsubscribeStore: (() => void) | null = null;
 let unsubscribeBasemap: (() => void) | null = null;
 let unregisterPanel: (() => void) | null = null;
-let appRef: GeoLibreAppAPI | null = null;
+let appRef: GeoIntAppAPI | null = null;
 // Bumped by activate()/deactivate() so an async provider's listFrames()
 // resolving after a deactivate cannot wire up a control the plugin manager
 // already considers gone.
@@ -1341,7 +1341,7 @@ let activationSession = 0;
  * pattern): re-registering the same identity updates its title/position
  * without rebuilding an open card's body.
  */
-const floatingPanelRegistration: GeoLibreFloatingPanelRegistration = {
+const floatingPanelRegistration: GeoIntFloatingPanelRegistration = {
   id: TIMELAPSE_PANEL_ID,
   title: DEFAULT_TIMELAPSE_LABELS.title,
   defaultWidth: 320,
@@ -1381,7 +1381,7 @@ function subscribeStoreLayer(control: TimelapseControl): () => void {
 }
 
 function activateWithFrames(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   provider: TimelapseProvider,
   frames: TimelapseFrame[],
 ): boolean | void {
@@ -1412,11 +1412,11 @@ function activateWithFrames(
   app.openFloatingPanel?.(TIMELAPSE_PANEL_ID);
 }
 
-export const maplibreTimelapsePlugin: GeoLibrePlugin = {
+export const maplibreTimelapsePlugin: GeoIntPlugin = {
   id: TIMELAPSE_PLUGIN_ID,
   name: "Timelapse",
   version: "0.2.0",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     const session = ++activationSession;
     const provider = getTimelapseProvider(savedState?.providerId);
     const frames = provider.listFrames();
@@ -1425,7 +1425,7 @@ export const maplibreTimelapsePlugin: GeoLibrePlugin = {
       activationSession === session ? activateWithFrames(app, provider, resolved) : false,
     );
   },
-  deactivate: (_app: GeoLibreAppAPI) => {
+  deactivate: (_app: GeoIntAppAPI) => {
     activationSession += 1;
     unsubscribeBasemap?.();
     unsubscribeBasemap = null;
@@ -1444,12 +1444,12 @@ export const maplibreTimelapsePlugin: GeoLibrePlugin = {
   // The floating card is freely draggable; the position submenu in the
   // Plugins menu just picks which corner it opens at.
   getMapControlPosition: () => timelapsePosition,
-  setMapControlPosition: (_app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (_app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     timelapsePosition = position;
     syncPanelRegistration();
   },
   getProjectState: () => timelapseControl?.getState() ?? savedState ?? undefined,
-  applyProjectState: (_app: GeoLibreAppAPI, state: unknown) => {
+  applyProjectState: (_app: GeoIntAppAPI, state: unknown) => {
     const frames = timelapseControl ? timelapseControl.frames : syncFramesForNormalization(state);
     const next = normalizeTimelapseProjectState(state, frames);
     const current = timelapseControl?.getState() ?? savedState;

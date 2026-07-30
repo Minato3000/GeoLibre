@@ -1,4 +1,4 @@
-import { useAppStore, type ConversionToolKind } from "@geolibre/core";
+import { useAppStore, type ConversionToolKind } from "@geoint/core";
 import {
   COG_WASM_COMPRESSIONS,
   MAX_VECTOR_PMTILES_ZOOM,
@@ -18,7 +18,7 @@ import {
   type ConversionJob,
   type PmtilesColormap,
   type PmtilesResamplingMethod,
-} from "@geolibre/processing";
+} from "@geoint/processing";
 import {
   Button,
   Dialog,
@@ -31,7 +31,7 @@ import {
   ScrollArea,
   Select,
   cn,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { AlertCircle, CheckCircle2, FolderOpen, Loader2, Play, Save, Server } from "lucide-react";
 import type { ParseKeys } from "i18next";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -45,7 +45,7 @@ import {
   type FileDialogFilter,
 } from "../../lib/tauri-io";
 import type { LargeVectorDataset } from "../../lib/duckdb-vector-guard";
-import { startGeoLibreSidecar } from "../../lib/sidecar";
+import { startGeoIntSidecar } from "../../lib/sidecar";
 import { beginProcessingRun, type ProcessingRunTracker } from "../../lib/processing-history";
 import i18n from "../../i18n";
 
@@ -886,7 +886,7 @@ export function ConversionDialog() {
       ]),
     );
     try {
-      const { convertVectorWithWasm } = await import("@geolibre/processing");
+      const { convertVectorWithWasm } = await import("@geoint/processing");
       const result = await convertVectorWithWasm(
         await toWasmFile(mainFile),
         outputName,
@@ -959,7 +959,7 @@ export function ConversionDialog() {
       ]),
     );
     try {
-      const { convertGeoTiffToCog, readGeoTiffInfo } = await import("@geolibre/processing");
+      const { convertGeoTiffToCog, readGeoTiffInfo } = await import("@geoint/processing");
       const bytes = new Uint8Array(await mainFile.arrayBuffer());
       // Header-only read: cheap, and it lets us report the shape and warn about
       // an already-tiled input before decoding any pixels.
@@ -1023,7 +1023,7 @@ export function ConversionDialog() {
       ]),
     );
     try {
-      const { readGeoTiffInfo, renderRasterToPmtiles } = await import("@geolibre/processing");
+      const { readGeoTiffInfo, renderRasterToPmtiles } = await import("@geoint/processing");
       const bytes = new Uint8Array(await mainFile.arrayBuffer());
       // Header-only check, matching runBrowserRasterToCog: a non-TIFF would
       // otherwise surface write_pmtiles' raw "unknown raster format" text. The
@@ -1107,7 +1107,7 @@ export function ConversionDialog() {
       ]),
     );
     try {
-      const { tileVectorToPmtiles } = await import("@geolibre/processing");
+      const { tileVectorToPmtiles } = await import("@geoint/processing");
       const [data, siblingFiles] = await Promise.all([
         mainFile.arrayBuffer().then((buffer) => new Uint8Array(buffer)),
         Promise.all(
@@ -1278,10 +1278,10 @@ export function ConversionDialog() {
     setStartingServer(true);
     setError(null);
     try {
-      await startGeoLibreSidecar();
+      await startGeoIntSidecar();
       await checkRuntime();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not start GeoLibre sidecar.");
+      setError(err instanceof Error ? err.message : "Could not start GeoInt sidecar.");
     } finally {
       setStartingServer(false);
     }

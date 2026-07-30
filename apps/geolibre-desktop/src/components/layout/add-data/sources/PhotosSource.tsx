@@ -1,5 +1,5 @@
-import { useAppStore } from "@geolibre/core";
-import { Button, Label } from "@geolibre/ui";
+import { useAppStore } from "@geoint/core";
+import { Button, Label } from "@geoint/ui";
 import { Images, MapPin } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";

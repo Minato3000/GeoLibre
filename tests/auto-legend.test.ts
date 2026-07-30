@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import {
   DEFAULT_LAYER_STYLE,
   DEFAULT_LEGEND_CONFIG,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LegendConfig,
 } from "../packages/core/src/index";
 import {
@@ -18,7 +18,7 @@ import {
   setLegendCustomEntry,
 } from "../apps/geolibre-desktop/src/lib/auto-legend";
 
-function layer(over: Partial<GeoLibreLayer>): GeoLibreLayer {
+function layer(over: Partial<GeoIntLayer>): GeoIntLayer {
   return {
     id: "l",
     name: "Layer",
@@ -29,7 +29,7 @@ function layer(over: Partial<GeoLibreLayer>): GeoLibreLayer {
     style: { ...DEFAULT_LAYER_STYLE },
     metadata: {},
     ...over,
-  } as GeoLibreLayer;
+  } as GeoIntLayer;
 }
 
 function config(over: Partial<LegendConfig> = {}): LegendConfig {

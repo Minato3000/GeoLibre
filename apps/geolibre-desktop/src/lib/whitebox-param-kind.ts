@@ -1,4 +1,4 @@
-import type { WhiteboxToolParameter } from "@geolibre/processing";
+import type { WhiteboxToolParameter } from "@geoint/processing";
 
 function datasetParameterKind(dataKind: string, suffix: "in" | "out"): string {
   if (["raster", "vector", "lidar", "file"].includes(dataKind)) {

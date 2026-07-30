@@ -2,7 +2,7 @@ import { isTauri } from "./tauri-io";
 import { invoke } from "@tauri-apps/api/core";
 import { addProtocol, type RequestParameters } from "maplibre-gl";
 
-const MBTILES_PROTOCOL = "geolibre-mbtiles";
+const MBTILES_PROTOCOL = "geoint-mbtiles";
 
 let protocolRegistered = false;
 
@@ -24,7 +24,7 @@ export function mbtilesTileUrl(path: string): string {
 
 export async function readMbtilesMetadata(path: string): Promise<MbtilesMetadata> {
   if (!isTauri()) {
-    throw new Error("MBTiles files require GeoLibre Desktop.");
+    throw new Error("MBTiles files require GeoInt Desktop.");
   }
 
   return invoke<MbtilesMetadata>("read_mbtiles_metadata", { path });

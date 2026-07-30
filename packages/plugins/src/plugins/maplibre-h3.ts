@@ -13,18 +13,18 @@ import {
   polygonToCells,
 } from "h3-js";
 import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from "maplibre-gl";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 
 export const H3_PLUGIN_ID = "maplibre-h3-grid";
 
-const PANEL_ID = "geolibre-h3-panel";
-const SOURCE_ID = "geolibre-h3-grid-source";
-const FILL_LAYER_ID = "geolibre-h3-grid-fill";
-const LINE_LAYER_ID = "geolibre-h3-grid-line";
-const LABEL_LAYER_ID = "geolibre-h3-grid-label";
-const SELECTED_SOURCE_ID = "geolibre-h3-selected-source";
-const SELECTED_FILL_LAYER_ID = "geolibre-h3-selected-fill";
-const SELECTED_LINE_LAYER_ID = "geolibre-h3-selected-line";
+const PANEL_ID = "geoint-h3-panel";
+const SOURCE_ID = "geoint-h3-grid-source";
+const FILL_LAYER_ID = "geoint-h3-grid-fill";
+const LINE_LAYER_ID = "geoint-h3-grid-line";
+const LABEL_LAYER_ID = "geoint-h3-grid-label";
+const SELECTED_SOURCE_ID = "geoint-h3-selected-source";
+const SELECTED_FILL_LAYER_ID = "geoint-h3-selected-fill";
+const SELECTED_LINE_LAYER_ID = "geoint-h3-selected-line";
 
 /** Prevent a fine resolution over a large viewport from freezing the browser. */
 export const H3_VIEWPORT_CELL_LIMIT = 20_000;
@@ -40,7 +40,7 @@ export interface H3GridSettings {
 }
 
 export const DEFAULT_H3_GRID_SETTINGS: H3GridSettings = {
-  // Useful immediately at GeoLibre's default world view (resolution 3 would
+  // Useful immediately at GeoInt's default world view (resolution 3 would
   // already exceed the viewport safety cap).
   resolution: 2,
   fillColor: "#2563eb",
@@ -118,7 +118,7 @@ export const DEFAULT_H3_LABELS: H3Labels = {
 let labels: H3Labels = { ...DEFAULT_H3_LABELS };
 let settings: H3GridSettings = { ...DEFAULT_H3_GRID_SETTINGS };
 let map: MapLibreMap | null = null;
-let appRef: GeoLibreAppAPI | null = null;
+let appRef: GeoIntAppAPI | null = null;
 let unregisterPanel: (() => void) | null = null;
 let moveHandler: (() => void) | null = null;
 let clickHandler: ((event: MapMouseEvent) => void) | null = null;
@@ -736,7 +736,7 @@ function settingsEqual(a: H3GridSettings, b: H3GridSettings): boolean {
   );
 }
 
-export const maplibreH3Plugin: GeoLibrePlugin = {
+export const maplibreH3Plugin: GeoIntPlugin = {
   id: H3_PLUGIN_ID,
   name: "H3 Grid",
   version: "1.0.0",

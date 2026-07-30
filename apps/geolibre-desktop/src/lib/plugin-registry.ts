@@ -4,7 +4,7 @@
 // external-plugin loader then fetches and registers - the registry adds no new
 // trust path. See docs/plugin-api.md and docs/roadmap.md.
 
-import { isAllowedPluginManifestUrl } from "@geolibre/core";
+import { isAllowedPluginManifestUrl } from "@geoint/core";
 
 /** A single curated plugin in the marketplace registry. */
 export interface PluginRegistryEntry {
@@ -17,8 +17,8 @@ export interface PluginRegistryEntry {
   author?: string;
   homepage?: string;
   categories?: string[];
-  /** Minimum GeoLibre app version this plugin supports, e.g. "1.0.0". */
-  minGeoLibreVersion?: string;
+  /** Minimum GeoInt app version this plugin supports, e.g. "1.0.0". */
+  minGeoIntVersion?: string;
 }
 
 export interface PluginRegistry {
@@ -27,18 +27,18 @@ export interface PluginRegistry {
   registryUrl: string;
 }
 
-// The curated registry is hosted at plugins.geolibre.app (the geolibre-plugins
+// The curated registry is hosted at plugins.geolibre.app (the geoint-plugins
 // repo, deployed to GitHub Pages). Override per build via env for forks or
 // local testing.
 const DEFAULT_REGISTRY_URL = "https://plugins.geolibre.app/plugin-registry.json";
 
 /**
- * Resolve the registry URL. Honors VITE_GEOLIBRE_PLUGIN_REGISTRY_URL (resolved
+ * Resolve the registry URL. Honors VITE_GEOINT_PLUGIN_REGISTRY_URL (resolved
  * against the app origin so a relative value works) and otherwise falls back to
  * the hosted default registry.
  */
 export function resolveRegistryUrl(): string {
-  const configured = import.meta.env.VITE_GEOLIBRE_PLUGIN_REGISTRY_URL;
+  const configured = import.meta.env.VITE_GEOINT_PLUGIN_REGISTRY_URL;
   // Resolving a configured value needs window.location as its base; outside a
   // browser (tests, SSR, Node scripts) fall back to the absolute default, the
   // same way bundledPluginManifestUrls guards window access.
@@ -192,7 +192,7 @@ function normalizeEntry(value: unknown, registryUrl: string): PluginRegistryEntr
     author: trimmedString(record.author, 128) || undefined,
     homepage: httpUrlOrUndefined(trimmedString(record.homepage, 2048)),
     categories: stringArray(record.categories),
-    minGeoLibreVersion: trimmedString(record.minGeoLibreVersion, 64) || undefined,
+    minGeoIntVersion: trimmedString(record.minGeoIntVersion, 64) || undefined,
   };
 }
 
@@ -229,9 +229,9 @@ function stringArray(value: unknown): string[] | undefined {
  * Compare dotted numeric versions. Returns true when `current` is greater than
  * or equal to `required`. Pre-release and build suffixes (e.g. `-rc.1`, `+sha`)
  * are stripped before comparison, which is the right behaviour for the
- * `minGeoLibreVersion` install gate: a coarse numeric floor. Non-numeric or
+ * `minGeoIntVersion` install gate: a coarse numeric floor. Non-numeric or
  * missing requirements are treated as satisfied so a malformed
- * `minGeoLibreVersion` never blocks installation. For detecting an available
+ * `minGeoIntVersion` never blocks installation. For detecting an available
  * upgrade (which must order `1.0.0-rc.1` below `1.0.0`), use isNewerVersion.
  */
 export function satisfiesMinVersion(current: string, required?: string): boolean {

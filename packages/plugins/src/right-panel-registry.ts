@@ -1,4 +1,4 @@
-import type { GeoLibreRightPanelDock, GeoLibreRightPanelRegistration } from "./types";
+import type { GeoIntRightPanelDock, GeoIntRightPanelRegistration } from "./types";
 import { PanelTitleResolver } from "./panel-title";
 
 /**
@@ -9,7 +9,7 @@ import { PanelTitleResolver } from "./panel-title";
  * mutate it through the host API (`registerRightPanel`, `openRightPanel`, ...),
  * and the desktop shell subscribes with `useSyncExternalStore` to mount the
  * active panel in one of three dock positions. Keeping the registry in
- * `@geolibre/plugins` (rather than the app) lets the host API delegate to it
+ * `@geoint/plugins` (rather than the app) lets the host API delegate to it
  * without the app and the plugins package depending on each other.
  *
  * Only one plugin panel is active at a time. It docks at one of four positions
@@ -24,9 +24,9 @@ import { PanelTitleResolver } from "./panel-title";
 
 /**
  * Where a plugin panel docks. Re-exported from the public {@link
- * GeoLibreRightPanelDock} so the two never diverge.
+ * GeoIntRightPanelDock} so the two never diverge.
  */
-export type RightPanelDock = GeoLibreRightPanelDock;
+export type RightPanelDock = GeoIntRightPanelDock;
 
 /**
  * Steppable dock positions in left-to-right order, used to move the panel
@@ -79,12 +79,12 @@ export interface RightPanelSnapshot {
   version: number;
 }
 
-const registry = new Map<string, GeoLibreRightPanelRegistration>();
+const registry = new Map<string, GeoIntRightPanelRegistration>();
 // Title resolution (string/getter normalization, throw/empty fallback, and the
 // per-id warning dedup the accessors rely on because they are called unmemoized
 // on every render) is shared with the floating-panel registry via
 // PanelTitleResolver. Each registry owns its own instance.
-const titleResolver = new PanelTitleResolver<GeoLibreRightPanelRegistration>("Right panel");
+const titleResolver = new PanelTitleResolver<GeoIntRightPanelRegistration>("Right panel");
 const listeners = new Set<() => void>();
 
 let activeId: string | null = null;
@@ -127,7 +127,7 @@ function runHook(
  * closes the panel (if active) and removes it from the registry; a plugin
  * should call it from its `deactivate` hook.
  */
-export function registerRightPanel(panel: GeoLibreRightPanelRegistration): () => void {
+export function registerRightPanel(panel: GeoIntRightPanelRegistration): () => void {
   if (!panel || typeof panel.id !== "string" || panel.id.length === 0) {
     throw new Error("registerRightPanel requires a panel with a non-empty id.");
   }
@@ -285,12 +285,12 @@ export function isRightPanelCollapsed(): boolean {
  * by re-running the panel's title resolver on every call. The registry does
  * not itself subscribe to i18n language changes, so live title translation
  * relies on the consumer re-rendering and re-reading on `languageChanged`;
- * see the `title` field on {@link GeoLibreRightPanelRegistration} for the full
+ * see the `title` field on {@link GeoIntRightPanelRegistration} for the full
  * contract a host must satisfy.
  */
 export function getRightPanel(
   id: string,
-): (GeoLibreRightPanelRegistration & { title: string }) | undefined {
+): (GeoIntRightPanelRegistration & { title: string }) | undefined {
   const panel = registry.get(id);
   if (!panel) return undefined;
   return titleResolver.resolve(panel);
@@ -301,7 +301,7 @@ export function getRightPanel(
  * clone with its title resolved to a string, mirroring {@link getRightPanel}
  * so consumers can read `.title` directly without unwrapping a getter.
  */
-export function listRightPanels(): (GeoLibreRightPanelRegistration & { title: string })[] {
+export function listRightPanels(): (GeoIntRightPanelRegistration & { title: string })[] {
   return [...registry.values()].map((panel) => titleResolver.resolve(panel));
 }
 

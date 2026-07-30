@@ -2,7 +2,7 @@ import {
   COMPONENTS_PLUGIN_ID,
   DECK_VIZ_PLUGIN_ID,
   DIRECTIONS_PLUGIN_ID,
-  type GeoLibreMapControlPosition,
+  type GeoIntMapControlPosition,
   GRATICULE_PLUGIN_ID,
   CLOUDS_PLUGIN_ID,
   PRECIPITATION_PLUGIN_ID,
@@ -11,7 +11,7 @@ import {
   ROUTE_ANIMATION_PLUGIN_ID,
   SUN_PLUGIN_ID,
   WEB_SERVICE_PLUGIN_IDS,
-} from "@geolibre/plugins";
+} from "@geoint/plugins";
 import {
   Button,
   DropdownMenu,
@@ -25,7 +25,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { Puzzle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { usePluginRegistry } from "../../../hooks/usePlugins";
@@ -92,7 +92,7 @@ export function PluginsMenu({
           <DropdownMenuRadioGroup
             value={pluginPosition}
             onValueChange={(position: string) =>
-              setMapControlPosition(p.id, appApi, position as GeoLibreMapControlPosition)
+              setMapControlPosition(p.id, appApi, position as GeoIntMapControlPosition)
             }
           >
             {PLUGIN_POSITION_ITEMS.map((position) => (

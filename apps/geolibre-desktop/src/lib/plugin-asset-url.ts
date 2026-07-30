@@ -36,7 +36,7 @@ export function managedUrlSourcesForIds(
 
 // Resolve `path` against a plugin manifest URL, rejecting anything absolute,
 // scheme-qualified, or that escapes the manifest's own directory. Mirrors the
-// safety checks GeoLibre applies to a manifest's `entry`/`style` paths so a
+// safety checks GeoInt applies to a manifest's `entry`/`style` paths so a
 // plugin can only reach assets shipped inside its own folder.
 export function resolvePluginAssetUrl(manifestUrl: string, path: string): string {
   if (
@@ -68,7 +68,7 @@ export function withPluginAssetCacheToken(url: string, token: string | null | un
   const value = token?.trim();
   if (!value) return url;
   const resolved = new URL(url);
-  resolved.searchParams.set("__geolibre_plugin_cache", value);
+  resolved.searchParams.set("__geoint_plugin_cache", value);
   return resolved.toString();
 }
 

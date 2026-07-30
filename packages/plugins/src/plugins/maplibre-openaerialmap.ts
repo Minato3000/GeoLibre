@@ -1,4 +1,4 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import type { Feature, FeatureCollection, MultiPolygon, Polygon } from "geojson";
 import type {
   GeoJSONSource,
@@ -7,7 +7,7 @@ import type {
   MapLayerMouseEvent,
   MapMouseEvent,
 } from "maplibre-gl";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 import {
   buildSearchUrl,
   footprintFeature,
@@ -23,7 +23,7 @@ export const OPENAERIALMAP_PLUGIN_ID = "maplibre-gl-openaerialmap";
 const PANEL_ID = OPENAERIALMAP_PLUGIN_ID;
 const PAGE_SIZE = 20;
 // The OpenAerialMap metadata API is CORS-locked to the OAM web app origin, so a
-// browser fetch from GeoLibre is blocked. GeoLibre's tiles Worker
+// browser fetch from GeoInt is blocked. GeoInt's tiles Worker
 // (workers/tiles, tiles.geolibre.app) re-emits it server-side with CORS, which
 // is the one endpoint that works uniformly across the web, dev, and Jupyter
 // embed builds (leafmap.oam_search avoids this entirely by calling the API
@@ -40,19 +40,19 @@ type SearchMode = "view" | "draw" | "bbox";
 // Layers panel as one entry via registerExternalNativeLayer (so the user can
 // hide/reorder/restyle/remove them), while the selection outline and the drawn
 // search box stay plugin-private overlays that never enter the store.
-const FOOTPRINT_SOURCE_ID = "geolibre-oam-footprints";
-const FOOTPRINT_FILL_LAYER_ID = "geolibre-oam-footprints-fill";
-const FOOTPRINT_LINE_LAYER_ID = "geolibre-oam-footprints-line";
+const FOOTPRINT_SOURCE_ID = "geoint-oam-footprints";
+const FOOTPRINT_FILL_LAYER_ID = "geoint-oam-footprints-fill";
+const FOOTPRINT_LINE_LAYER_ID = "geoint-oam-footprints-line";
 // The Layers-panel entry id (distinct from the map source/layer ids above).
-const FOOTPRINT_STORE_LAYER_ID = "geolibre-oam-footprints-layer";
+const FOOTPRINT_STORE_LAYER_ID = "geoint-oam-footprints-layer";
 // The selection outline lives in its own source so removing the footprints
 // store layer (which drops FOOTPRINT_SOURCE_ID) never leaves a layer pointing at
 // a deleted source — MapLibre throws on that.
-const SELECT_SOURCE_ID = "geolibre-oam-selected";
-const SELECT_LINE_LAYER_ID = "geolibre-oam-selected-line";
-const DRAW_SOURCE_ID = "geolibre-oam-draw";
-const DRAW_FILL_LAYER_ID = "geolibre-oam-draw-fill";
-const DRAW_LINE_LAYER_ID = "geolibre-oam-draw-line";
+const SELECT_SOURCE_ID = "geoint-oam-selected";
+const SELECT_LINE_LAYER_ID = "geoint-oam-selected-line";
+const DRAW_SOURCE_ID = "geoint-oam-draw";
+const DRAW_FILL_LAYER_ID = "geoint-oam-draw-fill";
+const DRAW_LINE_LAYER_ID = "geoint-oam-draw-line";
 const FOOTPRINT_COLOR = "#2f6feb";
 const HIGHLIGHT_COLOR = "#f5a623";
 
@@ -221,7 +221,7 @@ const CSS = {
     "color:hsl(var(--primary-foreground));",
 } as const;
 
-let appRef: GeoLibreAppAPI | null = null;
+let appRef: GeoIntAppAPI | null = null;
 let unregisterPanel: (() => void) | null = null;
 // The mounted panel container and its teardown, tracked so a language change can
 // rebuild the panel in place (see setOpenAerialMapLabels).
@@ -1322,11 +1322,11 @@ export function setOpenAerialMapLabels(next: Partial<OpenAerialMapLabels>): void
  * zooms to its footprint, inspects its metadata, or downloads the source
  * GeoTIFF.
  */
-export const maplibreOpenAerialMapPlugin: GeoLibrePlugin = {
+export const maplibreOpenAerialMapPlugin: GeoIntPlugin = {
   id: OPENAERIALMAP_PLUGIN_ID,
   name: "OpenAerialMap",
   version: "0.1.0",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     appRef = app;
     unregisterPanel =
       app.registerRightPanel?.({
@@ -1345,7 +1345,7 @@ export const maplibreOpenAerialMapPlugin: GeoLibrePlugin = {
       }) ?? null;
     app.openRightPanel?.(PANEL_ID);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     app.closeRightPanel?.(PANEL_ID);
     unregisterPanel?.();
     unregisterPanel = null;

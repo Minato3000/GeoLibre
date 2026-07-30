@@ -1,4 +1,4 @@
-import { Input, Label } from "@geolibre/ui";
+import { Input, Label } from "@geoint/ui";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { resolveOgcVectorTiles } from "../../../../lib/ogc-vector-tiles";
@@ -15,7 +15,7 @@ interface OgcSample {
  * Adds an OGC API - Tiles (vector) source as a MapLibre vector layer. The user
  * supplies a TileJSON metadata URL or a `{z}/{y}/{x}` MVT template, and may add
  * a Mapbox/MapLibre style URL to discover the tileset's source layers (an OGC
- * API TileJSON often omits them). Rendering uses GeoLibre's default per-source
+ * API TileJSON often omits them). Rendering uses GeoInt's default per-source
  * layer styling; the style's own paint is not applied.
  */
 export function OgcVectorTilesSource() {

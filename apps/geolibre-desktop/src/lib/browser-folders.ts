@@ -5,7 +5,7 @@
  * unit-tests in isolation.
  */
 
-export const PINNED_FOLDERS_STORAGE_KEY = "geolibre.browser.pinnedFolders";
+export const PINNED_FOLDERS_STORAGE_KEY = "geoint.browser.pinnedFolders";
 export const MAX_PINNED_FOLDERS = 20;
 
 /**
@@ -13,7 +13,7 @@ export const MAX_PINNED_FOLDERS = 20;
  * panel can re-read it in the same tab (the native `storage` event is cross-tab
  * only), mirroring the saved-connections change event.
  */
-export const PINNED_FOLDERS_CHANGED_EVENT = "geolibre:pinned-folders-changed";
+export const PINNED_FOLDERS_CHANGED_EVENT = "geoint:pinned-folders-changed";
 
 function uniquePaths(paths: string[]): string[] {
   return Array.from(new Set(paths));

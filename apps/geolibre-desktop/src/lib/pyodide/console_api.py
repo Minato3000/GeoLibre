@@ -1,15 +1,15 @@
-"""GeoLibre in-app Python console API.
+"""GeoInt in-app Python console API.
 
 This module is loaded into a main-thread Pyodide runtime by the Python Console
-panel. It defines ``geolibre`` — a synchronous facade that drives the *running*
-GeoLibre app (its Zustand store + MapController) through the JS scripting handlers
-registered as ``_geolibre_js``. Method names mirror the ``geolibre.Map`` notebook
+panel. It defines ``geoint`` — a synchronous facade that drives the *running*
+GeoInt app (its Zustand store + MapController) through the JS scripting handlers
+registered as ``_geoint_js``. Method names mirror the ``geoint.Map`` notebook
 API so the two surfaces feel identical.
 """
 
 import base64
 
-import _geolibre_js as _js
+import _geoint_js as _js
 import js
 from pyodide.ffi import to_js
 
@@ -127,8 +127,8 @@ class Layer:
         return f"Layer(id={self._id!r}, name={self.name!r}, type={self.type!r})"
 
 
-class _GeoLibre:
-    """The console's entry point, exposed to user code as ``geolibre``."""
+class _GeoInt:
+    """The console's entry point, exposed to user code as ``geoint``."""
 
     # -- view / camera --------------------------------------------------
     def get_view(self):
@@ -236,18 +236,18 @@ class _GeoLibre:
         return base64.b64decode(encoded)
 
     async def load_package(self, name):
-        """Load a Pyodide package on demand, e.g. ``await geolibre.load_package("numpy")``."""
+        """Load a Pyodide package on demand, e.g. ``await geoint.load_package("numpy")``."""
         await _js.loadPackage(name)
 
 
-geolibre = _GeoLibre()
+geoint = _GeoInt()
 
 
-def _geolibre_complete(source: str, end: int) -> str:
+def _geoint_complete(source: str, end: int) -> str:
     """Return completion candidates for the console autocomplete.
 
     Introspects the live runtime namespace (the same globals user code runs in),
-    so attribute access (``geolibre.``) lists real methods and bare names complete
+    so attribute access (``geoint.``) lists real methods and bare names complete
     from globals, builtins, and keywords. Private (``_``-prefixed) names are hidden
     unless the prefix explicitly starts with ``_``.
 
@@ -265,7 +265,7 @@ def _geolibre_complete(source: str, end: int) -> str:
     import re
 
     text = source[: max(0, end)]
-    # The dotted identifier chain ending at the caret, e.g. "geolibre.fly_".
+    # The dotted identifier chain ending at the caret, e.g. "geoint.fly_".
     match = re.search(r"[A-Za-z_][\w]*(?:\.[A-Za-z_][\w]*)*\.?$", text)
     token = match.group(0) if match else ""
     if "." in token:

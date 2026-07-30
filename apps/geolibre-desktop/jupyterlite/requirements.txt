@@ -1,5 +1,5 @@
 # Build-time dependencies for the self-hosted JupyterLite site embedded in the
-# GeoLibre web build (see scripts/build-jupyterlite.mjs). These are NOT runtime
+# GeoInt web build (see scripts/build-jupyterlite.mjs). These are NOT runtime
 # app dependencies — they are only needed by whoever runs `npm run
 # build:jupyterlite` to regenerate apps/geolibre-desktop/public/jupyterlite/.
 #

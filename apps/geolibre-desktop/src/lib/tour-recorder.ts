@@ -137,7 +137,7 @@ export function estimateTourDurationMs(
 // --- Tour configuration (save / load) ---------------------------------------
 
 /** `type` marker identifying a saved Record Map Tour configuration file. */
-export const TOUR_CONFIG_TYPE = "geolibre-tour";
+export const TOUR_CONFIG_TYPE = "geoint-tour";
 /**
  * Schema version of the saved tour configuration file. Bumped to 2 when the
  * single `durationMs` (transition into a keyframe) was split into a per-keyframe
@@ -476,7 +476,7 @@ export function parseTourConfig(text: string): ParsedTourConfig {
   }
   const obj = raw as Record<string, unknown>;
   if (obj.type !== TOUR_CONFIG_TYPE) {
-    throw new Error("File is not a GeoLibre tour configuration.");
+    throw new Error("File is not a GeoInt tour configuration.");
   }
   // Reject a file written by a newer, incompatible format so its data isn't
   // silently misread. A missing version is accepted (the format is then inferred

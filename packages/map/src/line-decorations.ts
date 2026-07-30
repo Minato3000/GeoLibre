@@ -1,9 +1,4 @@
-import {
-  normalizeHexColor,
-  styleValue,
-  type LayerStyle,
-  type LineDecoration,
-} from "@geolibre/core";
+import { normalizeHexColor, styleValue, type LayerStyle, type LineDecoration } from "@geoint/core";
 import { lineDecorationColorValue } from "./derived-geometry";
 import { registerGeneratedImage, type GeneratedImageResult } from "./generated-images";
 
@@ -103,7 +98,7 @@ export function prepareLineDecoration(style: LayerStyle): string | null {
   if (!DECORATION_SHAPES.has(shape)) return null;
   const size = decorationSize(style);
   const color = normalizeHexColor(lineDecorationColorValue(style)) ?? "#1e40af";
-  const id = `geolibre-line-decoration-${shape}-${color.replace("#", "")}-${size}`;
+  const id = `geoint-line-decoration-${shape}-${color.replace("#", "")}-${size}`;
   registerGeneratedImage(id, () => drawDecorationImage(shape, color, size));
   return id;
 }

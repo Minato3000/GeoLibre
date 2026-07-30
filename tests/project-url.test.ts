@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { fetchProjectFromUrl } from "../apps/geolibre-desktop/src/lib/project-url";
 
-const PROJECT_URL = "https://example.com/Test.geolibre.json";
+const PROJECT_URL = "https://example.com/Test.geoint.json";
 
 // A serialized project carrying exactly the fields `parseProject` requires
 // (version, name, mapView). Kept as a string so the fixture stays decoupled
-// from the full `GeoLibreProject` shape.
+// from the full `GeoIntProject` shape.
 const VALID_PROJECT_JSON = JSON.stringify({
   version: "1.0",
   name: "Test",
@@ -190,7 +190,7 @@ describe("fetchProjectFromUrl", () => {
           fetchImpl: okFetch("{ this is not json"),
         }),
       (error: Error) => {
-        assert.match(error.message, /is not a valid GeoLibre project/);
+        assert.match(error.message, /is not a valid GeoInt project/);
         assert.ok(error.message.includes(PROJECT_URL));
         return true;
       },
@@ -204,13 +204,13 @@ describe("fetchProjectFromUrl", () => {
           fetchImpl: okFetch(JSON.stringify({ not: "a project" })),
         }),
       (error: Error) => {
-        assert.match(error.message, /is not a valid GeoLibre project/);
+        assert.match(error.message, /is not a valid GeoInt project/);
         // Loosely assert the underlying reason carries through, without
         // hard-coding parseProject's exact wording.
         assert.match(error.message, /missing.*fields/i);
-        // parseProject's own "Invalid GeoLibre project:" prefix is stripped so
+        // parseProject's own "Invalid GeoInt project:" prefix is stripped so
         // the wrapper does not repeat the noun.
-        assert.doesNotMatch(error.message, /\): Invalid GeoLibre project:/);
+        assert.doesNotMatch(error.message, /\): Invalid GeoInt project:/);
         return true;
       },
     );

@@ -1,4 +1,4 @@
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import { useEffect, useRef, useState } from "react";
 import { MIN_REGION_SIZE, type RecordRegion } from "../../lib/map-recorder";
 

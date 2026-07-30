@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
-import { type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { type GeoIntLayer, useAppStore } from "@geoint/core";
 import {
   RASTER_SOURCE_KIND,
   activateRasterClassification,
@@ -64,7 +64,7 @@ function renderColormapProps(
 function rasterLayer(
   id: string,
   opts: { rasterSymbology?: Record<string, unknown>; reversed?: boolean } = {},
-): GeoLibreLayer {
+): GeoIntLayer {
   return {
     id,
     name: id,
@@ -86,7 +86,7 @@ function rasterLayer(
       },
       ...(opts.rasterSymbology ? { rasterSymbology: opts.rasterSymbology } : {}),
     },
-  } as GeoLibreLayer;
+  } as GeoIntLayer;
 }
 
 describe("raster symbology render injection", () => {
@@ -101,7 +101,7 @@ describe("raster symbology render injection", () => {
 
   it("leaves a built-in continuous ramp to the upstream control, reversed or not", () => {
     // A built-in colormap (even reversed) renders through the control via
-    // rasterState.reversed; GeoLibre injects nothing and the patch is a no-op.
+    // rasterState.reversed; GeoInt injects nothing and the patch is a no-op.
     useAppStore.getState().addLayer(rasterLayer("r1", { reversed: true }));
     const control = fakeControl();
     activateRasterClassification(control);

@@ -55,7 +55,7 @@ export function useMartinConnection(): MartinConnection {
   const stopTransient = useCallback(() => {
     if (!server || layerAddedRef.current) return;
     stopMartinServer().catch((err) => {
-      console.warn("[GeoLibre] Failed to stop Martin:", err);
+      console.warn("[GeoInt] Failed to stop Martin:", err);
     });
     setServer(null);
     setSources([]);

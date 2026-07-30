@@ -31,7 +31,7 @@ export interface TemporalLayerAdapter {
    */
   dimension?: string;
   /**
-   * Stepping unit for the Time Slider. When omitted, GeoLibre derives one from
+   * Stepping unit for the Time Slider. When omitted, GeoInt derives one from
    * the full axis span.
    */
   granularity?: TimeGranularity;

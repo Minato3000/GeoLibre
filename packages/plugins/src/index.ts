@@ -399,6 +399,7 @@ export {
   STAC_PLUGIN_ID,
   type StacLabels,
 } from "./plugins/maplibre-stac";
+export { mosaicTimelinePlugin, MOSAIC_TIMELINE_PLUGIN_ID } from "./plugins/mosaic-timeline";
 export {
   connectStac,
   isVisualizableAsset,

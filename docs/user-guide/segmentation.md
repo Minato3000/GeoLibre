@@ -3,28 +3,28 @@
 **Processing → AI Segmentation** turns imagery into vector features
 using [segment-geospatial](https://github.com/opengeos/segment-geospatial)
 (SamGeo) and Meta's **SAM 3** model. Describe what you want — *"trees"*,
-*"buildings"*, *"water"* — or run automatic segmentation, and GeoLibre adds the
+*"buildings"*, *"water"* — or run automatic segmentation, and GeoInt adds the
 resulting polygons as a new vector layer.
 
 !!! note "Requires the Python sidecar and a model backend"
-    Segmentation runs deep-learning models, so it needs the GeoLibre desktop
+    Segmentation runs deep-learning models, so it needs the GeoInt desktop
     app with the Python sidecar **plus** a running `samgeo-api` model server. A
     CUDA GPU is strongly recommended; CPU inference works but is slow. See
     [Setup](#setup) below.
 
 ## How it works
 
-The heavy model stack (PyTorch + SAM 3) does **not** run inside the GeoLibre
+The heavy model stack (PyTorch + SAM 3) does **not** run inside the GeoInt
 sidecar. Instead the sidecar exposes a thin `/ml` reverse-proxy in front of a
 separate **`samgeo-api`** server (the REST server shipped with
-`segment-geospatial`). GeoLibre uploads the image to the sidecar, which forwards
+`segment-geospatial`). GeoInt uploads the image to the sidecar, which forwards
 it to `samgeo-api`, runs SAM 3, and returns GeoJSON polygons.
 
 ```text
 SegmentationDialog ──image+prompt──▶ sidecar /ml/segment/* ──▶ samgeo-api (SAM 3) ──▶ GeoJSON
 ```
 
-This keeps the GeoLibre sidecar small and lets the model server run wherever you
+This keeps the GeoInt sidecar small and lets the model server run wherever you
 have a GPU.
 
 ## Setup
@@ -36,17 +36,17 @@ environment that has a working PyTorch build (ideally CUDA):
 pip install "segment-geospatial[api,samgeo3]"
 ```
 
-Then either let GeoLibre launch the model server for you, or run it yourself:
+Then either let GeoInt launch the model server for you, or run it yourself:
 
 - **Auto-launch (default).** If `samgeo-api` is on the `PATH` of the environment
-  the sidecar runs in, GeoLibre starts it automatically on first use.
-- **Run it yourself / on another machine.** Start the server and point GeoLibre
+  the sidecar runs in, GeoInt starts it automatically on first use.
+- **Run it yourself / on another machine.** Start the server and point GeoInt
   at it:
 
     ```bash
     samgeo-api --port 8000
     # then run the sidecar with:
-    GEOLIBRE_ML_SAMGEO_URL=http://127.0.0.1:8000
+    GEOINT_ML_SAMGEO_URL=http://127.0.0.1:8000
     ```
 
 !!! note "Desktop app: point it at an external `samgeo-api`"
@@ -56,18 +56,18 @@ Then either let GeoLibre launch the model server for you, or run it yourself:
     `samgeo-api` is not on its `PATH` and auto-launch does not apply. Install
     `segment-geospatial[api,samgeo3]` in a PyTorch-capable environment, start
     `samgeo-api` there, and launch the desktop app from a shell that exports
-    `GEOLIBRE_ML_SAMGEO_URL` so the sidecar proxies to it:
+    `GEOINT_ML_SAMGEO_URL` so the sidecar proxies to it:
 
     ```bash
     # in your PyTorch env
     samgeo-api --port 8000
 
     # launch the desktop app with the proxy target set
-    GEOLIBRE_ML_SAMGEO_URL=http://127.0.0.1:8000 npm run tauri:dev
+    GEOINT_ML_SAMGEO_URL=http://127.0.0.1:8000 npm run tauri:dev
     ```
 
     The Tauri process passes its environment to the sidecar it spawns. Without
-    `GEOLIBRE_ML_SAMGEO_URL`, the sidecar has no model backend and `/ml/status`
+    `GEOINT_ML_SAMGEO_URL`, the sidecar has no model backend and `/ml/status`
     reports the segmentation backend as unavailable.
 
 Install the sidecar's optional `ml` extra (just an HTTP client — the models live
@@ -81,9 +81,9 @@ pip install -e "backend/geolibre_server[ml]"
 
 | Environment variable | Purpose |
 | --- | --- |
-| `GEOLIBRE_ML_SAMGEO_URL` | Base URL of an already-running `samgeo-api`. When set, the sidecar proxies here and does not launch a child process. |
-| `GEOLIBRE_ML_SAMGEO_CMD` | Command used to launch `samgeo-api` on demand (default `samgeo-api`). `--host`/`--port` are appended automatically. |
-| `GEOLIBRE_ML_DEFAULT_MODEL` | Model the UI defaults to (default `sam3`). |
+| `GEOINT_ML_SAMGEO_URL` | Base URL of an already-running `samgeo-api`. When set, the sidecar proxies here and does not launch a child process. |
+| `GEOINT_ML_SAMGEO_CMD` | Command used to launch `samgeo-api` on demand (default `samgeo-api`). `--host`/`--port` are appended automatically. |
+| `GEOINT_ML_DEFAULT_MODEL` | Model the UI defaults to (default `sam3`). |
 
 ## Using it
 
@@ -104,7 +104,7 @@ pip install -e "backend/geolibre_server[ml]"
 
 ## Notes & limitations
 
-- **SAM 3 only.** GeoLibre uses the SAM 3 backend, which covers text, box/point,
+- **SAM 3 only.** GeoInt uses the SAM 3 backend, which covers text, box/point,
   and automatic prompts well. (SAM 2 is intentionally not wired up.)
 - **Desktop only.** Like the raster tools, segmentation needs the desktop app
   and the Python sidecar; it is not available in the browser-only build.

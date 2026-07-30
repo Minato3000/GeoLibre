@@ -17,8 +17,8 @@ import {
   type StoryLayerOpacityChange,
   type StoryMap,
   type StorySlideMode,
-} from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+} from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import {
   Button,
   ColorField,
@@ -38,7 +38,7 @@ import {
   Separator,
   Slider,
   Textarea,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   ChevronDown,
   ChevronUp,
@@ -216,7 +216,7 @@ export function StoryMapPanel({ mapControllerRef }: StoryMapPanelProps) {
   // non-default setting, so it stays disabled in the empty state (where "Load
   // sample story" is the relevant action) even if a stale `storymap` object
   // lingers after the last chapter was deleted manually. Reuse the canonical
-  // check from @geolibre/core so this stays in sync with how the project layer
+  // check from @geoint/core so this stays in sync with how the project layer
   // decides a story is worth persisting.
   const hasStoryContent = storyMapHasContent(story);
 

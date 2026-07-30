@@ -2,7 +2,7 @@ import {
   clearExternalNativePaintBridge,
   setExternalNativePaintBridge,
   useAppStore,
-} from "@geolibre/core";
+} from "@geoint/core";
 import {
   addRasterToMap,
   addZarrRasterLayer,
@@ -37,6 +37,7 @@ import {
   maplibreNationalMapPlugin,
   maplibreOpenAerialMapPlugin,
   maplibreStacCatalogsPlugin,
+  mosaicTimelinePlugin,
   maplibreSourceCoopPlugin,
   maplibreNaturalEarthPlugin,
   maplibreHuggingFacePlugin,
@@ -59,6 +60,7 @@ import {
   maplibreTimeSliderPlugin,
   setTimelapseVideoSaver,
   maplibreUsgsLidarPlugin,
+  MOSAIC_TIMELINE_PLUGIN_ID,
   PluginManager,
   registerRightPanel,
   unregisterRightPanel,
@@ -75,21 +77,21 @@ import {
   openFloatingPanel,
   closeFloatingPanel,
   getOpenFloatingPanels,
-} from "@geolibre/plugins";
-import type { MapController } from "@geolibre/map";
+} from "@geoint/plugins";
+import type { MapController } from "@geoint/map";
 import type {
-  GeoLibreCogLayerOptions,
-  GeoLibreDeckGL,
-  GeoLibreExternalNativeLayerRegistration,
-  GeoLibreFileDialogOptions,
-  GeoLibreMapControlPosition,
-  GeoLibreTileLayerOptions,
-  GeoLibreWmsLayerOptions,
-  GeoLibreZarrLayerOptions,
-  GeoLibreZarrQueryGeometry,
-  GeoLibreZarrQueryOptions,
-  GeoLibreZarrQuerySelector,
-} from "@geolibre/plugins";
+  GeoIntCogLayerOptions,
+  GeoIntDeckGL,
+  GeoIntExternalNativeLayerRegistration,
+  GeoIntFileDialogOptions,
+  GeoIntMapControlPosition,
+  GeoIntTileLayerOptions,
+  GeoIntWmsLayerOptions,
+  GeoIntZarrLayerOptions,
+  GeoIntZarrQueryGeometry,
+  GeoIntZarrQueryOptions,
+  GeoIntZarrQuerySelector,
+} from "@geoint/plugins";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readDir, readFile } from "@tauri-apps/plugin-fs";
@@ -127,16 +129,16 @@ import {
 import { useDesktopSettingsStore } from "./useDesktopSettings";
 import { ensureFileExtension, useFileNamePrompt } from "./useFileNamePrompt";
 
-const RASTER_PROXY_PATH = "/__geolibre_raster_proxy";
+const RASTER_PROXY_PATH = "/__geoint_raster_proxy";
 
 /**
- * Translate the public {@link GeoLibreTileLayerOptions} into the option bag
+ * Translate the public {@link GeoIntTileLayerOptions} into the option bag
  * passed straight to `store.addTileLayer(name, opts, ...)`, dropping
  * `beforeLayerId` (which the store takes as a separate positional argument).
  * The remaining keys mix source-level fields (tileSize, bounds, ...) and
  * layer-level ones (visible, opacity); the store reads each by name.
  */
-function tileLayerStoreOptions(options?: GeoLibreTileLayerOptions) {
+function tileLayerStoreOptions(options?: GeoIntTileLayerOptions) {
   if (!options) return {};
   const { beforeLayerId: _beforeLayerId, ...rest } = options;
   return rest;
@@ -174,6 +176,7 @@ manager.registerAll([
   maplibreEarthdataGisPlugin,
   maplibreOpenAerialMapPlugin,
   maplibreStacCatalogsPlugin,
+  mosaicTimelinePlugin,
   maplibreSourceCoopPlugin,
   maplibreNaturalEarthPlugin,
   maplibreHuggingFacePlugin,
@@ -201,6 +204,15 @@ manager.registerAll([
   maplibreDeckGlVizPlugin,
   maplibreComponentsPlugin,
 ]);
+// Mosaic Timeline should be on from a fresh boot with no user action, but
+// `activate()` needs a real app API (map, store, etc.) that does not exist yet
+// at module load -- `plugin.activeByDefault` would mark it active in name only
+// (register() adds it straight to the active set, so restoreProjectState's
+// "skip already-active plugins" loop never actually calls activate(), and the
+// panel never opens until the user manually toggles the plugin off and on).
+// markDefaultActive keeps it out of the active set until restoreProjectState
+// runs with a real app API, so its activation loop genuinely calls activate().
+manager.markDefaultActive(MOSAIC_TIMELINE_PLUGIN_ID);
 
 // The Timelapse plugin records the map to a video blob but cannot depend on
 // the app's Tauri I/O helpers, so the save step (native dialog under Tauri,
@@ -227,7 +239,7 @@ setTimelapseVideoSaver((blob, { defaultName, extension, mimeType }) =>
 setEarthdataCogSaver(async (geoTiffBytes, defaultName) => {
   // Imported on demand so the COG encoder's WASM is only fetched when a user
   // actually downloads one.
-  const { convertGeoTiffToCog } = await import("@geolibre/processing");
+  const { convertGeoTiffToCog } = await import("@geoint/processing");
   const cogBytes = await convertGeoTiffToCog(geoTiffBytes);
   const saved = await saveBinaryFileWithFallback(cogBytes, {
     defaultName,
@@ -291,7 +303,7 @@ export async function upgradeExternalPlugin(
 }
 
 // Install a plugin from a local `.zip` archive (desktop only). The Rust backend
-// validates the archive and copies it into GeoLibre's app-data plugins
+// validates the archive and copies it into GeoInt's app-data plugins
 // directory so it persists across restarts; the plugins directory is then
 // re-scanned so the new plugin loads without a reload. A reinstall of an
 // already-loaded plugin id is unloaded first so the updated archive replaces it
@@ -397,7 +409,7 @@ export function usePluginRegistry() {
     setMapControlPosition: (
       id: string,
       appApi: ReturnType<typeof createAppAPI>,
-      position: GeoLibreMapControlPosition,
+      position: GeoIntMapControlPosition,
     ) => {
       const before = JSON.stringify(projectPluginStateSnapshot());
       try {
@@ -584,7 +596,7 @@ export function useSwipeSplitViewExclusivity(
 export function bundledPluginManifestUrls(): string[] {
   if (typeof window === "undefined") return [];
   // Resolve against a base that always ends in "/" so a non-trailing-slash
-  // BASE_URL (e.g. "/geolibre") cannot mangle the path into "/geolibreplugins".
+  // BASE_URL (e.g. "/geoint") cannot mangle the path into "/geointplugins".
   const base = import.meta.env.BASE_URL.endsWith("/")
     ? import.meta.env.BASE_URL
     : `${import.meta.env.BASE_URL}/`;
@@ -641,7 +653,7 @@ function ensureExternalPluginsLoadedWithSettings(
       // already recorded and can be removed.
       const unloaded = unloadRemovedUrlPlugins(manager, pluginManifestUrls, app);
       if (unloaded.length) {
-        console.info(`Unloaded external GeoLibre plugins: ${unloaded.join(", ")}`);
+        console.info(`Unloaded external GeoInt plugins: ${unloaded.join(", ")}`);
       }
       return loadExternalPlugins(
         manager,
@@ -659,7 +671,7 @@ function ensureExternalPluginsLoadedWithSettings(
       notifyExternalPluginsListeners();
       if (result.loadedPluginIds.length) {
         console.info(
-          `Loaded external GeoLibre plugins from ${result.pluginSources.join(
+          `Loaded external GeoInt plugins from ${result.pluginSources.join(
             ", ",
           )}: ${result.loadedPluginIds.join(", ")}`,
         );
@@ -669,7 +681,7 @@ function ensureExternalPluginsLoadedWithSettings(
       }
     })
     .catch((error) => {
-      console.warn("Could not load external GeoLibre plugins.", error);
+      console.warn("Could not load external GeoInt plugins.", error);
     })
     .finally(() => {
       // A settings change can start a new load while this one is in flight.
@@ -813,7 +825,7 @@ export function createAppAPI(mapControllerRef?: RefObject<MapController | null>)
       const id = store.addGeoJsonLayer(name, data, sourcePath);
       return id;
     },
-    addTileLayer: (name: string, url: string, options?: GeoLibreTileLayerOptions) =>
+    addTileLayer: (name: string, url: string, options?: GeoIntTileLayerOptions) =>
       store.addTileLayer(
         name,
         { type: "xyz", tiles: [url], url, ...tileLayerStoreOptions(options) },
@@ -823,13 +835,13 @@ export function createAppAPI(mapControllerRef?: RefObject<MapController | null>)
     // XYZ and WMTS tile templates render through the same syncRasterTileLayer
     // path; the distinct type only changes how the layer is labelled/stored,
     // so the two helpers share an implementation by design (not a copy-paste).
-    addWmtsLayer: (name: string, url: string, options?: GeoLibreTileLayerOptions) =>
+    addWmtsLayer: (name: string, url: string, options?: GeoIntTileLayerOptions) =>
       store.addTileLayer(
         name,
         { type: "wmts", tiles: [url], url, ...tileLayerStoreOptions(options) },
         options?.beforeLayerId ?? null,
       ),
-    addWmsLayer: (name: string, options: GeoLibreWmsLayerOptions) => {
+    addWmsLayer: (name: string, options: GeoIntWmsLayerOptions) => {
       const { beforeLayerId, url, layers, styles, format, transparent, version, ...tileOptions } =
         options;
       // TypeScript enforces these, but an untyped JS plugin can pass "" — an
@@ -856,7 +868,7 @@ export function createAppAPI(mapControllerRef?: RefObject<MapController | null>)
         (typeof version !== "string" || !/^1\.\d/.test(version.trim()))
       ) {
         console.warn(
-          `[GeoLibre] addWmsLayer: unsupported WMS version "${String(
+          `[GeoInt] addWmsLayer: unsupported WMS version "${String(
             version,
           )}"; using "${resolvedVersion}".`,
         );
@@ -894,7 +906,7 @@ export function createAppAPI(mapControllerRef?: RefObject<MapController | null>)
     // raster control. Besides keeping every COG path on one renderer, this is
     // what mirrors the layer as `maplibre-gl-raster`, making the full Raster
     // symbology section available in the Style panel.
-    addCogLayer: (name: string, url: string, options?: GeoLibreCogLayerOptions) => {
+    addCogLayer: (name: string, url: string, options?: GeoIntCogLayerOptions) => {
       const bands = options?.bands
         ?.split(",")
         .map((value) => Number(value.trim()))
@@ -923,7 +935,7 @@ export function createAppAPI(mapControllerRef?: RefObject<MapController | null>)
     // Zarr goes through the components plugin's shared @carbonplan/zarr-layer
     // control for the same reason as addCogLayer: the host owns the renderer, so
     // a plugin does not bundle (and fail to activate) a second copy.
-    addZarrLayer: (name: string, url: string, options: GeoLibreZarrLayerOptions) =>
+    addZarrLayer: (name: string, url: string, options: GeoIntZarrLayerOptions) =>
       addZarrRasterLayer(api, {
         url,
         name,
@@ -949,9 +961,9 @@ export function createAppAPI(mapControllerRef?: RefObject<MapController | null>)
     // values itself instead of every plugin re-reading the store (#1555).
     queryZarrLayer: (
       layerId: string,
-      geometry: GeoLibreZarrQueryGeometry,
-      selector?: GeoLibreZarrQuerySelector,
-      options?: GeoLibreZarrQueryOptions,
+      geometry: GeoIntZarrQueryGeometry,
+      selector?: GeoIntZarrQuerySelector,
+      options?: GeoIntZarrQueryOptions,
     ) => queryZarrLayer(layerId, geometry, selector, options),
     // A layer whose time is an internal dimension joins the Time Slider through
     // an adapter rather than a filter or a source swap. Registering only makes
@@ -1012,7 +1024,7 @@ export function createAppAPI(mapControllerRef?: RefObject<MapController | null>)
     // to select every component, and to capture the file's path for restore.
     pickVectorFilesWithSidecars: isTauriRuntime() ? pickVectorFilesWithSidecars : undefined,
     readLocalVectorFile: readVectorFileWithSidecars,
-    exportTextFile: (filename: string, content: string, options?: GeoLibreFileDialogOptions) => {
+    exportTextFile: (filename: string, content: string, options?: GeoIntFileDialogOptions) => {
       const description = options?.description ?? "GeoJSON";
       const extensions = options?.extensions ?? ["geojson", "json"];
       const mimeType = options?.mimeType ?? "application/geo+json";
@@ -1043,7 +1055,7 @@ export function createAppAPI(mapControllerRef?: RefObject<MapController | null>)
         console.error(`Could not export ${filename}.`, error);
       });
     },
-    importTextFile: (options?: GeoLibreFileDialogOptions) => {
+    importTextFile: (options?: GeoIntFileDialogOptions) => {
       const extensions = options?.extensions ?? ["json"];
       return openLocalDataFileWithFallback({
         filters: [{ name: options?.description ?? "JSON", extensions }],
@@ -1051,7 +1063,7 @@ export function createAppAPI(mapControllerRef?: RefObject<MapController | null>)
         readText: true,
       }).then((result) => result?.text ?? null);
     },
-    registerExternalNativeLayer: (registration: GeoLibreExternalNativeLayerRegistration) => {
+    registerExternalNativeLayer: (registration: GeoIntExternalNativeLayerRegistration) => {
       const state = useAppStore.getState();
       const existing = state.layers.find((layer) => layer.id === registration.id);
       const layer = createExternalNativeStoreLayer(registration, existing);
@@ -1092,12 +1104,12 @@ export function createAppAPI(mapControllerRef?: RefObject<MapController | null>)
       control: Parameters<MapController["setBuiltInControlPosition"]>[0],
       position: Parameters<MapController["setBuiltInControlPosition"]>[1],
     ) => mapControllerRef?.current?.setBuiltInControlPosition(control, position) ?? false,
-    // Hand external plugins GeoLibre's own deck.gl modules so they render on the
+    // Hand external plugins GeoInt's own deck.gl modules so they render on the
     // host's single deck.gl instance (a bundled second copy throws on the
     // deck.gl/luma.gl version guards and fails to render). Memoized so repeated
     // calls reuse one resolved module set.
     getDeckGL: (() => {
-      let cached: Promise<GeoLibreDeckGL> | undefined;
+      let cached: Promise<GeoIntDeckGL> | undefined;
       return () =>
         (cached ??= Promise.all([
           import("@deck.gl/core"),
@@ -1115,7 +1127,7 @@ export function createAppAPI(mapControllerRef?: RefObject<MapController | null>)
           mapbox,
         })));
     })(),
-    // Hand external plugins GeoLibre's own maplibre-gl-raster module so they
+    // Hand external plugins GeoInt's own maplibre-gl-raster module so they
     // render COGs on the host's single deck.gl/luma.gl instance. A bundled
     // second copy throws on luma.gl's "already initialized" guard. Memoized so
     // repeated calls reuse one resolved module.
@@ -1139,7 +1151,7 @@ export function createAppAPI(mapControllerRef?: RefObject<MapController | null>)
       // forever.
       if (projection !== "globe" && projection !== "mercator") {
         console.warn(
-          `[GeoLibre] setMapProjection: ignoring unknown projection "${String(
+          `[GeoInt] setMapProjection: ignoring unknown projection "${String(
             projection,
           )}" (expected "globe" or "mercator").`,
         );

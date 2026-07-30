@@ -1,6 +1,6 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import { type RefObject, useEffect } from "react";
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import {
   EMBED_ORIGIN_WILDCARD,
   buildEmbedEvent,
@@ -15,7 +15,7 @@ import { fetchProjectFromUrl, projectUrlFromLocation } from "../lib/project-url"
 import { resolveProjectXyzLayers } from "../lib/xyz-url";
 import { isKnownWhiteboxToolId } from "../lib/whitebox-tool-url";
 
-// Runtime `postMessage` API for a host page that frames GeoLibre (issue #1462).
+// Runtime `postMessage` API for a host page that frames GeoInt (issue #1462).
 // Where `?url=`, `?maponly`, and `?tool=` configure the app once at load time,
 // this lets the host keep talking to a live map: fly to a record the user just
 // clicked in the host UI, highlight it, open a processing tool, and learn when
@@ -24,7 +24,7 @@ import { isKnownWhiteboxToolId } from "../lib/whitebox-tool-url";
 //
 // Trust: unlike the Jupyter bridges (which trust the page that embeds them), the
 // host here is a third party, so the API stays off until the deployment names
-// the origins it trusts via GEOLIBRE_EMBED_ORIGINS. Every inbound message is
+// the origins it trusts via GEOINT_EMBED_ORIGINS. Every inbound message is
 // checked against that list and every outbound message is scoped to a listed
 // origin, never "*" (unless the operator configured the "*" wildcard).
 
@@ -32,7 +32,7 @@ import { isKnownWhiteboxToolId } from "../lib/whitebox-tool-url";
 const VIEW_THROTTLE_MS = 250;
 
 /**
- * Bridges a framed GeoLibre with an arbitrary host page over a versioned
+ * Bridges a framed GeoInt with an arbitrary host page over a versioned
  * `postMessage` protocol.
  *
  * Host → app: `loadProject`, `setView`, `highlightFeature`, `openTool`.
@@ -75,7 +75,7 @@ export function useEmbedApi(mapControllerRef: RefObject<MapController | null>): 
         try {
           host.postMessage(message, target);
         } catch (error) {
-          console.error("[GeoLibre] Failed to post embed event", error);
+          console.error("[GeoInt] Failed to post embed event", error);
         }
       }
     };
@@ -301,7 +301,7 @@ export function useEmbedApi(mapControllerRef: RefObject<MapController | null>): 
     };
     rafId = requestAnimationFrame(attach);
 
-    emit("ready", { version: __GEOLIBRE_VERSION__ });
+    emit("ready", { version: __GEOINT_VERSION__ });
 
     return () => {
       disposed = true;

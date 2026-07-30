@@ -7,16 +7,16 @@ import {
   DEFAULT_LAYER_STYLE,
   extractCopiedLayerStyle,
   useAppStore,
-  type GeoLibreLayer,
-} from "@geolibre/core";
-// The real constant `@geolibre/core`'s clipboard module inlines as a literal
+  type GeoIntLayer,
+} from "@geoint/core";
+// The real constant `@geoint/core`'s clipboard module inlines as a literal
 // (core must not depend on plugins). Importing it here — not re-declaring it —
 // makes the raster fixtures fail if the two ever drift. Pulled from the module
 // that defines it rather than the package barrel, whose browser-only plugins
 // (earth-engine, ...) do not load under the Node test runner.
 import { RASTER_SOURCE_KIND } from "../packages/plugins/src/plugins/raster-layer-sync";
 
-function vectorLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function vectorLayer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id: "vec",
     name: "Vector",
@@ -31,7 +31,7 @@ function vectorLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
   };
 }
 
-function rasterLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function rasterLayer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id: "ras",
     name: "Raster",

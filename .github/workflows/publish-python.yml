@@ -89,7 +89,7 @@ jobs:
         env:
           # Force a fresh embed build so the published wheel always carries the
           # current app bundle.
-          GEOLIBRE_FORCE_JS_BUILD: "1"
+          GEOINT_FORCE_JS_BUILD: "1"
           NODE_OPTIONS: --max-old-space-size=4096
           VITE_GEE_OAUTH_CLIENT_ID: ${{ secrets.VITE_GEE_OAUTH_CLIENT_ID }}
 

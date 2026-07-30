@@ -43,7 +43,7 @@ before(async () => {
 // Intentionally duplicated from diagnostics.ts: the key is a persistence
 // contract with users' localStorage, so an accidental rename in the source
 // should fail this test rather than be silently mirrored by an import.
-const CAPTURE_NETWORK_INFO_STORAGE_KEY = "geolibre.diagnostics.captureNetworkInfo";
+const CAPTURE_NETWORK_INFO_STORAGE_KEY = "geoint.diagnostics.captureNetworkInfo";
 
 describe("diagnostics network info capture", () => {
   beforeEach(() => {

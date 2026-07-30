@@ -1,13 +1,13 @@
-import { useAppStore } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+import { useAppStore } from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import {
   detectObjects,
   readDetectionImage,
   readRasterData,
   type Detection,
   type RasterData,
-} from "@geolibre/processing";
-import { Button, Input, Label, Select } from "@geolibre/ui";
+} from "@geoint/processing";
+import { Button, Input, Label, Select } from "@geoint/ui";
 import {
   AlertCircle,
   CheckCircle2,

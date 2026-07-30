@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
 import {
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerVirtualField,
   applyJoinsToLayer,
   applyLayerVirtualFields,
@@ -9,7 +9,7 @@ import {
   reapplyLayerJoins,
   stripVirtualFieldColumns,
   useAppStore,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { Feature, FeatureCollection } from "geojson";
 
 function pointFeature(properties: Record<string, unknown>): Feature {
@@ -175,7 +175,7 @@ describe("stripVirtualFieldColumns", () => {
 });
 
 describe("applyJoinsToLayer with virtual fields", () => {
-  function makeLayer(overrides: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+  function makeLayer(overrides: Partial<GeoIntLayer> = {}): GeoIntLayer {
     return {
       id: "states",
       name: "States",
@@ -187,10 +187,10 @@ describe("applyJoinsToLayer with virtual fields", () => {
       metadata: {},
       geojson: states(),
       ...overrides,
-    } as GeoLibreLayer;
+    } as GeoIntLayer;
   }
 
-  const censusLayer = (): GeoLibreLayer =>
+  const censusLayer = (): GeoIntLayer =>
     ({
       id: "census",
       name: "Census",
@@ -205,7 +205,7 @@ describe("applyJoinsToLayer with virtual fields", () => {
         tableFeature({ state_name: "Alaska", pop: 10 }),
         tableFeature({ state_name: "Arizona", pop: 570 }),
       ]),
-    }) as GeoLibreLayer;
+    }) as GeoIntLayer;
 
   it("applies virtual fields after joins so expressions see joined columns", () => {
     const layer = makeLayer({

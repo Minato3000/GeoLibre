@@ -1,4 +1,4 @@
-import { redo, undo, useAppStore } from "@geolibre/core";
+import { redo, undo, useAppStore } from "@geoint/core";
 import { useEffect } from "react";
 
 /** True when focus is in a text-editing surface (let the browser handle undo). */

@@ -4,15 +4,15 @@ import {
   runVectorToVector,
   type ConversionJob,
   type VectorDatasetLayer,
-} from "@geolibre/processing";
-import { Button, Input, Label, Select } from "@geolibre/ui";
+} from "@geoint/processing";
+import { Button, Input, Label, Select } from "@geoint/ui";
 import { FolderOpen, Layers } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { FeatureCollection } from "geojson";
 import { tempDir, join } from "@tauri-apps/api/path";
 import { remove } from "@tauri-apps/plugin-fs";
-import { startGeoLibreSidecar } from "../../../../lib/sidecar";
+import { startGeoIntSidecar } from "../../../../lib/sidecar";
 import { isTauri, pickLocalDirectory, readLocalFileBytes } from "../../../../lib/tauri-io";
 import { LAST_GEODATABASE_STORAGE_KEY } from "../constants";
 import {
@@ -116,7 +116,7 @@ export function GdbSource() {
     setCrsOverride("");
     setIsReadingLayers(true);
     try {
-      await startGeoLibreSidecar();
+      await startGeoIntSidecar();
       const job = await waitForConversionJob(
         await runVectorLayers({ input_path: path }),
         t("addData.gdb.errorTimeout"),
@@ -194,10 +194,10 @@ export function GdbSource() {
     // file only serves this one add and is removed after the read below.
     const outputPath = await join(
       await tempDir(),
-      `geolibre-gdb-${Date.now()}-${Math.random().toString(36).slice(2)}.geojson`,
+      `geoint-gdb-${Date.now()}-${Math.random().toString(36).slice(2)}.geojson`,
     );
 
-    await startGeoLibreSidecar();
+    await startGeoIntSidecar();
     let featureCollection: FeatureCollection;
     // Set once the job is known to have finished on the sidecar; cleanup is
     // gated on it because after a poll timeout (or a mid-poll network error)

@@ -4,7 +4,7 @@ import {
   PLANETARY_BASEMAPS,
   useAppStore,
   type PlanetaryBasemap,
-} from "@geolibre/core";
+} from "@geoint/core";
 import {
   Button,
   cn,
@@ -16,17 +16,18 @@ import {
   Input,
   Label,
   Select,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import type { FormEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   getOpenFreeMapPresets,
+  getRasterBasemapPresets,
   LIBERTY_3D_ID,
   resolveProtomapsPresets,
   type PresetBasemap,
 } from "../../lib/basemap-presets";
-import { isOfflineBasemapSentinel, PROTOMAPS_FLAVORS, type ProtomapsFlavor } from "@geolibre/map";
+import { isOfflineBasemapSentinel, PROTOMAPS_FLAVORS, type ProtomapsFlavor } from "@geoint/map";
 import { planetaryBasemapLabel, planetaryBasemapSectionKey } from "../../lib/planetary-sections";
 import { buildRemotePmtilesBasemap, isPmtilesStyleUrl } from "../../lib/pmtiles-basemap-url";
 import { CollapsibleSection } from "../CollapsibleSection";
@@ -43,8 +44,8 @@ const OFFLINE_CHOICE = "__offline__";
 // The last custom URL (and PMTiles flavor) the user applied, so the field is
 // repopulated next time the picker opens — a PMTiles basemap resolves to an
 // opaque sentinel that can't be reversed back into its URL, so we remember it.
-const CUSTOM_URL_STORAGE_KEY = "geolibre.basemapPicker.customUrl";
-const CUSTOM_FLAVOR_STORAGE_KEY = "geolibre.basemapPicker.customFlavor";
+const CUSTOM_URL_STORAGE_KEY = "geoint.basemapPicker.customUrl";
+const CUSTOM_FLAVOR_STORAGE_KEY = "geoint.basemapPicker.customFlavor";
 
 function readStoredCustomUrl(): string {
   try {
@@ -111,6 +112,7 @@ export function BasemapPickerDialog({ open, onOpenChange }: BasemapPickerDialogP
   const applyPlanetaryBasemap = useAppStore((s) => s.applyPlanetaryBasemap);
 
   const openFreeMapPresets = useMemo(() => getOpenFreeMapPresets(), []);
+  const rasterPresets = useMemo(() => getRasterBasemapPresets(), []);
   // Protomaps styles need an API key (VITE_PROTOMAPS_API_KEY). It can come from
   // the build or from Settings → Environment variables, so re-resolve when the
   // dialog opens and whenever the runtime env changes; an absent key hides the
@@ -121,13 +123,14 @@ export function BasemapPickerDialog({ open, onOpenChange }: BasemapPickerDialogP
     if (!open) return;
     const refresh = () => setProtomapsPresets(resolveProtomapsPresets());
     refresh();
-    window.addEventListener("geolibre:runtime-env-change", refresh);
-    return () => window.removeEventListener("geolibre:runtime-env-change", refresh);
+    window.addEventListener("geoint:runtime-env-change", refresh);
+    return () => window.removeEventListener("geoint:runtime-env-change", refresh);
   }, [open]);
 
   const allPresets = useMemo(
     () => [
       ...openFreeMapPresets,
+      ...rasterPresets,
       ...protomapsPresets,
       ...PLANETARY_BASEMAPS.map((b) => ({
         id: b.id,
@@ -135,7 +138,7 @@ export function BasemapPickerDialog({ open, onOpenChange }: BasemapPickerDialogP
         styleUrl: b.styleUrl,
       })),
     ],
-    [openFreeMapPresets, protomapsPresets],
+    [openFreeMapPresets, rasterPresets, protomapsPresets],
   );
 
   // The currently active choice, used to highlight a single button. Match on the
@@ -242,6 +245,23 @@ export function BasemapPickerDialog({ open, onOpenChange }: BasemapPickerDialogP
               ))}
             </div>
           </div>
+
+          {rasterPresets.length > 0 ? (
+            <div className="space-y-2">
+              {/* Not run through t() yet, matching the rest of the raster-basemap wiring. */}
+              <p className="text-xs font-medium text-muted-foreground">Satellite</p>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {rasterPresets.map((basemap) => (
+                  <PresetButton
+                    key={basemap.id}
+                    name={basemap.name}
+                    selected={activeChoice === basemap.id}
+                    onSelect={() => applyPreset(basemap)}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : null}
 
           {protomapsPresets.length > 0 ? (
             <div className="space-y-2">

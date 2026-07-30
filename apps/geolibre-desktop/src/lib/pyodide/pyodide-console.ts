@@ -1,11 +1,11 @@
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import consoleApiSource from "./console_api.py?raw";
 import { getPyodideIndexUrl, isDefaultPyodideIndexUrl } from "./pyodide-config";
 import { createScriptingHandlers, type ScriptingDeps } from "../scripting/scriptingApi";
 
 // Main-thread Pyodide runtime backing the in-app Python Console. Unlike the
 // vector-tools worker (pyodide-vector-loader.ts), this runs on the main thread on
-// purpose: the console's `geolibre` facade must reach the live Zustand store and
+// purpose: the console's `geoint` facade must reach the live Zustand store and
 // MapController synchronously, which a Web Worker cannot. The runtime is a
 // memoized singleton, so the multi-MB download happens once and the Python
 // namespace (user variables) persists across panel open/close.
@@ -217,14 +217,14 @@ async function createRuntime(deps: ScriptingDeps): Promise<PyodideAPI> {
   }
   const pyodide = await window.loadPyodide({ indexURL });
 
-  emitProgress("Setting up GeoLibre");
+  emitProgress("Setting up GeoInt");
   // Expose the shared scripting handlers (plus on-demand package loading) to
-  // Python as the `_geolibre_js` module; console_api.py wraps them as `geolibre`.
+  // Python as the `_geoint_js` module; console_api.py wraps them as `geoint`.
   const facade = {
     ...createScriptingHandlers(deps),
     loadPackage: (name: string) => pyodide.loadPackage(name),
   };
-  pyodide.registerJsModule("_geolibre_js", facade);
+  pyodide.registerJsModule("_geoint_js", facade);
   pyodide.runPython(consoleApiSource);
   return pyodide;
 }
@@ -248,7 +248,7 @@ export function initConsoleRuntime(deps: ScriptingDeps): Promise<PyodideAPI> {
  * Run a snippet of user Python in the console runtime, capturing output.
  *
  * Uses `runPythonAsync` so top-level `await` works (e.g. `await
- * geolibre.run_algorithm(...)`). User variables persist across calls because the
+ * geoint.run_algorithm(...)`). User variables persist across calls because the
  * code runs in the runtime's shared globals.
  *
  * @param deps - Accessors for the live map controller (used on first init).
@@ -319,7 +319,7 @@ export async function completeConsoleCode(
   cursor: number,
 ): Promise<ConsoleCompletion> {
   const pyodide = await initConsoleRuntime(deps);
-  const completer = pyodide.globals.get("_geolibre_complete") as PyProxyFn;
+  const completer = pyodide.globals.get("_geoint_complete") as PyProxyFn;
   try {
     const json = completer(source, cursor) as string;
     return JSON.parse(json) as ConsoleCompletion;

@@ -1,5 +1,5 @@
 // The fetch used by the share.geolibre.app client: project upload
-// (`share-geolibre.ts`) and the gallery reads (`share-gallery.ts`).
+// (`share-geoint.ts`) and the gallery reads (`share-gallery.ts`).
 //
 // Defaults to the WebView's browser `fetch`. The desktop build swaps in a
 // native-HTTP-backed fetch (`installNativeShareFetch`) that bypasses the
@@ -10,7 +10,7 @@
 // "Could not reach share.geolibre.app." This mirrors the geocoding fix in
 // `geocoding-fetch.ts`.
 
-import { resolveShareBaseUrl } from "./share-geolibre";
+import { resolveShareBaseUrl } from "./share-geoint";
 
 /**
  * The active share fetch. Browser `fetch` by default; the desktop build
@@ -53,7 +53,7 @@ function requestHost(input: RequestInfo | URL): string | null {
  * the `http:default` capability scope (`src-tauri/capabilities/default.json`).
  *
  * The host is resolved from {@link resolveShareBaseUrl} (the configured or
- * production share URL) at install time, so a `VITE_GEOLIBRE_SHARE_URL` override
+ * production share URL) at install time, so a `VITE_GEOINT_SHARE_URL` override
  * is honored.
  *
  * Loaded lazily and only in the desktop build so the web/embedded bundles never

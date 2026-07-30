@@ -54,7 +54,7 @@ const SERVICE_KINDS: readonly ServiceLibraryKind[] = ["wms", "wfs", "wmts", "xyz
 export const UNCATEGORIZED_LABEL = "Uncategorized";
 
 /** The wrapped JSON shape produced by {@link serializeUserServices}. */
-const EXPORT_FORMAT = "geolibre-service-library";
+const EXPORT_FORMAT = "geoint-service-library";
 
 function createServiceId(): string {
   return typeof crypto !== "undefined" && "randomUUID" in crypto

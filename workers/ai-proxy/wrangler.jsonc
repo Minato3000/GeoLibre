@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
-  "name": "geolibre-ai-proxy",
+  "name": "geoint-ai-proxy",
   "main": "src/index.ts",
   "compatibility_date": "2026-07-26",
   "compatibility_flags": ["nodejs_compat"],
@@ -14,7 +14,7 @@
     "required": [
       "CF_AI_GATEWAY_TOKEN",
       "CLOUDFLARE_ACCOUNT_ID",
-      "GEOLIBRE_AI_PROXY_TOKEN"
+      "GEOINT_AI_PROXY_TOKEN"
     ]
   },
   "vars": {

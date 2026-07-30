@@ -1,4 +1,4 @@
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import {
   DEFAULT_DECK_VIZ_SCENEGRAPH,
@@ -19,7 +19,7 @@ export const DECK_VIZ_SOURCE_KIND = "deckgl-viz";
  * @param layer - A store layer.
  * @returns True when the layer was created by the Deck.gl Layer builder.
  */
-export function isDeckVizLayer(layer: GeoLibreLayer): boolean {
+export function isDeckVizLayer(layer: GeoIntLayer): boolean {
   return layer.type === "deckgl-viz" && layer.metadata.sourceKind === DECK_VIZ_SOURCE_KIND;
 }
 
@@ -71,14 +71,14 @@ const DECK_VIZ_ROW_WARN_COUNT = 50_000;
  * saved project re-renders without re-fetching.
  *
  * @param params - Layer name, viz config, and inline data.
- * @returns The corresponding GeoLibre store layer.
+ * @returns The corresponding GeoInt store layer.
  */
-export function createDeckVizStoreLayer(params: CreateDeckVizLayerParams): GeoLibreLayer {
+export function createDeckVizStoreLayer(params: CreateDeckVizLayerParams): GeoIntLayer {
   const id = params.id ?? crypto.randomUUID();
   const rowCount = params.rows?.length ?? params.geojson?.features.length ?? 0;
   if (rowCount > DECK_VIZ_ROW_WARN_COUNT) {
     console.warn(
-      "[GeoLibre] deck-viz: storing",
+      "[GeoInt] deck-viz: storing",
       rowCount,
       "rows inline; this will enlarge the saved project file",
     );
@@ -110,7 +110,7 @@ export function createDeckVizStoreLayer(params: CreateDeckVizLayerParams): GeoLi
 }
 
 /** Reads the inline row data from a deck-viz store layer. */
-export function deckVizRows(layer: GeoLibreLayer): ReadonlyArray<unknown> {
+export function deckVizRows(layer: GeoIntLayer): ReadonlyArray<unknown> {
   const data = (layer.source as { data?: unknown }).data;
   return Array.isArray(data) ? data : [];
 }
@@ -122,7 +122,7 @@ export function deckVizRows(layer: GeoLibreLayer): ReadonlyArray<unknown> {
  * @param layer - A deck-viz store layer.
  * @returns The viz config, or null when it is missing/invalid.
  */
-export function readDeckVizConfig(layer: GeoLibreLayer): DeckVizConfig | null {
+export function readDeckVizConfig(layer: GeoIntLayer): DeckVizConfig | null {
   const raw = layer.metadata.vizConfig;
   if (!raw || typeof raw !== "object") return null;
   const candidate = raw as Partial<DeckVizConfig>;

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import {
   type ProcessingAlgorithm,
   STATISTICS_TOOLS,
@@ -12,14 +12,14 @@ import {
   globalMoransITool,
   kernelDensityTool,
   localMoransITool,
-} from "@geolibre/processing";
+} from "@geoint/processing";
 import type { Feature, FeatureCollection, Point } from "geojson";
 
 /** Build a point layer from [lon, lat, properties] tuples. */
 function pointLayer(
   points: Array<[number, number, Record<string, unknown>]>,
   id = "layer-a",
-): GeoLibreLayer {
+): GeoIntLayer {
   const features: Feature<Point>[] = points.map(([lon, lat, properties]) => ({
     type: "Feature",
     properties,
@@ -46,7 +46,7 @@ interface RunOutcome {
 /** Run a statistics tool against a single layer, capturing logs and outputs. */
 function run(
   tool: ProcessingAlgorithm,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   parameters: Record<string, unknown>,
 ): RunOutcome {
   const messages: string[] = [];
@@ -71,7 +71,7 @@ function loggedNumber(messages: string[], needle: string): number {
 }
 
 /** A line of points with monotonically increasing values (strong + autocorrelation). */
-function gradientLine(values: number[]): GeoLibreLayer {
+function gradientLine(values: number[]): GeoIntLayer {
   return pointLayer(
     values.map((v, i) => [i * 0.001, 0, { v }] as [number, number, Record<string, unknown>]),
   );
@@ -283,7 +283,7 @@ describe("emerging hot spot (space-time cube)", () => {
    * plus a corner cell at the origin that fills up on days 3 and 4 — a location
    * that becomes a hot spot only in the final time steps.
    */
-  function spaceTimeLayer(): GeoLibreLayer {
+  function spaceTimeLayer(): GeoIntLayer {
     const pts: Array<[number, number, Record<string, unknown>]> = [];
     for (let day = 0; day < 5; day++) {
       const t = BASE + day * DAY_MS;

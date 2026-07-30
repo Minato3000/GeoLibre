@@ -18,8 +18,8 @@ import {
   valueMapToText,
   type AttributeFormConfig,
   type AttributeFormFieldConfig,
-  type GeoLibreLayer,
-} from "@geolibre/core";
+  type GeoIntLayer,
+} from "@geoint/core";
 import { buildPropertiesWithForm } from "../apps/geolibre-desktop/src/lib/field-collection";
 
 function fieldConfig(patch: Partial<AttributeFormFieldConfig> = {}): AttributeFormFieldConfig {
@@ -306,7 +306,7 @@ describe("project persistence", () => {
         { field: "height", widget: "range", min: 0, max: 300, step: 5 },
       ],
     };
-    const layer: GeoLibreLayer = {
+    const layer: GeoIntLayer = {
       id: "layer-a",
       name: "Layer A",
       type: "geojson",

@@ -129,18 +129,18 @@ describe("parseEmbedRequest envelope", () => {
 describe("parseEmbedRequest: loadProject", () => {
   it("accepts an http(s) project URL", () => {
     assert.deepEqual(
-      parseEmbedRequest(message("loadProject", { url: "https://x/p.geolibre.json" })),
+      parseEmbedRequest(message("loadProject", { url: "https://x/p.geoint.json" })),
       {
-        command: { type: "loadProject", url: "https://x/p.geolibre.json" },
+        command: { type: "loadProject", url: "https://x/p.geoint.json" },
         requestId: null,
       },
     );
   });
 
   it("accepts a same-origin absolute path", () => {
-    const parsed = parseEmbedRequest(message("loadProject", { url: "/projects/p.geolibre.json" }));
+    const parsed = parseEmbedRequest(message("loadProject", { url: "/projects/p.geoint.json" }));
     assert.deepEqual(parsed, {
-      command: { type: "loadProject", url: "/projects/p.geolibre.json" },
+      command: { type: "loadProject", url: "/projects/p.geoint.json" },
       requestId: null,
     });
   });

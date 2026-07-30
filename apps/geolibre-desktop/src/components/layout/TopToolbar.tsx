@@ -1,5 +1,5 @@
-import { DEFAULT_PROJECT_NAME, useAppStore } from "@geolibre/core";
-import { DEFAULT_BUILT_IN_CONTROL_VISIBILITY, type MapController } from "@geolibre/map";
+import { DEFAULT_PROJECT_NAME, useAppStore } from "@geoint/core";
+import { DEFAULT_BUILT_IN_CONTROL_VISIBILITY, type MapController } from "@geoint/map";
 import {
   closeDuckDBLayerPanel,
   closeEarthEnginePanel,
@@ -38,8 +38,8 @@ import {
   PRECIPITATION_PLUGIN_ID,
   REVERSE_GEOCODE_PLUGIN_ID,
   EFFECTS_PLUGIN_ID,
-} from "@geolibre/plugins";
-import { Button, cn, Input } from "@geolibre/ui";
+} from "@geoint/plugins";
+import { Button, cn, Input } from "@geoint/ui";
 import {
   ArrowLeft,
   ArrowRight,
@@ -62,6 +62,7 @@ import {
   Link2,
   Map,
   MapPin,
+  Menu,
   MessageSquare,
   Moon,
   Palette,
@@ -72,6 +73,7 @@ import {
   Sun,
   Workflow,
   Wrench,
+  X,
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
@@ -1379,21 +1381,31 @@ export function TopToolbar({
     onOpenShortcuts: () => setShortcutsOpen(true),
   });
 
-  const toolbarButtonSize = compact ? "icon" : "sm";
-  const toolbarButtonClass = compact ? "h-8 w-8 shrink-0" : "shrink-0";
+  // The toolbar is a collapsible vertical sidebar rather than a horizontal
+  // bar: collapsed shows every menu's trigger as an icon-only rail (still
+  // fully functional, just narrow); expanded adds labels. This reuses the
+  // existing compact/showLabels chrome plumbing (originally meant for
+  // ?layout=compact and narrow-viewport wrapping) rather than duplicating it.
+  // A true hamburger menu: closed by default on every viewport, showing only
+  // the toggle button -- no menu is visible at all until the user opens it.
+  const [railCollapsed, setRailCollapsed] = useState(true);
+  const effectiveCompact = compact || railCollapsed;
+  const effectiveShowLabels = showLabels && !railCollapsed;
+  const toolbarButtonSize = effectiveCompact ? "icon" : "sm";
+  const toolbarButtonClass = effectiveCompact ? "h-8 w-8 shrink-0" : "w-full justify-start";
   // Class for "secondary" toolbar menus that may be hidden on narrow screens to
   // reduce toolbar wrapping. The menu stays reachable other ways (e.g. Edit's
   // actions also have keyboard shortcuts). To make a future menu hideable, give
   // its trigger Button this class instead of `toolbarButtonClass`.
   const toolbarSecondaryButtonClass = cn(toolbarButtonClass, "hidden md:inline-flex");
-  const toolbarIconClassName = cn("h-3.5 w-3.5", showLabels && "sm:me-1");
-  // "GeoLibre Desktop" is the *desktop* product name. `isTauri()` alone is true
-  // on iOS and Android too — where the app is named plain "GeoLibre" (the bundle
+  const toolbarIconClassName = cn("h-3.5 w-3.5", effectiveShowLabels && "sm:me-1");
+  // "GeoInt Desktop" is the *desktop* product name. `isTauri()` alone is true
+  // on iOS and Android too — where the app is named plain "GeoInt" (the bundle
   // name from tauri.ios.conf.json, the home-screen icon, and the store listing),
-  // so titling it "GeoLibre Desktop" there contradicts every other surface.
-  const appTitle = isTauri() && !isMobile() ? "GeoLibre Desktop" : "GeoLibre";
+  // so titling it "GeoInt Desktop" there contradicts every other surface.
+  const appTitle = isTauri() && !isMobile() ? "GeoInt Desktop" : "GeoInt";
   const renderToolbarLabel = (label: string) =>
-    showLabels ? <span className="hidden sm:inline">{label}</span> : null;
+    effectiveShowLabels ? <span className="hidden sm:inline">{label}</span> : null;
   const chrome: ToolbarChrome = {
     buttonClass: toolbarButtonClass,
     secondaryButtonClass: toolbarSecondaryButtonClass,
@@ -1403,20 +1415,37 @@ export function TopToolbar({
   };
 
   return (
-    <header
+    <aside
+      aria-label={t("shell.section.toolbar")}
       className={cn(
-        "flex min-h-11 min-w-0 shrink-0 items-center gap-1 border-b bg-card py-1",
-        compact
-          ? "flex-nowrap overflow-x-auto px-1.5"
-          : // Wrap below md; scroll a single row at md+ so tablets reach every menu (#871).
-            "flex-wrap px-2 md:flex-nowrap md:overflow-x-auto",
+        "relative flex h-full min-h-0 shrink-0 flex-col gap-1 overflow-y-auto overflow-x-hidden border-e bg-card py-1",
+        railCollapsed ? "w-11 items-center px-1" : "w-64 items-stretch px-2",
       )}
     >
-      <span className="me-1 flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary md:me-2">
-        <Map className="h-4 w-4" />
-        {showProjectInfo ? <span className="hidden sm:inline">{appTitle}</span> : null}
-      </span>
-      {isMenuVisible(uiProfile, "project") && (
+      <div
+        className={cn(
+          "flex shrink-0 items-center gap-1.5 py-1 text-sm font-semibold text-primary",
+          railCollapsed ? "flex-col" : "justify-between",
+        )}
+      >
+        <span className="flex items-center gap-1.5">
+          <Map className="h-4 w-4" />
+          {showProjectInfo && !railCollapsed ? <span>{appTitle}</span> : null}
+        </span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 shrink-0"
+          // Not run through t() yet, matching the rest of this session's new UI text.
+          title={railCollapsed ? "Open menu" : "Close menu"}
+          aria-label={railCollapsed ? "Open menu" : "Close menu"}
+          aria-expanded={!railCollapsed}
+          onClick={() => setRailCollapsed((collapsed) => !collapsed)}
+        >
+          {railCollapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
+        </Button>
+      </div>
+      {!railCollapsed && isMenuVisible(uiProfile, "project") && (
         <ProjectMenu
           chrome={chrome}
           collaborationEnabled={collaboration.enabled}
@@ -1440,10 +1469,10 @@ export function TopToolbar({
           onOpenOfflineBasemap={onOpenBasemapExtract}
         />
       )}
-      {isMenuVisible(uiProfile, "edit") && (
+      {!railCollapsed && isMenuVisible(uiProfile, "edit") && (
         <EditMenu chrome={chrome} mapControllerRef={mapControllerRef} />
       )}
-      {isMenuVisible(uiProfile, "view") && (
+      {!railCollapsed && isMenuVisible(uiProfile, "view") && (
         <ViewMenu
           chrome={chrome}
           history={viewportHistory}
@@ -1484,7 +1513,7 @@ export function TopToolbar({
         onSaveCurrentProject={projectFiles.handleSave}
         onProjectCreated={resetRuntimeControlsForNewProject}
       />
-      {isMenuVisible(uiProfile, "addData") && (
+      {!railCollapsed && isMenuVisible(uiProfile, "addData") && (
         <AddDataMenu
           chrome={chrome}
           addLayer={addLayer}
@@ -1497,7 +1526,7 @@ export function TopToolbar({
           onOpenOsmPbfDialog={() => osmPbf.setDialogOpen(true)}
         />
       )}
-      {isMenuVisible(uiProfile, "processing") && (
+      {!railCollapsed && isMenuVisible(uiProfile, "processing") && (
         <ProcessingMenu
           chrome={chrome}
           earthEnginePanel={panels.earthEngine}
@@ -1506,7 +1535,7 @@ export function TopToolbar({
           onOpenGeoreferencer={() => setGeoreferencerOpen(true)}
         />
       )}
-      {isMenuVisible(uiProfile, "controls") && (
+      {!railCollapsed && isMenuVisible(uiProfile, "controls") && (
         <ControlsMenu
           chrome={chrome}
           controlsVisible={controlsVisible}
@@ -1533,7 +1562,7 @@ export function TopToolbar({
           onOpenRecordVideo={() => setRecordVideoOpen(true)}
         />
       )}
-      {isMenuVisible(uiProfile, "plugins") && (
+      {!railCollapsed && isMenuVisible(uiProfile, "plugins") && (
         <PluginsMenu
           chrome={chrome}
           appApi={appApi}
@@ -1545,21 +1574,25 @@ export function TopToolbar({
           hiddenPluginIds={hiddenPluginIds}
         />
       )}
-      {/* Top-level toolbar menus registered by built-in plugins via
-          app.registerToolbarMenu(); external plugin menus render after Help
-          (below). Renders nothing when none exist. */}
-      <PluginToolbarMenus chrome={chrome} placement="builtin" />
-      <SettingsDialog
-        buttonClassName={toolbarButtonClass}
-        buttonSize={toolbarButtonSize}
-        iconClassName={toolbarIconClassName}
-        mapControllerRef={mapControllerRef}
-        showLabels={showLabels}
-        onOpenManagePlugins={() => setManagePluginsOpen(true)}
-        profilePlugins={profilePlugins}
-        themeMode={themeMode}
-        onToggleThemeMode={onToggleThemeMode}
-      />
+      {!railCollapsed && (
+        <>
+          {/* Top-level toolbar menus registered by built-in plugins via
+              app.registerToolbarMenu(); external plugin menus render after Help
+              (below). Renders nothing when none exist. */}
+          <PluginToolbarMenus chrome={chrome} placement="builtin" />
+          <SettingsDialog
+            buttonClassName={toolbarButtonClass}
+            buttonSize={toolbarButtonSize}
+            iconClassName={toolbarIconClassName}
+            mapControllerRef={mapControllerRef}
+            showLabels={showLabels}
+            onOpenManagePlugins={() => setManagePluginsOpen(true)}
+            profilePlugins={profilePlugins}
+            themeMode={themeMode}
+            onToggleThemeMode={onToggleThemeMode}
+          />
+        </>
+      )}
       <ManagePluginsDialog
         open={managePluginsOpen}
         onOpenChange={setManagePluginsOpen}
@@ -1623,7 +1656,7 @@ export function TopToolbar({
             /[\u0000-\u001f\u007f/\\:*?"<>|]/g,
             "_",
           );
-          return { content, filename: `${safeName}.geolibre.json` };
+          return { content, filename: `${safeName}.geoint.json` };
         }}
       />
       <ProjectGalleryDialog
@@ -1631,7 +1664,7 @@ export function TopToolbar({
         onOpenChange={setGalleryDialogOpen}
         onOpenProject={(url, authToken) => projectFiles.openProjectFromShareUrl(url, { authToken })}
       />
-      {isMenuVisible(uiProfile, "help") && (
+      {!railCollapsed && isMenuVisible(uiProfile, "help") && (
         <HelpMenu
           chrome={chrome}
           diagnosticsErrorCount={diagnosticsErrorCount}
@@ -1647,7 +1680,7 @@ export function TopToolbar({
       )}
       {/* External plugin toolbar menus render after Help so third-party menus
           sit at the end of the banner, past the built-in menus. */}
-      <PluginToolbarMenus chrome={chrome} placement="external" />
+      {!railCollapsed && <PluginToolbarMenus chrome={chrome} placement="external" />}
       <AddDataDialog
         kind={addDataKind}
         mapControllerRef={mapControllerRef}
@@ -1681,67 +1714,69 @@ export function TopToolbar({
         commands={commands}
         onOpenChange={setShortcutsOpen}
       />
-      <div className="ms-auto flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
-        <Button
-          aria-label={
-            themeMode === "dark"
-              ? t("toolbar.command.switchToLight")
-              : t("toolbar.command.switchToDark")
-          }
-          className="h-7 w-7 shrink-0"
-          onClick={onToggleThemeMode}
-          size="icon"
-          title={
-            themeMode === "dark"
-              ? t("toolbar.command.switchToLight")
-              : t("toolbar.command.switchToDark")
-          }
-          variant="ghost"
-        >
-          {themeMode === "dark" ? (
-            <Sun className="h-3.5 w-3.5" />
-          ) : (
-            <Moon className="h-3.5 w-3.5" />
-          )}
-        </Button>
-        {showProjectInfo ? (
-          <>
-            <Input
-              aria-label={t("toolbar.item.projectName")}
-              className="hidden h-7 w-44 border-transparent px-2 text-xs shadow-none focus-visible:border-input md:block"
-              value={projectName}
-              onChange={(event) => setProjectName(event.target.value)}
-              onKeyDown={(event) => {
-                if (
-                  event.key === "Enter" &&
-                  !projectNameComposingRef.current &&
-                  !event.nativeEvent.isComposing
-                ) {
-                  event.currentTarget.blur();
-                }
-              }}
-              onCompositionStart={() => {
-                projectNameComposingRef.current = true;
-              }}
-              onCompositionEnd={() => {
-                projectNameComposingRef.current = false;
-              }}
-              onBlur={(event) => {
-                const nextName = event.target.value.trim();
-                // Persist the canonical, locale-independent default name; a
-                // translated string would otherwise be written into the saved
-                // project file and vary by UI language.
-                if (!nextName) setProjectName(DEFAULT_PROJECT_NAME);
-              }}
-            />
-            {projectPath ? (
-              <span className="hidden truncate lg:inline" title={projectPath}>
-                {projectPath}
-              </span>
-            ) : null}
-          </>
-        ) : null}
-      </div>
-    </header>
+      {!railCollapsed && (
+        <div className="mt-auto flex min-w-0 flex-col items-stretch gap-1.5 border-t pt-1.5 text-xs text-muted-foreground">
+          <Button
+            aria-label={
+              themeMode === "dark"
+                ? t("toolbar.command.switchToLight")
+                : t("toolbar.command.switchToDark")
+            }
+            className="h-7 w-7 shrink-0"
+            onClick={onToggleThemeMode}
+            size="icon"
+            title={
+              themeMode === "dark"
+                ? t("toolbar.command.switchToLight")
+                : t("toolbar.command.switchToDark")
+            }
+            variant="ghost"
+          >
+            {themeMode === "dark" ? (
+              <Sun className="h-3.5 w-3.5" />
+            ) : (
+              <Moon className="h-3.5 w-3.5" />
+            )}
+          </Button>
+          {showProjectInfo ? (
+            <>
+              <Input
+                aria-label={t("toolbar.item.projectName")}
+                className="h-7 w-full border-transparent px-2 text-xs shadow-none focus-visible:border-input"
+                value={projectName}
+                onChange={(event) => setProjectName(event.target.value)}
+                onKeyDown={(event) => {
+                  if (
+                    event.key === "Enter" &&
+                    !projectNameComposingRef.current &&
+                    !event.nativeEvent.isComposing
+                  ) {
+                    event.currentTarget.blur();
+                  }
+                }}
+                onCompositionStart={() => {
+                  projectNameComposingRef.current = true;
+                }}
+                onCompositionEnd={() => {
+                  projectNameComposingRef.current = false;
+                }}
+                onBlur={(event) => {
+                  const nextName = event.target.value.trim();
+                  // Persist the canonical, locale-independent default name; a
+                  // translated string would otherwise be written into the saved
+                  // project file and vary by UI language.
+                  if (!nextName) setProjectName(DEFAULT_PROJECT_NAME);
+                }}
+              />
+              {projectPath ? (
+                <span className="truncate" title={projectPath}>
+                  {projectPath}
+                </span>
+              ) : null}
+            </>
+          ) : null}
+        </div>
+      )}
+    </aside>
   );
 }

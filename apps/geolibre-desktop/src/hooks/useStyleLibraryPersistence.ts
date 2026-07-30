@@ -1,4 +1,4 @@
-import { normalizeStyleLibraryEntries, useAppStore } from "@geolibre/core";
+import { normalizeStyleLibraryEntries, useAppStore } from "@geoint/core";
 import { useEffect } from "react";
 import { loadStyleLibraryEntries, persistStyleLibraryEntries } from "../lib/style-library-store";
 

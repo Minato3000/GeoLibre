@@ -1,9 +1,9 @@
 import type { Layer } from "@deck.gl/core";
 import type { MapboxOverlay } from "@deck.gl/mapbox";
-import type { GeoLibreAppAPI, GeoLibreDeckGL } from "../types";
+import type { GeoIntAppAPI, GeoIntDeckGL } from "../types";
 
 /**
- * The single interleaved deck.gl overlay shared by every GeoLibre feature that
+ * The single interleaved deck.gl overlay shared by every GeoInt feature that
  * renders interleaved deck layers: the deckgl-viz overlay (Deck.gl layers plus
  * 3D Z-value vectors), Google Photorealistic 3D Tiles, and the web COG raster
  * control.
@@ -37,8 +37,8 @@ export type SharedDeckSource = (typeof SOURCE_DRAW_ORDER)[number];
 
 let overlay: MapboxOverlay | null = null;
 let overlayMounted = false;
-let deckGL: GeoLibreDeckGL | null = null;
-let appRef: GeoLibreAppAPI | null = null;
+let deckGL: GeoIntDeckGL | null = null;
+let appRef: GeoIntAppAPI | null = null;
 // The map the current overlay is bound to; on map re-init a fresh overlay is
 // created and re-attached, mirroring the other deck overlays in this repo.
 let boundMap: unknown;
@@ -74,7 +74,7 @@ let mountGaveUp = false;
  * @param app - The host application API.
  * @returns The shared overlay, or null when deck.gl is unavailable.
  */
-export function ensureSharedDeckOverlay(app: GeoLibreAppAPI): Promise<MapboxOverlay | null> {
+export function ensureSharedDeckOverlay(app: GeoIntAppAPI): Promise<MapboxOverlay | null> {
   if (ensureInFlight) return ensureInFlight;
   ensureInFlight = runEnsureSharedDeckOverlay(app).finally(() => {
     ensureInFlight = null;
@@ -82,7 +82,7 @@ export function ensureSharedDeckOverlay(app: GeoLibreAppAPI): Promise<MapboxOver
   return ensureInFlight;
 }
 
-async function runEnsureSharedDeckOverlay(app: GeoLibreAppAPI): Promise<MapboxOverlay | null> {
+async function runEnsureSharedDeckOverlay(app: GeoIntAppAPI): Promise<MapboxOverlay | null> {
   appRef = app;
   if (!app.getDeckGL) return null;
   deckGL ??= await app.getDeckGL();
@@ -102,7 +102,7 @@ async function runEnsureSharedDeckOverlay(app: GeoLibreAppAPI): Promise<MapboxOv
       app.removeMapControl(overlay);
     } catch (error) {
       // The old map may already be gone; surface anything unexpected.
-      console.debug("[GeoLibre] shared-deck-overlay: cleanup", error);
+      console.debug("[GeoInt] shared-deck-overlay: cleanup", error);
     }
   }
   boundMap = map;
@@ -116,7 +116,7 @@ async function runEnsureSharedDeckOverlay(app: GeoLibreAppAPI): Promise<MapboxOv
         try {
           listener(initializedDevice);
         } catch (error) {
-          console.warn("[GeoLibre] shared-deck-overlay: device listener", error);
+          console.warn("[GeoInt] shared-deck-overlay: device listener", error);
         }
       }
     },
@@ -162,7 +162,7 @@ export function onSharedDeckDevice(listener: DeviceListener): () => void {
     try {
       listener(device);
     } catch (error) {
-      console.warn("[GeoLibre] shared-deck-overlay: device listener", error);
+      console.warn("[GeoInt] shared-deck-overlay: device listener", error);
     }
   }
   return () => {
@@ -214,7 +214,7 @@ function scheduleMountRetry(): void {
   if (mountRetries >= MAX_MOUNT_RETRIES) {
     mountGaveUp = true;
     console.warn(
-      "[GeoLibre] shared-deck-overlay: gave up mounting after repeated addMapControl failures.",
+      "[GeoInt] shared-deck-overlay: gave up mounting after repeated addMapControl failures.",
     );
     return;
   }

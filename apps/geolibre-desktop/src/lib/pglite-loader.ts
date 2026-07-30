@@ -4,7 +4,7 @@
 // user first opens the PostGIS SQL workspace.
 //
 // The embed (Jupyter wheel) build swaps this module for `pglite-loader.cdn.ts`
-// via a Vite alias (see vite.config.ts, gated on GEOLIBRE_PGLITE_CDN) so the
+// via a Vite alias (see vite.config.ts, gated on GEOINT_PGLITE_CDN) so the
 // bundled packages are removed from the graph entirely and never vendored into
 // the wheel. A bundler emits a chunk for every `import()` it parses regardless
 // of dead-code reachability, so the CDN/bundled choice must be made by swapping

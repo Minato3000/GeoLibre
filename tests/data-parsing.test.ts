@@ -15,9 +15,9 @@ import {
   isRefreshableLayer,
   setLayerRefreshConfig,
 } from "../apps/geolibre-desktop/src/lib/layer-refresh";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 
-function layer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function layer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id: "layer-a",
     name: "Layer A",

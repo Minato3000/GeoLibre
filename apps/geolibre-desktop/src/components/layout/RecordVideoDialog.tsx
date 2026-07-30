@@ -1,5 +1,5 @@
-import type { MapController } from "@geolibre/map";
-import { Button, cn, Input, Label, Select } from "@geolibre/ui";
+import type { MapController } from "@geoint/map";
+import { Button, cn, Input, Label, Select } from "@geoint/ui";
 import {
   Circle,
   Crop,
@@ -47,15 +47,15 @@ type Mode = "whole" | "region";
 
 const DEFAULT_FILE_NAME = "map-recording";
 // The on-map info panels: the Components plugin's HTML control display box,
-// legend, and colorbar, plus GeoLibre's own Legend panel
-// (`geolibre-legend-panel`, see MapLegendPanel). The vendor entries are the
+// legend, and colorbar, plus GeoInt's own Legend panel
+// (`geoint-legend-panel`, see MapLegendPanel). The vendor entries are the
 // *rendered* overlays (`maplibre-gl-html-control` / `maplibre-gl-legend` /
 // `maplibre-gl-colorbar`), NOT the `*-gui-control` authoring editors -- we burn
 // the info in, not the editor chrome. Those class names mirror
 // maplibre-gl-components internals; see CLAUDE.md and re-check them when that
 // package is bumped.
 const MAP_PANEL_SELECTOR =
-  ".maplibre-gl-html-control, .maplibre-gl-legend, .maplibre-gl-colorbar, .geolibre-legend-panel";
+  ".maplibre-gl-html-control, .maplibre-gl-legend, .maplibre-gl-colorbar, .geoint-legend-panel";
 // Hoisted so the save path doesn't recompile it on every call (and to satisfy
 // the e18e/prefer-static-regex lint rule).
 const VIDEO_EXTENSION_RE = /\.(mp4|webm)$/i;

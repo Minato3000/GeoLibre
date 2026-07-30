@@ -2,7 +2,7 @@
 
 This tutorial takes you from an empty workspace to a styled map with inspectable data, in a few minutes. You can do all of it in the [live viewer](https://web.geolibre.app/).
 
-## 1. Open GeoLibre
+## 1. Open GeoInt
 
 Open [web.geolibre.app](https://web.geolibre.app/), or launch the desktop app. You start with a basemap and an empty [Layers panel](../user-guide/layers.md).
 
@@ -15,7 +15,7 @@ Open [web.geolibre.app](https://web.geolibre.app/), or launch the desktop app. Y
    ```
 3. Click **Load**. The countries appear on the map and a `countries` layer is added to the Layers panel.
 
-![Add Vector Layer panel with the sample URL ready to load](https://data.geolibre.app/images/geolibre-add-vector-panel.webp)
+![Add Vector Layer panel with the sample URL ready to load](https://data.geolibre.app/images/geoint-add-vector-panel.webp)
 
 See [Adding Data](../user-guide/adding-data.md) for every supported source.
 
@@ -33,7 +33,7 @@ See [Adding Data](../user-guide/adding-data.md) for every supported source.
 
 ## 5. Save or share
 
-- In the desktop app, use **Project → Save** to write a `.geolibre.json` file.
+- In the desktop app, use **Project → Save** to write a `.geoint.json` file.
 - Anywhere, use **Project → Share** to upload the project and get a public link. See [Sharing & Embedding](sharing-embedding.md).
 
 ## Next steps

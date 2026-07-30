@@ -6,9 +6,9 @@
  * the app store. The React dialog (FieldCollectionDialog.tsx) owns the GPS,
  * map-click, and store wiring and delegates the data shaping to these functions.
  *
- * A "collection layer" is an ordinary `geojson` GeoLibreLayer tagged with
+ * A "collection layer" is an ordinary `geojson` GeoIntLayer tagged with
  * `metadata.fieldCollection === true` and carrying its schema under
- * `metadata.collectionSchema`. Both ride through `.geolibre.json` save/load via
+ * `metadata.collectionSchema`. Both ride through `.geoint.json` save/load via
  * the layer's free-form `metadata` bag, so collection layers reopen ready to use.
  */
 import {
@@ -17,11 +17,11 @@ import {
   PHOTO_FULL_PROPERTY,
   PHOTO_PROPERTY,
   type AttributeFormConfig,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson";
 
 // Re-exported so existing importers (geotagged-photos, tests) keep a single
-// import site; the canonical definitions live in @geolibre/core's schema.
+// import site; the canonical definitions live in @geoint/core's schema.
 export { PHOTO_FULL_PROPERTY, PHOTO_PROPERTY };
 
 /** The attribute field kinds a collection form can declare. */

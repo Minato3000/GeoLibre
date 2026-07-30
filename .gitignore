@@ -5,9 +5,9 @@ dist-embed/
 apps/geolibre-desktop/public/jupyterlite/
 # JupyterLite (doit) build cache, written to the working dir during the build.
 .jupyterlite.doit.db
-# The kernel-side geolibre client and the Welcome example are staged here from
+# The kernel-side geoint client and the Welcome example are staged here from
 # their canonical backend copies by scripts/build-jupyterlite.mjs.
-apps/geolibre-desktop/jupyterlite/files/geolibre.py
+apps/geolibre-desktop/jupyterlite/files/geoint.py
 apps/geolibre-desktop/jupyterlite/files/Welcome.ipynb
 site/
 target/
@@ -16,6 +16,8 @@ target/
 .DS_Store
 .env
 .env.local
+# Local bind mount for the Docker Compose sidecar (GEOINT_CONVERSION_ROOTS=/data).
+/data/
 __pycache__/
 *.pyc
 .ruff_cache/
@@ -47,7 +49,7 @@ coverage.xml
 uv.lock
 # ...except the sidecar's. That project is BUNDLED into the desktop installers
 # and `uv run` against it at app startup, from a resource directory the user
-# cannot write (C:\Program Files\..., /usr/lib/GeoLibre Desktop/...). Without a
+# cannot write (C:\Program Files\..., /usr/lib/GeoInt Desktop/...). Without a
 # committed lock, a CI-built release ships lockless, so uv has to resolve and
 # then WRITE uv.lock there on first launch — which fails with "Permission
 # denied" and exits 2, surfacing as "Jupyter server exited before it was ready
@@ -66,11 +68,13 @@ private/
 # Documentation screenshots are hosted on Cloudflare R2 (data.geolibre.app/images),
 # not committed to the repo, to save space.
 docs/assets/screenshots/
-python/examples/my-map.geolibre.json
+python/examples/my-map.geoint.json
 
 # Cloudflare Workers local dev state (wrangler dev / miniflare)
 .wrangler/
 
 # Rendered Homebrew cask, emitted to the working dir by scripts/render-*-cask.sh
 # for submission to a tap / homebrew-cask; not committed to this repo.
-/geolibre.rb
+/geoint.rb
+.env.example
+CLAUDE.md

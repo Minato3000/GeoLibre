@@ -1,4 +1,4 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { fetchProjectFromUrl, projectUrlFromLocation } from "../lib/project-url";
 import { resolveProjectXyzLayers } from "../lib/xyz-url";

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { TRANSPARENT_COLOR, isTransparentColor } from "@geolibre/ui";
+import { TRANSPARENT_COLOR, isTransparentColor } from "@geoint/ui";
 
 // The ColorField component itself is DOM-bound and cannot run in the
 // node --test environment, but its transparent-value contract is pure: the

@@ -74,7 +74,7 @@ export class TerrainControl implements maplibregl.IControl {
     this.map = map;
 
     const container = document.createElement("div");
-    container.className = "maplibregl-ctrl maplibregl-ctrl-group geolibre-terrain-ctrl";
+    container.className = "maplibregl-ctrl maplibregl-ctrl-group geoint-terrain-ctrl";
 
     const button = document.createElement("button");
     button.type = "button";

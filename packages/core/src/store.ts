@@ -36,8 +36,8 @@ import {
   type CollaborationPresence,
   type CollaborationState,
   type DashboardWidget,
-  type GeoLibreLayer,
-  type GeoLibreProject,
+  type GeoIntLayer,
+  type GeoIntProject,
   type LayerGroup,
   type AttributeFormConfig,
   type LayerJoin,
@@ -85,7 +85,7 @@ export type ConversionToolKind =
 
 /**
  * Identifiers of the vector processing tools. Kept in sync by hand with the
- * `id` fields of `VECTOR_TOOLS` in `@geolibre/processing` (`vector-tools.ts`);
+ * `id` fields of `VECTOR_TOOLS` in `@geoint/processing` (`vector-tools.ts`);
  * deriving the type there would create a core -> processing circular import.
  */
 export type VectorToolKind =
@@ -135,7 +135,7 @@ export type StatisticsToolKind =
 
 /**
  * Identifiers of the raster processing tools. Kept in sync by hand with the
- * `id` fields of `RASTER_TOOLS` in `@geolibre/processing` (`raster-tools.ts`);
+ * `id` fields of `RASTER_TOOLS` in `@geoint/processing` (`raster-tools.ts`);
  * deriving the type there would create a core -> processing circular import.
  */
 export type RasterToolKind =
@@ -184,7 +184,7 @@ export interface AppState {
   basemapStyleUrl: string;
   basemapVisible: boolean;
   basemapOpacity: number;
-  layers: GeoLibreLayer[];
+  layers: GeoIntLayer[];
   layerGroups: LayerGroup[];
   preferences: ProjectPreferences;
   projectPlugins: ProjectPluginState | null;
@@ -204,7 +204,7 @@ export interface AppState {
   templateLibrary: ProjectTemplateEntry[];
   /**
    * Project-scoped Style Manager entries (issue #1294), serialized into the
-   * `.geolibre.json` `styleLibrary` array and replaced on project load.
+   * `.geoint.json` `styleLibrary` array and replaced on project load.
    */
   projectStyleLibrary: StyleLibraryEntry[];
   /** Recorded processing tool runs, oldest first (Processing History; #1292). */
@@ -472,7 +472,7 @@ export interface AppState {
 
   newProject: (options?: CreateProjectOptions & { name?: string }) => void;
   loadProject: (
-    project: GeoLibreProject,
+    project: GeoIntProject,
     path?: string | null,
     options?: { rememberRecent?: boolean; presenting?: boolean },
   ) => void;
@@ -484,9 +484,9 @@ export interface AppState {
   clearRecentProjects: () => void;
   markSaved: () => void;
 
-  addLayer: (layer: GeoLibreLayer, beforeLayerId?: string | null) => void;
+  addLayer: (layer: GeoIntLayer, beforeLayerId?: string | null) => void;
   removeLayer: (id: string) => void;
-  updateLayer: (id: string, patch: Partial<GeoLibreLayer>) => void;
+  updateLayer: (id: string, patch: Partial<GeoIntLayer>) => void;
   setLayerVisibility: (id: string, visible: boolean) => void;
   setLayerOpacity: (id: string, opacity: number) => void;
   setLayerStyle: (id: string, style: Partial<LayerStyle>) => void;
@@ -810,7 +810,7 @@ export const useAppStore = create<AppState>()(
         loadEditorFeaturesLayerId: null,
         pythonConsoleOpen: false,
         notebookOpen: false,
-        assistantOpen: false,
+        assistantOpen: true,
         attributeTableOpen: false,
         rasterAttributeTableOpen: false,
         dashboardOpen: false,
@@ -1486,7 +1486,7 @@ export const useAppStore = create<AppState>()(
 
       addGeoJsonLayer: (name, geojson, sourcePath, beforeLayerId = null) => {
         const id = uuidv4();
-        const layer: GeoLibreLayer = {
+        const layer: GeoIntLayer = {
           id,
           name,
           type: "geojson",
@@ -1510,7 +1510,7 @@ export const useAppStore = create<AppState>()(
 
       addImageOverlayLayer: (name, source, options, beforeLayerId = null) => {
         const id = uuidv4();
-        const layer: GeoLibreLayer = {
+        const layer: GeoIntLayer = {
           id,
           name,
           type: "image",
@@ -1554,7 +1554,7 @@ export const useAppStore = create<AppState>()(
             `addTileLayer: minzoom (${options.minzoom}) must be <= maxzoom (${options.maxzoom}).`,
           );
         }
-        const layer: GeoLibreLayer = {
+        const layer: GeoIntLayer = {
           id,
           name,
           type: options.type ?? "xyz",
@@ -1700,7 +1700,7 @@ export const useAppStore = create<AppState>()(
           // Build the top-level units in store (render) order: each ungrouped
           // layer is its own unit, and a group's contiguous members form one
           // unit. Reordering swaps the whole group block past its neighbor.
-          const units: { key: string; layers: GeoLibreLayer[] }[] = [];
+          const units: { key: string; layers: GeoIntLayer[] }[] = [];
           for (const layer of s.layers) {
             const key = layer.groupId ?? `layer:${layer.id}`;
             const last = units[units.length - 1];

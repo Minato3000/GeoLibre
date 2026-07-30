@@ -5,7 +5,7 @@
 //
 // As of Pyodide 0.27.x, geopandas/shapely/pyproj (with PROJ data) ship in the
 // distribution, so a single loadPackage("geopandas") pulls the whole graph.
-import { getRuntimeEnvironment } from "@geolibre/core";
+import { getRuntimeEnvironment } from "@geoint/core";
 
 export const PYODIDE_VERSION = "0.27.7";
 

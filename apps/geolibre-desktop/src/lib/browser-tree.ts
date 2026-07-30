@@ -19,7 +19,7 @@ import {
 } from "../components/layout/add-data/service-library";
 import type { AddDataKind } from "../components/layout/add-data/types";
 import type { FavoriteKind } from "./browser-favorites";
-import type { RecentProjectEntry } from "@geolibre/core";
+import type { RecentProjectEntry } from "@geoint/core";
 
 /** The kind of node, which determines its icon and click behavior. */
 export type BrowserNodeKind =
@@ -85,7 +85,7 @@ export interface BrowserTreeInput {
    * Saved database (PostGIS) connections to list under the Databases section.
    * Omitted (undefined) hides the section entirely; an empty array still renders
    * it (with its "New connection" action). The app always passes it — the
-   * PostgreSQL add flow itself reports when it needs GeoLibre Desktop.
+   * PostgreSQL add flow itself reports when it needs GeoInt Desktop.
    */
   databaseConnections?: readonly { connectionString: string; label: string }[];
   /**

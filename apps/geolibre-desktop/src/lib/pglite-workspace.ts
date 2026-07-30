@@ -1,4 +1,4 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import { loadPgliteModules } from "./pglite-loader";
 import {
@@ -22,7 +22,7 @@ import {
 // Schema that holds every layer table. It is dropped and recreated on each run
 // so the exposed tables always match the current layers (and tables for removed
 // layers never linger), mirroring how the DuckDB engine rebuilds TEMP tables.
-const WORKSPACE_SCHEMA = "geolibre";
+const WORKSPACE_SCHEMA = "geoint";
 
 // Rows are inserted in batches so a layer with many features does not build one
 // enormous parameterized statement. Postgres caps bind parameters at 65535, so a
@@ -107,7 +107,7 @@ async function getState(): Promise<PgliteState> {
  */
 async function registerLayerTables(
   pg: PgliteLike,
-  layers: GeoLibreLayer[],
+  layers: GeoIntLayer[],
 ): Promise<SqlWorkspaceTable[]> {
   await pg.exec(
     `DROP SCHEMA IF EXISTS ${quoteIdentifier(WORKSPACE_SCHEMA)} CASCADE; ` +
@@ -156,7 +156,7 @@ async function describeQuery(
 ): Promise<DescribedQuery | null> {
   try {
     const described = await pg.query(
-      `SELECT * FROM (${statement}) AS ${quoteIdentifier("__geolibre_sql_subquery")} LIMIT 0`,
+      `SELECT * FROM (${statement}) AS ${quoteIdentifier("__geoint_sql_subquery")} LIMIT 0`,
     );
     const columnNames = described.fields.map((field) => field.name);
     const geometryColumn =
@@ -184,10 +184,7 @@ async function describeQuery(
  * @returns Columns, rows, row count, geometry column name, and GeoJSON result.
  * @throws Whatever PostGIS throws for invalid SQL (surfaced to the caller).
  */
-export async function runPostgisQuery(
-  sql: string,
-  layers: GeoLibreLayer[],
-): Promise<SqlQueryResult> {
+export async function runPostgisQuery(sql: string, layers: GeoIntLayer[]): Promise<SqlQueryResult> {
   const cleaned = cleanStatement(sql);
   if (containsMultipleStatements(cleaned)) {
     throw new Error(
@@ -204,7 +201,7 @@ export async function runPostgisQuery(
 
     if (described && geometryColumn) {
       const geomId = quoteIdentifier(geometryColumn);
-      const sub = quoteIdentifier("__geolibre_sql_subquery");
+      const sub = quoteIdentifier("__geoint_sql_subquery");
       const hiddenId = quoteIdentifier(GEOMETRY_JSON_COLUMN);
       // Build an explicit projection (Postgres has no DuckDB `SELECT * REPLACE`):
       // pass each column through, but render the geometry column as WKT text for

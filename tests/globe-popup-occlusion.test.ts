@@ -282,7 +282,7 @@ describe("installGlobePopupOcclusion", () => {
   });
 
   // MapLibre v6 ships an ESM namespace object, which is sealed: the old
-  // `maplibre.Popup = GeoLibrePopup` swap threw and the map never mounted.
+  // `maplibre.Popup = GeoIntPopup` swap threw and the map never mounted.
   it("does not assign to the maplibre namespace", () => {
     const maplibre = Object.freeze(createMaplibreStub(shape));
     const Original = maplibre.Popup;

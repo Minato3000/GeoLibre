@@ -1,4 +1,4 @@
-import { DEFAULT_LAYER_STYLE, useAppStore, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, useAppStore, type GeoIntLayer } from "@geoint/core";
 import {
   DEFAULT_TILES_BASE_URL,
   defaultSizeForGeometry,
@@ -16,16 +16,16 @@ import {
   type OvertureThemeState,
   type OvertureTheme,
 } from "maplibre-gl-overture-maps";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 
-let overturePosition: GeoLibreMapControlPosition = "top-left";
+let overturePosition: GeoIntMapControlPosition = "top-left";
 
 const OVERTURE_OPTIONS = {
   collapsed: false,
   title: "Overture Maps",
   panelWidth: 340,
   inspect: true,
-  className: "geolibre-overture-control",
+  className: "geoint-overture-control",
   // Start with only the buildings theme (its "building" and "building_part"
   // source layers) shown, instead of the upstream default that also enables
   // transportation and places.
@@ -40,7 +40,7 @@ let overtureControl: OvertureMapsControl | null = null;
 // repositioning it restores the user's release, visibility, and opacity.
 let pendingState: RestorableOvertureState | null = null;
 
-function createOvertureControl(app: GeoLibreAppAPI): OvertureMapsControl {
+function createOvertureControl(app: GeoIntAppAPI): OvertureMapsControl {
   // Construct with the static defaults, then let setState restore the full
   // saved state (release, panel size, and per-layer themes). setState alone
   // covers collapsed/panelWidth/release too, so they are not duplicated as
@@ -298,11 +298,11 @@ function applyOvertureMapsState(control: OvertureMapsControl, patch: OvertureSta
   return true;
 }
 
-export const maplibreOvertureMapsPlugin: GeoLibrePlugin = {
+export const maplibreOvertureMapsPlugin: GeoIntPlugin = {
   id: "maplibre-gl-overture-maps",
   name: "Overture Maps",
   version: "0.2.0",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     if (!overtureControl) {
       overtureControl = createOvertureControl(app);
       attachStoreSync(overtureControl);
@@ -318,7 +318,7 @@ export const maplibreOvertureMapsPlugin: GeoLibrePlugin = {
     // click-outside that immediately re-collapses the panel.
     setTimeout(() => overtureControl?.expand(), 0);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     if (!overtureControl) return;
     detachStoreSync();
     pendingState = restorableOvertureState(overtureControl.getState());
@@ -326,7 +326,7 @@ export const maplibreOvertureMapsPlugin: GeoLibrePlugin = {
     overtureControl = null;
   },
   getMapControlPosition: () => overturePosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     overturePosition = position;
     if (!overtureControl) return;
     // Snapshot before detaching from the map so a failed re-add still keeps
@@ -342,7 +342,7 @@ export const maplibreOvertureMapsPlugin: GeoLibrePlugin = {
     setTimeout(() => overtureControl?.expand(), 0);
   },
   getProjectState: () => overtureControl?.getState() ?? pendingState ?? undefined,
-  applyProjectState: (_app: GeoLibreAppAPI, state: unknown) => {
+  applyProjectState: (_app: GeoIntAppAPI, state: unknown) => {
     if (!isOvertureMapsState(state)) return false;
     if (overtureControl) {
       if (!applyOvertureMapsState(overtureControl, state)) return false;
@@ -363,13 +363,13 @@ export const maplibreOvertureMapsPlugin: GeoLibrePlugin = {
 //
 // The control adds Overture PMTiles layers directly to the map. This mirrors
 // each visible Overture source layer (e.g. "building", "building_part") into
-// the GeoLibre layer store as a single external-native "custom" layer so it
+// the GeoInt layer store as a single external-native "custom" layer so it
 // appears in the Layers panel and persists in projects. Each entry combines the
 // source layer's fill/line/circle native layers into one row, matching the
 // per-source-layer structure of the Overture Maps control.
 //
 // The control owns rendering (visibility, opacity, color, draw order), so the
-// store layers carry `customLayerType`, which tells `@geolibre/map`'s layer
+// store layers carry `customLayerType`, which tells `@geoint/map`'s layer
 // sync to track and reorder them without overwriting the control's paint.
 //
 // Sync is bidirectional:
@@ -556,7 +556,7 @@ function reverseSync(control: OvertureMapsControl): void {
 function createOvertureStoreLayer(
   unit: OvertureUnit,
   options: { visible: boolean; opacity: number; release: string },
-): GeoLibreLayer {
+): GeoIntLayer {
   const sourceId = sourceIdForTheme(unit.theme);
   const tileUrl = options.release
     ? tileUrlForTheme(DEFAULT_TILES_BASE_URL, options.release, unit.theme)
@@ -574,7 +574,7 @@ function createOvertureStoreLayer(
     opacity: options.opacity,
     style: { ...DEFAULT_LAYER_STYLE },
     metadata: {
-      // The control renders and styles these layers; GeoLibre only tracks and
+      // The control renders and styles these layers; GeoInt only tracks and
       // reorders them. customLayerType opts into that control-managed path.
       customLayerType: SOURCE_KIND,
       externalNativeLayer: true,
@@ -586,7 +586,7 @@ function createOvertureStoreLayer(
       sourceIds: [sourceId],
       sourceKind: SOURCE_KIND,
       // The control has no extrusion concept, so polygon themes hand 3D
-      // extrusion back to GeoLibre's layer sync, which re-renders the control's
+      // extrusion back to GeoInt's layer sync, which re-renders the control's
       // native fill as a fill-extrusion. Without this the Style panel's 3D mode
       // is offered but never takes effect.
       ...(unit.geometry === "polygon" ? { nativeFillExtrusion: true } : {}),
@@ -596,7 +596,7 @@ function createOvertureStoreLayer(
   };
 }
 
-function shouldUpdateStoreLayer(existing: GeoLibreLayer, next: GeoLibreLayer): boolean {
+function shouldUpdateStoreLayer(existing: GeoIntLayer, next: GeoIntLayer): boolean {
   return (
     existing.name !== next.name ||
     existing.type !== next.type ||

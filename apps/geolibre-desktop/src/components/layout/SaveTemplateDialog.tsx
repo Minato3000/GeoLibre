@@ -1,4 +1,4 @@
-import { createProjectTemplate, useAppStore, type GeoLibreProject } from "@geolibre/core";
+import { createProjectTemplate, useAppStore, type GeoIntProject } from "@geoint/core";
 import {
   Button,
   Dialog,
@@ -8,7 +8,7 @@ import {
   DialogTitle,
   Input,
   Label,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { v4 as uuidv4 } from "uuid";
@@ -16,7 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 interface SaveTemplateDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  getProject: () => { project: GeoLibreProject; defaultProjectName: string };
+  getProject: () => { project: GeoIntProject; defaultProjectName: string };
 }
 
 export function SaveTemplateDialog({ open, onOpenChange, getProject }: SaveTemplateDialogProps) {

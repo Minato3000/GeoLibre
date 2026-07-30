@@ -1,4 +1,4 @@
-import type { Detection } from "@geolibre/processing";
+import type { Detection } from "@geoint/processing";
 import type { Feature, FeatureCollection, Point } from "geojson";
 
 /** Browser-decodable photo extensions accepted by Object Detection. */

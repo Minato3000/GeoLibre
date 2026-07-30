@@ -14,8 +14,8 @@ use std::{
 
 const OAUTH_HOST: &str = "127.0.0.1";
 const OAUTH_PORT: u16 = 5173;
-const AUTH_PATH: &str = "/__geolibre_ee_auth";
-const TOKEN_PATH: &str = "/__geolibre_ee_token";
+const AUTH_PATH: &str = "/__geoint_ee_auth";
+const TOKEN_PATH: &str = "/__geoint_ee_token";
 
 #[derive(Default)]
 pub struct EarthEngineOAuthState {
@@ -58,7 +58,7 @@ pub fn start_earth_engine_oauth(
         .duration_since(UNIX_EPOCH)
         .map_err(|error| error.to_string())?
         .as_millis();
-    let state_id = format!("geolibre-{now}-{counter}");
+    let state_id = format!("geoint-{now}-{counter}");
     let url = format!(
         "http://localhost:{OAUTH_PORT}{AUTH_PATH}?client_id={}&state={}",
         url_encode(client_id),
@@ -98,7 +98,7 @@ fn ensure_oauth_server(state: &EarthEngineOAuthState) -> Result<(), String> {
             state.server_started.store(false, Ordering::Release);
             if error.kind() == ErrorKind::AddrInUse {
                 return Err(format!(
-                    "Could not start Earth Engine OAuth helper on http://localhost:{OAUTH_PORT} because the port is already in use. Close any running GeoLibre dev server or other app using port {OAUTH_PORT}, then try again.",
+                    "Could not start Earth Engine OAuth helper on http://localhost:{OAUTH_PORT} because the port is already in use. Close any running GeoInt dev server or other app using port {OAUTH_PORT}, then try again.",
                 ));
             }
             return Err(format!(
@@ -301,7 +301,7 @@ fn auth_page(client_id: &str, state: &str) -> String {
 <body>
   <main>
     <h1>Sign in to Earth Engine</h1>
-    <p>Continue with Google to authorize GeoLibre Desktop to request Earth Engine map tiles.</p>
+    <p>Continue with Google to authorize GeoInt Desktop to request Earth Engine map tiles.</p>
     <button id="sign-in" type="button">Continue with Google</button>
     <div id="status"></div>
   </main>
@@ -311,7 +311,7 @@ fn auth_page(client_id: &str, state: &str) -> String {
     const state = {state_json};
     // Minimal Earth Engine scopes: tiles/thumbnails need `earthengine`, and the
     // EE control's "Export" writes to Drive via the non-sensitive `drive.file`
-    // scope. `cloud-platform` is intentionally omitted (GeoLibre never uses it),
+    // scope. `cloud-platform` is intentionally omitted (GeoInt never uses it),
     // keeping the app clear of Google's broad/restricted-scope verification. Keep
     // in sync with EARTH_ENGINE_OAUTH_SCOPES in
     // packages/plugins/src/plugins/earth-engine-auth.ts.
@@ -323,7 +323,7 @@ fn auth_page(client_id: &str, state: &str) -> String {
     const status = document.getElementById("status");
 
     async function sendResult(payload) {{
-      await fetch("/__geolibre_ee_token", {{
+      await fetch("/__geoint_ee_token", {{
         method: "POST",
         headers: {{ "content-type": "application/json" }},
         body: JSON.stringify({{ state, ...payload }})

@@ -315,7 +315,7 @@ function itemProperties(item: Element): GeoJsonProperties {
   if (title) properties.title = title;
 
   // RSS: <description>; Atom: <summary> or <content>. Stored as raw text (RSS
-  // descriptions often hold CDATA-wrapped HTML); GeoLibre renders all property
+  // descriptions often hold CDATA-wrapped HTML); GeoInt renders all property
   // values as text nodes (identify popup setDOMContent + textContent, attribute
   // table React children), so the markup is never parsed and needs no sanitizing.
   const description =

@@ -2,11 +2,11 @@ import {
   getRightPanelSnapshot,
   subscribeRightPanels,
   type RightPanelSnapshot,
-} from "@geolibre/plugins";
+} from "@geoint/plugins";
 import { useSyncExternalStore } from "react";
 
 /**
- * Subscribe React to the plugin right-panel registry in `@geolibre/plugins`.
+ * Subscribe React to the plugin right-panel registry in `@geoint/plugins`.
  *
  * Returns the current {@link RightPanelSnapshot} (active panel id, collapsed
  * state, and dock position). The snapshot object identity is stable between

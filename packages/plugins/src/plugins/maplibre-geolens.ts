@@ -16,13 +16,13 @@
  *
  * Panel DOM is built by hand (like `maplibre-source-coop.ts`): the plugin
  * `render(container)` contract hands over a bare element and external plugins
- * cannot share the host's React, so `@geolibre/ui` primitives are unavailable
+ * cannot share the host's React, so `@geoint/ui` primitives are unavailable
  * here and inputs are plain elements styled with the shadcn HSL theme tokens.
  */
 
-import { DEFAULT_LAYER_STYLE, useAppStore, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, useAppStore, type GeoIntLayer } from "@geoint/core";
 import type { Map as MapLibreMap, RequestParameters, ResourceType } from "maplibre-gl";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 import {
   applyFeatureEdits,
   captureFeatureBaseline,
@@ -76,7 +76,7 @@ export interface GeoLensSampleServer {
  * they identify a specific server, the way a bookmark does.
  */
 export const GEOLENS_SAMPLE_SERVERS: readonly GeoLensSampleServer[] = [
-  { label: "GeoLibre datasets", baseUrl: "https://datasets.geolibre.app" },
+  { label: "GeoInt datasets", baseUrl: "https://datasets.geolibre.app" },
   { label: "GeoLens demo", baseUrl: "https://demo.getgeolens.com" },
 ];
 
@@ -85,8 +85,8 @@ const SEARCH_LIMIT = 50;
 /** Default maximum number of editable GeoJSON features loaded per dataset. */
 export const DEFAULT_GEOLENS_FEATURE_LIMIT = 10_000;
 const MAX_GEOLENS_FEATURE_LIMIT = 1_000_000;
-const FEATURE_LIMIT_STORAGE_KEY = "geolibre.geolens.featureLimit";
-const VIEW_ONLY_STORAGE_KEY = "geolibre.geolens.viewOnly";
+const FEATURE_LIMIT_STORAGE_KEY = "geoint.geolens.featureLimit";
+const VIEW_ONLY_STORAGE_KEY = "geoint.geolens.viewOnly";
 /** Re-mint the tile token this many seconds before it expires. */
 const TOKEN_REFRESH_LEAD_SECONDS = 30;
 /** Floor on the refresh delay, so a tiny/expired TTL cannot busy-loop. */
@@ -175,7 +175,7 @@ export const DEFAULT_GEOLENS_LABELS: GeoLensLabels = {
   blockedError: (host) =>
     `Could not reach ${host}. The request never completed — the host may be ` +
     `unreachable or offline, or, if it is reachable, it may not allow ` +
-    `cross-origin requests from GeoLibre (CORS).`,
+    `cross-origin requests from GeoInt (CORS).`,
   showing: (count) => `${count} dataset${count === 1 ? "" : "s"}.`,
   vectorBadge: "vector",
   rasterBadge: "raster",
@@ -441,7 +441,7 @@ function createLayerId(): string {
  * covers everything), so a view that spans the world is treated as "no bbox" —
  * filtering to it would only add a pointless query parameter.
  */
-function currentViewBbox(app: GeoLibreAppAPI | null): GeoLensBbox | null {
+function currentViewBbox(app: GeoIntAppAPI | null): GeoLensBbox | null {
   const bounds = app?.getMap?.()?.getBounds();
   if (!bounds) return null;
   const west = bounds.getWest();
@@ -511,13 +511,13 @@ function geolensTransformRequest(
 /**
  * Register a private raster's tile URL so its requests carry the API key.
  *
- * Installs the transform on first use only. GeoLibre sets no `transformRequest`
+ * Installs the transform on first use only. GeoInt sets no `transformRequest`
  * of its own, and `Map` exposes no getter for an existing one, so this
  * deliberately does not try to chain: it returns `undefined` for anything it
  * does not recognize, which is the documented "leave this request alone" answer
  * and keeps the hook cheap to hand over if the host ever wants to own it.
  */
-function registerRasterApiKey(app: GeoLibreAppAPI, tiles: string, apiKey: string): void {
+function registerRasterApiKey(app: GeoIntAppAPI, tiles: string, apiKey: string): void {
   rasterApiKeys.set(tileUrlPrefix(tiles), apiKey);
   const map = app.getMap?.();
   if (!map || installedOnMap === map) return;
@@ -541,7 +541,7 @@ function clearRasterApiKeys(): void {
 }
 
 /** True when the layer's signed tile URL carries an expired (or near-expiry) token. */
-function tileTokenExpired(layer: GeoLibreLayer): boolean {
+function tileTokenExpired(layer: GeoIntLayer): boolean {
   const tiles = layer.source.tiles;
   const url = Array.isArray(tiles) && typeof tiles[0] === "string" ? tiles[0] : "";
   const match = url.match(/[?&]exp=(\d+)/);
@@ -591,7 +591,7 @@ function healRestoredGeoLensLayers(): void {
 // plus once now for layers already present when this module loads. Guarded on
 // the `layers` reference so unrelated store churn (pointer, selection, map view)
 // doesn't re-run the scan — useAppStore has no selector-subscribe middleware.
-let lastLayersRef: readonly GeoLibreLayer[] | null = null;
+let lastLayersRef: readonly GeoIntLayer[] | null = null;
 useAppStore.subscribe((state) => {
   if (state.layers === lastLayersRef) return;
   lastLayersRef = state.layers;
@@ -657,7 +657,7 @@ function scheduleTokenRefresh(
  * store (the same shape the OGC Vector Tiles Add Data source produces).
  */
 async function addVectorTilesLayer(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   client: GeoLensClientOptions,
   dataset: GeoLensDataset,
   fetchImpl: GeoLensFetch,
@@ -672,7 +672,7 @@ async function addVectorTilesLayer(
     fetchDatasetFields(client, dataset.id, fetchImpl).catch(() => [] as string[]),
   ]);
   const { tiles, sourceLayer } = vectorTileTemplate(client, token);
-  const layer: GeoLibreLayer = {
+  const layer: GeoIntLayer = {
     id: createLayerId(),
     name: dataset.title,
     type: "vector-tiles",
@@ -715,7 +715,7 @@ async function addVectorTilesLayer(
  * `sourcePath` the vector path uses for add/remove state.
  */
 async function addRasterTilesLayer(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   client: GeoLensClientOptions,
   dataset: GeoLensDataset,
   fetchImpl: GeoLensFetch,
@@ -723,7 +723,7 @@ async function addRasterTilesLayer(
   const raster = await resolveRasterTiles(client, dataset.id, fetchImpl);
   // A public raster renders anonymously; only a keyed client needs the header.
   if (client.apiKey) registerRasterApiKey(app, raster.tiles, client.apiKey);
-  const layer: GeoLibreLayer = {
+  const layer: GeoIntLayer = {
     id: createLayerId(),
     name: dataset.title,
     type: "xyz",
@@ -757,7 +757,7 @@ async function addRasterTilesLayer(
  * styling/attribute-table/export all apply.
  */
 async function addFeaturesLayer(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   client: GeoLensClientOptions,
   dataset: GeoLensDataset,
   featureLimit: number,
@@ -1230,7 +1230,7 @@ interface PanelState {
  */
 function buildPanel(
   container: HTMLElement,
-  app: GeoLibreAppAPI | null,
+  app: GeoIntAppAPI | null,
   fetchImpl: GeoLensFetch,
 ): () => void {
   const state: PanelState = {
@@ -1833,7 +1833,7 @@ function buildPanel(
   // but only when the `layers` array itself changed. Repainting diffs every
   // tracked collection against its baseline, and this subscription fires on all
   // store churn (pointer moves, map view), which would run that diff continuously.
-  let lastLayersRef: readonly GeoLibreLayer[] | null = null;
+  let lastLayersRef: readonly GeoIntLayer[] | null = null;
   const unsubscribe = useAppStore.subscribe((store) => {
     for (const resync of resyncers) resync();
     if (store.layers === lastLayersRef) return;
@@ -1859,9 +1859,9 @@ interface GeoLensPluginConfig {
   fetchImpl?: GeoLensFetch;
 }
 
-function createGeoLensPlugin(config: GeoLensPluginConfig): GeoLibrePlugin {
+function createGeoLensPlugin(config: GeoLensPluginConfig): GeoIntPlugin {
   const fetchImpl = config.fetchImpl ?? defaultGeoLensFetch;
-  let appRef: GeoLibreAppAPI | null = null;
+  let appRef: GeoIntAppAPI | null = null;
   let unregisterPanel: (() => void) | null = null;
   let panelContainer: HTMLElement | null = null;
   let disposePanel: (() => void) | null = null;
@@ -1881,7 +1881,7 @@ function createGeoLensPlugin(config: GeoLensPluginConfig): GeoLibrePlugin {
     id: config.id,
     name: config.name,
     version: "0.1.0",
-    activate: (app: GeoLibreAppAPI) => {
+    activate: (app: GeoIntAppAPI) => {
       appRef = app;
       mountedPanels.add(remount);
       unregisterPanel =
@@ -1901,12 +1901,12 @@ function createGeoLensPlugin(config: GeoLensPluginConfig): GeoLibrePlugin {
         }) ?? null;
       app.openRightPanel?.(config.id);
     },
-    deactivate: (app: GeoLibreAppAPI) => {
+    deactivate: (app: GeoIntAppAPI) => {
       app.closeRightPanel?.(config.id);
       unregisterPanel?.();
       unregisterPanel = null;
       mountedPanels.delete(remount);
-      // Layers the user added stay on the map (ordinary GeoLibre layers now),
+      // Layers the user added stay on the map (ordinary GeoInt layers now),
       // but the token-refresh timers and the raster API keys we own must not
       // outlive the plugin.
       clearAllRefreshTimers();
@@ -1919,7 +1919,7 @@ function createGeoLensPlugin(config: GeoLensPluginConfig): GeoLibrePlugin {
   };
 }
 
-export const maplibreGeoLensPlugin: GeoLibrePlugin = createGeoLensPlugin({
+export const maplibreGeoLensPlugin: GeoIntPlugin = createGeoLensPlugin({
   id: GEOLENS_PLUGIN_ID,
   name: "GeoLens",
 });

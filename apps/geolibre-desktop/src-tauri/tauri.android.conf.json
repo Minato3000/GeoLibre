@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "GeoLibre",
+  "productName": "GeoInt",
   "identifier": "org.geolibre.app",
   "bundle": {
     "resources": []

@@ -2,7 +2,7 @@ import {
   DEFAULT_LAYER_STYLE,
   isInitialLayerStyle,
   type DiagramField,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type DiagramSizeMode,
   type DiagramType,
   type ExpressionVariable,
@@ -28,7 +28,7 @@ import {
   supportsBridgedOpacity,
   useAppStore,
   validateMapExpression,
-} from "@geolibre/core";
+} from "@geoint/core";
 import {
   Button,
   ColorField,
@@ -42,15 +42,15 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   RASTER_SOURCE_KIND,
   SKETCHES_SOURCE_KIND,
   TIME_SLIDER_SOURCE_KIND,
   countAtlasDroppedDiagrams,
   getVectorLayerPropertyValues,
-} from "@geolibre/plugins";
-import { type MapController } from "@geolibre/map";
+} from "@geoint/plugins";
+import { type MapController } from "@geoint/map";
 import type { ParseKeys, TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { AttributeFormSection } from "./AttributeFormSection";
@@ -290,7 +290,7 @@ function isPointOnlyGeoJsonLayer(layer: {
  * @param pointOnly - Result of {@link isPointOnlyGeoJsonLayer}, passed in so
  *   the caller can reuse its memoized value instead of re-scanning features.
  */
-function supportsPointRendererFor(layer: GeoLibreLayer, pointOnly: boolean): boolean {
+function supportsPointRendererFor(layer: GeoIntLayer, pointOnly: boolean): boolean {
   if (hasExternalDeckLayer(layer)) return false;
   if (!hasExternalNativeLayers(layer)) return pointOnly;
   return (
@@ -1281,7 +1281,7 @@ export function StylePanel({
       })
       .catch((error) => {
         if (!cancelled) {
-          console.error("[GeoLibre] Could not read vector attribute values", error);
+          console.error("[GeoInt] Could not read vector attribute values", error);
           setLoadedVectorPropertyValues(null);
           setVectorPropertyValuesUnavailable(true);
         }
@@ -2195,7 +2195,7 @@ export function StylePanel({
     pointRenderer !== "heatmap" &&
     // Proportional sizing drives circle-radius, marker icon-size (the
     // interpolate scales the baked sprite, see markerIconSizeValue in
-    // @geolibre/map), and line-width, so it applies to any single-renderer
+    // @geoint/map), and line-width, so it applies to any single-renderer
     // point layer (with or without a marker icon) and to layers that carry
     // lines.
     ((geometryFlags.hasPoint && pointRenderer === "single") || geometryFlags.hasLine);

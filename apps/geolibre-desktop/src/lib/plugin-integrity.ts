@@ -13,7 +13,7 @@
 // Local plugins (installed zips, filesystem drop-ins) are not pinned here — the
 // vector is remote fetch-and-execute.
 
-const PIN_STORAGE_KEY = "geolibre.pluginBundlePins";
+const PIN_STORAGE_KEY = "geoint.pluginBundlePins";
 
 export interface PluginBundleForHashing {
   entrySource: string;

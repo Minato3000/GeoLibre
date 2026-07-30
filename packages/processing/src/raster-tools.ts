@@ -3,7 +3,7 @@ import { SENSOR_IDS, SPECTRAL_INDICES } from "./spectral-indices";
 
 /**
  * Identifiers of the raster processing tools. Kept in sync by hand with the
- * `RasterToolKind` union in `@geolibre/core` (`store.ts`).
+ * `RasterToolKind` union in `@geoint/core` (`store.ts`).
  */
 export type RasterToolId =
   | "hillshade"

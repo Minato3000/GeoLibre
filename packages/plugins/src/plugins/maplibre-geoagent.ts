@@ -7,7 +7,7 @@ import {
   renderEeLayer,
   type VisualizeOptions,
 } from "maplibre-gl-earth-engine";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 import {
   removeGeoAgentStoreLayers,
   syncGeoAgentOverlaysToStore,
@@ -16,7 +16,7 @@ import {
   type GeoAgentOverlayRecord,
 } from "./geoagent-layer-sync";
 import {
-  authenticateEarthEngine as authenticateEarthEngineForGeoLibre,
+  authenticateEarthEngine as authenticateEarthEngineForGeoInt,
   captureEarthEngineFunctionInfo,
   clearEarthEngineFunctionInfo,
   closeTauriOauthPopups,
@@ -29,12 +29,12 @@ import {
   shouldUseTauriEarthEngineOAuth,
 } from "./earth-engine-auth";
 
-const STORAGE_PREFIX = "geolibre.geoagent";
+const STORAGE_PREFIX = "geoint.geoagent";
 
 type GeoAgentControlInternals = {
   options?: GeoAgentControlOptions;
   tools?: {
-    __geolibreToolRunnerPatched?: boolean;
+    __geointToolRunnerPatched?: boolean;
     addGeeRasterOverlay?: (overlay: { name: string; url: string }) => Promise<void>;
     map?: MapLibreMap;
     overlays?: Map<string, GeoAgentOverlayRecord>;
@@ -54,7 +54,7 @@ type GeoAgentControlInternals = {
   invalidateAgent?: () => void;
 };
 
-let geoAgentPosition: GeoLibreMapControlPosition = "top-left";
+let geoAgentPosition: GeoIntMapControlPosition = "top-left";
 
 const GEOAGENT_OPTIONS = {
   title: "GeoAgent + Earth Engine",
@@ -82,11 +82,11 @@ let earthEngineTokenTypeOverride = "Bearer";
 let earthEngineTokenExpiresInOverride = 3600;
 let geoAgentEarthEngineFunctionInfo: unknown;
 
-export const maplibreGeoAgentPlugin: GeoLibrePlugin = {
+export const maplibreGeoAgentPlugin: GeoIntPlugin = {
   id: "maplibre-gl-geoagent",
   name: "GeoAgent",
   version: "0.4.2",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     geoAgentActive = true;
     // Return the mount promise so the host can roll back the Plugins menu when
     // the GeoAgent chunk fails to load (e.g. a stale chunk after a web
@@ -94,7 +94,7 @@ export const maplibreGeoAgentPlugin: GeoLibrePlugin = {
     // leaving GeoAgent marked active with no visible panel.
     return mountGeoAgentControl(app, ++geoAgentActivationGeneration);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     geoAgentActive = false;
     unwireGeoAgentStoreSync();
     if (geoAgentControl) {
@@ -106,7 +106,7 @@ export const maplibreGeoAgentPlugin: GeoLibrePlugin = {
     removeGeoAgentStoreLayers();
   },
   getMapControlPosition: () => geoAgentPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     geoAgentPosition = position;
     if (!geoAgentControl) {
       // Only kick off a mount if one is not already in flight. A mount started
@@ -135,7 +135,7 @@ export const maplibreGeoAgentPlugin: GeoLibrePlugin = {
 };
 
 async function mountGeoAgentControl(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   activationGeneration: number,
 ): Promise<boolean> {
   let control: GeoAgentControl;
@@ -199,7 +199,7 @@ function getGeoAgentOptions(): GeoAgentControlOptions {
 
 function patchGeoAgentToolRunner(control: GeoAgentControl): void {
   const tools = (control as unknown as GeoAgentControlInternals).tools;
-  if (!tools?.runCommand || tools.__geolibreToolRunnerPatched === true) {
+  if (!tools?.runCommand || tools.__geointToolRunnerPatched === true) {
     return;
   }
 
@@ -208,7 +208,7 @@ function patchGeoAgentToolRunner(control: GeoAgentControl): void {
     try {
       if (isEarthEngineToolCommand(command)) {
         if (command === "load_gee_dataset") {
-          return await loadGeoAgentDatasetWithGeoLibreEarthEngine(tools, args);
+          return await loadGeoAgentDatasetWithGeoIntEarthEngine(tools, args);
         }
 
         installEarthEngineFunctionInfoFallback(geoAgentEarthEngineFunctionInfo);
@@ -226,7 +226,7 @@ function patchGeoAgentToolRunner(control: GeoAgentControl): void {
       syncGeoAgentOverlaysToStore(tools.overlays);
     }
   };
-  tools.__geolibreToolRunnerPatched = true;
+  tools.__geointToolRunnerPatched = true;
 
   wireGeoAgentStoreSync(tools);
   // The control recreates tools (with an empty overlay registry) on every
@@ -234,7 +234,7 @@ function patchGeoAgentToolRunner(control: GeoAgentControl): void {
   syncGeoAgentOverlaysToStore(tools.overlays);
 }
 
-async function loadGeoAgentDatasetWithGeoLibreEarthEngine(
+async function loadGeoAgentDatasetWithGeoIntEarthEngine(
   tools: NonNullable<GeoAgentControlInternals["tools"]>,
   args: unknown,
 ): Promise<Record<string, unknown>> {
@@ -379,13 +379,13 @@ function enhanceEarthEngineSignIn(): void {
     !status ||
     !clientIdInput ||
     !projectIdInput ||
-    details.querySelector(".geolibre-ee-sign-in")
+    details.querySelector(".geoint-ee-sign-in")
   ) {
     return;
   }
 
   const button = document.createElement("button");
-  button.className = "geolibre-ee-sign-in secondary";
+  button.className = "geoint-ee-sign-in secondary";
   button.type = "button";
   button.textContent = "Sign in";
   button.addEventListener("click", async () => {
@@ -442,7 +442,7 @@ async function earthEngineAccessToken(): Promise<string> {
 }
 
 async function authenticateEarthEngine(oauthClientId: string): Promise<void> {
-  const token = await authenticateEarthEngineForGeoLibre(oauthClientId);
+  const token = await authenticateEarthEngineForGeoInt(oauthClientId);
   if (token?.accessToken) {
     earthEngineAccessTokenOverride = token.accessToken.replace(/^Bearer\s+/i, "").trim();
     earthEngineTokenTypeOverride = token.tokenType || "Bearer";

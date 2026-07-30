@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { getProtomapsApiKey, getProtomapsStyleUrl, PROTOMAPS_BASEMAPS } from "@geolibre/core";
+import { getProtomapsApiKey, getProtomapsStyleUrl, PROTOMAPS_BASEMAPS } from "@geoint/core";
 
 describe("getProtomapsApiKey", () => {
   it("returns undefined when env is missing or empty", () => {

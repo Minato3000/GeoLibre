@@ -1088,7 +1088,7 @@ wheels = [
 ]
 
 [[package]]
-name = "geolibre-server"
+name = "geoint-server"
 version = "1.0.0"
 source = { editable = "." }
 dependencies = [
@@ -1170,7 +1170,7 @@ requires-dist = [
     { name = "duckdb", marker = "extra == 'conversion'", specifier = ">=1.1.0" },
     { name = "fastapi", specifier = ">=0.115.0" },
     { name = "freestiler", marker = "extra == 'conversion'", specifier = ">=0.1.0" },
-    { name = "geolibre-server", extras = ["dev", "vector", "raster", "conversion", "ml", "sedona", "postgis", "notebook"], marker = "extra == 'test'" },
+    { name = "geoint-server", extras = ["dev", "vector", "raster", "conversion", "ml", "sedona", "postgis", "notebook"], marker = "extra == 'test'" },
     { name = "geopandas", marker = "extra == 'sedona'", specifier = ">=1.0" },
     { name = "geopandas", marker = "extra == 'vector'", specifier = ">=1.0" },
     { name = "httpx", marker = "extra == 'ml'", specifier = ">=0.27" },

@@ -1,8 +1,8 @@
-import { DEFAULT_LAYER_STYLE, useAppStore } from "@geolibre/core";
-import { fillLayerId, lineLayerId } from "@geolibre/map";
+import { DEFAULT_LAYER_STYLE, useAppStore } from "@geoint/core";
+import { fillLayerId, lineLayerId } from "@geoint/map";
 import type { FeatureCollection, Geometry } from "geojson";
 import type { GeoJSONSource, MapMouseEvent, Map as MapLibreMap } from "maplibre-gl";
-import type { GeoLibreAppAPI, GeoLibreCogLayerOptions, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntCogLayerOptions, GeoIntPlugin } from "../types";
 import {
   connectStac,
   isVisualizableAsset,
@@ -17,21 +17,21 @@ import {
   type StacNextPage,
 } from "./stac-api";
 
-export const STAC_PLUGIN_ID = "geolibre-stac-catalogs";
+export const STAC_PLUGIN_ID = "geoint-stac-catalogs";
 const PANEL_ID = STAC_PLUGIN_ID;
 // The footprints layer is a normal store layer, so it is saved into the project
 // while `footprintLayerId` only lives for the session. This marker is how a
 // later search — or a reopened project — recognizes the layer as ours instead
 // of adding a second copy.
 const FOOTPRINT_SOURCE_KIND = "stac-footprints";
-const DRAW_SOURCE = "geolibre-stac-draw-bbox";
-const DRAW_FILL = "geolibre-stac-draw-bbox-fill";
-const DRAW_LINE = "geolibre-stac-draw-bbox-line";
+const DRAW_SOURCE = "geoint-stac-draw-bbox";
+const DRAW_FILL = "geoint-stac-draw-bbox-fill";
+const DRAW_LINE = "geoint-stac-draw-bbox-line";
 // Selection highlight, like the draw rectangle: a transient interaction overlay
 // rather than data, so it stays off the Layers panel.
-const SELECT_SOURCE = "geolibre-stac-selected";
-const SELECT_FILL = "geolibre-stac-selected-fill";
-const SELECT_LINE = "geolibre-stac-selected-line";
+const SELECT_SOURCE = "geoint-stac-selected";
+const SELECT_FILL = "geoint-stac-selected-fill";
+const SELECT_LINE = "geoint-stac-selected-line";
 
 /**
  * Colormaps the COG renderer knows by name (`ColormapName` in
@@ -199,7 +199,7 @@ let labels: StacLabels = {
   download: "Download",
   addUnsupported: "Only GeoTIFF/COG and GeoJSON assets can be added to the map",
   addFailed: "Could not add asset",
-  cogUnsupported: "This GeoLibre host cannot visualize remote GeoTIFF assets",
+  cogUnsupported: "This GeoInt host cannot visualize remote GeoTIFF assets",
   showing: (count) => `Showing ${count} items.`,
   showingOfMatched: (count, matched) => `Showing ${count} of ${matched} items.`,
   adding: (asset) => `Adding ${asset}…`,
@@ -214,7 +214,7 @@ export function setStacLabels(next: Partial<StacLabels>): void {
   if (panelContainer) mountPanel(panelContainer);
 }
 
-let appRef: GeoLibreAppAPI | null = null;
+let appRef: GeoIntAppAPI | null = null;
 // The result footprints are a first-class store layer, so they show up in the
 // Layers panel and can be hidden, restyled, or removed like any other layer.
 let footprintLayerId: string | null = null;
@@ -497,7 +497,7 @@ async function visualizeAsset(
   item: StacItem,
   key: string,
   asset: StacAsset,
-  cogOptions: GeoLibreCogLayerOptions,
+  cogOptions: GeoIntCogLayerOptions,
   signal?: AbortSignal,
 ): Promise<void> {
   const name = `${item.id} — ${assetLabel(key, asset)}`;
@@ -672,7 +672,7 @@ function buildPanel(container: HTMLElement): () => void {
     status.style.color = error ? "hsl(var(--destructive))" : "hsl(var(--muted-foreground))";
   };
 
-  const cogOptions = (): GeoLibreCogLayerOptions => {
+  const cogOptions = (): GeoIntCogLayerOptions => {
     const numeric = (input: HTMLInputElement): number | undefined => {
       const value = Number(input.value);
       return input.value.trim() && Number.isFinite(value) ? value : undefined;
@@ -1036,7 +1036,7 @@ function mountPanel(container: HTMLElement): void {
   disposePanel = buildPanel(container);
 }
 
-export const maplibreStacCatalogsPlugin: GeoLibrePlugin = {
+export const maplibreStacCatalogsPlugin: GeoIntPlugin = {
   id: STAC_PLUGIN_ID,
   name: "STAC Catalogs",
   version: "0.1.0",

@@ -24,8 +24,8 @@
  * and there is no second catalog to keep in step.
  */
 
-import { useAppStore } from "@geolibre/core";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import { useAppStore } from "@geoint/core";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 import { isVectorLayerSelectionCancelled } from "maplibre-gl-vector/errors";
 import { addPMTilesLayerFromUrl } from "./maplibre-components";
 import { addVectorLayerFromUrl } from "./maplibre-vector";
@@ -144,7 +144,7 @@ export const DEFAULT_SOURCE_COOP_LABELS: SourceCoopLabels = {
   downloadTitle: "Download this file",
   copyUrlTitle: "Copy this file's URL",
   openProductTitle: "Open this product's page on source.coop",
-  unsupportedTitle: "GeoLibre cannot render this format — download it instead",
+  unsupportedTitle: "GeoInt cannot render this format — download it instead",
   addError: (message) => `Could not add this file: ${message}`,
   largeFileWarning: (size) =>
     `This file is ${size}. It streams from the source, so only the parts in view are read.`,
@@ -276,7 +276,7 @@ function isTauri(): boolean {
  * through the tiles Worker, which re-emits the JSON with CORS — source.coop
  * sends none, so a direct browser fetch is blocked outright.
  */
-function clientOptions(app: GeoLibreAppAPI | null, signal?: AbortSignal): SourceCoopClientOptions {
+function clientOptions(app: GeoIntAppAPI | null, signal?: AbortSignal): SourceCoopClientOptions {
   const fetchArrayBuffer = app?.fetchArrayBuffer;
   if (isTauri() && fetchArrayBuffer) {
     const fetchImpl: SourceCoopFetch = async (url) => {
@@ -366,7 +366,7 @@ function ingestModeOf(layer: ReturnType<typeof findAddedLayer>): SourceCoopInges
  *   only a GeoParquet card offers the choice (see {@link canStream}).
  */
 async function addObjectToMap(
-  app: GeoLibreAppAPI | null,
+  app: GeoIntAppAPI | null,
   object: SourceCoopObject,
   ingestMode: SourceCoopIngestMode = "table",
 ): Promise<boolean> {
@@ -485,7 +485,7 @@ function noteText(object: SourceCoopObject, state: { added: boolean; pending: bo
  */
 function buildPanel(
   container: HTMLElement,
-  app: GeoLibreAppAPI | null,
+  app: GeoIntAppAPI | null,
   pinned?: SourceCoopPinnedProduct,
 ): () => void {
   type View = { kind: "browse" } | { kind: "product"; product: SourceCoopProduct; prefix: string };
@@ -1103,8 +1103,8 @@ interface SourceCoopPluginConfig {
  * listing, same add/download routing, so the two can never drift. All state is
  * per-instance, so several of these can be active at once.
  */
-function createSourceCoopPlugin(config: SourceCoopPluginConfig): GeoLibrePlugin {
-  let appRef: GeoLibreAppAPI | null = null;
+function createSourceCoopPlugin(config: SourceCoopPluginConfig): GeoIntPlugin {
+  let appRef: GeoIntAppAPI | null = null;
   let unregisterPanel: (() => void) | null = null;
   // The mounted container and its teardown, tracked so a language change can
   // rebuild the panel in place (see setSourceCoopLabels).
@@ -1126,7 +1126,7 @@ function createSourceCoopPlugin(config: SourceCoopPluginConfig): GeoLibrePlugin 
     id: config.id,
     name: config.name,
     version: "0.1.0",
-    activate: (app: GeoLibreAppAPI) => {
+    activate: (app: GeoIntAppAPI) => {
       appRef = app;
       mountedPanels.add(remount);
       unregisterPanel =
@@ -1146,19 +1146,19 @@ function createSourceCoopPlugin(config: SourceCoopPluginConfig): GeoLibrePlugin 
         }) ?? null;
       app.openRightPanel?.(config.id);
     },
-    deactivate: (app: GeoLibreAppAPI) => {
+    deactivate: (app: GeoIntAppAPI) => {
       app.closeRightPanel?.(config.id);
       unregisterPanel?.();
       unregisterPanel = null;
       mountedPanels.delete(remount);
-      // Layers the user added stay on the map: they are ordinary GeoLibre layers
+      // Layers the user added stay on the map: they are ordinary GeoInt layers
       // now, owned by the Layers panel, not by this browser.
       appRef = null;
     },
   };
 }
 
-export const maplibreSourceCoopPlugin: GeoLibrePlugin = createSourceCoopPlugin({
+export const maplibreSourceCoopPlugin: GeoIntPlugin = createSourceCoopPlugin({
   id: SOURCE_COOP_PLUGIN_ID,
   name: "Source Cooperative",
 });
@@ -1171,7 +1171,7 @@ export const NATURAL_EARTH_PLUGIN_ID = "maplibre-gl-natural-earth";
  * shapefiles. It is the Source Cooperative browser pinned to one product, so
  * the layer list comes from the live bucket listing and needs no catalog here.
  */
-export const maplibreNaturalEarthPlugin: GeoLibrePlugin = createSourceCoopPlugin({
+export const maplibreNaturalEarthPlugin: GeoIntPlugin = createSourceCoopPlugin({
   id: NATURAL_EARTH_PLUGIN_ID,
   name: "Natural Earth",
   pinnedProduct: {

@@ -14,8 +14,8 @@ import {
   type DashboardWidget,
   type DashboardWidgetAggregation,
   type DashboardWidgetType,
-  type GeoLibreLayer,
-  type GeoLibreProject,
+  type GeoIntLayer,
+  type GeoIntProject,
   type IndicatorAggregation,
   type LayerGroup,
   type LayerStyle,
@@ -71,7 +71,7 @@ export function createDefaultMapView(): MapViewState {
 export function createEmptyProject(
   name = DEFAULT_PROJECT_NAME,
   options: CreateProjectOptions = {},
-): GeoLibreProject {
+): GeoIntProject {
   return {
     version: PROJECT_VERSION,
     name,
@@ -96,14 +96,14 @@ export function createEmptyProject(
   };
 }
 
-export function serializeProject(project: GeoLibreProject): string {
+export function serializeProject(project: GeoIntProject): string {
   return JSON.stringify(project, null, 2);
 }
 
-export function parseProject(json: string): GeoLibreProject {
-  const data = JSON.parse(json) as Partial<GeoLibreProject>;
+export function parseProject(json: string): GeoIntProject {
+  const data = JSON.parse(json) as Partial<GeoIntProject>;
   if (!data.version || !data.name || !data.mapView) {
-    throw new Error("Invalid GeoLibre project: missing required fields");
+    throw new Error("Invalid GeoInt project: missing required fields");
   }
   const layerGroups = normalizeLayerGroups(data.layerGroups);
   const validGroupIds = new Set(layerGroups.map((g) => g.id));
@@ -1089,7 +1089,7 @@ function isPlainObject(value: object): boolean {
   return prototype === Object.prototype || prototype === null;
 }
 
-function normalizeLayer(layer: GeoLibreLayer): GeoLibreLayer {
+function normalizeLayer(layer: GeoIntLayer): GeoIntLayer {
   return {
     ...layer,
     style: { ...DEFAULT_LAYER_STYLE, ...layer.style },
@@ -1106,7 +1106,7 @@ export function projectFromStore(state: {
   basemapStyleUrl: string;
   basemapVisible: boolean;
   basemapOpacity: number;
-  layers: GeoLibreLayer[];
+  layers: GeoIntLayer[];
   selectedLayerId?: string | null;
   layerGroups?: LayerGroup[];
   preferences: ProjectPreferences;
@@ -1123,7 +1123,7 @@ export function projectFromStore(state: {
   /** Project-scoped Style Manager entries (the store's `projectStyleLibrary`). */
   styleLibrary?: StyleLibraryEntry[] | null;
   metadata: Record<string, unknown>;
-}): GeoLibreProject {
+}): GeoIntProject {
   const styles: Record<string, LayerStyle> = {};
   for (const layer of state.layers) {
     styles[layer.id] = layer.style;
@@ -1200,7 +1200,7 @@ export function projectFromStore(state: {
 // files or built in-memory (e.g. by a plugin's drawing/annotation control)
 // have no such URL, so the persisted `geojson` is their ONLY copy and must be
 // kept.
-function hasRestorableSourceUrl(layer: GeoLibreLayer): boolean {
+function hasRestorableSourceUrl(layer: GeoIntLayer): boolean {
   const sourceUrl = layer.source.url;
   const originalUrl = layer.metadata.originalUrl;
   return (
@@ -1209,7 +1209,7 @@ function hasRestorableSourceUrl(layer: GeoLibreLayer): boolean {
   );
 }
 
-function prepareLayerForSave(layer: GeoLibreLayer): GeoLibreLayer {
+function prepareLayerForSave(layer: GeoIntLayer): GeoIntLayer {
   // The live time filter is derived from the Time Slider's current date, so it
   // is transient: strip it before saving so a reopened project never starts
   // with a stale time-window filter hiding most of a layer's features. The
@@ -1224,7 +1224,7 @@ function prepareLayerForSave(layer: GeoLibreLayer): GeoLibreLayer {
   // a `geojson` copy on the map only for the attribute table; it is redundant
   // in a saved project and would only bloat it, so strip it. Layers without a
   // restorable URL (local-file or in-memory) keep their `geojson` because it is
-  // the sole copy GeoLibre's restore path (`ensureExternalGeoJsonNativeLayer`)
+  // the sole copy GeoInt's restore path (`ensureExternalGeoJsonNativeLayer`)
   // re-renders from.
   //
   // Add Vector Layer (`maplibre-gl-vector`) layers are the exception: they are
@@ -1277,13 +1277,13 @@ function prepareLayerForSave(layer: GeoLibreLayer): GeoLibreLayer {
   };
 }
 
-export function applyProjectToStore(project: GeoLibreProject): {
+export function applyProjectToStore(project: GeoIntProject): {
   projectName: string;
   mapView: MapViewState;
   basemapStyleUrl: string;
   basemapVisible: boolean;
   basemapOpacity: number;
-  layers: GeoLibreLayer[];
+  layers: GeoIntLayer[];
   layerGroups: LayerGroup[];
   preferences: ProjectPreferences;
   projectPlugins: ProjectPluginState | null;
@@ -1359,9 +1359,9 @@ export function applyProjectToStore(project: GeoLibreProject): {
  * stripped of share-specific metadata (shareId, shareUrl, etc.).
  */
 export function detachProjectCopy(
-  project: GeoLibreProject,
+  project: GeoIntProject,
   options: { nameSuffix?: string } = {},
-): GeoLibreProject {
+): GeoIntProject {
   const suffix = options.nameSuffix ?? "(copy)";
   const rawName = project.name.trim() || DEFAULT_PROJECT_NAME;
   const name = suffix ? (rawName.endsWith(suffix) ? rawName : `${rawName} ${suffix}`) : rawName;
@@ -1387,9 +1387,9 @@ export function detachProjectCopy(
  * print layout.
  */
 export function createProjectTemplate(
-  project: GeoLibreProject,
+  project: GeoIntProject,
   options: { name?: string; stripDataLayers?: boolean } = {},
-): GeoLibreProject {
+): GeoIntProject {
   const detached = detachProjectCopy(project, { nameSuffix: "" });
   const name = options.name?.trim() || detached.name;
   const stripDataLayers = options.stripDataLayers !== false;

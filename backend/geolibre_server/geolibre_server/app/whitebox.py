@@ -39,19 +39,19 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/whitebox", tags=["whitebox"])
 WHITEBOX_RUNTIME_PACKAGE = os.environ.get(
-    "GEOLIBRE_WHITEBOX_PACKAGE",
+    "GEOINT_WHITEBOX_PACKAGE",
     "whitebox-workflows>=2.0.2",
 )
-WHITEBOX_PYTHON_VERSION = os.environ.get("GEOLIBRE_WHITEBOX_PYTHON_VERSION", "3.12")
+WHITEBOX_PYTHON_VERSION = os.environ.get("GEOINT_WHITEBOX_PYTHON_VERSION", "3.12")
 
 
 def _whitebox_run_timeout_secs() -> int:
     """Return the wall-clock timeout for a single Whitebox tool run.
 
-    Reads ``GEOLIBRE_WHITEBOX_RUN_TIMEOUT_SECS`` so deployments can tune the
+    Reads ``GEOINT_WHITEBOX_RUN_TIMEOUT_SECS`` so deployments can tune the
     cap for unusually long jobs; falls back to one hour when unset or invalid.
     """
-    raw = os.environ.get("GEOLIBRE_WHITEBOX_RUN_TIMEOUT_SECS")
+    raw = os.environ.get("GEOINT_WHITEBOX_RUN_TIMEOUT_SECS")
     if raw:
         try:
             value = int(raw)
@@ -134,7 +134,7 @@ def _explicit_runtime_python() -> str | None:
 
 def _managed_runtime_dir() -> Path:
     """Return the managed Whitebox runtime environment directory."""
-    configured = os.environ.get("GEOLIBRE_WHITEBOX_ENV")
+    configured = os.environ.get("GEOINT_WHITEBOX_ENV")
     if configured:
         return Path(configured).expanduser()
     return _runtime_cache_root() / "whitebox-runtime"
@@ -518,7 +518,7 @@ def _normalize_param(param: dict[str, Any]) -> dict[str, Any]:
 
 
 def _infer_param_kind(param: dict[str, Any]) -> str:
-    """Infer a GeoLibre parameter kind from Whitebox runtime metadata."""
+    """Infer a GeoInt parameter kind from Whitebox runtime metadata."""
     schema = param.get("schema")
     schema = schema if isinstance(schema, dict) else {}
     dataset = schema.get("dataset")
@@ -572,7 +572,7 @@ def _param_options(param: dict[str, Any]) -> list[str]:
 
 
 def _normalize_catalog_item(item: dict[str, Any]) -> dict[str, Any]:
-    """Normalize a Whitebox tool manifest for the GeoLibre frontend."""
+    """Normalize a Whitebox tool manifest for the GeoInt frontend."""
     fixed = dict(item)
     tool_id = str(fixed.get("id", "")).strip()
     fixed.setdefault("display_name", _humanize_tool_id(tool_id))
@@ -622,7 +622,7 @@ def _safe_output_stem(tool_id: str, parameter_name: str) -> str:
 def _default_output_path(tool_id: str, parameter_name: str, kind: str) -> str:
     """Return a temporary output path for a Whitebox output parameter."""
     ext = _output_extension(kind)
-    folder = Path(tempfile.gettempdir()) / "geolibre-whitebox"
+    folder = Path(tempfile.gettempdir()) / "geoint-whitebox"
     folder.mkdir(parents=True, exist_ok=True)
     unique = uuid.uuid4().hex[:8]
     stem = _safe_output_stem(tool_id, parameter_name)
@@ -705,7 +705,7 @@ def _write_layer_input(param_name: str, layer: dict[str, Any], temp_paths: list[
     geojson = layer.get("geojson")
     if not isinstance(geojson, dict):
         raise ValueError(f"Layer input for {param_name} does not contain GeoJSON.")
-    folder = Path(tempfile.mkdtemp(prefix="geolibre-whitebox-input-"))
+    folder = Path(tempfile.mkdtemp(prefix="geoint-whitebox-input-"))
     temp_paths.append(folder)
     path = folder / f"{_safe_output_stem('input', param_name)}.geojson"
     path.write_text(json.dumps(geojson), encoding="utf-8")
@@ -715,7 +715,7 @@ def _write_layer_input(param_name: str, layer: dict[str, Any], temp_paths: list[
 def _ensure_within_roots(path_value: str) -> None:
     """Reject a Whitebox path argument that escapes the configured roots.
 
-    No-op when ``GEOLIBRE_CONVERSION_ROOTS`` is unset (the desktop default,
+    No-op when ``GEOINT_CONVERSION_ROOTS`` is unset (the desktop default,
     where paths are the user's own filesystem). When it is set (the Docker/web
     build, whose sidecar is reachable same-origin through the nginx proxy),
     attacker-supplied ``*_in``/``*_out`` paths and batch directories are confined
@@ -779,7 +779,7 @@ def _pinned_working_directory(absolute_paths: list[str]) -> str:
     Prefer the allowlisted root that already contains one of the run's
     (validated) absolute path arguments, so a relative path argument resolves
     alongside them; fall back to the first configured root. Without this, a
-    multi-root ``GEOLIBRE_CONVERSION_ROOTS`` deployment would resolve every
+    multi-root ``GEOINT_CONVERSION_ROOTS`` deployment would resolve every
     relative path against root #0 regardless of which root the run's files live
     under.
 
@@ -858,7 +858,7 @@ def _prepare_arguments(
     # *relative* path argument (e.g. "out.tif" — not "escape-shaped", so it skips
     # _ensure_within_roots) against its cwd; without this that cwd is the
     # sidecar's own (WORKDIR /app in the Docker image), letting a relative value
-    # read or write outside GEOLIBRE_CONVERSION_ROOTS. Pinning cwd to a root
+    # read or write outside GEOINT_CONVERSION_ROOTS. Pinning cwd to a root
     # keeps relative paths inside the sandbox. Set after default outputs are
     # generated so their `not working_directory` condition still holds. The root
     # is chosen from the run's absolute paths (so multi-root deployments resolve

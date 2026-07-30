@@ -65,7 +65,7 @@ Get-ChildItem -Recurse -Force -Path $backendPackageDir -Include $devArtifacts |
 
 # Drop a short note alongside the binary so the zip is self-documenting.
 $readme = @"
-GeoLibre Desktop $version (portable, $Architecture)
+GeoInt Desktop $version (portable, $Architecture)
 
 Unzip this folder anywhere and run $binaryName.exe. No installation or admin
 rights are required.

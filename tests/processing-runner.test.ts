@@ -1,14 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
-import {
-  getVectorTool,
-  runAlgorithmCapture,
-  runModel,
-  type RunnerHost,
-} from "@geolibre/processing";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
+import { getVectorTool, runAlgorithmCapture, runModel, type RunnerHost } from "@geoint/processing";
 
-const points: GeoLibreLayer = {
+const points: GeoIntLayer = {
   id: "pts",
   name: "Points",
   type: "geojson",

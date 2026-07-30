@@ -23,7 +23,7 @@ if (typeof maplibregl.setRTLTextPlugin === "function") {
     // actually encounters RTL text, so the bytes are not paid for on LTR-only
     // maps. Returns a promise that resolves once the plugin is requested.
     maplibregl.setRTLTextPlugin(rtlTextPluginUrl, true).catch((error: unknown) => {
-      console.error("[GeoLibre] Failed to load RTL text plugin", error);
+      console.error("[GeoInt] Failed to load RTL text plugin", error);
     });
   }
 }

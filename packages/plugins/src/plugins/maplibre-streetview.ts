@@ -1,6 +1,6 @@
-import { getGoogleMapsApiKey } from "@geolibre/core";
+import { getGoogleMapsApiKey } from "@geoint/core";
 import { StreetViewControl, type StreetViewControlOptions } from "maplibre-gl-streetview";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 
 const streetViewEnv = (
   import.meta as ImportMeta & {
@@ -11,10 +11,10 @@ const streetViewEnv = (
 function getRuntimeEnvironment(): Record<string, string | undefined> {
   if (typeof window === "undefined") return streetViewEnv ?? {};
 
-  // __GEOLIBRE_RUNTIME_ENV__ is declared globally in @geolibre/core.
+  // __GEOINT_RUNTIME_ENV__ is declared globally in @geoint/core.
   return {
     ...(streetViewEnv ?? {}),
-    ...(window.__GEOLIBRE_RUNTIME_ENV__ ?? {}),
+    ...(window.__GEOINT_RUNTIME_ENV__ ?? {}),
   };
 }
 
@@ -41,7 +41,7 @@ function getStreetViewCredentials(): Pick<
   };
 }
 
-let streetViewPosition: GeoLibreMapControlPosition = "top-right";
+let streetViewPosition: GeoIntMapControlPosition = "top-right";
 
 const STREET_VIEW_OPTIONS = {
   collapsed: false,
@@ -54,7 +54,7 @@ const STREET_VIEW_OPTIONS = {
 >;
 
 let streetViewControl: StreetViewControl | null = null;
-let activeApp: GeoLibreAppAPI | null = null;
+let activeApp: GeoIntAppAPI | null = null;
 let removeRuntimeEnvListener: (() => void) | null = null;
 // The credentials the current control was built with, so a runtime-env change
 // that doesn't touch Street View's own vars (a common case now that the desktop
@@ -67,11 +67,11 @@ function credentialsSignature(): string {
   return JSON.stringify([defaultProvider, googleApiKey ?? "", mapillaryAccessToken ?? ""]);
 }
 
-export const maplibreStreetViewPlugin: GeoLibrePlugin = {
+export const maplibreStreetViewPlugin: GeoIntPlugin = {
   id: "maplibre-gl-streetview",
   name: "Street View",
   version: "0.4.0",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     activeApp = app;
     addRuntimeEnvListener();
     if (!streetViewControl) {
@@ -87,14 +87,14 @@ export const maplibreStreetViewPlugin: GeoLibrePlugin = {
     appliedCredentialsSignature = credentialsSignature();
     setTimeout(() => streetViewControl?.expand(), 0);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     if (streetViewControl) app.removeMapControl(streetViewControl);
     streetViewControl = null;
     appliedCredentialsSignature = null;
     cleanupRuntimeEnvListener();
   },
   getMapControlPosition: () => streetViewPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     streetViewPosition = position;
     if (!streetViewControl) return;
     app.removeMapControl(streetViewControl);
@@ -140,9 +140,9 @@ function addRuntimeEnvListener(): void {
     setTimeout(() => streetViewControl?.expand(), 0);
   };
 
-  window.addEventListener("geolibre:runtime-env-change", handleRuntimeEnvChange);
+  window.addEventListener("geoint:runtime-env-change", handleRuntimeEnvChange);
   removeRuntimeEnvListener = () => {
-    window.removeEventListener("geolibre:runtime-env-change", handleRuntimeEnvChange);
+    window.removeEventListener("geoint:runtime-env-change", handleRuntimeEnvChange);
   };
 }
 

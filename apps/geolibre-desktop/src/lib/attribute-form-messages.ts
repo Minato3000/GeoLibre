@@ -1,8 +1,8 @@
-import type { AttributeFormFieldError } from "@geolibre/core";
+import type { AttributeFormFieldError } from "@geoint/core";
 import type { TFunction } from "i18next";
 
 /**
- * Localize an Attribute Form validation error (`@geolibre/core`'s
+ * Localize an Attribute Form validation error (`@geoint/core`'s
  * `validateAttributeFormValues`) into the message both editing surfaces show —
  * the attribute table's cell tooltip and the Field Collection form's inline
  * error. A constraint failure prefers the author's own description over the

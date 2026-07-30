@@ -1,14 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
-import { getVectorTool } from "@geolibre/processing";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
+import { getVectorTool } from "@geoint/processing";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 
 /** Build a point layer from [lon, lat, props] tuples. */
-function pointLayer(
-  id: string,
-  points: [number, number, Record<string, unknown>][],
-): GeoLibreLayer {
+function pointLayer(id: string, points: [number, number, Record<string, unknown>][]): GeoIntLayer {
   const features: Feature<Geometry>[] = points.map(([lon, lat, properties]) => ({
     type: "Feature",
     properties,
@@ -30,7 +27,7 @@ function pointLayer(
 /** Run a vector tool and return the result collection (or null if none added). */
 function runTool(
   id: string,
-  layers: GeoLibreLayer[],
+  layers: GeoIntLayer[],
   parameters: Record<string, unknown>,
 ): { result: FeatureCollection | null; messages: string[] } {
   const tool = getVectorTool(id);

@@ -1,5 +1,5 @@
-import { geojsonHasZCoordinates, styleValue, useAppStore } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+import { geojsonHasZCoordinates, styleValue, useAppStore } from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import {
   ROUTE_ANIM_SPEED_MAX,
   ROUTE_ANIM_SPEED_MIN,
@@ -27,8 +27,8 @@ import {
   subscribeRouteAnimationPanel,
   toggleRouteAnimationPlaying,
   videoExtensionForMime,
-} from "@geolibre/plugins";
-import { Button, Select, Slider } from "@geolibre/ui";
+} from "@geoint/plugins";
+import { Button, Select, Slider } from "@geoint/ui";
 import {
   ChevronDown,
   ChevronUp,

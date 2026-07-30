@@ -1,9 +1,9 @@
 import type {
-  GeoLibreAppAPI,
-  GeoLibreExternalPluginManifest,
-  GeoLibrePlugin,
+  GeoIntAppAPI,
+  GeoIntExternalPluginManifest,
+  GeoIntPlugin,
   PluginManager,
-} from "@geolibre/plugins";
+} from "@geoint/plugins";
 import { invoke } from "@tauri-apps/api/core";
 import {
   deletePluginArchive,
@@ -69,7 +69,7 @@ const externallyLoadedPluginSources = new Map<string, string>();
 // same existingId/wasActive snapshot and would double-register. Coalescing them
 // onto one promise makes the function safe even if the UI's busyId guard is
 // bypassed (e.g. the dialog is closed and reopened mid-upgrade).
-const inFlightUrlUpgrades = new Map<string, Promise<GeoLibrePlugin>>();
+const inFlightUrlUpgrades = new Map<string, Promise<GeoIntPlugin>>();
 
 export async function loadExternalPlugins(
   manager: PluginManager,
@@ -123,7 +123,7 @@ export async function loadExternalPlugins(
           issues.push({
             archiveName: bundle.archiveName,
             sourceUrl: bundle.sourceUrl,
-            message: `Plugin id '${bundle.manifest.id}' is already loaded from '${loadedFrom}'. Restart GeoLibre to load this copy.`,
+            message: `Plugin id '${bundle.manifest.id}' is already loaded from '${loadedFrom}'. Restart GeoInt to load this copy.`,
           });
         }
         continue;
@@ -315,10 +315,7 @@ async function loadPluginUrlBundle(
   };
 }
 
-function pluginAssetCacheToken(
-  response: Response,
-  manifest: GeoLibreExternalPluginManifest,
-): string {
+function pluginAssetCacheToken(response: Response, manifest: GeoIntExternalPluginManifest): string {
   return [
     manifest.id,
     manifest.version,
@@ -377,7 +374,7 @@ async function fetchPluginText(url: string, label: string, signal?: AbortSignal)
   return new TextDecoder().decode(merged);
 }
 
-async function importExternalPlugin(bundle: ExternalPluginBundle): Promise<GeoLibrePlugin> {
+async function importExternalPlugin(bundle: ExternalPluginBundle): Promise<GeoIntPlugin> {
   const moduleUrl = URL.createObjectURL(
     new Blob([bundle.entrySource], { type: "text/javascript" }),
   );
@@ -388,8 +385,8 @@ async function importExternalPlugin(bundle: ExternalPluginBundle): Promise<GeoLi
       plugin?: unknown;
     };
     const candidate = module.default ?? module.plugin;
-    if (!isGeoLibrePlugin(candidate)) {
-      throw new Error("Entry must export a GeoLibrePlugin as default or plugin.");
+    if (!isGeoIntPlugin(candidate)) {
+      throw new Error("Entry must export a GeoIntPlugin as default or plugin.");
     }
     validateManifestMatchesPlugin(bundle.manifest, candidate);
     if (candidate.activeByDefault) {
@@ -401,9 +398,9 @@ async function importExternalPlugin(bundle: ExternalPluginBundle): Promise<GeoLi
   }
 }
 
-function isGeoLibrePlugin(value: unknown): value is GeoLibrePlugin {
+function isGeoIntPlugin(value: unknown): value is GeoIntPlugin {
   if (!value || typeof value !== "object") return false;
-  const plugin = value as Partial<GeoLibrePlugin>;
+  const plugin = value as Partial<GeoIntPlugin>;
   return (
     typeof plugin.id === "string" &&
     typeof plugin.name === "string" &&
@@ -414,8 +411,8 @@ function isGeoLibrePlugin(value: unknown): value is GeoLibrePlugin {
 }
 
 function validateManifestMatchesPlugin(
-  manifest: GeoLibreExternalPluginManifest,
-  plugin: GeoLibrePlugin,
+  manifest: GeoIntExternalPluginManifest,
+  plugin: GeoIntPlugin,
 ): void {
   if (plugin.id !== manifest.id) {
     throw new Error("Exported plugin id does not match plugin.json.");
@@ -429,18 +426,18 @@ function validateManifestMatchesPlugin(
 }
 
 function injectExternalPluginStyle(pluginId: string, styleSource: string): void {
-  const styleId = `geolibre-external-plugin-style:${pluginId}`;
+  const styleId = `geoint-external-plugin-style:${pluginId}`;
   if (document.getElementById(styleId)) return;
 
   const style = document.createElement("style");
   style.id = styleId;
-  style.dataset.geolibreExternalPlugin = pluginId;
+  style.dataset.geointExternalPlugin = pluginId;
   style.textContent = styleSource;
   document.head.append(style);
 }
 
 function removeExternalPluginStyle(pluginId: string): void {
-  document.getElementById(`geolibre-external-plugin-style:${pluginId}`)?.remove();
+  document.getElementById(`geoint-external-plugin-style:${pluginId}`)?.remove();
 }
 
 // ---------------------------------------------------------------------------
@@ -493,7 +490,7 @@ export async function installWebPluginArchive(
   manager: PluginManager,
   fileName: string,
   bytes: Uint8Array,
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
 ): Promise<string> {
   const bundle = await bundleFromZipBytes(fileName, bytes);
   // importExternalPlugin validates the exported plugin, that it matches the
@@ -543,7 +540,7 @@ export async function installWebPluginArchive(
 export async function uninstallWebPlugin(
   manager: PluginManager,
   pluginId: string,
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
 ): Promise<void> {
   await deletePluginArchive(pluginId);
   const source = externallyLoadedPluginSources.get(pluginId);
@@ -583,7 +580,7 @@ function pluginInstallTimestamp(): number {
  * plugin's own directory. Returns null when the plugin is unknown, was loaded
  * from the desktop filesystem (no URL base), or when `relativePath` would
  * escape the plugin directory. This is exposed to plugins via the app API so a
- * plugin can locate its own bundled assets without GeoLibre knowing anything
+ * plugin can locate its own bundled assets without GeoInt knowing anything
  * about that specific plugin.
  */
 export function resolvePluginAssetUrlForLoadedPlugin(
@@ -604,7 +601,7 @@ export function resolvePluginAssetUrlForLoadedPlugin(
 export function unloadRemovedUrlPlugins(
   manager: PluginManager,
   currentManifestUrls: string[],
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
 ): string[] {
   const keep = new Set(currentManifestUrls);
   // Collect first, then mutate: manager.unregister notifies subscribers
@@ -644,7 +641,7 @@ export function unloadRemovedUrlPlugins(
 export function unloadFilesystemPlugin(
   manager: PluginManager,
   pluginId: string,
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
 ): boolean {
   const source = externallyLoadedPluginSources.get(pluginId);
   if (source === undefined || isManagedUrlSource(source)) return false;
@@ -670,8 +667,8 @@ export function unloadFilesystemPlugin(
 export function reloadExternalUrlPlugin(
   manager: PluginManager,
   manifestUrl: string,
-  app: GeoLibreAppAPI,
-): Promise<GeoLibrePlugin> {
+  app: GeoIntAppAPI,
+): Promise<GeoIntPlugin> {
   const inFlight = inFlightUrlUpgrades.get(manifestUrl);
   if (inFlight) return inFlight;
   const promise = reloadExternalUrlPluginUncoalesced(manager, manifestUrl, app).finally(() => {
@@ -684,8 +681,8 @@ export function reloadExternalUrlPlugin(
 async function reloadExternalUrlPluginUncoalesced(
   manager: PluginManager,
   manifestUrl: string,
-  app: GeoLibreAppAPI,
-): Promise<GeoLibrePlugin> {
+  app: GeoIntAppAPI,
+): Promise<GeoIntPlugin> {
   let existingId: string | null = null;
   for (const [id, source] of externallyLoadedPluginSources) {
     if (source === manifestUrl) {
@@ -701,7 +698,7 @@ async function reloadExternalUrlPluginUncoalesced(
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15_000);
   let bundle: ExternalPluginBundle;
-  let plugin: GeoLibrePlugin;
+  let plugin: GeoIntPlugin;
   try {
     bundle = await loadPluginUrlBundle(manifestUrl, controller.signal);
     // The timeout only bounds the fetch/stream above; a dynamic import() of a

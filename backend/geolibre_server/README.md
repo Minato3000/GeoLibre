@@ -1,6 +1,6 @@
-# GeoLibre Server (Python sidecar)
+# GeoInt Server (Python sidecar)
 
-Optional FastAPI backend for heavy geoprocessing. **Not required** to run GeoLibre Desktop UI.
+Optional FastAPI backend for heavy geoprocessing. **Not required** to run GeoInt Desktop UI.
 
 ## Install
 
@@ -20,7 +20,7 @@ uvicorn geolibre_server.app.main:app --host 127.0.0.1 --port 8765 --reload
 Or:
 
 ```bash
-geolibre-server
+geoint-server
 ```
 
 ## Test
@@ -31,20 +31,20 @@ python -m pytest
 
 ## Whitebox runtime
 
-Whitebox tools use a dedicated GeoLibre-managed Python environment. On first
+Whitebox tools use a dedicated GeoInt-managed Python environment. On first
 use, the sidecar looks for `uv`; if it is not available, it downloads the
-official uv standalone installer and installs uv into the GeoLibre runtime cache.
+official uv standalone installer and installs uv into the GeoInt runtime cache.
 It then creates a Whitebox virtual environment and installs
 `whitebox-workflows`.
 
 Useful overrides:
 
 ```bash
-GEOLIBRE_RUNTIME_DIR=/path/to/cache
-GEOLIBRE_UV=/path/to/uv
-GEOLIBRE_UV_DIR=/path/to/managed-uv
-GEOLIBRE_WHITEBOX_ENV=/path/to/whitebox-venv
-GEOLIBRE_WHITEBOX_PACKAGE='whitebox-workflows>=2.0.2'
+GEOINT_RUNTIME_DIR=/path/to/cache
+GEOINT_UV=/path/to/uv
+GEOINT_UV_DIR=/path/to/managed-uv
+GEOINT_WHITEBOX_ENV=/path/to/whitebox-venv
+GEOINT_WHITEBOX_PACKAGE='whitebox-workflows>=2.0.2'
 WBW_EXTERNAL_PYTHON=/path/to/python
 ```
 
@@ -64,7 +64,7 @@ To enable them, install the optional extras and run the sidecar:
 
 ```bash
 pip install -e ".[conversion]"
-geolibre-server
+geoint-server
 ```
 
 For the **web** build, serve the app from `localhost:5173` — CORS is restricted
@@ -73,14 +73,14 @@ to that origin and the Tauri origins, so other ports cannot reach the sidecar.
 Useful overrides:
 
 ```bash
-GEOLIBRE_CONVERSION_PYTHON=/path/to/python   # reuse an existing env (skip bootstrap)
-GEOLIBRE_CONVERSION_ENV=/path/to/venv        # managed runtime location
-GEOLIBRE_CONVERSION_PACKAGES='duckdb>=1.1.0 rio-cogeo>=5.0.0 freestiler>=0.1.0'  # whitespace-separated
-GEOLIBRE_CONVERSION_ROOTS=/data:/srv/geo      # confine inputs/outputs to these roots (os.pathsep-separated; unset = no restriction)
+GEOINT_CONVERSION_PYTHON=/path/to/python   # reuse an existing env (skip bootstrap)
+GEOINT_CONVERSION_ENV=/path/to/venv        # managed runtime location
+GEOINT_CONVERSION_PACKAGES='duckdb>=1.1.0 rio-cogeo>=5.0.0 freestiler>=0.1.0'  # whitespace-separated
+GEOINT_CONVERSION_ROOTS=/data:/srv/geo      # confine inputs/outputs to these roots (os.pathsep-separated; unset = no restriction)
 ```
 
 When the sidecar is reachable by untrusted same-origin content (e.g. the
-bundled Docker image), set `GEOLIBRE_CONVERSION_ROOTS` so conversions cannot
+bundled Docker image), set `GEOINT_CONVERSION_ROOTS` so conversions cannot
 read or overwrite arbitrary filesystem paths. It is unset by default for the
 desktop app, where paths are the user's own filesystem.
 
@@ -92,7 +92,7 @@ through the `/sql` endpoints. It is an optional extra:
 
 ```bash
 pip install -e ".[sedona]"   # apache-sedona[db] + geopandas + shapely
-geolibre-server
+geoint-server
 ```
 
 The sidecar reports availability through `/sql/status`. When the extra is **not**
@@ -126,7 +126,7 @@ has a geometry column.
 
 ## AI segmentation runtime (SamGeo / SAM 3)
 
-The `/ml` endpoints back GeoLibre's AI segmentation toolbox. They are a thin
+The `/ml` endpoints back GeoInt's AI segmentation toolbox. They are a thin
 reverse-proxy in front of a **separate `samgeo-api` server** (the REST server
 shipped with [segment-geospatial](https://github.com/opengeos/segment-geospatial)),
 which runs SAM 3 and returns GeoJSON. The heavy model stack (PyTorch + SAM 3) is
@@ -144,14 +144,14 @@ pip install -e ".[ml]"
 returns `available: false` with an actionable message. The desktop app runs the
 sidecar in a managed (uv) environment that includes the `ml` extra but not
 `segment-geospatial`, so `samgeo-api` is not on its `PATH`; launch the desktop
-app with `GEOLIBRE_ML_SAMGEO_URL` set to an external `samgeo-api` (the spawned
+app with `GEOINT_ML_SAMGEO_URL` set to an external `samgeo-api` (the spawned
 sidecar inherits the app's environment). Configuration:
 
 | Variable | Purpose |
 |----------|---------|
-| `GEOLIBRE_ML_SAMGEO_URL` | Proxy to an already-running `samgeo-api` (no child process is launched). |
-| `GEOLIBRE_ML_SAMGEO_CMD` | Command to launch `samgeo-api` on demand (default `samgeo-api`). |
-| `GEOLIBRE_ML_DEFAULT_MODEL` | Model the UI defaults to (default `sam3`). |
+| `GEOINT_ML_SAMGEO_URL` | Proxy to an already-running `samgeo-api` (no child process is launched). |
+| `GEOINT_ML_SAMGEO_CMD` | Command to launch `samgeo-api` on demand (default `samgeo-api`). |
+| `GEOINT_ML_DEFAULT_MODEL` | Model the UI defaults to (default `sam3`). |
 
 Each `/ml/segment/*` request takes a multipart `file` plus `model_version`
 (default `sam3`) and `output_format` (default `geojson`).

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { GeoLibreAppAPI, GeoLibreDeckGL } from "../packages/plugins/src/types";
+import type { GeoIntAppAPI, GeoIntDeckGL } from "../packages/plugins/src/types";
 import {
   ensureSharedDeckOverlay,
   onSharedDeckDevice,
@@ -33,7 +33,7 @@ class FakeMapboxOverlay {
 
 const fakeDeckGL = {
   mapbox: { MapboxOverlay: FakeMapboxOverlay },
-} as unknown as GeoLibreDeckGL;
+} as unknown as GeoIntDeckGL;
 
 // A minimal host: records addMapControl/removeMapControl and hands back a stable
 // (or swappable) map so the rebind path can be exercised.
@@ -55,7 +55,7 @@ function makeApp(map: object) {
     removeMapControl: (control: unknown) => {
       state.removed.push(control);
     },
-  } as unknown as GeoLibreAppAPI;
+  } as unknown as GeoIntAppAPI;
   return { app, state };
 }
 

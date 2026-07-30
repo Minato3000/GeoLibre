@@ -1,5 +1,5 @@
 {
-  "name": "@geolibre/processing",
+  "name": "@geoint/processing",
   "version": "2.4.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@bjorn3/browser_wasi_shim": "^0.4.2",
-    "@geolibre/core": "*",
+    "@geoint/core": "*",
     "@turf/area": "^7.3.5",
     "@turf/bbox": "^7.3.5",
     "@turf/boolean-contains": "^7.3.5",

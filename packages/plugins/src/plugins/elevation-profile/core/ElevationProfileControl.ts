@@ -24,12 +24,12 @@ import type {
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
-const SOURCE_LINE = "geolibre-elevation-profile-line";
-const SOURCE_VERTICES = "geolibre-elevation-profile-vertices";
-const SOURCE_HOVER = "geolibre-elevation-profile-hover";
-const LAYER_LINE = "geolibre-elevation-profile-line-layer";
-const LAYER_VERTICES = "geolibre-elevation-profile-vertices-layer";
-const LAYER_HOVER = "geolibre-elevation-profile-hover-layer";
+const SOURCE_LINE = "geoint-elevation-profile-line";
+const SOURCE_VERTICES = "geoint-elevation-profile-vertices";
+const SOURCE_HOVER = "geoint-elevation-profile-hover";
+const LAYER_LINE = "geoint-elevation-profile-line-layer";
+const LAYER_VERTICES = "geoint-elevation-profile-vertices-layer";
+const LAYER_HOVER = "geoint-elevation-profile-hover-layer";
 
 const LINE_COLOR = "#f97316";
 const HOVER_COLOR = "#ef4444";
@@ -71,7 +71,7 @@ const pointCollection = (coords: LngLat[]): FeatureCollection<Point> => ({
  * A MapLibre control that draws a line on the map and charts the elevation
  * profile along it, sampling elevations from the Open-Meteo API.
  *
- * Implements {@link DeepLinkConsumer} so GeoLibre can restore a shared line from
+ * Implements {@link DeepLinkConsumer} so GeoInt can restore a shared line from
  * a URL parameter, and exposes {@link getState}/{@link setState} for project
  * persistence.
  */
@@ -213,7 +213,7 @@ export class ElevationProfileControl implements IControl, DeepLinkConsumer {
   }
 
   /**
-   * Merge new state and reflect it in the UI and map. Used by GeoLibre to
+   * Merge new state and reflect it in the UI and map. Used by GeoInt to
    * restore project state.
    *
    * @param newState - Partial state to apply

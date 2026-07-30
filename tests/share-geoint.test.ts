@@ -8,14 +8,14 @@ import {
   resolveShareBaseUrl,
   ShareUploadError,
   uploadProjectToShare,
-} from "../apps/geolibre-desktop/src/lib/share-geolibre";
+} from "../apps/geolibre-desktop/src/lib/share-geoint";
 
 const PROJECT_DTO = {
   username: "giswqs",
   slug: "my-map",
   projectUrl: "https://share.geolibre.app/giswqs/my-map",
-  viewerUrl: "https://web.geolibre.app/?url=https://share.geolibre.app/giswqs/my-map.geolibre.json",
-  rawJsonUrl: "https://share.geolibre.app/giswqs/my-map.geolibre.json",
+  viewerUrl: "https://web.geolibre.app/?url=https://share.geolibre.app/giswqs/my-map.geoint.json",
+  rawJsonUrl: "https://share.geolibre.app/giswqs/my-map.geoint.json",
 };
 
 function fakeFetch(
@@ -36,7 +36,7 @@ function fakeFetch(
 
 const baseArgs = {
   token: "glb_secrettoken",
-  filename: "my-map.geolibre.json",
+  filename: "my-map.geoint.json",
   content: '{"version":"1.0.0"}',
   visibility: "unlisted" as const,
   baseUrl: "https://share.geolibre.app",
@@ -109,7 +109,7 @@ describe("uploadProjectToShare", () => {
     assert.equal(headers.Authorization, "Bearer glb_secrettoken");
     assert.equal(headers["Content-Type"], "application/json");
     assert.deepEqual(JSON.parse(calls[0].init.body as string), {
-      filename: "my-map.geolibre.json",
+      filename: "my-map.geoint.json",
       content: '{"version":"1.0.0"}',
       visibility: "unlisted",
     });
@@ -205,7 +205,7 @@ describe("uploadProjectToShare", () => {
     const { fn } = fakeFetch(201, {
       project: {
         projectUrl: "https://share.geolibre.app/user/project",
-        rawJsonUrl: "https://share.geolibre.app/user/project.geolibre.json",
+        rawJsonUrl: "https://share.geolibre.app/user/project.geoint.json",
       },
     });
     const result = await uploadProjectToShare({ ...baseArgs, fetchImpl: fn });

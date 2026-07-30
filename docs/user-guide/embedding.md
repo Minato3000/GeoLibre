@@ -1,28 +1,28 @@
 # Embedding & Sharing
 
-GeoLibre's browser build can be embedded in any web page and configured through URL query parameters. This is how you turn a shared project into a live, focused map for a website, a report, or a dashboard.
+GeoInt's browser build can be embedded in any web page and configured through URL query parameters. This is how you turn a shared project into a live, focused map for a website, a report, or a dashboard.
 
 ## The live viewer
 
 The browser build is hosted at `https://web.geolibre.app/`. It is a static site deployed on GitHub Pages that runs entirely in your browser: it has no analytics and no server account, and the data you load is processed client-side. Data leaves your browser only when you add a remote URL or explicitly share a project.
 
-Open a public project by passing its `.geolibre.json` URL with the `url` parameter:
+Open a public project by passing its `.geoint.json` URL with the `url` parameter:
 
 ```text
-https://web.geolibre.app/?url=https://share.geolibre.app/giswqs/3d-tiles.geolibre.json
+https://web.geolibre.app/?url=https://share.geolibre.app/giswqs/3d-tiles.geoint.json
 ```
 
 A project URL like this comes from **Project → Share**. See [Projects](projects.md#share).
 
 A chrome-free `maponly` embed shows only the map, as in this shared 3D Tiles project:
 
-![Chrome-free maponly embed of a 3D Tiles project](https://data.geolibre.app/images/geolibre-embed-maponly.webp)
+![Chrome-free maponly embed of a 3D Tiles project](https://data.geolibre.app/images/geoint-embed-maponly.webp)
 
 ## URL parameters
 
 | Parameter    | Example                                                    | Description                                                                                                                           |
 | ------------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `url`        | `url=https://share.geolibre.app/you/project.geolibre.json` | Loads a `.geolibre.json` project from a public URL.                                                                                   |
+| `url`        | `url=https://share.geolibre.app/you/project.geoint.json` | Loads a `.geoint.json` project from a public URL.                                                                                   |
 | `layout`     | `layout=compact`                                           | Compact embed layout: icon-only toolbar buttons and hidden project metadata. `embed` and `iframe` are aliases.                        |
 | `toolbar`    | `toolbar=icons`                                            | Icon-only toolbar buttons without the full compact layout. `icon` and `icon-only` are aliases.                                        |
 | `panels`     | `panels=none`                                              | Hides the Layers, Style, and Attribute table panels. `hidden`, `hide`, and `off` are aliases.                                         |
@@ -35,7 +35,7 @@ A chrome-free `maponly` embed shows only the map, as in this shared 3D Tiles pro
 Parameters combine. For a narrow, chrome-free, dark embed of a shared project:
 
 ```text
-https://web.geolibre.app/?url=https://share.geolibre.app/you/project.geolibre.json&maponly&theme=dark
+https://web.geolibre.app/?url=https://share.geolibre.app/you/project.geoint.json&maponly&theme=dark
 ```
 
 ### Deep-linking a Processing tool
@@ -65,8 +65,8 @@ Drop the viewer into an `<iframe>`:
 
 ```html
 <iframe
-  src="https://web.geolibre.app/?url=https://share.geolibre.app/you/project.geolibre.json&amp;maponly"
-  title="GeoLibre map"
+  src="https://web.geolibre.app/?url=https://share.geolibre.app/you/project.geoint.json&amp;maponly"
+  title="GeoInt map"
   width="100%"
   height="600"
   style="border: 0;"
@@ -92,12 +92,12 @@ image, that is one environment variable:
 
 ```bash
 docker run --rm -p 8080:80 \
-  -e GEOLIBRE_EMBED_ORIGINS="https://portal.example.com,https://erp.example.com" \
+  -e GEOINT_EMBED_ORIGINS="https://portal.example.com,https://erp.example.com" \
   ghcr.io/opengeos/geolibre:latest
 ```
 
 For a static build, bake it in instead:
-`VITE_GEOLIBRE_EMBED_ORIGINS="https://portal.example.com" npm run build`.
+`VITE_GEOINT_EMBED_ORIGINS="https://portal.example.com" npm run build`.
 
 Entries are origins (`scheme://host[:port]`); a trailing path is ignored. `*`
 allows any origin and is only appropriate on a private network. The allowlist is
@@ -119,14 +119,14 @@ Every message, in both directions, is versioned:
 { "v": 1, "type": "setView", "payload": { "center": [-95.7, 37.1], "zoom": 5 } }
 ```
 
-Messages the **app** sends also carry `"source": "geolibre"`, so you can filter
+Messages the **app** sends also carry `"source": "geoint"`, so you can filter
 them out of the other `postMessage` traffic on your page.
 
-### Host to GeoLibre
+### Host to GeoInt
 
 | Type               | Payload                                                    | Effect                                                                             |
 | ------------------ | ---------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `loadProject`      | `{ url }`                                                  | Loads a `.geolibre.json` project without reloading the iframe.                      |
+| `loadProject`      | `{ url }`                                                  | Loads a `.geoint.json` project without reloading the iframe.                      |
 | `setView`          | `{ bbox }` or `{ center, zoom, bearing, pitch, duration }` | Fits a bounding box, or flies the camera to the properties you send.                |
 | `highlightFeature` | `{ layerId, featureId \| featureIds \| filter, fit }`      | Selects and highlights features; `filter` matches properties. `fit` zooms to them.  |
 | `openTool`         | `{ id, params }`                                           | Opens the Processing dialog on a tool, pre-filling `params`. Runtime twin of `?tool=`. |
@@ -135,13 +135,13 @@ Send `{ layerId }` alone to `highlightFeature` to clear the highlight. A request
 that names features (or a filter) but matches none is rejected rather than
 treated as a clear, so a mistyped id does not silently wipe the user's selection.
 Highlighting reads the layer's features from the project, so it applies to vector
-layers GeoLibre holds as GeoJSON, not to ones whose features live only in a tile
+layers GeoInt holds as GeoJSON, not to ones whose features live only in a tile
 source.
 
 Add a `requestId` to any message and the app answers with an `ack` (below)
 reporting whether it worked.
 
-### GeoLibre to host
+### GeoInt to host
 
 | Type                | Payload                                                        | Fires when                                                       |
 | ------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -158,8 +158,8 @@ reporting whether it worked.
 ```html
 <iframe
   id="map"
-  src="https://gis.example.com/?url=https://erp.example.com/fields.geolibre.json&maponly"
-  title="GeoLibre map"
+  src="https://gis.example.com/?url=https://erp.example.com/fields.geoint.json&maponly"
+  title="GeoInt map"
   width="100%"
   height="600"
   style="border: 0"
@@ -175,7 +175,7 @@ reporting whether it worked.
   window.addEventListener("message", (event) => {
     if (event.origin !== APP_ORIGIN) return;
     const message = event.data;
-    if (message?.source !== "geolibre" || message.v !== 1) return;
+    if (message?.source !== "geoint" || message.v !== 1) return;
 
     if (message.type === "ready") {
       // Safe to start sending commands.

@@ -4,19 +4,19 @@ import {
   isHexColor,
   parseJsonExpression,
   styleValue,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerStyle,
   type MarkerShape,
   type VectorRule,
   type VectorStyleStop,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import { detectGeometryProfile, type GeometryProfile } from "./geojson-loader";
 
 /**
  * OGC standardized rendering scale denominator at MapLibre/Web-Mercator zoom 0
  * (a 256px tile, 0.28mm pixel). Scale halves with each zoom level, so
- * `denominator = SCALE_AT_ZOOM_0 / 2**zoom`. Used to translate GeoLibre's zoom
+ * `denominator = SCALE_AT_ZOOM_0 / 2**zoom`. Used to translate GeoInt's zoom
  * window into SLD `Min`/`MaxScaleDenominator` and back. This is the value QGIS
  * and GeoServer use, so the exported scale bounds line up with those tools.
  */
@@ -28,7 +28,7 @@ const MAX_LAYER_ZOOM = DEFAULT_LAYER_STYLE.maxZoom;
 /** Default font family written to exported `TextSymbolizer` labels. */
 const DEFAULT_FONT_FAMILY = "Open Sans";
 
-/** GeoLibre marker shapes that map onto an SLD `WellKnownName`. */
+/** GeoInt marker shapes that map onto an SLD `WellKnownName`. */
 const MARKER_WELL_KNOWN_NAME: Partial<Record<MarkerShape, string>> = {
   circle: "circle",
   square: "square",
@@ -51,17 +51,17 @@ export interface SldExportResult {
 
 /**
  * The layer fields the SLD exporter reads. Kept structural (rather than the full
- * {@link GeoLibreLayer}) so it is easy to unit-test with a minimal fixture.
+ * {@link GeoIntLayer}) so it is easy to unit-test with a minimal fixture.
  */
 export type SldExportableLayer = Pick<
-  GeoLibreLayer,
+  GeoIntLayer,
   "id" | "name" | "type" | "style" | "opacity" | "visible"
 >;
 
 export interface SldExportOptions {
   /**
    * Font family written to exported label (`TextSymbolizer`) fonts. Defaults to
-   * {@link DEFAULT_FONT_FAMILY} (a widely available default); GeoLibre has no
+   * {@link DEFAULT_FONT_FAMILY} (a widely available default); GeoInt has no
    * per-layer font setting, so this is the only place to influence it.
    */
   fontFamily?: string;
@@ -208,7 +208,7 @@ function pointSymbolizer(style: LayerStyle, paint: SymbolPaint, warnings: string
 
   // A plain circle mark takes the layer's real stroke (matching MapLibre's
   // circle-stroke-width, so the width round-trips). A built-in shape marker is
-  // rasterized by GeoLibre with a fixed white halo (drawBuiltinMarker) that
+  // rasterized by GeoInt with a fixed white halo (drawBuiltinMarker) that
   // ignores strokeColor/strokeWidth, so approximate that halo instead.
   const stroke = shapeMarker
     ? `<Stroke>${cssParam("stroke", "#ffffff")}${cssParam(
@@ -385,7 +385,7 @@ function belowFilter(property: string, value: number): string {
 }
 
 /**
- * Translate a GeoLibre rule's MapLibre filter (JSON string) into an
+ * Translate a GeoInt rule's MapLibre filter (JSON string) into an
  * `<ogc:Filter>` body (no wrapper), or null when it uses an operator SLD cannot
  * express. Supports the comparison and logical operators QGIS/GeoServer rules
  * use (`==`, `!=`, `<`, `<=`, `>`, `>=`, `in`, `all`, `any`, `!`).
@@ -523,7 +523,7 @@ function categorizedRules(
 }
 
 /**
- * Build the graduated renderer's rules. GeoLibre's graduated renderer is a
+ * Build the graduated renderer's rules. GeoInt's graduated renderer is a
  * continuous color interpolation, which SLD vector fills cannot express, so the
  * stops are written as discrete class-break rules (`>= vi AND < vi+1`); the
  * exact stop values and colors survive a round-trip.
@@ -738,7 +738,7 @@ function singleRule(
 }
 
 /**
- * Serialize a vector layer's GeoLibre symbology into an OGC SLD 1.0.0 document
+ * Serialize a vector layer's GeoInt symbology into an OGC SLD 1.0.0 document
  * (`StyledLayerDescriptor` with `CssParameter` symbolizers), the interchange
  * format QGIS, GeoServer, MapServer, and ArcGIS speak. The
  * single/categorized/graduated/rule-based renderers map onto SLD rules and

@@ -1,5 +1,5 @@
 name: Bug report
-description: Report unexpected behavior or a possible flaw in GeoLibre.
+description: Report unexpected behavior or a possible flaw in GeoInt.
 title: "[Bug]: "
 labels: ["unconfirmed possible issue"]
 body:
@@ -48,7 +48,7 @@ body:
   - type: input
     id: app
     attributes:
-      label: How are you running GeoLibre?
+      label: How are you running GeoInt?
       description: Web app, desktop app, or Jupyter, plus the version if you know it.
       placeholder: Desktop app v0.x.y / Web (https://geolibre.app) / Jupyter
     validations:

@@ -11,7 +11,7 @@ import {
   serializeProject,
   useAppStore,
   type DashboardWidget,
-} from "@geolibre/core";
+} from "@geoint/core";
 import {
   computeChart,
   chartResultHasData,

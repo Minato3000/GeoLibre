@@ -12,7 +12,7 @@ import type {
   ClientMessage,
   ServerMessage,
 } from "../apps/geolibre-desktop/src/lib/collab-protocol";
-import type { CollaborationParticipant } from "@geolibre/core";
+import type { CollaborationParticipant } from "@geoint/core";
 
 describe("resolveCollabBaseUrl", () => {
   it("accepts a wss host", () => {

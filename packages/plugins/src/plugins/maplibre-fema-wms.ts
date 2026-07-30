@@ -4,8 +4,8 @@ import {
   type FemaWmsControlOptions,
   type FemaWmsEventHandler,
 } from "maplibre-gl-fema-wms";
-import { useAppStore, type GeoLibreLayer } from "@geolibre/core";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import { useAppStore, type GeoIntLayer } from "@geoint/core";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 import {
   createWebServiceStoreSync,
   layerTypeForTiles,
@@ -19,19 +19,19 @@ const SOURCE_KIND = "fema-wms";
 // Matches the control's native source/layer id scheme (`fema-wms-<name>`).
 const NATIVE_ID_PREFIX = "fema-wms-";
 
-let femaWmsPosition: GeoLibreMapControlPosition = "top-left";
+let femaWmsPosition: GeoIntMapControlPosition = "top-left";
 
 const FEMA_WMS_OPTIONS = {
   collapsed: false,
   title: "FEMA NFHL",
   panelWidth: 340,
-  className: "geolibre-fema-wms-control",
+  className: "geoint-fema-wms-control",
 } satisfies Partial<FemaWmsControlOptions>;
 
 let femaWmsControl: FemaWmsControl | null = null;
 let controlEventHandler: FemaWmsEventHandler | null = null;
 
-function layerNameFromStoreLayer(layer: GeoLibreLayer): string | undefined {
+function layerNameFromStoreLayer(layer: GeoIntLayer): string | undefined {
   const fromMetadata = stringMetadata(layer.metadata.femaLayerName);
   if (fromMetadata) return fromMetadata;
   return layer.id.startsWith(NATIVE_ID_PREFIX)
@@ -109,11 +109,11 @@ const femaWmsAdapter: WebServiceAdapter<FemaWmsControl> = {
 
 const femaWmsStoreSync = createWebServiceStoreSync(femaWmsAdapter);
 
-export const maplibreFemaWmsPlugin: GeoLibrePlugin = {
+export const maplibreFemaWmsPlugin: GeoIntPlugin = {
   id: "maplibre-gl-fema-wms",
   name: "FEMA NFHL",
   version: "0.1.2",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     if (!femaWmsControl) {
       femaWmsControl = new FemaWmsControl(getFemaWmsControlOptions());
     }
@@ -126,14 +126,14 @@ export const maplibreFemaWmsPlugin: GeoLibrePlugin = {
     femaWmsStoreSync.attach(femaWmsControl);
     setTimeout(() => femaWmsControl?.expand(), 0);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     if (!femaWmsControl) return;
     femaWmsStoreSync.detach();
     app.removeMapControl(femaWmsControl);
     femaWmsControl = null;
   },
   getMapControlPosition: () => femaWmsPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     femaWmsPosition = position;
     if (!femaWmsControl) return;
     app.removeMapControl(femaWmsControl);

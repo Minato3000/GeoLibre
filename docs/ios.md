@@ -1,6 +1,6 @@
 # iOS
 
-GeoLibre runs as a native iOS app built from the same React codebase via **Tauri
+GeoInt runs as a native iOS app built from the same React codebase via **Tauri
 v2 mobile** — no separate app. The webview UI (WKWebView) is bundled in the app,
 so the shell works offline; map tiles and the heavier engines are fetched on
 demand (same as the desktop and Android builds).
@@ -16,7 +16,7 @@ demand (same as the desktop and Android builds).
 > - **In CI**, the signed job has run green on a `macos-15` runner (Xcode 26.3):
 >   it imported the certificate and profile from the `APPLE_IOS_*` secrets,
 >   archived, exported under manual signing, verified the signature, and
->   published the `geolibre-ios-ipa` artifact.
+>   published the `geoint-ios-ipa` artifact.
 >
 > A first build (version 2.4.0, build 2.4.0) has been uploaded to App Store
 > Connect by hand via Transporter. What has **not** happened: any submission for
@@ -47,12 +47,12 @@ client-side.
 This is the one place iOS differs sharply from Android. Android's geolocation
 plugin declares the runtime permission and the OS shows a generic dialog; **iOS
 terminates the app the instant it requests location if no usage-description
-string is present.** GeoLibre supplies it in
+string is present.** GeoInt supplies it in
 `src-tauri/Info.ios.plist`:
 
 ```xml
 <key>NSLocationWhenInUseUsageDescription</key>
-<string>GeoLibre uses your location to center the map, capture GPS points during Field Collection, and record GPS tracks.</string>
+<string>GeoInt uses your location to center the map, capture GPS points during Field Collection, and record GPS tracks.</string>
 ```
 
 Tauri merges `Info.ios.plist` into the generated
@@ -133,7 +133,7 @@ npx tauri ios build --no-sign          # unsigned .ipa + .xcarchive (no Apple ac
 >   -exportPath "$G/build/appstore"
 > ```
 >
-> This produces a genuinely submittable `build/appstore/GeoLibre.ipa`: signed by
+> This produces a genuinely submittable `build/appstore/GeoInt.ipa`: signed by
 > `Apple Distribution`, `get-task-allow=false`, entitlement
 > `<TEAM>.org.geolibre.app`, and an embedded *iOS Team Store Provisioning
 > Profile*. Verify with `codesign -dvvv` before uploading.
@@ -145,10 +145,10 @@ npx tauri ios build --no-sign          # unsigned .ipa + .xcarchive (no Apple ac
 - `gen/apple` is generated (git-ignored) and regenerated on demand. `init` also
   merges `tauri.ios.conf.json` (bundle id, drops the Python backend) and
   `Info.ios.plist` (the location string).
-- The app is named **GeoLibre** on iOS (the desktop build is "GeoLibre Desktop")
+- The app is named **GeoInt** on iOS (the desktop build is "GeoInt Desktop")
   and uses the bundle id **`org.geolibre.app`**, both set via
   `src-tauri/tauri.ios.conf.json` — the same override pattern and reasoning as
-  Android (`identifier` in `tauri.conf.json` stays `org.geolibre.desktop` so it
+  Android (`identifier` in `tauri.conf.json` stays `org.geoint.desktop` so it
   keeps keying desktop settings and the Linux/macOS packaging).
 - Verify the location string landed after a build:
 
@@ -163,7 +163,7 @@ npx tauri ios build --no-sign          # unsigned .ipa + .xcarchive (no Apple ac
   directory are named from the **Cargo package** (`geolibre-desktop` in
   `src-tauri/Cargo.toml`), not from `productName`. The user-visible app name and
   bundle id still come from `tauri.ios.conf.json` — they land as `PRODUCT_NAME:
-  GeoLibre` and `PRODUCT_BUNDLE_IDENTIFIER: org.geolibre.app` in the generated
+  GeoInt` and `PRODUCT_BUNDLE_IDENTIFIER: org.geolibre.app` in the generated
   `project.yml`.
 
 ## Signing
@@ -204,7 +204,7 @@ not free to choose — see the Xcode floor below.
 - **With Apple signing secrets set**, it imports the identity into a throwaway
   keychain, archives **unsigned**, exports a signed `.ipa` under manual signing,
   verifies the bundle id and the signature, and uploads it as the
-  `geolibre-ios-ipa` artifact:
+  `geoint-ios-ipa` artifact:
   - `APPLE_IOS_CERTIFICATE_BASE64` — `base64 -i dist.p12`
   - `APPLE_IOS_CERTIFICATE_PASSWORD`
   - `APPLE_IOS_PROVISIONING_PROFILE_BASE64` — `base64 -i profile.mobileprovision`
@@ -238,7 +238,7 @@ add an Apple Distribution certificate and an App Store provisioning profile for
 > This has been verified on a runner — a `workflow_dispatch` run with
 > `export_method: app-store-connect` completed green, reporting
 > `IPA ... bundle id org.geolibre.app, signed by Apple Distribution` and
-> publishing the `geolibre-ios-ipa` artifact. What remains unexercised is the
+> publishing the `geoint-ios-ipa` artifact. What remains unexercised is the
 > **release-triggered** entry point (the job has only been started manually) and
 > everything downstream of the artifact: no build has been uploaded to App Store
 > Connect.
@@ -286,12 +286,12 @@ onboarding.
 1. **App record.** In App Store Connect, create a new app with the bundle id
    `org.geolibre.app` (register the app id in the Developer portal first).
 2. **Minimum Functionality (Guideline 4.2).** Apple rejects apps that are "a
-   repackaged website." GeoLibre passes because it's a bundled native app with
+   repackaged website." GeoInt passes because it's a bundled native app with
    real device integration — GPS, offline-capable map workspace, local file
    handling — not a wrapper that loads a remote URL. Keep it that way: ship the
    web assets in the binary (the default here), don't point the webview at
    `geolibre.app`.
-3. **Upload** the `.ipa` from the `geolibre-ios-ipa` CI artifact (or via
+3. **Upload** the `.ipa` from the `geoint-ios-ipa` CI artifact (or via
    Transporter / Xcode Organizer) to a TestFlight build, then submit that build
    for App Store review.
 
@@ -338,7 +338,7 @@ onboarding.
    the question unanswered cannot be submitted or sent to testers ("Missing
    Compliance"). Declaring it in the plist answers it once, at build time.
 
-   `false` asserts that GeoLibre's use of encryption stays limited to what Apple
+   `false` asserts that GeoInt's use of encryption stays limited to what Apple
    treats as exempt — HTTPS/TLS via the system libraries for tiles, geocoding,
    the AI assistant, cloud catalogs, and the collaboration relay — and that the
    app ships no cryptography of its own. That holds today, but it is a **legal

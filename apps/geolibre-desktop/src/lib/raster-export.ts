@@ -1,4 +1,4 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 
 import { saveBinaryFileWithFallback } from "./tauri-io";
 import { fetchableUrl } from "./url-utils";
@@ -13,7 +13,7 @@ import { fetchableUrl } from "./url-utils";
  * @param layer - The raster store layer.
  * @returns A URL whose bytes are a single GeoTIFF/COG, or null.
  */
-export function rasterExportUrl(layer: GeoLibreLayer): string | null {
+export function rasterExportUrl(layer: GeoIntLayer): string | null {
   const src = layer.source as Record<string, unknown>;
   return fetchableUrl(layer.metadata.localBytesUrl) ?? fetchableUrl(src.url);
 }
@@ -24,7 +24,7 @@ export function rasterExportUrl(layer: GeoLibreLayer): string | null {
  * @param layer - The layer to test.
  * @returns True for raster/COG layers backed by a downloadable file.
  */
-export function canExportRasterLayer(layer: GeoLibreLayer): boolean {
+export function canExportRasterLayer(layer: GeoIntLayer): boolean {
   return (layer.type === "cog" || layer.type === "raster") && rasterExportUrl(layer) !== null;
 }
 
@@ -39,7 +39,7 @@ export function canExportRasterLayer(layer: GeoLibreLayer): boolean {
  * @throws If the raster has no downloadable source or its bytes cannot be read.
  */
 export async function exportRasterLayer(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   baseName: string,
 ): Promise<string | null> {
   const url = rasterExportUrl(layer);

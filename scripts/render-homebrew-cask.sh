@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 #
-# Render the Homebrew cask for the GeoLibre desktop app.
+# Render the Homebrew cask for the GeoInt desktop app.
 #
 # The macOS DMGs are signed with an Apple Developer ID certificate and notarized
 # by Apple, so they install and launch without a quarantine workaround.
 #
-# GeoLibre is now published in the official homebrew/homebrew-cask repository
-# (Casks/g/geolibre.rb), which is what users install via `brew install --cask
-# geolibre`. This script renders the cask for the self-hosted tap
-# (opengeos/homebrew-geolibre), which is kept as a fallback and updated by the
+# GeoInt is now published in the official homebrew/homebrew-cask repository
+# (Casks/g/geoint.rb), which is what users install via `brew install --cask
+# geoint`. This script renders the cask for the self-hosted tap
+# (opengeos/homebrew-geoint), which is kept as a fallback and updated by the
 # release workflow. See scripts/render-official-cask.sh for the official cask.
 #
 # Usage:
 #   VERSION=1.2.0 \
-#   SHA256_ARM=<sha256 of GeoLibre.Desktop_<version>_aarch64.dmg> \
-#   SHA256_INTEL=<sha256 of GeoLibre.Desktop_<version>_x64.dmg> \
-#   scripts/render-homebrew-cask.sh > Casks/geolibre.rb
+#   SHA256_ARM=<sha256 of GeoInt.Desktop_<version>_aarch64.dmg> \
+#   SHA256_INTEL=<sha256 of GeoInt.Desktop_<version>_x64.dmg> \
+#   scripts/render-homebrew-cask.sh > Casks/geoint.rb
 #
 # All three variables are required. The rendered cask is written to stdout.
 set -euo pipefail
@@ -33,34 +33,34 @@ set -euo pipefail
 REPO="${REPO:-opengeos/GeoLibre}"
 
 cat <<RUBY
-cask "geolibre" do
+cask "geoint" do
   version "${VERSION}"
 
   on_arm do
     sha256 "${SHA256_ARM}"
 
-    url "https://github.com/${REPO}/releases/download/v#{version}/GeoLibre.Desktop_#{version}_aarch64.dmg",
+    url "https://github.com/${REPO}/releases/download/v#{version}/GeoInt.Desktop_#{version}_aarch64.dmg",
         verified: "github.com/${REPO}/"
   end
   on_intel do
     sha256 "${SHA256_INTEL}"
 
-    url "https://github.com/${REPO}/releases/download/v#{version}/GeoLibre.Desktop_#{version}_x64.dmg",
+    url "https://github.com/${REPO}/releases/download/v#{version}/GeoInt.Desktop_#{version}_x64.dmg",
         verified: "github.com/${REPO}/"
   end
 
-  name "GeoLibre Desktop"
+  name "GeoInt Desktop"
   desc "Lightweight, cloud-native GIS platform"
   homepage "https://geolibre.app/"
 
-  app "GeoLibre Desktop.app"
+  app "GeoInt Desktop.app"
 
   zap trash: [
-    "~/Library/Application Support/org.geolibre.desktop",
-    "~/Library/Caches/org.geolibre.desktop",
-    "~/Library/Preferences/org.geolibre.desktop.plist",
-    "~/Library/Saved Application State/org.geolibre.desktop.savedState",
-    "~/Library/WebKit/org.geolibre.desktop",
+    "~/Library/Application Support/org.geoint.desktop",
+    "~/Library/Caches/org.geoint.desktop",
+    "~/Library/Preferences/org.geoint.desktop.plist",
+    "~/Library/Saved Application State/org.geoint.desktop.savedState",
+    "~/Library/WebKit/org.geoint.desktop",
   ]
 end
 RUBY

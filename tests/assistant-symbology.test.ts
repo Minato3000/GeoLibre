@@ -1,11 +1,11 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import type { Feature } from "geojson";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { buildSymbologyStyle } from "../apps/geolibre-desktop/src/lib/assistant/symbology";
 
 /** Build a minimal point layer carrying the given property values. */
-function layerWith(property: string, values: unknown[]): GeoLibreLayer {
+function layerWith(property: string, values: unknown[]): GeoIntLayer {
   const features: Feature[] = values.map((value) => ({
     type: "Feature",
     geometry: { type: "Point", coordinates: [0, 0] },
@@ -16,7 +16,7 @@ function layerWith(property: string, values: unknown[]): GeoLibreLayer {
     name: "Test layer",
     type: "geojson",
     geojson: { type: "FeatureCollection", features },
-  } as unknown as GeoLibreLayer;
+  } as unknown as GeoIntLayer;
 }
 
 describe("buildSymbologyStyle", () => {

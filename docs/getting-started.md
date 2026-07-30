@@ -1,33 +1,33 @@
 # Getting Started
 
-[![Launch GeoLibre Web](https://img.shields.io/badge/Launch-GeoLibre%20Web-green.svg)](https://web.geolibre.app/)
-[![GeoLibre shared project](https://img.shields.io/badge/GeoLibre-share-green.svg)](https://share.geolibre.app)
-[![GeoLibre plugins](https://img.shields.io/badge/GeoLibre-plugins-green.svg)](https://plugins.geolibre.app)
-[![image](https://img.shields.io/pypi/v/geolibre.svg)](https://pypi.python.org/pypi/geolibre)
+[![Launch GeoInt Web](https://img.shields.io/badge/Launch-GeoInt%20Web-green.svg)](https://web.geolibre.app/)
+[![GeoInt shared project](https://img.shields.io/badge/GeoInt-share-green.svg)](https://share.geolibre.app)
+[![GeoInt plugins](https://img.shields.io/badge/GeoInt-plugins-green.svg)](https://plugins.geolibre.app)
+[![image](https://img.shields.io/pypi/v/geoint.svg)](https://pypi.python.org/pypi/geolibre)
 [![image](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/opengeos/GeoLibre/blob/main/python/examples/getting-started.ipynb)
 [![image](https://img.shields.io/conda/vn/conda-forge/geolibre.svg)](https://anaconda.org/conda-forge/geolibre)
-[![Conda Recipe](https://img.shields.io/badge/recipe-geolibre-green.svg)](https://github.com/conda-forge/geolibre-feedstock)
+[![Conda Recipe](https://img.shields.io/badge/recipe-geoint-green.svg)](https://github.com/conda-forge/geolibre-feedstock)
 [![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox)](https://codesandbox.io/p/github/opengeos/geolibre)
-[![Microsoft Store](https://img.shields.io/badge/Microsoft%20Store-GeoLibre-0078D4?logo=windows)](https://apps.microsoft.com/detail/9nwt67rv531x)
-[![Google Play](https://img.shields.io/badge/Google%20Play-GeoLibre-01875F?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=org.geolibre.app)
-[![AUR version](https://img.shields.io/aur/version/geolibre-bin?logo=archlinux&label=AUR)](https://aur.archlinux.org/packages/geolibre-bin)
-[![FlatPark](https://img.shields.io/badge/FlatPark-GeoLibre-4A90D9?logo=flatpak)](https://flatpark.org/apps/app.geolibre.GeoLibre/)
+[![Microsoft Store](https://img.shields.io/badge/Microsoft%20Store-GeoInt-0078D4?logo=windows)](https://apps.microsoft.com/detail/9nwt67rv531x)
+[![Google Play](https://img.shields.io/badge/Google%20Play-GeoInt-01875F?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=org.geolibre.app)
+[![AUR version](https://img.shields.io/aur/version/geoint-bin?logo=archlinux&label=AUR)](https://aur.archlinux.org/packages/geoint-bin)
+[![FlatPark](https://img.shields.io/badge/FlatPark-GeoInt-4A90D9?logo=flatpak)](https://flatpark.org/apps/app.geoint.GeoInt/)
 [![image](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20785400.svg)](https://doi.org/10.5281/zenodo.20785400)
 
-GeoLibre is a free and open-source, lightweight, cloud-native GIS platform for visualizing, exploring, and analyzing geospatial data. It runs everywhere you do, in the web browser, on the desktop, on mobile, and inside Jupyter notebooks, all while keeping your data local and private.
+GeoInt is a free and open-source, lightweight, cloud-native GIS platform for visualizing, exploring, and analyzing geospatial data. It runs everywhere you do, in the web browser, on the desktop, on mobile, and inside Jupyter notebooks, all while keeping your data local and private.
 
-This page helps you start using GeoLibre. If you want to contribute to GeoLibre or run it from source, jump to [Run from source](#run-from-source) below or read the [Contributing](contributing.md) guide.
+This page helps you start using GeoInt. If you want to contribute to GeoInt or run it from source, jump to [Run from source](#run-from-source) below or read the [Contributing](contributing.md) guide.
 
-## Use GeoLibre
+## Use GeoInt
 
-Pick whichever fits how you work. The same app ships in every form, so projects and `.geolibre.json` files move between them.
+Pick whichever fits how you work. The same app ships in every form, so projects and `.geoint.json` files move between them.
 
 ### On the web
 
-GeoLibre Web is the full app running in your browser, with nothing to install. It keeps your data local and private, processing everything client-side in your browser session.
+GeoInt Web is the full app running in your browser, with nothing to install. It keeps your data local and private, processing everything client-side in your browser session.
 
-[Launch GeoLibre Web](https://web.geolibre.app/){ .md-button .md-button--primary }
+[Launch GeoInt Web](https://web.geolibre.app/){ .md-button .md-button--primary }
 
 You can load browser-selected vector data supported by DuckDB-WASM Spatial, drag GeoTIFF/COG rasters onto the map, add URL-based services and datasets (XYZ, WMS, GeoJSON, vector tiles, COG, ArcGIS, FlatGeobuf, PMTiles, Zarr, LiDAR, and Gaussian splats), style layers, and test plugins. Desktop-only file dialogs, local MBTiles, local raster file reads, and project save/open need the desktop app.
 
@@ -39,36 +39,36 @@ The desktop app adds local filesystem dialogs, local MBTiles, local raster file 
 
 ### In Jupyter
 
-The [`geolibre`](python.md) Python package embeds the full GeoLibre app in a Jupyter notebook and drives the map through an expanded leafmap-style API that syncs both ways, so UI edits read back from Python.
+The [`geoint`](python.md) Python package embeds the full GeoInt app in a Jupyter notebook and drives the map through an expanded leafmap-style API that syncs both ways, so UI edits read back from Python.
 
 ```bash
-pip install geolibre
+pip install geoint
 ```
 
 Or install it from conda-forge:
 
 ```bash
-conda install -c conda-forge geolibre
+conda install -c conda-forge geoint
 ```
 
 See the [Python Package](python.md) reference to get started.
 
 ### On Android
 
-GeoLibre ships as a native Android app built from the same codebase, with a responsive touch layout for phones. Install it from Google Play and it updates automatically:
+GeoInt ships as a native Android app built from the same codebase, with a responsive touch layout for phones. Install it from Google Play and it updates automatically:
 
-[Get GeoLibre on Google Play](https://play.google.com/store/apps/details?id=org.geolibre.app){ .md-button .md-button--primary }
+[Get GeoInt on Google Play](https://play.google.com/store/apps/details?id=org.geolibre.app){ .md-button .md-button--primary }
 
 Signed APKs are also attached to each [GitHub release](https://github.com/opengeos/GeoLibre/releases) if you prefer to sideload. See [Android](android.md) for what runs on mobile, sideloading instructions, and build details.
 
 ## Video tutorials
 
-- [GeoLibre 1.0: A Free, Open-Source Cloud-Native GIS That Runs Anywhere (Browser, Desktop & Jupyter)](https://youtu.be/87Cm0QagtxI)
-- [Geoprocessing in the Browser: 700+ Free GIS Tools in GeoLibre, Zero Install](https://youtu.be/W32bIQO_nG8)
+- [GeoInt 1.0: A Free, Open-Source Cloud-Native GIS That Runs Anywhere (Browser, Desktop & Jupyter)](https://youtu.be/87Cm0QagtxI)
+- [Geoprocessing in the Browser: 700+ Free GIS Tools in GeoInt, Zero Install](https://youtu.be/W32bIQO_nG8)
 
 ## Run from source
 
-This section is for contributors and developers who want to clone GeoLibre and run it locally. Most users do not need it. For the full development workflow, project layout, and quality gate, see the [Contributing](contributing.md) guide. GeoLibre is an npm workspaces monorepo: the main app lives in `apps/geolibre-desktop` and is built with Tauri, React, TypeScript, and MapLibre GL JS.
+This section is for contributors and developers who want to clone GeoInt and run it locally. Most users do not need it. For the full development workflow, project layout, and quality gate, see the [Contributing](contributing.md) guide. GeoInt is an npm workspaces monorepo: the main app lives in `apps/geolibre-desktop` and is built with Tauri, React, TypeScript, and MapLibre GL JS.
 
 ### Prerequisites
 
@@ -80,7 +80,7 @@ This section is for contributors and developers who want to clone GeoLibre and r
 
 ```bash
 git clone https://github.com/opengeos/GeoLibre.git
-cd GeoLibre
+cd GeoInt
 npm install
 ```
 
@@ -91,7 +91,7 @@ Bun users can run `bun install`. The root `trustedDependencies` list allows the 
 To update an existing source checkout to the latest version, pull the changes, reinstall dependencies (in case `package.json` changed), and rebuild:
 
 ```bash
-cd /path/to/GeoLibre   # your GeoLibre checkout
+cd /path/to/GeoInt   # your GeoInt checkout
 git pull origin main
 npm install            # or: bun install
 ```
@@ -110,11 +110,11 @@ Desktop filesystem dialogs, local MBTiles, local raster file reads, project save
 
 ### Run with Docker
 
-The repository includes a Dockerfile for the browser version of GeoLibre. It builds the Vite app and serves the production files with nginx:
+The repository includes a Dockerfile for the browser version of GeoInt. It builds the Vite app and serves the production files with nginx:
 
 ```bash
-docker build -t geolibre .
-docker run --rm -p 8080:80 geolibre
+docker build -t geoint .
+docker run --rm -p 8080:80 geoint
 ```
 
 Open `http://localhost:8080`. The containerized browser UI supports web-capable workflows, but desktop filesystem dialogs, local MBTiles, local raster file reads, project save/open, and other Tauri-only features require the desktop app.
@@ -144,7 +144,7 @@ the **Whitebox** toolbox — both run client-side on DuckDB-WASM and
 
 Sidecar jobs read and write **paths on the sidecar's own filesystem** — a
 browser cannot hand the container an absolute host path — and those reads and
-writes are confined to `GEOLIBRE_CONVERSION_ROOTS` (default `/data` in the
+writes are confined to `GEOINT_CONVERSION_ROOTS` (default `/data` in the
 image). Mount your files there:
 
 ```bash
@@ -156,23 +156,23 @@ installed on **amd64 only**; on arm64 the sidecar reports those tools
 unavailable. This does not affect the browser's own PMTiles and Whitebox
 engines, which are WebAssembly and run on any architecture.
 
-Set `GEOLIBRE_DISABLE_SIDECAR=1` to run nginx only (web-only behavior):
+Set `GEOINT_DISABLE_SIDECAR=1` to run nginx only (web-only behavior):
 
 ```bash
-docker run --rm -p 8080:80 -e GEOLIBRE_DISABLE_SIDECAR=1 ghcr.io/opengeos/geolibre:latest
+docker run --rm -p 8080:80 -e GEOINT_DISABLE_SIDECAR=1 ghcr.io/opengeos/geolibre:latest
 ```
 
 #### Password protection (optional)
 
-To require a username and password, set `GEOLIBRE_AUTH_USER` and
-`GEOLIBRE_AUTH_PASSWORD`; nginx then protects the app and the `/sidecar` API
+To require a username and password, set `GEOINT_AUTH_USER` and
+`GEOINT_AUTH_PASSWORD`; nginx then protects the app and the `/sidecar` API
 with HTTP Basic Auth (a single shared credential). Pair it with a
 TLS-terminating reverse proxy outside trusted networks:
 
 ```bash
 docker run --rm -p 8080:80 \
-  -e GEOLIBRE_AUTH_USER=admin \
-  -e GEOLIBRE_AUTH_PASSWORD='change-me' \
+  -e GEOINT_AUTH_USER=admin \
+  -e GEOINT_AUTH_PASSWORD='change-me' \
   ghcr.io/opengeos/geolibre:latest
 ```
 
@@ -180,33 +180,33 @@ To let authenticated users access the managed AI proxy without exposing its
 server token, route AI requests through the same nginx instance:
 
 ```bash
-export GEOLIBRE_AI_PROXY_TOKEN="$(openssl rand -hex 32)"
+export GEOINT_AI_PROXY_TOKEN="$(openssl rand -hex 32)"
 cd workers/ai-proxy
-printf '%s' "$GEOLIBRE_AI_PROXY_TOKEN" |
-  npx wrangler secret put GEOLIBRE_AI_PROXY_TOKEN
+printf '%s' "$GEOINT_AI_PROXY_TOKEN" |
+  npx wrangler secret put GEOINT_AI_PROXY_TOKEN
 cd ../..
 
 docker run --rm -p 8080:80 \
-  -e GEOLIBRE_AUTH_USER=admin \
-  -e GEOLIBRE_AUTH_PASSWORD='change-me' \
-  -e GEOLIBRE_AI_URL=/ai \
-  -e GEOLIBRE_AI_MODEL=openai/gpt-5.5 \
-  -e GEOLIBRE_AI_PROXY_URL=https://ai.geolibre.app \
-  -e GEOLIBRE_AI_PROXY_TOKEN="$GEOLIBRE_AI_PROXY_TOKEN" \
+  -e GEOINT_AUTH_USER=admin \
+  -e GEOINT_AUTH_PASSWORD='change-me' \
+  -e GEOINT_AI_URL=/ai \
+  -e GEOINT_AI_MODEL=openai/gpt-5.5 \
+  -e GEOINT_AI_PROXY_URL=https://ai.geolibre.app \
+  -e GEOINT_AI_PROXY_TOKEN="$GEOINT_AI_PROXY_TOKEN" \
   ghcr.io/opengeos/geolibre:latest
 ```
 
-The proxy token must match the `GEOLIBRE_AI_PROXY_TOKEN` Worker secret. nginx
+The proxy token must match the `GEOINT_AI_PROXY_TOKEN` Worker secret. nginx
 injects it server-side and it never appears in frontend configuration. Direct
 inference calls to `ai.geolibre.app` without the token return `401`. If
-`GEOLIBRE_AI_URL` is unset, the image leaves the managed proxy disabled. Use
+`GEOINT_AI_URL` is unset, the image leaves the managed proxy disabled. Use
 HTTPS and prefer an `--env-file` or secrets manager.
 
 Enabling the proxy does not by itself restrict who may use it: whoever can
 reach `/ai` on the container spends against your Cloudflare account. Set
-`GEOLIBRE_AUTH_USER`/`GEOLIBRE_AUTH_PASSWORD` as above, or put your own
+`GEOINT_AUTH_USER`/`GEOINT_AUTH_PASSWORD` as above, or put your own
 authentication in front, before exposing an AI-enabled instance. If a TLS proxy
-fronts the container, list its address in `GEOLIBRE_TRUSTED_PROXIES` (a
+fronts the container, list its address in `GEOINT_TRUSTED_PROXIES` (a
 comma-separated list of IPs or CIDRs) so per-client rate limiting sees the real
 client rather than counting every user as the proxy.
 
@@ -232,16 +232,16 @@ publicly.
 For deployments under a URL subpath, pass the app base at build time:
 
 ```bash
-docker build --build-arg GEOLIBRE_APP_BASE=/geolibre/ -t geolibre .
+docker build --build-arg GEOINT_APP_BASE=/geoint/ -t geoint .
 ```
 
-The container always serves the app from its root path. The build argument only sets the URL prefix that the app expects, so subpath deployments also require a reverse proxy in front of the container that strips the prefix before forwarding requests (for example, nginx `proxy_pass http://geolibre/;` with a trailing slash).
+The container always serves the app from its root path. The build argument only sets the URL prefix that the app expects, so subpath deployments also require a reverse proxy in front of the container that strips the prefix before forwarding requests (for example, nginx `proxy_pass http://geoint/;` with a trailing slash).
 
 To skip the first-launch welcome wizard for every visitor (kiosk or embedded
 deployments), bake `VITE_WELCOME_DISABLED=1` into the build:
 
 ```bash
-docker build --build-arg VITE_WELCOME_DISABLED=1 -t geolibre .
+docker build --build-arg VITE_WELCOME_DISABLED=1 -t geoint .
 ```
 
 Individual links can also opt out at runtime with `?welcome=0`. See
@@ -255,7 +255,7 @@ view, and tool events), list the origins you trust:
 
 ```bash
 docker run --rm -p 8080:80 \
-  -e GEOLIBRE_EMBED_ORIGINS="https://portal.example.com" \
+  -e GEOINT_EMBED_ORIGINS="https://portal.example.com" \
   ghcr.io/opengeos/geolibre:latest
 ```
 
@@ -392,7 +392,7 @@ uvicorn geolibre_server.app.main:app --host 127.0.0.1 --port 8765
 ```
 
 The sidecar self-bootstraps a managed runtime on first use; set
-`GEOLIBRE_CONVERSION_PYTHON=$(which python)` to reuse the current environment
+`GEOINT_CONVERSION_PYTHON=$(which python)` to reuse the current environment
 instead. See the
 [sidecar README](https://github.com/opengeos/GeoLibre/blob/main/backend/geolibre_server/README.md)
 for details.
@@ -400,7 +400,7 @@ for details.
 ### Optional extras
 
 The base install is deliberately small. Each group of tools has its own extra;
-install only the ones you need, then run `geolibre-server` (or the `uvicorn`
+install only the ones you need, then run `geoint-server` (or the `uvicorn`
 command above). These continue from `backend/geolibre_server`, the directory the
 snippet above changes into:
 

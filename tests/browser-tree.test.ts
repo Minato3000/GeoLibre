@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { RecentProjectEntry } from "@geolibre/core";
+import type { RecentProjectEntry } from "@geoint/core";
 import {
   augmentConnections,
   augmentFolders,
@@ -37,8 +37,8 @@ function service(
 }
 
 const RECENT: RecentProjectEntry[] = [
-  { path: "/a/one.geolibre.json", name: "One", openedAt: "2026-01-02" },
-  { path: "/a/two.geolibre.json", name: "Two", openedAt: "2026-01-01" },
+  { path: "/a/one.geoint.json", name: "One", openedAt: "2026-01-02" },
+  { path: "/a/two.geoint.json", name: "Two", openedAt: "2026-01-01" },
 ];
 
 /** Finds a node by id anywhere in the tree (depth-first). */
@@ -171,9 +171,9 @@ describe("buildBrowserTree", () => {
       recent.children?.map((n) => n.label),
       ["One", "Two"],
     );
-    const one = find(tree, "recent:/a/one.geolibre.json");
+    const one = find(tree, "recent:/a/one.geoint.json");
     assert.equal(one?.kind, "recent-project");
-    assert.equal(one?.projectPath, "/a/one.geolibre.json");
+    assert.equal(one?.projectPath, "/a/one.geoint.json");
     assert.equal(one?.addable, true);
   });
 });

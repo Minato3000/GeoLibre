@@ -14,7 +14,7 @@ import {
   removeTrailingJsonCommas,
   substituteExpressionVariables,
   validateMapExpression,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { Feature } from "geojson";
 
 const sampleFeature: Feature = {

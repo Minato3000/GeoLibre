@@ -8,7 +8,7 @@
  * `postgis-connections.ts`.
  */
 
-export const POSTGRES_CONNECTIONS_STORAGE_KEY = "geolibre.postgres.connectionStrings";
+export const POSTGRES_CONNECTIONS_STORAGE_KEY = "geoint.postgres.connectionStrings";
 export const MAX_SAVED_POSTGRES_CONNECTIONS = 10;
 
 /**
@@ -16,7 +16,7 @@ export const MAX_SAVED_POSTGRES_CONNECTIONS = 10;
  * views (e.g. the Browser panel's Databases section) can re-read it — the
  * native `storage` event only fires cross-tab.
  */
-export const POSTGRES_CONNECTIONS_CHANGED_EVENT = "geolibre:postgres-connections-changed";
+export const POSTGRES_CONNECTIONS_CHANGED_EVENT = "geoint:postgres-connections-changed";
 
 export function uniquePostgresConnections(connections: string[]): string[] {
   return Array.from(new Set(connections));

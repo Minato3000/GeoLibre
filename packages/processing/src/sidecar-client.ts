@@ -45,7 +45,7 @@ const DEFAULT_SIDECAR_URL = resolveSidecarBaseUrl();
 
 /**
  * Per-launch sidecar auth token. The desktop shell mints it when it spawns the
- * sidecar and hands it back through `start_geolibre_sidecar`; {@link
+ * sidecar and hands it back through `start_geoint_sidecar`; {@link
  * setSidecarAuthToken} stashes it here so {@link sidecarFetch} can attach it to
  * every request. Null in the browser/Docker build, where the same-origin nginx
  * proxy injects the token instead and the sidecar is unreachable directly.
@@ -53,7 +53,7 @@ const DEFAULT_SIDECAR_URL = resolveSidecarBaseUrl();
 let sidecarAuthToken: string | null = null;
 
 /**
- * Record (or clear) the sidecar auth token. Call after `startGeoLibreSidecar()`
+ * Record (or clear) the sidecar auth token. Call after `startGeoIntSidecar()`
  * returns. Passing an empty/nullish value clears it.
  *
  * @param token - The per-launch token from the desktop backend, or null.
@@ -64,7 +64,7 @@ export function setSidecarAuthToken(token: string | null | undefined): void {
 
 /**
  * `fetch` wrapper for sidecar requests that attaches the per-launch auth token
- * (as `X-GeoLibre-Token`) when one is set. Used for every sidecar endpoint call;
+ * (as `X-GeoInt-Token`) when one is set. Used for every sidecar endpoint call;
  * external fetches (e.g. the Whitebox catalog snapshot on GitHub) use plain
  * `fetch` so the token is never sent off-host.
  *
@@ -75,7 +75,7 @@ export function setSidecarAuthToken(token: string | null | undefined): void {
 function sidecarFetch(input: string, init?: RequestInit): Promise<Response> {
   if (!sidecarAuthToken) return fetch(input, init);
   const headers = new Headers(init?.headers);
-  headers.set("X-GeoLibre-Token", sidecarAuthToken);
+  headers.set("X-GeoInt-Token", sidecarAuthToken);
   return fetch(input, { ...init, headers });
 }
 
@@ -135,8 +135,8 @@ export interface WhiteboxTool {
   locked_reason?: string | null;
   params?: WhiteboxToolParameter[];
   return_type?: string;
-  /** Tool provenance: "geolibre" for GeoLibre-authored WASM tools, else unset (Whitebox). */
-  source?: "geolibre";
+  /** Tool provenance: "geoint" for GeoInt-authored WASM tools, else unset (Whitebox). */
+  source?: "geoint";
 }
 
 export interface WhiteboxStatus {
@@ -172,7 +172,7 @@ export interface WhiteboxLayerInput {
  * `"geojson"` (the default) is reprojected to WGS84 (RFC 7946) and returned as a
  * `FeatureCollection` for a map layer; the other formats preserve the tool's
  * target-CRS coordinates and CRS metadata and are returned as bytes to download
- * (a reprojection result would otherwise lose its projection, since GeoLibre and
+ * (a reprojection result would otherwise lose its projection, since GeoInt and
  * MapLibre only render EPSG:4326). Ignored by the Python sidecar.
  */
 export type VectorOutputFormat = "geojson" | "geoparquet" | "flatgeobuf" | "shapefile";
@@ -1100,9 +1100,9 @@ async function responseErrorMessage(response: Response, fallback: string): Promi
 }
 
 function sidecarConnectionError(baseUrl: string, error: unknown): Error {
-  console.debug("GeoLibre sidecar unreachable:", error);
+  console.debug("GeoInt sidecar unreachable:", error);
   return new Error(
-    `Could not connect to the GeoLibre sidecar at ${baseUrl}. ` +
+    `Could not connect to the GeoInt sidecar at ${baseUrl}. ` +
       "Start the sidecar to run processing tools.",
   );
 }

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import {
   getSqlQueryLayerConfig,
   isSqlQueryLayer,
@@ -13,7 +13,7 @@ import { isRefreshableLayer } from "../apps/geolibre-desktop/src/lib/layer-refre
 
 const QUERY = "SELECT NAME, geom FROM countries WHERE POP_EST > 50000000";
 
-function makeLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function makeLayer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id: "layer-1",
     name: "Query result",
@@ -28,7 +28,7 @@ function makeLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
   };
 }
 
-function makeQueryLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function makeQueryLayer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return makeLayer({ metadata: sqlQueryLayerMetadata(QUERY), ...patch });
 }
 

@@ -1,4 +1,4 @@
-import { Button } from "@geolibre/ui";
+import { Button } from "@geoint/ui";
 import { BookOpen, ExternalLink, Loader2, MapPin, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

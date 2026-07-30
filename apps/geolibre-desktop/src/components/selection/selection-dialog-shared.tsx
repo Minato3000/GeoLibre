@@ -1,5 +1,5 @@
-import { type GeoLibreLayer, type SelectionMode, SELECTION_MODES } from "@geolibre/core";
-import { Label, Select, cn } from "@geolibre/ui";
+import { type GeoIntLayer, type SelectionMode, SELECTION_MODES } from "@geoint/core";
+import { Label, Select, cn } from "@geoint/ui";
 import type { ParseKeys } from "i18next";
 import { GripHorizontal, X } from "lucide-react";
 import { useRef, useState, type ReactNode } from "react";
@@ -121,7 +121,7 @@ export function SelectionFloatingPanel({
  * features are present in the store. Matches the highlight/attribute-table
  * model, which resolves selection ids against `layer.geojson`.
  */
-export function selectableVectorLayers(layers: GeoLibreLayer[]): GeoLibreLayer[] {
+export function selectableVectorLayers(layers: GeoIntLayer[]): GeoIntLayer[] {
   return layers.filter((layer) => (layer.geojson?.features?.length ?? 0) > 0);
 }
 

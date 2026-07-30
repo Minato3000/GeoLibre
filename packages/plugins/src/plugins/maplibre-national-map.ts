@@ -4,8 +4,8 @@ import {
   type NationalMapControlEventHandler,
   type NationalMapControlOptions,
 } from "maplibre-gl-national-map";
-import type { GeoLibreLayer } from "@geolibre/core";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntLayer } from "@geoint/core";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 import {
   createWebServiceStoreSync,
   layerTypeForTiles,
@@ -17,13 +17,13 @@ import {
 
 const SOURCE_KIND = "national-map";
 
-let nationalMapPosition: GeoLibreMapControlPosition = "top-left";
+let nationalMapPosition: GeoIntMapControlPosition = "top-left";
 
 const NATIONAL_MAP_OPTIONS = {
   collapsed: false,
   title: "USGS National Map",
   panelWidth: 340,
-  className: "geolibre-national-map-control",
+  className: "geoint-national-map-control",
 } satisfies NationalMapControlOptions;
 
 let nationalMapControl: NationalMapControl | null = null;
@@ -100,7 +100,7 @@ const nationalMapAdapter: WebServiceAdapter<NationalMapControl> = {
         serviceId: stringMetadata(layer.metadata.nationalMapServiceId),
       }))
       .filter(
-        (item): item is { layer: GeoLibreLayer; serviceId: string } =>
+        (item): item is { layer: GeoIntLayer; serviceId: string } =>
           item.serviceId !== undefined && !existingIds.has(item.serviceId),
       );
     if (restorable.length === 0) return;
@@ -123,11 +123,11 @@ const nationalMapAdapter: WebServiceAdapter<NationalMapControl> = {
 
 const nationalMapStoreSync = createWebServiceStoreSync(nationalMapAdapter);
 
-export const maplibreNationalMapPlugin: GeoLibrePlugin = {
+export const maplibreNationalMapPlugin: GeoIntPlugin = {
   id: "maplibre-gl-national-map",
   name: "USGS National Map",
   version: "0.1.1",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     if (!nationalMapControl) {
       nationalMapControl = new NationalMapControl(getNationalMapControlOptions());
     }
@@ -140,14 +140,14 @@ export const maplibreNationalMapPlugin: GeoLibrePlugin = {
     nationalMapStoreSync.attach(nationalMapControl);
     setTimeout(() => nationalMapControl?.expand(), 0);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     if (!nationalMapControl) return;
     nationalMapStoreSync.detach();
     app.removeMapControl(nationalMapControl);
     nationalMapControl = null;
   },
   getMapControlPosition: () => nationalMapPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     nationalMapPosition = position;
     if (!nationalMapControl) return;
     app.removeMapControl(nationalMapControl);

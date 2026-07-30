@@ -7,7 +7,7 @@ import type {
   Map as MapLibreMap,
 } from "maplibre-gl";
 import proj4, { type Converter } from "proj4";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 
 /**
  * Coordinate graticule plugin.
@@ -25,13 +25,13 @@ export const GRATICULE_PLUGIN_ID = "maplibre-gl-graticule";
  * can detect an active graticule and fit the captured map without cropping
  * (the default crop would trim these edge labels).
  */
-export const GRATICULE_LABEL_LAYER_ID = "geolibre-graticule-labels-layer";
+export const GRATICULE_LABEL_LAYER_ID = "geoint-graticule-labels-layer";
 
-const LINE_SOURCE_ID = "geolibre-graticule-lines-source";
-const LABEL_SOURCE_ID = "geolibre-graticule-labels-source";
-const LINE_LAYER_ID = "geolibre-graticule-lines-layer";
+const LINE_SOURCE_ID = "geoint-graticule-lines-source";
+const LABEL_SOURCE_ID = "geoint-graticule-labels-source";
+const LINE_LAYER_ID = "geoint-graticule-lines-layer";
 const LABEL_LAYER_ID = GRATICULE_LABEL_LAYER_ID;
-const PANEL_ID = "geolibre-graticule-panel";
+const PANEL_ID = "geoint-graticule-panel";
 
 /**
  * User-facing strings for the settings panel and on-map control. This package
@@ -172,7 +172,7 @@ const NICE_METRIC_STEPS = [100000, 50000, 20000, 10000, 5000, 2000, 1000, 500, 2
 
 let settings: GraticuleSettings = { ...DEFAULT_GRATICULE_SETTINGS };
 let map: MapLibreMap | null = null;
-let appRef: GeoLibreAppAPI | null = null;
+let appRef: GeoIntAppAPI | null = null;
 let control: GraticuleControl | null = null;
 let unsubscribeBasemap: (() => void) | null = null;
 let unregisterPanel: (() => void) | null = null;
@@ -881,10 +881,10 @@ class GraticuleControl implements IControl {
 
   onAdd(): HTMLElement {
     const container = document.createElement("div");
-    container.className = "maplibregl-ctrl maplibregl-ctrl-group geolibre-graticule-ctrl";
+    container.className = "maplibregl-ctrl maplibregl-ctrl-group geoint-graticule-ctrl";
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "geolibre-graticule-button";
+    button.className = "geoint-graticule-button";
     button.innerHTML = GRID_ICON_SVG;
     button.addEventListener("click", () => appRef?.openRightPanel?.(PANEL_ID));
     container.appendChild(button);
@@ -935,7 +935,7 @@ function buildPanelBody(container: HTMLElement): void {
   container.innerHTML = "";
   // Tag the panel so the host can theme its native form controls (the host
   // applies `color-scheme: dark` to these in dark mode; see index.css).
-  container.classList.add("geolibre-graticule-panel");
+  container.classList.add("geoint-graticule-panel");
   container.style.padding = "12px";
   container.style.display = "flex";
   container.style.flexDirection = "column";
@@ -1223,11 +1223,11 @@ function isDefaultSettings(value: GraticuleSettings): boolean {
 // Plugin definition
 // ---------------------------------------------------------------------------
 
-export const maplibreGraticulePlugin: GeoLibrePlugin = {
+export const maplibreGraticulePlugin: GeoIntPlugin = {
   id: GRATICULE_PLUGIN_ID,
   name: "Gridlines",
   version: "0.1.0",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     const activeMap = app.getMap?.();
     if (!activeMap) return false;
     map = activeMap;
@@ -1262,7 +1262,7 @@ export const maplibreGraticulePlugin: GeoLibrePlugin = {
     }
     app.openRightPanel?.(PANEL_ID);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     if (moveHandler && map) map.off("moveend", moveHandler);
     moveHandler = null;
     unsubscribeBasemap?.();
@@ -1284,7 +1284,7 @@ export const maplibreGraticulePlugin: GeoLibrePlugin = {
     appRef = null;
   },
   getProjectState: () => (isDefaultSettings(settings) ? undefined : { ...settings }),
-  applyProjectState: (_app: GeoLibreAppAPI, state: unknown) => {
+  applyProjectState: (_app: GeoIntAppAPI, state: unknown) => {
     const next = normalizeGraticuleSettings(state);
     // Skip the redraw when nothing changed (e.g. the host resets a fresh project
     // to defaults that already match what is in memory).

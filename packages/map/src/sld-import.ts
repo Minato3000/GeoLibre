@@ -5,14 +5,14 @@ import {
   type MarkerShape,
   type VectorRule,
   type VectorStyleStop,
-} from "@geolibre/core";
+} from "@geoint/core";
 import { XMLParser } from "fast-xml-parser";
 import { OGC_SCALE_DENOMINATOR_AT_ZOOM_0 } from "./sld-export";
 
 const MIN_LAYER_ZOOM = DEFAULT_LAYER_STYLE.minZoom;
 const MAX_LAYER_ZOOM = DEFAULT_LAYER_STYLE.maxZoom;
 
-/** The `text-anchor` values GeoLibre's {@link LabelStyle.anchor} accepts. */
+/** The `text-anchor` values GeoInt's {@link LabelStyle.anchor} accepts. */
 const VALID_LABEL_ANCHORS = new Set<string>([
   "center",
   "left",
@@ -160,7 +160,7 @@ function paramMap(container: unknown): Map<string, string> {
 }
 
 /**
- * SLD `WellKnownName` values that map back onto a GeoLibre {@link MarkerShape}.
+ * SLD `WellKnownName` values that map back onto a GeoInt {@link MarkerShape}.
  * The inverse of the exporter's `MARKER_WELL_KNOWN_NAME`; `circle` is the plain
  * default and is handled separately (it is not a shape marker).
  */
@@ -388,7 +388,7 @@ function filterLiteral(literal: string): string | number | boolean {
 
 /**
  * Translate a parsed `<ogc:Filter>` body into a MapLibre filter expression, or
- * null when it uses a predicate GeoLibre cannot express. The reverse of
+ * null when it uses a predicate GeoInt cannot express. The reverse of
  * {@link mapboxFilterToOgc}; supports the comparison and logical operators
  * (`PropertyIsEqualTo`/…, `And`, `Or`, `Not`).
  */
@@ -453,7 +453,7 @@ function readLabels(text: XmlNode, warnings: string[]): Partial<LabelStyle> {
   // A TextSymbolizer fully describes the label, so an absent optional element
   // (no <Halo>, <AnchorPoint>, <Displacement>, <Rotation>) means the SLD default,
   // not "keep the target layer's current value". Seed those presentation fields
-  // with the GeoLibre defaults so importing over a styled layer replaces them
+  // with the GeoInt defaults so importing over a styled layer replaces them
   // rather than leaving stale values (e.g. a halo the imported label doesn't have).
   const defaults = DEFAULT_LAYER_STYLE.labels;
   const labels: Partial<LabelStyle> = {
@@ -498,7 +498,7 @@ function readLabels(text: XmlNode, warnings: string[]): Partial<LabelStyle> {
         const dx = toNum(nodeText(point.Displacement.DisplacementX));
         const dy = toNum(nodeText(point.Displacement.DisplacementY));
         if (dx !== null) labels.offsetX = dx;
-        // SLD Y grows upward; GeoLibre offsetY grows downward.
+        // SLD Y grows upward; GeoInt offsetY grows downward.
         if (dy !== null) labels.offsetY = -dy;
       }
       const rotation = toNum(nodeText(point.Rotation));
@@ -637,13 +637,13 @@ function applyPaint(
       patch.markerEnabled = false;
       if (name && name !== "circle") {
         warnings.push(
-          `The "${name}" point mark has no GeoLibre equivalent; it was imported as a circle.`,
+          `The "${name}" point mark has no GeoInt equivalent; it was imported as a circle.`,
         );
       } else if (name === undefined) {
         // The Graphic had no Mark (e.g. an <ExternalGraphic> image/icon marker,
-        // common in QGIS/GeoServer SLDs), which GeoLibre cannot represent.
+        // common in QGIS/GeoServer SLDs), which GeoInt cannot represent.
         warnings.push(
-          "A point graphic (image/icon marker) has no GeoLibre equivalent; it was imported as a circle.",
+          "A point graphic (image/icon marker) has no GeoInt equivalent; it was imported as a circle.",
         );
       }
     }
@@ -659,17 +659,17 @@ interface RenderRule {
 }
 
 /**
- * Parse an OGC SLD document into a GeoLibre symbology patch. Classifies the
- * FeatureTypeStyle's rules into GeoLibre's renderer model:
+ * Parse an OGC SLD document into a GeoInt symbology patch. Classifies the
+ * FeatureTypeStyle's rules into GeoInt's renderer model:
  *
  * - one plain rule ⇒ `single`;
  * - all filters are `PropertyIsEqualTo` on one property ⇒ `categorized`;
  * - all filters are numeric ranges on one property ⇒ `graduated`;
  * - otherwise ⇒ `rule-based` (each filter translated back to a MapLibre filter).
  *
- * Reverses what {@link buildSld} produces (so a GeoLibre export round-trips) and
+ * Reverses what {@link buildSld} produces (so a GeoInt export round-trips) and
  * imports a hand-written or QGIS/GeoServer SLD as far as its symbolizers map onto
- * GeoLibre's model. Anything that cannot be represented is reported in
+ * GeoInt's model. Anything that cannot be represented is reported in
  * {@link SldImportResult.warnings} rather than dropped silently.
  *
  * @param xml The SLD document text.

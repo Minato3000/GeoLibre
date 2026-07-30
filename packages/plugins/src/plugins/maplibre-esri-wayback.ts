@@ -1,4 +1,4 @@
-import { DEFAULT_LAYER_STYLE, useAppStore, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, useAppStore, type GeoIntLayer } from "@geoint/core";
 import {
   DEFAULT_LAYER_ID,
   DEFAULT_SOURCE_ID,
@@ -10,15 +10,15 @@ import {
   type EsriWaybackRelease,
 } from "maplibre-gl-esri-wayback";
 import type { LayerSpecification } from "maplibre-gl";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 
-let esriWaybackPosition: GeoLibreMapControlPosition = "top-left";
+let esriWaybackPosition: GeoIntMapControlPosition = "top-left";
 
 const ESRI_WAYBACK_OPTIONS = {
   collapsed: false,
   title: "Esri Wayback",
   panelWidth: 340,
-  className: "geolibre-esri-wayback-control",
+  className: "geoint-esri-wayback-control",
   metadataOnClick: true,
 } satisfies Omit<EsriWaybackControlOptions, "position">;
 
@@ -26,11 +26,11 @@ let esriWaybackControl: EsriWaybackControl | null = null;
 let releaseChangeHandler: EsriWaybackControlEventHandler | null = null;
 let stateChangeHandler: EsriWaybackControlEventHandler | null = null;
 
-export const maplibreEsriWaybackPlugin: GeoLibrePlugin = {
+export const maplibreEsriWaybackPlugin: GeoIntPlugin = {
   id: "maplibre-gl-esri-wayback",
   name: "Historical Imagery",
   version: "0.2.0",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     if (!esriWaybackControl) {
       esriWaybackControl = new EsriWaybackControl(getEsriWaybackControlOptions());
       attachStoreSync(esriWaybackControl);
@@ -48,7 +48,7 @@ export const maplibreEsriWaybackPlugin: GeoLibrePlugin = {
       syncPersistentWaybackLayers(esriWaybackControl);
     }, 0);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     if (!esriWaybackControl) return;
     detachStoreSync(esriWaybackControl);
     app.removeMapControl(esriWaybackControl);
@@ -56,7 +56,7 @@ export const maplibreEsriWaybackPlugin: GeoLibrePlugin = {
     removeCurrentWaybackStoreLayer();
   },
   getMapControlPosition: () => esriWaybackPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     esriWaybackPosition = position;
     if (!esriWaybackControl) return;
     app.removeMapControl(esriWaybackControl);
@@ -155,7 +155,7 @@ function syncPersistentWaybackLayers(control: EsriWaybackControl | null): void {
   }
 }
 
-function addOrUpdateWaybackStoreLayer(layer: GeoLibreLayer): void {
+function addOrUpdateWaybackStoreLayer(layer: GeoIntLayer): void {
   const store = useAppStore.getState();
   const existingLayer = store.layers.find((item) => item.id === layer.id);
   if (!existingLayer) {
@@ -174,8 +174,8 @@ function addOrUpdateWaybackStoreLayer(layer: GeoLibreLayer): void {
 }
 
 function shouldUpdateWaybackStoreLayer(
-  existingLayer: GeoLibreLayer,
-  nextLayer: GeoLibreLayer,
+  existingLayer: GeoIntLayer,
+  nextLayer: GeoIntLayer,
 ): boolean {
   return (
     existingLayer.name !== nextLayer.name ||
@@ -192,7 +192,7 @@ function removeCurrentWaybackStoreLayer(): void {
   }
 }
 
-function createCurrentWaybackStoreLayer(release: EsriWaybackRelease): GeoLibreLayer {
+function createCurrentWaybackStoreLayer(release: EsriWaybackRelease): GeoIntLayer {
   return createWaybackStoreLayer({
     id: DEFAULT_LAYER_ID,
     name: `Esri Wayback ${release.releaseDateLabel}`,
@@ -206,7 +206,7 @@ function createCurrentWaybackStoreLayer(release: EsriWaybackRelease): GeoLibreLa
 function createPersistentWaybackStoreLayer(
   styleLayer: LayerSpecification,
   release: EsriWaybackRelease | undefined,
-): GeoLibreLayer {
+): GeoIntLayer {
   return createWaybackStoreLayer({
     id: styleLayer.id,
     name: release
@@ -226,7 +226,7 @@ function createWaybackStoreLayer(options: {
   release?: EsriWaybackRelease;
   sourceId: string;
   sourceKind: "esri-wayback-current" | "esri-wayback-persistent";
-}): GeoLibreLayer {
+}): GeoIntLayer {
   return {
     id: options.id,
     name: options.name,

@@ -3,7 +3,7 @@ import type maplibregl from "maplibre-gl";
 /**
  * Lazily-generated MapLibre sprite images (fill-pattern tiles and marker icons).
  *
- * GeoLibre has no static sprite sheet, so recolorable pattern/marker images are
+ * GeoInt has no static sprite sheet, so recolorable pattern/marker images are
  * drawn on a canvas on demand. A layer references an image by a deterministic id
  * (which encodes everything needed to regenerate it: shape/pattern + color +
  * size). When MapLibre cannot find that id it fires `styleimagemissing`; the
@@ -47,7 +47,7 @@ const warnedRemoteSvgSources = new Set<string>();
  *
  * Remote `http(s):` URLs are supported intentionally (custom marker/pattern
  * SVGs) but trigger a cross-origin request when rendered. Because a shared
- * `.geolibre.json` can carry such a URL, we log a one-time warning so the
+ * `.geoint.json` can carry such a URL, we log a one-time warning so the
  * outbound request is visible; prefer inline `<svg>` or `data:` in shared
  * projects.
  */
@@ -61,7 +61,7 @@ export function resolveSvgSource(markup: string): string | null {
     if (!warnedRemoteSvgSources.has(trimmed)) {
       warnedRemoteSvgSources.add(trimmed);
       console.warn(
-        `[geolibre] Loading a custom SVG from a remote URL triggers a ` +
+        `[geoint] Loading a custom SVG from a remote URL triggers a ` +
           `cross-origin request: ${trimmed}. Prefer inline <svg> markup or a ` +
           `data: URL in shared projects.`,
       );

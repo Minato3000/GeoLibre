@@ -1,5 +1,5 @@
 import type { Feature, FeatureCollection, GeoJsonProperties } from "geojson";
-import type { GeoLibreLayer, LayerJoin, LayerVirtualField } from "./types";
+import type { GeoIntLayer, LayerJoin, LayerVirtualField } from "./types";
 import { applyLayerVirtualFields, stripVirtualFieldColumns } from "./virtual-fields";
 
 /**
@@ -256,11 +256,11 @@ export function applyLayerJoins(
  * collection are returned unchanged.
  */
 export function applyJoinsToLayer(
-  layer: GeoLibreLayer,
-  allLayers: GeoLibreLayer[],
+  layer: GeoIntLayer,
+  allLayers: GeoIntLayer[],
   nextJoins?: LayerJoin[],
   nextVirtualFields?: LayerVirtualField[],
-): GeoLibreLayer {
+): GeoIntLayer {
   const geojson = layer.geojson;
   const joins = nextJoins ?? layer.joins ?? [];
   const virtualFields = nextVirtualFields ?? layer.virtualFields ?? [];
@@ -301,7 +301,7 @@ export function applyJoinsToLayer(
  * projects).
  */
 export function collectTransitiveJoinSourceIds(
-  layers: GeoLibreLayer[],
+  layers: GeoIntLayer[],
   layerId: string,
 ): Set<string> {
   const byId = new Map(layers.map((layer) => [layer.id, layer]));
@@ -327,7 +327,7 @@ export function collectTransitiveJoinSourceIds(
  * until a node repeats — so consumers *downstream* of the cycle still order
  * after it rather than falling back ahead of it.
  */
-function topologicalJoinOrder(candidates: GeoLibreLayer[]): string[] {
+function topologicalJoinOrder(candidates: GeoIntLayer[]): string[] {
   const candidateIds = new Set(candidates.map((layer) => layer.id));
   const indegree = new Map<string, number>();
   const dependents = new Map<string, string[]>();
@@ -392,7 +392,7 @@ function topologicalJoinOrder(candidates: GeoLibreLayer[]): string[] {
  * layer joining two other affected layers sees both of them fresh regardless
  * of their positions in the layer panel. The seed itself is not touched.
  */
-export function cascadeLayerJoinRefresh(layers: GeoLibreLayer[], seedId: string): GeoLibreLayer[] {
+export function cascadeLayerJoinRefresh(layers: GeoIntLayer[], seedId: string): GeoIntLayer[] {
   // Collect the transitive dependents of the seed.
   const affected = new Set<string>();
   const queue = [seedId];
@@ -426,7 +426,7 @@ export function cascadeLayerJoinRefresh(layers: GeoLibreLayer[], seedId: string)
  * too (their expressions run against the freshly loaded features). Layer sets
  * without joins or virtual fields pass through by reference.
  */
-export function reapplyLayerJoins(layers: GeoLibreLayer[]): GeoLibreLayer[] {
+export function reapplyLayerJoins(layers: GeoIntLayer[]): GeoIntLayer[] {
   const joined = layers.filter((layer) => layer.joins?.length || layer.virtualFields?.length);
   if (joined.length === 0) return layers;
 

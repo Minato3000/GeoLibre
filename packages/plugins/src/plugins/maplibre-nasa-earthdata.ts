@@ -6,8 +6,8 @@ import {
   type NasaEarthdataControlOptions,
   type NasaEarthdataEventHandler,
 } from "maplibre-gl-nasa-earthdata";
-import { useAppStore, type GeoLibreLayer } from "@geolibre/core";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import { useAppStore, type GeoIntLayer } from "@geoint/core";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 import {
   createWebServiceStoreSync,
   layerTypeForTiles,
@@ -21,13 +21,13 @@ const SOURCE_KIND = "nasa-earthdata";
 // Matches the control's native source/layer id scheme (`nasa-gibs-<key>`).
 const NATIVE_ID_PREFIX = "nasa-gibs-";
 
-let nasaEarthdataPosition: GeoLibreMapControlPosition = "top-left";
+let nasaEarthdataPosition: GeoIntMapControlPosition = "top-left";
 
 const NASA_EARTHDATA_OPTIONS = {
   collapsed: false,
   title: "NASA Earthdata",
   panelWidth: 360,
-  className: "geolibre-nasa-earthdata-control",
+  className: "geoint-nasa-earthdata-control",
 } satisfies NasaEarthdataControlOptions;
 
 let nasaEarthdataControl: NasaEarthdataControl | null = null;
@@ -42,7 +42,7 @@ function instanceKey(entry: WebServiceLayerEntry): string {
   return stringMetadata(entry.metadata?.nasaKey) ?? entry.id.slice(NATIVE_ID_PREFIX.length);
 }
 
-function addedLayerStateFromStoreLayer(layer: GeoLibreLayer): AddedLayerState | null {
+function addedLayerStateFromStoreLayer(layer: GeoIntLayer): AddedLayerState | null {
   const key =
     stringMetadata(layer.metadata.nasaKey) ??
     (layer.id.startsWith(NATIVE_ID_PREFIX) ? layer.id.slice(NATIVE_ID_PREFIX.length) : undefined);
@@ -150,11 +150,11 @@ function storeTiles(layerId: string): string[] | null {
 
 const nasaEarthdataStoreSync = createWebServiceStoreSync(nasaEarthdataAdapter);
 
-export const maplibreNasaEarthdataPlugin: GeoLibrePlugin = {
+export const maplibreNasaEarthdataPlugin: GeoIntPlugin = {
   id: "maplibre-gl-nasa-earthdata",
   name: "NASA Earthdata",
   version: "0.1.4",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     if (!nasaEarthdataControl) {
       nasaEarthdataControl = new NasaEarthdataControl(getNasaEarthdataControlOptions());
     }
@@ -167,14 +167,14 @@ export const maplibreNasaEarthdataPlugin: GeoLibrePlugin = {
     nasaEarthdataStoreSync.attach(nasaEarthdataControl);
     setTimeout(() => nasaEarthdataControl?.expand(), 0);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     if (!nasaEarthdataControl) return;
     nasaEarthdataStoreSync.detach();
     app.removeMapControl(nasaEarthdataControl);
     nasaEarthdataControl = null;
   },
   getMapControlPosition: () => nasaEarthdataPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     nasaEarthdataPosition = position;
     if (!nasaEarthdataControl) return;
     app.removeMapControl(nasaEarthdataControl);

@@ -5,7 +5,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { ArrowUpCircle, ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { openExternalLink } from "../../lib/open-external";

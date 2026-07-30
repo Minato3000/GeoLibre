@@ -35,7 +35,7 @@ concurrency:
 env:
   # The Apple bundle identifier, asserted after the build. Comes from
   # `identifier` in src-tauri/tauri.ios.conf.json, which overrides the desktop
-  # `org.geolibre.desktop` for iOS only (same value Android uses — different
+  # `org.geoint.desktop` for iOS only (same value Android uses — different
   # stores, so the shared reverse-DNS id is fine). Burned permanently on first
   # App Store Connect upload, so it is verified rather than trusted.
   EXPECTED_BUNDLE_ID: "org.geolibre.app"
@@ -218,7 +218,7 @@ jobs:
           # reads UserData/Provisioning Profiles; older versions read the
           # MobileDevice path. Install to both so the job is not coupled to the
           # runner image's Xcode version.
-          profile="$RUNNER_TEMP/geolibre.mobileprovision"
+          profile="$RUNNER_TEMP/geoint.mobileprovision"
           echo "$APPLE_IOS_PROVISIONING_PROFILE_BASE64" | base64 --decode > "$profile"
 
           # The export step must name the profile, so read its identity out of
@@ -359,7 +359,7 @@ jobs:
           # Built with PlistBuddy rather than a heredoc so the values are encoded
           # by a plist writer instead of pasted into raw XML. PROFILE_NAME comes
           # from the Developer portal and is free text: a display name like
-          # "GeoLibre R&D" would produce malformed XML by string interpolation,
+          # "GeoInt R&D" would produce malformed XML by string interpolation,
           # and xcodebuild would reject the options file with an unhelpful parse
           # error rather than pointing at the name.
           opts="$RUNNER_TEMP/ExportOptions.plist"
@@ -502,7 +502,7 @@ jobs:
         if: steps.signing.outputs.present == 'true'
         uses: actions/upload-artifact@v7
         with:
-          name: geolibre-ios-ipa
+          name: geoint-ios-ipa
           path: ${{ env.IPA_PATH }}
           if-no-files-found: error
           retention-days: 14

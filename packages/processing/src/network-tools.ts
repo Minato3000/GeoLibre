@@ -1,7 +1,7 @@
 import { featureCollection } from "@turf/helpers";
 import type { Feature, Point } from "geojson";
 import {
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type RoutingMetric,
   type RoutingMode,
   type RoutingPoint,
@@ -18,7 +18,7 @@ import {
   requestMatrix,
   requestRoute,
   routeResponseToFeatures,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { ProcessingAlgorithm, ProcessingContext } from "./types";
 
 /**
@@ -45,7 +45,7 @@ const MODE_OPTIONS = [
   { value: "bicycle", label: "Cycling" },
 ];
 
-function getLayer(ctx: ProcessingContext, paramId: string): GeoLibreLayer | undefined {
+function getLayer(ctx: ProcessingContext, paramId: string): GeoIntLayer | undefined {
   const layerId = ctx.parameters[paramId] as string | undefined;
   return ctx.layers.find((layer) => layer.id === layerId);
 }
@@ -68,7 +68,7 @@ function pointId(feature: Feature, index: number): string | number {
  * from the feature id, an `id`/`name` property, or the feature index. Non-point
  * geometries are skipped.
  */
-function layerToRoutingPoints(layer: GeoLibreLayer | undefined): RoutingPoint[] {
+function layerToRoutingPoints(layer: GeoIntLayer | undefined): RoutingPoint[] {
   const features = layer?.geojson?.features ?? [];
   const points: RoutingPoint[] = [];
   features.forEach((feature, index) => {
@@ -88,7 +88,7 @@ function layerToRoutingPoints(layer: GeoLibreLayer | undefined): RoutingPoint[] 
  * Non-point geometries are skipped.
  */
 export function layerToSequencedPoints(
-  layer: GeoLibreLayer | undefined,
+  layer: GeoIntLayer | undefined,
   orderField: string,
 ): RoutingPoint[] {
   const features = layer?.geojson?.features ?? [];

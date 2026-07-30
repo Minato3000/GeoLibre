@@ -17,12 +17,12 @@ param(
   # (Product Identity) for a Microsoft Store submission; the Store rejects the
   # Tauri identifier. Pass "" to fall back to the Tauri identifier for a
   # non-Store build.
-  [string] $Name = "OpenGeospatialSolutions.GeoLibre",
+  [string] $Name = "OpenGeospatialSolutions.GeoInt",
   # Package display name (Properties/DisplayName). For a Microsoft Store
-  # submission it must be a name you reserved in Partner Center ("GeoLibre"),
-  # which differs from the Tauri productName ("GeoLibre Desktop"). Pass "" to
+  # submission it must be a name you reserved in Partner Center ("GeoInt"),
+  # which differs from the Tauri productName ("GeoInt Desktop"). Pass "" to
   # fall back to the productName for a non-Store build.
-  [string] $DisplayName = "GeoLibre",
+  [string] $DisplayName = "GeoInt",
   # Default package language. Required by the Store; every MSIX must declare one.
   [ValidatePattern('^[a-zA-Z]{2,3}(-[a-zA-Z0-9]{1,8})*$')]
   [string] $Language = "en-us"
@@ -145,7 +145,7 @@ $manifest = @"
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
   </Dependencies>
   <Applications>
-    <Application Id="GeoLibreDesktop" Executable="$(ConvertTo-XmlText "$binaryName.exe")" EntryPoint="Windows.FullTrustApplication">
+    <Application Id="GeoIntDesktop" Executable="$(ConvertTo-XmlText "$binaryName.exe")" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements
         DisplayName="$(ConvertTo-XmlText $productName)"
         Description="$(ConvertTo-XmlText $description)"

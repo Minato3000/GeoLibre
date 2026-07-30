@@ -1,6 +1,6 @@
 # Notebook panel
 
-GeoLibre can run a Jupyter notebook **beside the map**, in a resizable,
+GeoInt can run a Jupyter notebook **beside the map**, in a resizable,
 collapsible panel (open it from **Processing → Jupyter Notebook**). It works in
 both the web and desktop builds, with a different Python runtime behind the same
 `<iframe>` panel:
@@ -14,19 +14,19 @@ both the web and desktop builds, with a different Python runtime behind the same
   sidecar) on `127.0.0.1:8766`, token-authenticated, and embeds it. This gives
   full CPython with the native geospatial stack (geopandas, rasterio, GDAL, …).
 
-This is distinct from the [`geolibre` Python package](python.md), which does the
-inverse — embedding the *whole GeoLibre app* inside a notebook cell.
+This is distinct from the [`geoint` Python package](python.md), which does the
+inverse — embedding the *whole GeoInt app* inside a notebook cell.
 
 ## Scripting the map from a cell
 
-A lightweight `geolibre` client is preloaded into the notebook kernel — on web
+A lightweight `geoint` client is preloaded into the notebook kernel — on web
 it is bundled into JupyterLite's filesystem, so **no `pip install` is needed**;
 on desktop it is placed on the kernel's import path. Just import it:
 
 ```python
-import geolibre
+import geoint
 
-m = geolibre.connect()          # or geolibre.Map()
+m = geoint.connect()          # or geoint.Map()
 m.fly_to(-122.4, 37.8, zoom=11) # animate the live map in the left pane
 m.add_geojson(gdf, name="My layer")   # GeoDataFrame, dict, or JSON string
 m.fit_bounds([-123, 37, -122, 38])
@@ -42,7 +42,7 @@ client behaves identically on the in-browser kernel and a real server. Canonical
 client source: `backend/geolibre_server/notebook_client.py`.
 
 > Read-back queries (e.g. `get_center`) are not exposed by this fire-and-forget
-> client; they need the blocking request/reply path the `geolibre` widget uses.
+> client; they need the blocking request/reply path the `geoint` widget uses.
 
 ## Driving the map from an external client (VS Code, …)
 
@@ -58,10 +58,10 @@ than depending on how the notebook is being *displayed*:
 
 - `backend/geolibre_server/geolibre_server/jupyter_relay.py` is a Jupyter Server
   extension (enabled from `jupyter_server_config.py`) exposing
-  `POST …/geolibre/relay/command`, a `…/geolibre/relay/socket` WebSocket, and
-  `GET …/geolibre/relay/status`. At load it publishes `GEOLIBRE_RELAY_URL` and
-  `GEOLIBRE_RELAY_TOKEN` into the server's environment, which **kernels inherit**
-  — that is how `import geolibre` finds the map with no configuration.
+  `POST …/geoint/relay/command`, a `…/geoint/relay/socket` WebSocket, and
+  `GET …/geoint/relay/status`. At load it publishes `GEOINT_RELAY_URL` and
+  `GEOINT_RELAY_TOKEN` into the server's environment, which **kernels inherit**
+  — that is how `import geoint` finds the map with no configuration.
 - The app subscribes to that socket for its whole lifetime
   (`useJupyterRelay`), reconnecting with backoff, and runs each command against
   the same `createScriptingHandlers` surface.
@@ -72,16 +72,16 @@ The POST answers with how many app windows received the command, so a
 disconnected session is reported instead of silently doing nothing:
 
 ```python
-geolibre.is_connected()   # False -> no GeoLibre window is listening
+geoint.is_connected()   # False -> no GeoInt window is listening
 ```
 
 When a command cannot be delivered the client raises a
-`GeoLibreNotConnectedWarning` pointing at your own line. Promote it to an error
+`GeoIntNotConnectedWarning` pointing at your own line. Promote it to an error
 with:
 
 ```python
-import warnings, geolibre
-warnings.simplefilter("error", geolibre.GeoLibreNotConnectedWarning)
+import warnings, geoint
+warnings.simplefilter("error", geoint.GeoIntNotConnectedWarning)
 ```
 
 Only the desktop server has the relay: on web (JupyterLite) there is no server to

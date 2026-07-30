@@ -6,11 +6,11 @@
  * Distances use the great-circle (haversine) length between consecutive
  * vertices; areas use the spherical-excess formula. Both are evaluated on a
  * sphere whose radius is the active body's mean radius (Earth / Moon / Mars),
- * read from `@geolibre/core`, so measurements stay consistent with the rest of
+ * read from `@geoint/core`, so measurements stay consistent with the rest of
  * the app when a non-Earth ellipsoid is active. Coordinates are assumed to be
  * lon/lat degrees (EPSG:4326), which is what every layer in the store carries.
  */
-import { getActiveMeanRadiusMeters } from "@geolibre/core";
+import { getActiveMeanRadiusMeters } from "@geoint/core";
 import type { Feature, Geometry, Position } from "geojson";
 
 /** Length units, matching the Measure tool's `DistanceUnit` set. */

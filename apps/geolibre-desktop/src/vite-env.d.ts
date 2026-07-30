@@ -1,12 +1,12 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-pwa/client" />
 
-declare const __GEOLIBRE_VERSION__: string;
+declare const __GEOINT_VERSION__: string;
 
-// True only in the Microsoft Store MSIX build (GEOLIBRE_STORE_BUILD=1), where the
+// True only in the Microsoft Store MSIX build (GEOINT_STORE_BUILD=1), where the
 // in-app update checker is removed so the app updates solely through the Store
 // (Microsoft policy 10.2.5). false in every other build. See vite.config.ts.
-declare const __GEOLIBRE_STORE_BUILD__: boolean;
+declare const __GEOINT_STORE_BUILD__: boolean;
 
 // jsDelivr URLs for the PGlite engine and its PostGIS extension, injected by
 // vite.config.ts. Only the embed (Jupyter wheel) build reads them, from
@@ -18,13 +18,13 @@ declare const __PGLITE_POSTGIS_CDN_URL__: string | null;
 // jsDelivr URL for the CereusDB (Apache Sedona) WASM blob, injected by
 // vite.config.ts and read by cereus-loader.cdn.ts. By default every build
 // (web/desktop/embed) CDN-loads it so the ~40 MB wasm never lands in dist; the
-// value is null only when GEOLIBRE_CEREUS_CDN=0 force-bundles it via the `?url`
+// value is null only when GEOINT_CEREUS_CDN=0 force-bundles it via the `?url`
 // import in cereus-loader.ts.
 declare const __CEREUS_WASM_CDN_URL__: string | null;
 
 // jsDelivr URLs for the gdal3.js (GDAL-WASM) engine + data, injected by
 // vite.config.ts and read by gdal-loader.ts for the Georeferencer's client-side
-// GeoTIFF export. null only when GEOLIBRE_GDAL_CDN=0 (export then unavailable).
+// GeoTIFF export. null only when GEOINT_GDAL_CDN=0 (export then unavailable).
 declare const __GDAL3_CDN_PATHS__: { wasm: string; data: string } | null;
 
 declare module "virtual:bundled-plugins" {

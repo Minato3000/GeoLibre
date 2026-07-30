@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import { GEBCO_ATTRIBUTION } from "../apps/geolibre-desktop/src/components/layout/add-data/constants";
 import {
@@ -76,7 +76,7 @@ describe("buildXyzLayer", () => {
       name: "Short",
       tileUrl: {
         originalUrl: "https://short.example/abc",
-        renderUrl: "geolibre-xyz://abc/{z}/{x}/{y}",
+        renderUrl: "geoint-xyz://abc/{z}/{x}/{y}",
         url: "https://cdn.example/{z}/{x}/{y}.png",
         redirected: true,
       },
@@ -296,11 +296,11 @@ describe("field mappers", () => {
 describe("applyServiceEntry", () => {
   /** A dispatcher deps stub that records the layers added to the store. */
   function stubDeps() {
-    const added: { layer: GeoLibreLayer; beforeLayerId: string | null }[] = [];
+    const added: { layer: GeoIntLayer; beforeLayerId: string | null }[] = [];
     return {
       added,
       deps: {
-        addLayer: (layer: GeoLibreLayer, beforeLayerId: string | null = null) => {
+        addLayer: (layer: GeoIntLayer, beforeLayerId: string | null = null) => {
           added.push({ layer, beforeLayerId });
         },
         mapControllerRef: { current: null },
@@ -329,8 +329,8 @@ describe("applyServiceEntry", () => {
   });
 
   it("fetches WFS GeoJSON, adds the layer, and fits the map to it", async () => {
-    const added: { layer: GeoLibreLayer; beforeLayerId: string | null }[] = [];
-    const fitted: GeoLibreLayer[] = [];
+    const added: { layer: GeoIntLayer; beforeLayerId: string | null }[] = [];
+    const fitted: GeoIntLayer[] = [];
     const fc: FeatureCollection = {
       type: "FeatureCollection",
       features: [
@@ -357,7 +357,7 @@ describe("applyServiceEntry", () => {
             added.push({ layer, beforeLayerId });
           },
           mapControllerRef: {
-            current: { fitLayer: (layer: GeoLibreLayer) => fitted.push(layer) },
+            current: { fitLayer: (layer: GeoIntLayer) => fitted.push(layer) },
           } as unknown as Parameters<typeof applyServiceEntry>[1]["mapControllerRef"],
         },
       );

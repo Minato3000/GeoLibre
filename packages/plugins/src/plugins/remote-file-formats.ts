@@ -1,11 +1,11 @@
 /**
- * What GeoLibre can do with a remote data file, decided from its path and size.
+ * What GeoInt can do with a remote data file, decided from its path and size.
  *
  * Every "browse a remote bucket and put a file on the map" panel — Source
  * Cooperative, Hugging Face — has to answer the same three questions before it
  * can draw a card: what format is this, which reader would open it, and is it
  * small enough for that reader to manage. The answers are facts about
- * *GeoLibre's readers*, not about any one host, so they live here once instead
+ * *GeoInt's readers*, not about any one host, so they live here once instead
  * of being re-derived (and drifting) per panel. In particular
  * {@link MAX_VECTOR_BYTES} mirrors a constant inside `maplibre-gl-vector` that
  * has to be re-checked on every bump of that package; a second copy elsewhere
@@ -16,7 +16,7 @@
  */
 
 /**
- * A data format GeoLibre can act on. Everything GeoLibre cannot render is
+ * A data format GeoInt can act on. Everything GeoInt cannot render is
  * `other` and offers download only.
  */
 export type RemoteFileFormat =
@@ -73,7 +73,7 @@ const FORMAT_BY_EXTENSION: [RegExp, RemoteFileFormat][] = [
  * `application/octet-stream` anyway.
  *
  * @param path - An object key, repo-relative path, or URL path
- * @returns The format GeoLibre will treat the file as
+ * @returns The format GeoInt will treat the file as
  */
 export function classifyPath(path: string): RemoteFileFormat {
   for (const [pattern, format] of FORMAT_BY_EXTENSION) {
@@ -90,7 +90,7 @@ export function classifyPath(path: string): RemoteFileFormat {
  *   (see {@link isTooLargeToOpen}).
  * - `range` — has its own range-request reader (MapLibre's PMTiles protocol, a
  *   COG reader). Streams by nature, and none of the DuckDB limits apply.
- * - `none` — GeoLibre cannot render it; download only.
+ * - `none` — GeoInt cannot render it; download only.
  *
  * One `Record` over the whole union rather than a set per question: adding a
  * member to {@link RemoteFileFormat} then fails to compile until it is
@@ -115,7 +115,7 @@ const FORMAT_READER: Record<RemoteFileFormat, "duckdb" | "range" | "none"> = {
 };
 
 /**
- * Whether GeoLibre can put a format on the map (the rest are download-only).
+ * Whether GeoInt can put a format on the map (the rest are download-only).
  *
  * @param format - The classified format
  * @returns True when some reader renders it

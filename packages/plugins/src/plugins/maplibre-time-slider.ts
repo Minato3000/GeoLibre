@@ -1,4 +1,4 @@
-import { DEFAULT_LAYER_STYLE, useAppStore, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, useAppStore, type GeoIntLayer } from "@geoint/core";
 import {
   resolveUrl,
   TimeSliderControl,
@@ -7,7 +7,7 @@ import {
   type TimeSliderOptions,
 } from "maplibre-gl-time-slider";
 import { loadMosaic } from "maplibre-gl-raster";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 import {
   buildTimeFilter,
   pickGranularity,
@@ -28,7 +28,7 @@ import {
 import { usesMosaicManifest } from "./time-slider-source-url";
 
 /**
- * Marker placed on every GeoLibre store layer that mirrors a time-slider
+ * Marker placed on every GeoInt store layer that mirrors a time-slider
  * source, used to reconcile and prune the plugin's layers without touching any
  * others (mirrors the Esri Wayback `sourceKind` convention).
  *
@@ -71,7 +71,7 @@ function buildDefaultOptions(): TimeSliderOptions {
 }
 
 /**
- * Reads the current GeoLibre theme from the `dark` class that the desktop app
+ * Reads the current GeoInt theme from the `dark` class that the desktop app
  * toggles on the document element, so the time slider dock is forced to match
  * the in-app theme instead of the system `prefers-color-scheme`.
  *
@@ -122,7 +122,7 @@ function stopThemeSync(): void {
   themeObserver = null;
 }
 
-let timeSliderPosition: GeoLibreMapControlPosition = "bottom-left";
+let timeSliderPosition: GeoIntMapControlPosition = "bottom-left";
 let timeSliderControl: TimeSliderControl | null = null;
 // Last known config, kept so deactivating/reactivating (or restoring a saved
 // project) rebuilds the timeline and its layers exactly.
@@ -146,7 +146,7 @@ export function getActiveTimeSliderControl(): TimeSliderControl | null {
   return timeSliderControl;
 }
 
-export const maplibreTimeSliderPlugin: GeoLibrePlugin = {
+export const maplibreTimeSliderPlugin: GeoIntPlugin = {
   id: "maplibre-gl-time-slider",
   name: "Time Slider",
   version: "1.0.3",
@@ -155,7 +155,7 @@ export const maplibreTimeSliderPlugin: GeoLibrePlugin = {
   // this the host's restore-time collapse sweep hid the dock entirely (its
   // collapsed style is `display: none`) even for a project saved expanded.
   restoresPanelCollapseState: true,
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     if (timeSliderControl) return;
     const control = savedConfig
       ? controlFromConfig(savedConfig)
@@ -174,7 +174,7 @@ export const maplibreTimeSliderPlugin: GeoLibrePlugin = {
     // control locally so a later reassignment cannot redirect this callback.
     setTimeout(() => syncStoreLayers(control), 0);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     if (!timeSliderControl) return;
     savedConfig = timeSliderControl.getConfig();
     detachStoreSync?.();
@@ -183,7 +183,7 @@ export const maplibreTimeSliderPlugin: GeoLibrePlugin = {
     removeAllTimeSliderStoreLayers();
   },
   getMapControlPosition: () => timeSliderPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     timeSliderPosition = position;
     if (!timeSliderControl) return;
     // The library's onRemove destroys all adapters/layers and clears event
@@ -216,7 +216,7 @@ export const maplibreTimeSliderPlugin: GeoLibrePlugin = {
     // JSON to strip those keys before persisting.
     return config ? (JSON.parse(JSON.stringify(config)) as TimeSliderConfig) : undefined;
   },
-  applyProjectState: (app: GeoLibreAppAPI, state: unknown) => {
+  applyProjectState: (app: GeoIntAppAPI, state: unknown) => {
     const nextConfig = normalizeConfig(state);
     if (!nextConfig) {
       // A reset/new project (or an invalid value) clears the cached config so
@@ -447,8 +447,8 @@ function attachDisplaySync(control: TimeSliderControl): () => void {
   return useAppStore.subscribe(apply);
 }
 
-// ----- Bound GeoLibre layers ------------------------------------------------
-// The Time Slider can drive vector layers added through GeoLibre's own Add Data
+// ----- Bound GeoInt layers ------------------------------------------------
+// The Time Slider can drive vector layers added through GeoInt's own Add Data
 // menu: a "Bind to Time Slider" action stores a `timeBinding` on the layer's
 // metadata, and while the dock is active the timeline's current date is turned
 // into a MapLibre filter written to the layer's transient `timeFilter`. The
@@ -819,7 +819,7 @@ export function __reconcileBoundLayersForTests(control: TimeSliderControl): void
 }
 
 /**
- * Wire the control's date changes and the GeoLibre store together so bound
+ * Wire the control's date changes and the GeoInt store together so bound
  * layers track the timeline. Returns a detacher that also clears every applied
  * time filter, so deactivating the dock restores full feature visibility.
  *
@@ -951,7 +951,7 @@ export function isTimeSliderIdle(): boolean {
 }
 
 /**
- * Reconciles the GeoLibre layer store with the control's current sources: each
+ * Reconciles the GeoInt layer store with the control's current sources: each
  * source becomes (or updates) an external-native store layer, and store layers
  * whose source no longer exists are pruned. The maplibre layer id equals the
  * source id for every adapter type, so `nativeLayerIds` lets the Layers panel
@@ -1061,7 +1061,7 @@ function forgetSourceBounds(id: string): void {
   boundsGeneration.set(id, (boundsGeneration.get(id) ?? 0) + 1);
 }
 
-function addOrUpdateStoreLayer(layer: GeoLibreLayer): void {
+function addOrUpdateStoreLayer(layer: GeoIntLayer): void {
   const store = useAppStore.getState();
   const existingLayer = store.layers.find((item) => item.id === layer.id);
   if (!existingLayer) {
@@ -1080,7 +1080,7 @@ function addOrUpdateStoreLayer(layer: GeoLibreLayer): void {
   });
 }
 
-function shouldUpdateStoreLayer(existingLayer: GeoLibreLayer, nextLayer: GeoLibreLayer): boolean {
+function shouldUpdateStoreLayer(existingLayer: GeoIntLayer, nextLayer: GeoIntLayer): boolean {
   return (
     existingLayer.name !== nextLayer.name ||
     JSON.stringify(existingLayer.metadata) !== JSON.stringify(nextLayer.metadata) ||
@@ -1098,7 +1098,7 @@ function shouldUpdateStoreLayer(existingLayer: GeoLibreLayer, nextLayer: GeoLibr
  * @param spec - The dock source to mirror.
  * @returns The store layer representing it.
  */
-export function createStoreLayer(spec: SourceSpec): GeoLibreLayer {
+export function createStoreLayer(spec: SourceSpec): GeoIntLayer {
   const sourceId = spec.id as string;
   const layerType = spec.type === "geojson" ? "geojson" : "raster";
   // COG and mosaic sources carry real source values, so Identify reads their

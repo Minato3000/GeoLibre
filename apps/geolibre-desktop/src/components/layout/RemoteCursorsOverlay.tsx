@@ -1,13 +1,13 @@
-import { useAppStore, type CollaborationPresence } from "@geolibre/core";
+import { useAppStore, type CollaborationPresence } from "@geoint/core";
 import maplibregl from "maplibre-gl";
 import { useEffect, useRef } from "react";
 import type { RefObject } from "react";
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
 import type { Feature, FeatureCollection, Polygon } from "geojson";
 
-const VIEWPORT_SOURCE_ID = "__geolibre_collab_viewports";
-const VIEWPORT_LAYER_ID = "__geolibre_collab_viewports_line";
+const VIEWPORT_SOURCE_ID = "__geoint_collab_viewports";
+const VIEWPORT_LAYER_ID = "__geoint_collab_viewports_line";
 
 /**
  * Renders remote participants' presence on the map during a live session:
@@ -68,7 +68,7 @@ function safely(fn: () => void): void {
     fn();
   } catch (error) {
     if (import.meta.env.DEV) {
-      console.warn("[GeoLibre] collab presence overlay error", error);
+      console.warn("[GeoInt] collab presence overlay error", error);
     }
   }
 }
@@ -182,12 +182,12 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 // validates `color`, but this is the defense-in-depth client half.
 function createCursorElement(p: CollaborationPresence): HTMLDivElement {
   const el = document.createElement("div");
-  el.className = "geolibre-collab-cursor";
+  el.className = "geoint-collab-cursor";
   el.style.cssText =
     "pointer-events:none;display:flex;align-items:flex-start;gap:2px;transform:translate(-2px,-2px);will-change:transform;";
   el.appendChild(createCursorSvg(p.color));
   const label = document.createElement("span");
-  label.className = "geolibre-collab-cursor-label";
+  label.className = "geoint-collab-cursor-label";
   label.style.cssText =
     "color:#fff;font-size:11px;line-height:1;padding:2px 5px;border-radius:6px;white-space:nowrap;margin-top:10px;box-shadow:0 1px 2px rgba(0,0,0,.3);";
   label.style.background = p.color;
@@ -200,7 +200,7 @@ function updateCursorElement(el: HTMLElement, p: CollaborationPresence): void {
   // Keep the arrow color in sync too, not just the label (the color can change).
   const path = el.querySelector<SVGPathElement>("path");
   if (path) path.setAttribute("fill", p.color);
-  const label = el.querySelector<HTMLElement>(".geolibre-collab-cursor-label");
+  const label = el.querySelector<HTMLElement>(".geoint-collab-cursor-label");
   if (label) {
     label.style.background = p.color;
     label.textContent = p.displayName;

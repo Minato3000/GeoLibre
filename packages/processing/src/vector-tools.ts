@@ -30,7 +30,7 @@ import type {
   Position,
   MultiPolygon,
 } from "geojson";
-import { layerJoinKey, type GeoLibreLayer } from "@geolibre/core";
+import { layerJoinKey, type GeoIntLayer } from "@geoint/core";
 import type { GeometryFamily, ProcessingAlgorithm, ProcessingContext } from "./types";
 import { createH3GridTool, binPointsTool } from "./h3-tools";
 import { TOPOLOGY_TOOLS } from "./topology-tools";
@@ -38,7 +38,7 @@ import { TOPOLOGY_TOOLS } from "./topology-tools";
 /** Upper bound on input×overlay pairs for the main-thread pairwise loops. */
 export const MAX_CLIENT_PAIRS = 250_000;
 
-function getLayer(ctx: ProcessingContext, paramId = "layer"): GeoLibreLayer | undefined {
+function getLayer(ctx: ProcessingContext, paramId = "layer"): GeoIntLayer | undefined {
   const layerId = ctx.parameters[paramId] as string | undefined;
   return ctx.layers.find((l) => l.id === layerId);
 }
@@ -693,7 +693,7 @@ export const spatialJoinTool: ProcessingAlgorithm = {
  * string) never match a row, mirroring a SQL/pandas NaN join key. Non-empty
  * values are keyed stringified, so a numeric `5` and the string `"5"` join
  * (both render `"5"`) while a zero-padded code like `"01001"` only matches
- * another `"01001"`. Delegates to `@geolibre/core`'s {@link layerJoinKey} —
+ * another `"01001"`. Delegates to `@geoint/core`'s {@link layerJoinKey} —
  * the persistent-join engine's key — so the two client-side joins cannot
  * drift; the backend's ``_attribute_join_key`` remains the Python mirror.
  */
@@ -1294,7 +1294,7 @@ export const reprojectTool: ProcessingAlgorithm = {
     },
   ],
   run: (ctx) => {
-    // GeoLibre layers are WGS84 GeoJSON, and real CRS math needs pyproj, so the
+    // GeoInt layers are WGS84 GeoJSON, and real CRS math needs pyproj, so the
     // client (Turf.js) engine cannot reproject. Point the user at the engines
     // that share the backend's _reproject (Sidecar/GeoPandas or Pyodide).
     ctx.log(

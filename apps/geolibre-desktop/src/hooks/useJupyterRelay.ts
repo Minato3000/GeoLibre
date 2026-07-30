@@ -1,5 +1,5 @@
 import { type RefObject, useEffect } from "react";
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import { subscribeJupyterServer } from "../lib/jupyter";
 import {
   type RelayCommand,

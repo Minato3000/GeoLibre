@@ -1,5 +1,5 @@
 // Shared embed-host plumbing for the postMessage bridges that connect the app to
-// an embedding host (the GeoLibre Python widget / `to_html()` export). Both the
+// an embedding host (the GeoInt Python widget / `to_html()` export). Both the
 // project-state bridge (useEmbedBridge) and the scripting command bridge
 // (useCommandBridge) talk to the SAME host window and must apply the SAME trust
 // rules, so the detection and origin handshake live here once.
@@ -7,7 +7,7 @@
 import { EMBED_ORIGIN_WILDCARD, isEmbedOriginAllowed, readEmbedOrigins } from "../lib/embed-api";
 
 /**
- * Detects whether the app is running inside the GeoLibre Jupyter/embed host.
+ * Detects whether the app is running inside the GeoInt Jupyter/embed host.
  *
  * The app is considered embedded when it is framed (a different `window.parent`)
  * or when it is opened with an explicit `?embed=1` query parameter, which lets
@@ -25,7 +25,7 @@ import { EMBED_ORIGIN_WILDCARD, isEmbedOriginAllowed, readEmbedOrigins } from ".
  * is not viable here; instead the deployment constraint is: an `?embed=1`
  * export must only be served from a trusted context, never a public URL. A
  * deployment that *can* name its hosts (a web build framed by a portal) should
- * set `GEOLIBRE_EMBED_ORIGINS`, which both enables the embed API
+ * set `GEOINT_EMBED_ORIGINS`, which both enables the embed API
  * (`hooks/useEmbedApi.ts`) and narrows these bridges to those origins.
  *
  * @returns True when the postMessage bridges should be active.
@@ -89,7 +89,7 @@ export interface EmbedHost {
  * receives from itself.
  *
  * When the deployment configured an embed-API origin allowlist
- * (`GEOLIBRE_EMBED_ORIGINS`), it applies here too: a host whose origin is not
+ * (`GEOINT_EMBED_ORIGINS`), it applies here too: a host whose origin is not
  * listed never completes the handshake, so an operator who names their trusted
  * hosts also narrows the `?embed=1` project/scripting bridges to them. With no
  * allowlist configured nothing changes (the Jupyter widget's host origin is

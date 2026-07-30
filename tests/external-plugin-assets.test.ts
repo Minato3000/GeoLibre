@@ -19,10 +19,10 @@ describe("pluginAssetUrlFromSource", () => {
   it("respects a non-root app base in the manifest URL", () => {
     assert.equal(
       pluginAssetUrlFromSource(
-        "https://example.com/geolibre/plugins/x/plugin.json",
+        "https://example.com/geoint/plugins/x/plugin.json",
         "dist/sample-data",
       ),
-      "https://example.com/geolibre/plugins/x/dist/sample-data",
+      "https://example.com/geoint/plugins/x/dist/sample-data",
     );
   });
 
@@ -36,7 +36,7 @@ describe("pluginAssetUrlFromSource", () => {
   it("returns null for a desktop filesystem source (no URL base)", () => {
     assert.equal(
       pluginAssetUrlFromSource(
-        "/home/user/.local/share/org.geolibre.desktop/plugins/x",
+        "/home/user/.local/share/org.geoint.desktop/plugins/x",
         "dist/sample-data",
       ),
       null,
@@ -79,7 +79,7 @@ describe("managedUrlSourcesForIds", () => {
   const SOURCES: Record<string, string> = {
     "url-plugin": "https://data.example.com/url-plugin/plugin.json",
     "bundled-plugin": "tauri://localhost/plugins/bundled-plugin/plugin.json",
-    "filesystem-plugin": "/home/user/.local/share/org.geolibre.desktop/plugins/fs-plugin",
+    "filesystem-plugin": "/home/user/.local/share/org.geoint.desktop/plugins/fs-plugin",
     "web-archive-plugin": "web-archive:web-archive-plugin",
   };
   const sourceOf = (pluginId: string) => SOURCES[pluginId];

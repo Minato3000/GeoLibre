@@ -191,7 +191,7 @@ class Hdf5NetcdfFile implements LocalNetcdfFile {
    */
   static async open(buffer: ArrayBuffer): Promise<Hdf5NetcdfFile> {
     const mod = await loadH5wasm();
-    const fsPath = `geolibre-netcdf-${fileCounter++}.h5`;
+    const fsPath = `geoint-netcdf-${fileCounter++}.h5`;
     mod.FS.writeFile(fsPath, new Uint8Array(buffer));
     let file: H5File | null = null;
     try {

@@ -1,5 +1,5 @@
-import { useAppStore } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+import { useAppStore } from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import type maplibregl from "maplibre-gl";
 import {
   BookOpen,

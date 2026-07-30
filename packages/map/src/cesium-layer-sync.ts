@@ -1,7 +1,7 @@
-import { resolveThreeDTilesRequestHeaders, type GeoLibreLayer } from "@geolibre/core";
+import { resolveThreeDTilesRequestHeaders, type GeoIntLayer } from "@geoint/core";
 import type { Cesium3DTileset, DataSource, ImageryLayer, Viewer } from "cesium";
 
-// Reconciles the store's `GeoLibreLayer[]` onto a Cesium globe, mirroring what
+// Reconciles the store's `GeoIntLayer[]` onto a Cesium globe, mirroring what
 // MapController.syncLayers does for MapLibre. M3 covers the layer kinds where
 // Cesium is the natural renderer: GeoJSON (as a draped GeoJsonDataSource), XYZ /
 // WMS / WMTS / raster tiles (as ImageryLayers), and 3D Tiles (as a
@@ -22,7 +22,7 @@ type EntryKind = "imagery" | "geojson" | "3dtiles";
 interface LayerEntry {
   kind: EntryKind;
   /** The layer as last applied, for change detection. */
-  layer: GeoLibreLayer;
+  layer: GeoIntLayer;
   /** The Cesium object, or null while an async create is in flight. */
   handle: ImageryLayer | DataSource | Cesium3DTileset | null;
   /** Set when the entry is removed mid-load so the resolved handle is discarded. */
@@ -35,12 +35,12 @@ function str(value: unknown): string | undefined {
   return typeof value === "string" && value ? value : undefined;
 }
 
-function firstTile(layer: GeoLibreLayer): string | undefined {
+function firstTile(layer: GeoIntLayer): string | undefined {
   const tiles = layer.source.tiles;
   return Array.isArray(tiles) ? str(tiles[0]) : undefined;
 }
 
-function tilesetUrl(layer: GeoLibreLayer): string | undefined {
+function tilesetUrl(layer: GeoIntLayer): string | undefined {
   return str(layer.source.url) ?? str(layer.sourcePath);
 }
 
@@ -49,12 +49,12 @@ function tilesetUrl(layer: GeoLibreLayer): string | undefined {
  * its data has loaded yet). Exported so the UI can flag "2D only" layers on a
  * globe pane. See the module header for the supported kinds.
  */
-export function isCesiumSupportedLayerType(layer: GeoLibreLayer): boolean {
+export function isCesiumSupportedLayerType(layer: GeoIntLayer): boolean {
   return layer.type === "geojson" || layer.type === "3d-tiles" || IMAGERY_TYPES.has(layer.type);
 }
 
 /** Whether this layer can render on the globe now (kind supported + data ready). */
-function isSupported(layer: GeoLibreLayer): boolean {
+function isSupported(layer: GeoIntLayer): boolean {
   if (!isCesiumSupportedLayerType(layer)) return false;
   if (layer.type === "geojson") return Boolean(layer.geojson?.features?.length);
   if (layer.type === "3d-tiles") return Boolean(tilesetUrl(layer));
@@ -63,7 +63,7 @@ function isSupported(layer: GeoLibreLayer): boolean {
   return layer.type === "wms" ? Boolean(str(layer.source.url)) : Boolean(firstTile(layer));
 }
 
-function entryKind(layer: GeoLibreLayer): EntryKind {
+function entryKind(layer: GeoIntLayer): EntryKind {
   if (layer.type === "geojson") return "geojson";
   if (layer.type === "3d-tiles") return "3dtiles";
   return "imagery";
@@ -74,7 +74,7 @@ function entryKind(layer: GeoLibreLayer): EntryKind {
 // (layer.opacity × fill opacity) is deliberately excluded: it is re-applied in
 // place by applyGeoJsonStyle, so dragging the opacity slider restyles the fill
 // alpha instead of reloading the whole GeoJsonDataSource on every tick.
-function styleSignature(layer: GeoLibreLayer): string {
+function styleSignature(layer: GeoIntLayer): string {
   const style = layer.style ?? {};
   return [style.fillColor, style.strokeColor, style.strokeWidth, style.markerColor].join("|");
 }
@@ -87,7 +87,7 @@ function styleSignature(layer: GeoLibreLayer): string {
  * its fill/stroke colours bake into the Cesium colours at load, so a colour
  * change rebuilds; opacity is restyled in place (see styleSignature).
  */
-function needsRebuild(prev: GeoLibreLayer, next: GeoLibreLayer): boolean {
+function needsRebuild(prev: GeoIntLayer, next: GeoIntLayer): boolean {
   if (prev.type !== next.type) return true;
   switch (entryKind(next)) {
     case "geojson":
@@ -128,7 +128,7 @@ export class CesiumLayerSync {
   ) {}
 
   /** Reconcile the globe to `layers` (order preserved for imagery stacking). */
-  sync(layers: GeoLibreLayer[]): void {
+  sync(layers: GeoIntLayer[]): void {
     const nextIds = new Set(layers.map((l) => l.id));
     for (const [id, entry] of this.entries) {
       if (!nextIds.has(id)) {
@@ -196,7 +196,7 @@ export class CesiumLayerSync {
     this.entries.clear();
   }
 
-  private createEntry(layer: GeoLibreLayer): void {
+  private createEntry(layer: GeoIntLayer): void {
     const kind = entryKind(layer);
     const entry: LayerEntry = { kind, layer, handle: null, cancelled: false };
     this.entries.set(layer.id, entry);

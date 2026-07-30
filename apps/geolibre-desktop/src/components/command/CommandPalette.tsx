@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle } from "@geolibre/ui";
+import { Dialog, DialogContent, DialogTitle } from "@geoint/ui";
 import { Search } from "lucide-react";
 import {
   type KeyboardEvent as ReactKeyboardEvent,

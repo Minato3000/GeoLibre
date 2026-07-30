@@ -4,7 +4,7 @@
  * A plugin can register a MapLibre `CustomLayerInterface` (a WebGL layer that
  * draws itself, e.g. a Zarr renderer that reprojects chunks on the GPU) through
  * `registerExternalNativeLayer`. Such a layer has **no MapLibre paint
- * properties**, so GeoLibre's Style panel editors (raster opacity/brightness/
+ * properties**, so GeoInt's Style panel editors (raster opacity/brightness/
  * saturation/contrast/hue, or the vector paint editors) cannot reach it: every
  * `setPaintProperty` call is dropped and the control looks functional while
  * doing nothing (opengeos/GeoLibre#1445).
@@ -12,18 +12,18 @@
  * The registration therefore declares `paintMode: "plugin"`, which lands in the
  * store layer as `metadata.paintMode` so the UI can hide the editors it cannot
  * apply, and may additionally supply a {@link ExternalNativePaintBridge} so the
- * generic controls GeoLibre keeps (opacity, visibility) are forwarded to the
+ * generic controls GeoInt keeps (opacity, visibility) are forwarded to the
  * custom layer's own API.
  *
  * The bridge holds live functions, so it cannot live in `metadata` (that is
- * serialized into `.geolibre.json`). It is kept in this module-level registry
+ * serialized into `.geoint.json`). It is kept in this module-level registry
  * instead, keyed by layer id, and the layer record only carries the
  * serializable `paintMode` flag.
  */
 export interface ExternalNativePaintBridge {
   /**
    * Apply an opacity in [0, 1] to the plugin's layer (e.g.
-   * `zarrLayer.setOpacity(value)`). When supplied, GeoLibre keeps its Opacity
+   * `zarrLayer.setOpacity(value)`). When supplied, GeoInt keeps its Opacity
    * sliders live for the layer and calls this whenever the value changes.
    */
   setOpacity?: (opacity: number) => void;
@@ -35,11 +35,11 @@ export interface ExternalNativePaintBridge {
   setVisibility?: (visible: boolean) => void;
 }
 
-/** Serializable paint-ownership marker stored in `GeoLibreLayer.metadata`. */
-export type ExternalNativePaintMode = "geolibre" | "plugin";
+/** Serializable paint-ownership marker stored in `GeoIntLayer.metadata`. */
+export type ExternalNativePaintMode = "geoint" | "plugin";
 
 /**
- * True when the plugin that registered this layer paints it itself, so GeoLibre
+ * True when the plugin that registered this layer paints it itself, so GeoInt
  * must not offer (or apply) MapLibre paint properties for it.
  */
 export function pluginOwnsPaint(layer: { metadata: Record<string, unknown> }): boolean {
@@ -74,7 +74,7 @@ export function getExternalNativePaintBridge(
 
 /**
  * True when a plugin-painted layer bridged `setOpacity`, so an Opacity slider
- * would actually reach the renderer. It says nothing about GeoLibre-painted
+ * would actually reach the renderer. It says nothing about GeoInt-painted
  * layers, which have no bridge: the Style and Layers panels combine it with
  * `!pluginOwnsPaint(layer)` to decide whether to show the slider at all.
  */

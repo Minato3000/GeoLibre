@@ -27,11 +27,11 @@ describe("buildProtomapsBasemapStyle", () => {
     const style = buildProtomapsBasemapStyle({
       sourceUrl: "abc.pmtiles",
       flavor: "light",
-      assetsBaseUrl: "/geolibre/basemaps-assets/",
+      assetsBaseUrl: "/geoint/basemaps-assets/",
     });
     assert.equal((style.sources.protomaps as { url: string }).url, "pmtiles://abc.pmtiles");
     // Trailing slash is trimmed and the sub-path prefix is kept.
-    assert.equal(style.glyphs, "/geolibre/basemaps-assets/fonts/{fontstack}/{range}.pbf");
+    assert.equal(style.glyphs, "/geoint/basemaps-assets/fonts/{fontstack}/{range}.pbf");
   });
 });
 

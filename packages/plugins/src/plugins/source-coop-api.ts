@@ -41,7 +41,7 @@
  * tested under `node --test`; everything that touches the map or the document
  * lives in `maplibre-source-coop.ts`.
  *
- * What GeoLibre can *do* with a listed file — its format, which reader opens
+ * What GeoInt can *do* with a listed file — its format, which reader opens
  * it, and the size limits that reader imposes — is not specific to Source
  * Cooperative and lives in `remote-file-formats.ts`, shared with the other
  * remote-browse panels. It is re-exported here under this module's names so

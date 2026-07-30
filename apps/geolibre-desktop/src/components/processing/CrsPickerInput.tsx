@@ -1,4 +1,4 @@
-import { Button, Input, cn } from "@geolibre/ui";
+import { Button, Input, cn } from "@geoint/ui";
 import { Globe2, Search } from "lucide-react";
 import { type ReactElement, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -17,7 +17,7 @@ export interface CrsPickerInputProps {
 }
 
 /**
- * An EPSG-code field with a searchable CRS list beside it (GeoLibre#1538).
+ * An EPSG-code field with a searchable CRS list beside it (GeoInt#1538).
  *
  * The text box remains the source of truth and accepts any code, so a system the
  * curated catalog omits can still be typed; the picker is a shortcut that

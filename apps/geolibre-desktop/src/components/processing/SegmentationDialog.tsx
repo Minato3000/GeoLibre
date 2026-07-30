@@ -1,6 +1,6 @@
-import { useAppStore } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
-import { fetchMlStatus, mlSegment, type MlSegmentMode, type MlStatus } from "@geolibre/processing";
+import { useAppStore } from "@geoint/core";
+import type { MapController } from "@geoint/map";
+import { fetchMlStatus, mlSegment, type MlSegmentMode, type MlStatus } from "@geoint/processing";
 import {
   Button,
   Dialog,
@@ -11,7 +11,7 @@ import {
   Input,
   Label,
   Select,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   AlertCircle,
   CheckCircle2,
@@ -27,7 +27,7 @@ import { useCallback, useEffect, useRef, useState, type ReactElement } from "rea
 import { useTranslation } from "react-i18next";
 import { isTauri, openLocalDataFileWithFallback } from "../../lib/tauri-io";
 import { reprojectFeatureCollectionToWgs84 } from "../../lib/duckdb-vector-loader";
-import { startGeoLibreSidecar } from "../../lib/sidecar";
+import { startGeoIntSidecar } from "../../lib/sidecar";
 import { UPDATE_URL } from "../../lib/updates";
 import { SidecarHelpBanner, SIDECAR_PORT, SIDECAR_URL } from "./SidecarHelpBanner";
 
@@ -137,7 +137,7 @@ export function SegmentationDialog({ mapControllerRef }: SegmentationDialogProps
     setError(null);
     setServerError(null);
     try {
-      await startGeoLibreSidecar();
+      await startGeoIntSidecar();
       await checkStatus();
     } catch (err) {
       // Route the failure into serverError so the bottom of the dialog renders

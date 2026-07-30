@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import {
   createGeoAgentStoreLayer,
   geoAgentStoreLayerId,
@@ -40,7 +40,7 @@ function geeOverlay(patch: Partial<GeoAgentOverlayRecord> = {}): GeoAgentOverlay
   };
 }
 
-function otherStoreLayer(id = "unrelated"): GeoLibreLayer {
+function otherStoreLayer(id = "unrelated"): GeoIntLayer {
   return {
     id,
     name: "Unrelated",

@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@geolibre/ui";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@geoint/ui";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import {

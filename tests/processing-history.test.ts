@@ -8,7 +8,7 @@ import {
   serializeProject,
   useAppStore,
   type ProcessingRun,
-} from "@geolibre/core";
+} from "@geoint/core";
 
 function makeRun(patch: Partial<ProcessingRun> = {}): ProcessingRun {
   return {

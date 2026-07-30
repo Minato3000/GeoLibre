@@ -1,22 +1,22 @@
 # UI Profiles & Data Source Filtering
 
-GeoLibre can hide data sources, web services, and plugins to simplify the
+GeoInt can hide data sources, web services, and plugins to simplify the
 interface for beginners or to standardize a deployment across a team. Hiding is
 **non-destructive** — nothing is removed, and any item can be re-enabled at any
 time. Profile preferences are stored locally in the browser/app and never travel
-inside a saved `.geolibre.json` project.
+inside a saved `.geoint.json` project.
 
 ## For users
 
 ### Onboarding
 
-By default GeoLibre starts on the **Advanced** interface — everything visible —
+By default GeoInt starts on the **Advanced** interface — everything visible —
 and does not show a first-launch welcome dialog. Choose a simpler experience
 level at any time from **Settings → Interface** (see below):
 
 - **Beginner** — only the essential data sources and tools.
 - **Intermediate** — common data sources, services, and plugins.
-- **Advanced** — everything GeoLibre offers (the default).
+- **Advanced** — everything GeoInt offers (the default).
 
 An administrator profile can pre-configure the interface for a whole deployment
 and lock these controls.

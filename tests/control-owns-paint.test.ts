@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import { syncLayer } from "../packages/map/src/layer-sync";
 
 // Records the maplibre calls a layer sync makes so a test can assert which
@@ -32,7 +32,7 @@ function makeMapStub(nativeLayerId: string, nativeType: string) {
   return { map, calls };
 }
 
-function externalNativeLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function externalNativeLayer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id: "mub-deliveries",
     name: "Deliveries",

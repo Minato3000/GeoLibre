@@ -4,12 +4,12 @@ import {
   type LabelStyle,
   type LayerStyle,
   type VectorStyleStop,
-} from "@geolibre/core";
+} from "@geoint/core";
 
 const MIN_LAYER_ZOOM = DEFAULT_LAYER_STYLE.minZoom;
 const MAX_LAYER_ZOOM = DEFAULT_LAYER_STYLE.maxZoom;
 
-/** The `text-anchor` values GeoLibre's {@link LabelStyle.anchor} accepts. */
+/** The `text-anchor` values GeoInt's {@link LabelStyle.anchor} accepts. */
 const VALID_LABEL_ANCHORS = new Set<string>([
   "center",
   "left",
@@ -135,11 +135,11 @@ function wrappedProperty(node: unknown): string | null {
 
 /**
  * Reverse a color paint value (string or MapLibre expression) back into a
- * GeoLibre renderer. Recognizes the exact shapes the exporter produces:
+ * GeoInt renderer. Recognizes the exact shapes the exporter produces:
  * `match` (categorized), `step` over a numeric field (graduated), and `case`
  * (rule-based); any other expression is preserved as an `expression` renderer.
  * A `coalesce` simplestyle wrapper is unwrapped first. `interpolate` over a
- * numeric field is also read as graduated, for styles GeoLibre exported before
+ * numeric field is also read as graduated, for styles GeoInt exported before
  * the graduated renderer became discrete and for hand-written styles.
  */
 function parseColorValue(value: unknown, warnings: string[]): ParsedColor {
@@ -171,7 +171,7 @@ function parseColorValue(value: unknown, warnings: string[]): ParsedColor {
   if (array[0] === "interpolate") return parseInterpolateColor(array, warnings);
   if (array[0] === "case") return parseCase(array);
 
-  // An expression GeoLibre did not author (or cannot classify): keep it verbatim
+  // An expression GeoInt did not author (or cannot classify): keep it verbatim
   // so the styling still renders through the `expression` renderer.
   return { mode: "expression", expression: JSON.stringify(value) };
 }
@@ -264,7 +264,7 @@ function parseStepColor(array: unknown[], warnings: string[]): ParsedColor {
 
 /**
  * Parse `["interpolate", ["linear"], ["to-number", ["get", p], x], v1, c1, ...]`
- * as a graduated color renderer. Retained for styles GeoLibre exported before
+ * as a graduated color renderer. Retained for styles GeoInt exported before
  * its graduated renderer became discrete, and for hand-written continuous
  * ramps. A different interpolation input (`zoom`, `heatmap-density`) is not
  * graduated color, so it is preserved as an expression.
@@ -435,7 +435,7 @@ function parseLineWidth(
       input &&
       input[0] === "zoom" &&
       // The reverse only holds when the first stop is zoom 0 (as the exporter
-      // emits); a different first stop is not a GeoLibre meters width.
+      // emits); a different first stop is not a GeoInt meters width.
       asFiniteNumber(array[3]) === 0
     ) {
       const widthAtZoom0 = asFiniteNumber(array[4]);
@@ -465,7 +465,7 @@ function parseExtrusionHeight(
 ): void {
   const array = asArray(value);
   if (!array) {
-    // GeoLibre has no constant-height field (height is attribute-driven), so a
+    // GeoInt has no constant-height field (height is attribute-driven), so a
     // flat non-zero height cannot be represented; warn rather than drop silently.
     const flat = asFiniteNumber(value);
     if (flat !== null && flat !== 0) {
@@ -525,7 +525,7 @@ function parseLabelLayer(layer: RawStyleLayer, warnings: string[]): Partial<Labe
     labels.expression = JSON.stringify(textField);
   } else if (typeof textField === "string") {
     // A Mapbox token string like "{name}" maps to a single attribute field.
-    // A literal or multi-token string ("{a} ({b})") has no GeoLibre equivalent,
+    // A literal or multi-token string ("{a} ({b})") has no GeoInt equivalent,
     // so leave the field unset and fall through to the "no text field" warning
     // rather than storing a non-expression that would fail JSON.parse later.
     const token = textField.trim().match(/^\{([^{}]+)\}$/);
@@ -546,7 +546,7 @@ function parseLabelLayer(layer: RawStyleLayer, warnings: string[]): Partial<Labe
     labels.allowOverlap = layout["text-allow-overlap"];
   }
   const anchor = asString(layout["text-anchor"]);
-  // Only accept anchors GeoLibre supports; an unknown value keeps the base.
+  // Only accept anchors GeoInt supports; an unknown value keeps the base.
   if (anchor && VALID_LABEL_ANCHORS.has(anchor)) {
     labels.anchor = anchor as LabelStyle["anchor"];
   }
@@ -588,17 +588,17 @@ function parseLabelLayer(layer: RawStyleLayer, warnings: string[]): Partial<Labe
 }
 
 /**
- * Parse a Mapbox GL / MapLibre style document into a GeoLibre symbology patch.
+ * Parse a Mapbox GL / MapLibre style document into a GeoInt symbology patch.
  * Reverses what {@link buildMapboxStyle} produces (fill/line/circle/heatmap/
  * fill-extrusion render layers, categorized/graduated/rule-based/expression
  * color renderers, proportional and "map units" sizing, and labels) so a style
- * exported from GeoLibre round-trips, and a hand-written or third-party style
- * imports as far as its paint maps onto GeoLibre's model. Anything that cannot
+ * exported from GeoInt round-trips, and a hand-written or third-party style
+ * imports as far as its paint maps onto GeoInt's model. Anything that cannot
  * be represented is reported in {@link MapboxStyleImportResult.warnings} rather
  * than dropped silently.
  *
  * When several render layers share a color renderer (a mixed-geometry export),
- * the geometry whose baked fallback color matches GeoLibre's field wins: a
+ * the geometry whose baked fallback color matches GeoInt's field wins: a
  * polygon `fill` first, then a `circle` (its fallback is `fillColor`), then a
  * `line` (whose fallback is `strokeColor`, recovered separately).
  *
@@ -635,7 +635,7 @@ export function parseMapboxStyle(input: unknown): MapboxStyleImportResult {
   // stroke/radius. Track whether the color mode has been claimed.
   let colorClaimed = false;
 
-  // Only the first render layer of each type feeds the single GeoLibre style, so
+  // Only the first render layer of each type feeds the single GeoInt style, so
   // warn when a style stacks several (a sub-styled fill, multiple label configs)
   // rather than dropping the extras silently.
   for (const type of ["fill", "fill-extrusion", "line", "circle", "symbol"]) {
@@ -767,7 +767,7 @@ export function parseMapboxStyle(input: unknown): MapboxStyleImportResult {
 
   if (heatmap) {
     matchedLayerCount += 1;
-    // GeoLibre has a single point renderer, so a style with both a circle and a
+    // GeoInt has a single point renderer, so a style with both a circle and a
     // heatmap layer (e.g. split by zoom) collapses to the heatmap; flag the loss.
     if (circle) {
       warnings.push("The style has both circle and heatmap point layers; imported as a heatmap.");
@@ -806,7 +806,7 @@ export function parseMapboxStyle(input: unknown): MapboxStyleImportResult {
  * `["all", …]` filter with an `["any", …]` arm whose members are exactly the
  * recovered rules' filters (as a multiset — duplicate-filter rules stay
  * duplicated in both), the style hides features matching no rule, which
- * GeoLibre represents as a disabled else record. The exact-match requirement
+ * GeoInt represents as a disabled else record. The exact-match requirement
  * keeps hand-written `any` filters that are unrelated to the rules from
  * spuriously disabling the else rule.
  */

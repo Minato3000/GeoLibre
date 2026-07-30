@@ -2,7 +2,7 @@
 //
 // A Zarr store is a directory tree, so opening one locally means read access to
 // a folder rather than to a file. Two platforms offer that, and this module
-// hides the difference behind `@geolibre/plugins`' `ZarrDirectoryReader`:
+// hides the difference behind `@geoint/plugins`' `ZarrDirectoryReader`:
 //
 // - the desktop app, through the Tauri folder dialog, whose `recursive: true`
 //   grant extends the `fs` scope to the picked folder's whole subtree;
@@ -15,7 +15,7 @@
 
 import { open } from "@tauri-apps/plugin-dialog";
 import { readFile } from "@tauri-apps/plugin-fs";
-import type { ZarrDirectoryReader } from "@geolibre/plugins";
+import type { ZarrDirectoryReader } from "@geoint/plugins";
 import { isTauri } from "./is-tauri";
 
 /** The subset of `FileSystemDirectoryHandle` this module uses. */

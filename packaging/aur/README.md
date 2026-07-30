@@ -1,7 +1,7 @@
-# AUR packaging (`geolibre-bin`)
+# AUR packaging (`geoint-bin`)
 
-GeoLibre ships to the [Arch User Repository](https://aur.archlinux.org/) as
-**`geolibre-bin`**, a *binary* package that repackages the Linux `.deb` already
+GeoInt ships to the [Arch User Repository](https://aur.archlinux.org/) as
+**`geoint-bin`**, a *binary* package that repackages the Linux `.deb` already
 attached to each GitHub release. It does not build from source, so installs are
 fast and need no Rust/Node toolchain. The `.deb` carries the binary, the
 `.desktop` entry, and the icons, so extracting it gives full desktop
@@ -25,12 +25,12 @@ integration.
 2. Bootstrap the package once, manually, so the AUR repo exists:
 
    ```bash
-   git clone ssh://aur@aur.archlinux.org/geolibre-bin.git
-   cd geolibre-bin
-   cp /path/to/GeoLibre/packaging/aur/PKGBUILD .
+   git clone ssh://aur@aur.archlinux.org/geoint-bin.git
+   cd geoint-bin
+   cp /path/to/GeoInt/packaging/aur/PKGBUILD .
    makepkg --printsrcinfo > .SRCINFO          # needs an Arch system
    git add PKGBUILD .SRCINFO
-   git commit -m "Initial import: geolibre-bin 1.5.0"
+   git commit -m "Initial import: geoint-bin 1.5.0"
    git push
    ```
 
@@ -43,7 +43,7 @@ integration.
 
 On every published, non-prerelease GitHub release, the `aur` job:
 
-1. downloads `GeoLibre.Desktop_<version>_amd64.deb` from the release and
+1. downloads `GeoInt.Desktop_<version>_amd64.deb` from the release and
    computes its `sha256`,
 2. renders a fresh `PKGBUILD` with `scripts/render-aur-pkgbuild.sh`,
 3. pushes the new `PKGBUILD` + regenerated `.SRCINFO` to the AUR.
@@ -57,8 +57,8 @@ affects the other publish targets.
 ```bash
 # from a checkout, after a release exists for the pinned version
 cd packaging/aur
-makepkg -si                                   # build + install, then launch GeoLibre
-namcap PKGBUILD geolibre-bin-*.pkg.tar.zst    # lint; trim depends() if it flags extras
+makepkg -si                                   # build + install, then launch GeoInt
+namcap PKGBUILD geoint-bin-*.pkg.tar.zst    # lint; trim depends() if it flags extras
 ```
 
 `depends` lists the libraries the bundle links against (`webkit2gtk-4.1`,

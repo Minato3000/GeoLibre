@@ -1,11 +1,11 @@
-import { GEOCODING_PROVIDERS, setGeocodingFetch } from "@geolibre/core";
+import { GEOCODING_PROVIDERS, setGeocodingFetch } from "@geoint/core";
 
 /**
  * Identify the app to geocoding services. Nominatim's usage policy requires a
  * User-Agent (or Referer) naming the application; the WebView's browser `fetch`
  * cannot set that header, but Tauri's native HTTP client can.
  */
-const GEOCODER_USER_AGENT = "GeoLibre-Desktop (+https://github.com/opengeos/GeoLibre)";
+const GEOCODER_USER_AGENT = "GeoInt-Desktop (+https://github.com/opengeos/GeoLibre)";
 
 /**
  * Hosts of the built-in geocoding providers' default endpoints. Only these are
@@ -13,7 +13,7 @@ const GEOCODER_USER_AGENT = "GeoLibre-Desktop (+https://github.com/opengeos/GeoL
  * custom or self-hosted endpoint) keeps the browser `fetch` — unchanged from
  * before this bypass existed. This bounds the native, CORS-exempt client to the
  * exact hosts that need it, and it stays in sync with the provider registry in
- * `@geolibre/core`. The Tauri capability scope (`src-tauri/capabilities/
+ * `@geoint/core`. The Tauri capability scope (`src-tauri/capabilities/
  * default.json`, `http:default`) must list the same hosts.
  */
 const NATIVE_FETCH_HOSTS = new Set(

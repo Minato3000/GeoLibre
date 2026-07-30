@@ -10,8 +10,8 @@ import {
   SUN_SPEED_MIN,
   subscribeSunPanel,
   subscribeSunSettings,
-} from "@geolibre/plugins";
-import { Button, Slider } from "@geolibre/ui";
+} from "@geoint/plugins";
+import { Button, Slider } from "@geoint/ui";
 import { Clock3, Pause, Play, Repeat, SkipBack, SkipForward, Sun, X } from "lucide-react";
 import { type PointerEvent as ReactPointerEvent, useState, useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";

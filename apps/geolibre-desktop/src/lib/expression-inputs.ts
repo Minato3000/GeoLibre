@@ -1,5 +1,5 @@
-import type { ExpressionVariable } from "@geolibre/core";
-import { OGC_SCALE_DENOMINATOR_AT_ZOOM_0 } from "@geolibre/map";
+import type { ExpressionVariable } from "@geoint/core";
+import { OGC_SCALE_DENOMINATOR_AT_ZOOM_0 } from "@geoint/map";
 
 /**
  * Shared inputs for the Expression Builder's entry points (Style panel,

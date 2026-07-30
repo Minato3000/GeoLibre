@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, useAppStore, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, useAppStore, type GeoIntLayer } from "@geoint/core";
 import { isTimeSliderIdle } from "../packages/plugins/src/plugins/maplibre-time-slider";
 import {
   __resetTimeSliderDockForTests,
@@ -19,7 +19,7 @@ const shouldCloseTimeSliderDock = (active: boolean): boolean =>
 // that; `isTimeSliderIdle` (tested in time-slider-config.test.ts) supplies the
 // "nothing left to drive" half.
 
-const layer = (id: string, metadata: Record<string, unknown>): GeoLibreLayer => ({
+const layer = (id: string, metadata: Record<string, unknown>): GeoIntLayer => ({
   id,
   name: id,
   type: "geojson",
@@ -30,7 +30,7 @@ const layer = (id: string, metadata: Record<string, unknown>): GeoLibreLayer => 
   metadata,
 });
 
-const withLayers = (layers: GeoLibreLayer[]): void => {
+const withLayers = (layers: GeoIntLayer[]): void => {
   useAppStore.setState({ layers });
 };
 

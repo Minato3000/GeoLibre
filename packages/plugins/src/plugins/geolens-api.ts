@@ -2,7 +2,7 @@
  * GeoLens (https://getgeolens.com) API client.
  *
  * GeoLens is a self-hosted spatial catalog + map builder (FastAPI + PostGIS)
- * that serves its datasets over open standards GeoLibre already speaks:
+ * that serves its datasets over open standards GeoInt already speaks:
  *
  *  - **Search** — `GET /api/search/datasets/?q=…` returns an OGC-Records-shaped
  *    `FeatureCollection`, one feature per dataset, with `record_type`,

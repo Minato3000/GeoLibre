@@ -70,7 +70,7 @@ export function copyRtlText(destPath: string): Plugin {
   };
 
   return {
-    name: "geolibre:copy-rtl-text",
+    name: "geoint:copy-rtl-text",
     // buildStart runs for both `vite` (dev) and `vite build`, before any module
     // in the graph is resolved, so the `?url` import always sees the copy.
     buildStart() {

@@ -1,4 +1,4 @@
-site_name: GeoLibre
+site_name: GeoInt
 site_description: A lightweight, cloud-native GIS platform for visualizing, exploring, and analyzing geospatial data across desktop and web environments, with a responsive layout for mobile screens.
 site_url: https://geolibre.app
 repo_name: opengeos/GeoLibre
@@ -11,8 +11,8 @@ site_dir: site
 
 theme:
   name: material
-  logo: assets/geolibre-icon.png
-  favicon: assets/geolibre-icon.png
+  logo: assets/geoint-icon.png
+  favicon: assets/geoint-icon.png
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -43,7 +43,7 @@ nav:
   - Features: features.md
   - Demos: demos.md
   - Downloads: downloads.md
-  - Launch GeoLibre Web: /demo/
+  - Launch GeoInt Web: /demo/
   - User Guide:
       - Interface Overview: user-guide/interface.md
       - Projects: user-guide/projects.md
@@ -114,4 +114,4 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/opengeos/GeoLibre
-      name: GeoLibre on GitHub
+      name: GeoInt on GitHub

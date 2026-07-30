@@ -1,5 +1,5 @@
-import type { GeoLibreLayer } from "@geolibre/core";
-import { extractCogSubset, extractWmsSubset, extractXyzTileSubset } from "@geolibre/processing";
+import type { GeoIntLayer } from "@geoint/core";
+import { extractCogSubset, extractWmsSubset, extractXyzTileSubset } from "@geoint/processing";
 
 import { normalizeSubdomains, rasterSubsetKind, type RasterSubsetKind } from "./raster-subset-kind";
 import { saveBinaryFileWithFallback } from "./tauri-io";
@@ -64,7 +64,7 @@ const MAX_LOCAL_COG_BYTES = 2 * 1024 * 1024 * 1024;
  * the extractor can byte-range only the tiles it needs.
  */
 async function resolveCogSource(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   signal?: AbortSignal,
 ): Promise<string | Uint8Array> {
   const source = layer.source as Record<string, unknown>;
@@ -132,7 +132,7 @@ export const WGS84 = 4326;
  * @throws If the layer type is unsupported or its source is unreadable.
  */
 export async function extractRasterSubset(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   request: RasterSubsetRequest,
 ): Promise<Uint8Array> {
   const kind = rasterSubsetKind(layer);

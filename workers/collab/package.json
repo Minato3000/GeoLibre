@@ -1,5 +1,5 @@
 {
-  "name": "geolibre-collab-worker",
+  "name": "geoint-collab-worker",
   "version": "0.0.0",
   "private": true,
   "scripts": {

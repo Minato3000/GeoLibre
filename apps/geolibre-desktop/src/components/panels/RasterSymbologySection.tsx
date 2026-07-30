@@ -1,4 +1,4 @@
-import { type GeoLibreLayer, parseHexColorList, useAppStore } from "@geolibre/core";
+import { type GeoIntLayer, parseHexColorList, useAppStore } from "@geoint/core";
 import {
   RASTER_MAX_CLASSES,
   RASTER_MAX_STORED_CLASSES,
@@ -14,7 +14,7 @@ import {
   type PaletteLegendEntry,
   savedRasterSymbology,
   warmColormapColors,
-} from "@geolibre/plugins";
+} from "@geoint/plugins";
 import {
   Button,
   type ColorRampOption,
@@ -24,7 +24,7 @@ import {
   Select,
   Separator,
   Textarea,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   COLORMAP_OPTIONS,
   CUSTOM_NORMALIZED_DIFFERENCE,
@@ -79,7 +79,7 @@ const SORTED_COLORMAPS = [...COLORMAP_OPTIONS].sort((a, b) =>
 );
 
 /** True when a pre-migration project stored `reversed` on rasterSymbology. */
-function legacyReversed(layer: GeoLibreLayer): boolean {
+function legacyReversed(layer: GeoIntLayer): boolean {
   const sym = layer.metadata.rasterSymbology;
   return (
     typeof sym === "object" &&
@@ -89,7 +89,7 @@ function legacyReversed(layer: GeoLibreLayer): boolean {
   );
 }
 
-function readRasterState(layer: GeoLibreLayer): RasterStateRecord {
+function readRasterState(layer: GeoIntLayer): RasterStateRecord {
   const raw =
     layer.metadata.rasterState &&
     typeof layer.metadata.rasterState === "object" &&
@@ -122,12 +122,12 @@ function readRasterState(layer: GeoLibreLayer): RasterStateRecord {
   };
 }
 
-function readBandCount(layer: GeoLibreLayer): number | null {
+function readBandCount(layer: GeoIntLayer): number | null {
   const value = layer.metadata.bandCount;
   return typeof value === "number" && value > 0 ? value : null;
 }
 
-function readBandNames(layer: GeoLibreLayer): Map<number, string> {
+function readBandNames(layer: GeoIntLayer): Map<number, string> {
   const raw = layer.metadata.bandNames;
   const map = new Map<number, string>();
   if (Array.isArray(raw)) {
@@ -148,12 +148,12 @@ function rangeFromBreaks(breaks: number[]): [number, number][] {
  * Single-band pseudocolor (with optional discrete classification) and RGB
  * band-combination controls for a maplibre-gl-raster COG layer. Edits the
  * layer's `metadata.rasterState` (pushed to the control by the store sync) and
- * GeoLibre-owned `metadata.rasterSymbology` (consumed by the classification
+ * GeoInt-owned `metadata.rasterSymbology` (consumed by the classification
  * render injection).
  *
  * @param props.layer - The selected raster store layer.
  */
-export function RasterSymbologySection({ layer }: { layer: GeoLibreLayer }) {
+export function RasterSymbologySection({ layer }: { layer: GeoIntLayer }) {
   const { t } = useTranslation();
   const updateLayer = useAppStore((s) => s.updateLayer);
   const state = readRasterState(layer);

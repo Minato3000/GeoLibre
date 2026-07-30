@@ -1,10 +1,10 @@
 # Troubleshooting
 
-This page collects fixes for common problems when running GeoLibre Web in a browser. Most display glitches after an update come down to a stale browser cache, so start there.
+This page collects fixes for common problems when running GeoInt Web in a browser. Most display glitches after an update come down to a stale browser cache, so start there.
 
 ## Stale browser cache
 
-GeoLibre Web is a single-page app that browsers cache aggressively. After a new version ships, an outdated cached copy can leave you with display errors, missing or non-responsive controls, plugins that appear not to load, or stale data. The fix is to clear the cache and reload so the browser fetches the latest build.
+GeoInt Web is a single-page app that browsers cache aggressively. After a new version ships, an outdated cached copy can leave you with display errors, missing or non-responsive controls, plugins that appear not to load, or stale data. The fix is to clear the cache and reload so the browser fetches the latest build.
 
 Try these in order:
 
@@ -13,7 +13,7 @@ Try these in order:
     - **macOS Chrome / Edge / Firefox**: `Cmd + Shift + R`.
     - **macOS Safari**: `Cmd + Option + R`.
 - **Open the app in a private / incognito window** to confirm the problem is cache related. If it works there, the cache is the cause.
-- **Clear the cached files** for the GeoLibre site if a hard refresh is not enough, then reload.
+- **Clear the cached files** for the GeoInt site if a hard refresh is not enough, then reload.
 
 !!! note "Safari users"
     Safari caches web GIS apps aggressively, so it is the most common source of these issues. To empty Safari's cache, choose **Develop → Empty Caches** (`Cmd + Option + E`), or **Safari → Clear History**, then reload the page. If the **Develop** menu is hidden, enable it in **Safari → Settings → Advanced → Show features for web developers**.
@@ -26,4 +26,4 @@ If a plugin's **Activate** action seems to do nothing, first rule out the stale-
 
 ## Desktop-only features in the browser
 
-Some capabilities require the desktop app and are unavailable in the browser build: local filesystem dialogs, local MBTiles, local raster file reads, and project save/open. If one of these is missing, you are likely running GeoLibre Web rather than the desktop app. See [Getting Started](../getting-started.md) for how the web, desktop, and Jupyter builds differ.
+Some capabilities require the desktop app and are unavailable in the browser build: local filesystem dialogs, local MBTiles, local raster file reads, and project save/open. If one of these is missing, you are likely running GeoInt Web rather than the desktop app. See [Getting Started](../getting-started.md) for how the web, desktop, and Jupyter builds differ.

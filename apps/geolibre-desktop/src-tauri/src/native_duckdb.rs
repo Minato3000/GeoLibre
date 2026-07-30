@@ -6,8 +6,8 @@ use duckdb::{
 use serde_json::{json, Map};
 use std::path::Path;
 
-const GEOMETRY_JSON_COLUMN: &str = "__geolibre_geometry_geojson";
-const FEATURE_COUNT_COLUMN: &str = "__geolibre_feature_count";
+const GEOMETRY_JSON_COLUMN: &str = "__geoint_geometry_geojson";
+const FEATURE_COUNT_COLUMN: &str = "__geoint_feature_count";
 const TARGET_CRS: &str = "EPSG:4326";
 const WKB_GEOMETRY_COLUMN_NAMES: [&str; 6] = [
     "geometry",
@@ -226,7 +226,7 @@ fn ensure_spatial_extension(conn: &Connection) -> Result<(), String> {
 }
 
 fn trusted_spatial_extension_path() -> Result<Option<String>, String> {
-    let Some(path) = blank_to_none(std::env::var("GEOLIBRE_DUCKDB_SPATIAL_EXTENSION_PATH").ok())
+    let Some(path) = blank_to_none(std::env::var("GEOINT_DUCKDB_SPATIAL_EXTENSION_PATH").ok())
     else {
         return Ok(None);
     };
@@ -391,7 +391,7 @@ fn has_valid_base64_wkb_values(
     column: &str,
 ) -> Result<bool, String> {
     let column_sql = quote_identifier(column);
-    let sample_column = quote_identifier("__geolibre_base64_wkb_sample");
+    let sample_column = quote_identifier("__geoint_base64_wkb_sample");
     let probe_sql = format!(
         "SELECT count(*) AS sample_count, \
          count(TRY(ST_GeomFromWKB(from_base64({sample_column})))) AS valid_count \
@@ -734,7 +734,7 @@ mod tests {
             .as_nanos();
         std::env::temp_dir()
             .join(format!(
-                "geolibre-native-duckdb-{suffix}-{}.geoparquet",
+                "geoint-native-duckdb-{suffix}-{}.geoparquet",
                 std::process::id()
             ))
             .to_string_lossy()
@@ -893,7 +893,7 @@ mod tests {
         assert!(error.contains("glob paths are not allowed"));
 
         let bracket_pattern = format!(
-            "{}/geolibre-native-duckdb-[{}].parquet",
+            "{}/geoint-native-duckdb-[{}].parquet",
             std::env::temp_dir().display(),
             std::process::id()
         );
@@ -905,7 +905,7 @@ mod tests {
     #[test]
     fn native_options_allows_literal_brackets_in_existing_paths() {
         let path = format!(
-            "{}/geolibre-native-duckdb-[literal]-{}.parquet",
+            "{}/geoint-native-duckdb-[literal]-{}.parquet",
             std::env::temp_dir().display(),
             std::process::id()
         );
@@ -922,7 +922,7 @@ mod tests {
             .expect("system time before Unix epoch")
             .as_nanos();
         let base = std::env::temp_dir().join(format!(
-            "geolibre-native-prj-{suffix}-{}",
+            "geoint-native-prj-{suffix}-{}",
             std::process::id()
         ));
         let shp_path = base.with_extension("shp");
@@ -950,7 +950,7 @@ mod tests {
             .expect("system time before Unix epoch")
             .as_nanos();
         let base = std::env::temp_dir().join(format!(
-            "geolibre-native-prj-missing-{suffix}-{}",
+            "geoint-native-prj-missing-{suffix}-{}",
             std::process::id()
         ));
         let shp_path = base.with_extension("shp");
@@ -972,7 +972,7 @@ mod tests {
         // A unique per-test subdirectory so the directory scan only sees this
         // file set, independent of other tests sharing the temp dir.
         let dir = std::env::temp_dir().join(format!(
-            "geolibre-native-prj-case-{suffix}-{}",
+            "geoint-native-prj-case-{suffix}-{}",
             std::process::id()
         ));
         std::fs::create_dir_all(&dir).expect("create test dir");

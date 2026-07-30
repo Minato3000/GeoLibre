@@ -1,4 +1,6 @@
-import { readRuntimeEnv, type RuntimeEnv } from "./provider";
+import { getRuntimeEnvironment } from "@geoint/core";
+
+type RuntimeEnv = Record<string, string | undefined>;
 
 /** Fetch with a hard timeout so a slow search backend can't hang the tool. */
 async function fetchWithTimeout(
@@ -75,7 +77,7 @@ async function tavilySearch(
 async function duckDuckGoSearch(query: string, signal?: AbortSignal): Promise<WebSearchResponse> {
   const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(
     query,
-  )}&format=json&no_html=1&skip_disambig=1&t=geolibre`;
+  )}&format=json&no_html=1&skip_disambig=1&t=geoint`;
   const response = await fetchWithTimeout(url, { signal });
   if (!response.ok) {
     throw new Error(`DuckDuckGo ${response.status} ${response.statusText}`);
@@ -127,7 +129,7 @@ async function duckDuckGoSearch(query: string, signal?: AbortSignal): Promise<We
  */
 export async function webSearch(
   query: string,
-  env: RuntimeEnv = readRuntimeEnv(),
+  env: RuntimeEnv = getRuntimeEnvironment(),
   signal?: AbortSignal,
 ): Promise<WebSearchResponse> {
   const tavilyKey = env.TAVILY_API_KEY?.trim();

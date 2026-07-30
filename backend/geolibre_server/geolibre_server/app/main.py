@@ -1,5 +1,5 @@
 """
-GeoLibre processing sidecar (FastAPI).
+GeoInt processing sidecar (FastAPI).
 
 Future integrations (v0.9+):
 - GDAL / Rasterio — raster I/O, warping, COG
@@ -28,6 +28,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from .conversion import router as conversion_router
 from .ml import router as ml_router
 from .ml import stop_child_server
+from .mosaics import router as mosaics_router
 from .postgis import router as postgis_router
 from .raster import router as raster_router
 from .sql import router as sql_router
@@ -41,7 +42,7 @@ from .whitebox import router as whitebox_router
 # skipped so those flows keep working. CORS is *not* a sufficient control on its
 # own: a browser can send a simple cross-origin POST without a preflight (CSRF),
 # and a DNS-rebinding attacker can read responses too. The token closes both.
-SIDECAR_TOKEN = os.environ.get("GEOLIBRE_SIDECAR_TOKEN", "").strip()
+SIDECAR_TOKEN = os.environ.get("GEOINT_SIDECAR_TOKEN", "").strip()
 # Compared as bytes: Starlette decodes request headers as latin-1, so a header
 # with a byte > 0x7F arrives as a non-ASCII ``str`` and ``hmac.compare_digest``
 # would raise ``TypeError`` (turning an auth failure into a 500). Encoding both
@@ -52,24 +53,24 @@ _SIDECAR_TOKEN_BYTES = SIDECAR_TOKEN.encode("utf-8")
 # readiness poll and the frontend before it holds a token) and CORS preflight.
 _TOKEN_EXEMPT_PATHS = frozenset({"/health"})
 
-app = FastAPI(title="GeoLibre Server", version="0.8.0")
+app = FastAPI(title="GeoInt Server", version="0.8.0")
 
 
 @app.middleware("http")
 async def require_sidecar_token(request: Request, call_next):
     """Reject requests that do not present the per-launch sidecar token.
 
-    The token may be supplied either as ``X-GeoLibre-Token: <token>`` or as
+    The token may be supplied either as ``X-GeoInt-Token: <token>`` or as
     ``Authorization: Bearer <token>``. ``OPTIONS`` preflights and ``/health`` are
     exempt so CORS and readiness probing keep working. No-ops when
-    ``GEOLIBRE_SIDECAR_TOKEN`` is unset.
+    ``GEOINT_SIDECAR_TOKEN`` is unset.
     """
     if (
         SIDECAR_TOKEN
         and request.method != "OPTIONS"
         and request.url.path not in _TOKEN_EXEMPT_PATHS
     ):
-        provided = request.headers.get("x-geolibre-token", "")
+        provided = request.headers.get("x-geoint-token", "")
         if not provided:
             auth = request.headers.get("authorization", "")
             if auth.lower().startswith("bearer "):
@@ -115,6 +116,7 @@ app.include_router(vector_router)
 app.include_router(postgis_router)
 app.include_router(sql_router)
 app.include_router(ml_router)
+app.include_router(mosaics_router)
 
 
 class RunRequest(BaseModel):

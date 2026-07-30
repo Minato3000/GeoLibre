@@ -13,7 +13,7 @@ import {
   ensureRemotePMTilesArchive,
   registerOfflineBasemapStyle,
   type ProtomapsFlavor,
-} from "@geolibre/map";
+} from "@geoint/map";
 
 /** True when `url` points at a PMTiles archive (a `.pmtiles` HTTP(S) URL or a
  * `pmtiles://…` URL), i.e. something to style rather than load as a style.json. */
@@ -44,7 +44,7 @@ export function buildRemotePmtilesBasemap(url: string, flavor: ProtomapsFlavor):
     // Resolve bundled glyphs/sprites to a fully-qualified absolute URL that
     // honours the deployment base. MapLibre rejects non-absolute sprite/glyph
     // URLs, so a relative "./" base (embed/demo build) must be absolutised;
-    // document.baseURI also keeps a sub-path (GEOLIBRE_APP_BASE) working where a
+    // document.baseURI also keeps a sub-path (GEOINT_APP_BASE) working where a
     // bare "/basemaps-assets" would 404. Mirrors BasemapExtractPanel.
     assetsBaseUrl: new URL(`${import.meta.env.BASE_URL}basemaps-assets`, document.baseURI).href,
   });

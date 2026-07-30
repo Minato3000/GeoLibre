@@ -1,6 +1,6 @@
 # Portable zip packaging (`build-portable.ps1`)
 
-[`build-portable.ps1`](build-portable.ps1) packages GeoLibre Desktop as a
+[`build-portable.ps1`](build-portable.ps1) packages GeoInt Desktop as a
 **portable Windows zip** from a finished Windows Tauri release build. The user
 unzips the folder anywhere and runs `geolibre-desktop.exe` directly: no
 installer, no admin rights, no registry changes.

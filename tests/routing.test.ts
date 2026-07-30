@@ -301,7 +301,7 @@ describe("getRoutingConfig", () => {
 
   it("honors VITE_ROUTING_ENDPOINT from runtime env and trims a trailing slash", () => {
     (globalThis as { window?: unknown }).window = {
-      __GEOLIBRE_RUNTIME_ENV__: {
+      __GEOINT_RUNTIME_ENV__: {
         VITE_ROUTING_ENDPOINT: "https://valhalla.example.com/",
       },
     };

@@ -3,8 +3,8 @@ import {
   type SelectionMode,
   useAppStore,
   validateMapExpression,
-} from "@geolibre/core";
-import { Button, Label, Select, Textarea } from "@geolibre/ui";
+} from "@geoint/core";
+import { Button, Label, Select, Textarea } from "@geoint/ui";
 import { SquareFunction } from "lucide-react";
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 import { useTranslation } from "react-i18next";

@@ -1,15 +1,15 @@
-"""``geolibre`` — drive the host GeoLibre map from a notebook cell.
+"""``geoint`` — drive the host GeoInt map from a notebook cell.
 
-This module is made importable inside GeoLibre's **Notebook panel** (both the
+This module is made importable inside GeoInt's **Notebook panel** (both the
 in-browser JupyterLite kernel on web and the JupyterLab server on desktop), and
 in any kernel of the desktop app's Jupyter server — including one driven from an
 external client such as VS Code's Jupyter extension. It is the kernel side of the
-notebook scripting bridge: it forwards commands to the running GeoLibre app.
+notebook scripting bridge: it forwards commands to the running GeoInt app.
 
-Scope: this client speaks GeoLibre's **scripting bridge** (the same
+Scope: this client speaks GeoInt's **scripting bridge** (the same
 ``createScriptingHandlers`` surface used by the in-app Python console). That is a
 focused map-control API — camera, layers, styling, GeoJSON, processing — and is
-intentionally a smaller surface than the full ``geolibre`` PyPI widget (which
+intentionally a smaller surface than the full ``geoint`` PyPI widget (which
 mutates a whole project model and renders its own app). Marker/choropleth helpers
 here build GeoJSON and add it through the same layer command, so no extra bridge
 commands are needed.
@@ -19,12 +19,12 @@ without waiting for a reply, so it behaves identically in JupyterLite (a
 browser/WebAssembly kernel) and a real JupyterLab server, with no
 ``anywidget``/comm dependency. Consequently *read-back* queries (``get_view``,
 ``identify``, ``list_layers``, …) are not available here — they need the blocking
-request/reply path the ``geolibre`` widget uses.
+request/reply path the ``geoint`` widget uses.
 
 Two transports carry those commands, picked per call:
 
 1. **The relay** (``geolibre_server/jupyter_relay.py``), when the kernel belongs
-   to a GeoLibre desktop Jupyter server. Commands are POSTed to a loopback
+   to a GeoInt desktop Jupyter server. Commands are POSTed to a loopback
    endpoint the app subscribes to, so they arrive no matter which *frontend* is
    driving the kernel — the Notebook panel, or an external client such as VS
    Code's Jupyter extension (issue #1442).
@@ -32,17 +32,17 @@ Two transports carry those commands, picked per call:
    This only reaches the map when the notebook is rendered inside the app's own
    iframe, which is exactly the case on web (JupyterLite).
 
-When neither can deliver, the call emits a :class:`GeoLibreNotConnectedWarning`
+When neither can deliver, the call emits a :class:`GeoIntNotConnectedWarning`
 rather than doing nothing at all. Turn it into an error with::
 
-    import warnings, geolibre
-    warnings.simplefilter("error", geolibre.GeoLibreNotConnectedWarning)
+    import warnings, geoint
+    warnings.simplefilter("error", geoint.GeoIntNotConnectedWarning)
 
 Usage::
 
-    import geolibre
+    import geoint
 
-    m = geolibre.connect()
+    m = geoint.connect()
     m.fly_to(-122.4, 37.8, zoom=11)
     m.add_geojson(gdf, name="My layer")          # GeoDataFrame, dict, or JSON
     m.add_markers([(-122.4, 37.8), (-73.9, 40.7)], name="Cities")
@@ -67,7 +67,7 @@ from typing import Any
 from IPython.display import Javascript, display
 
 __all__ = [
-    "GeoLibreNotConnectedWarning",
+    "GeoIntNotConnectedWarning",
     "HostMap",
     "Map",
     "connect",
@@ -76,22 +76,22 @@ __all__ = [
 
 # Published by the relay extension into the Jupyter server's environment, which
 # every kernel it spawns inherits. See geolibre_server/jupyter_relay.py.
-_RELAY_URL_ENV = "GEOLIBRE_RELAY_URL"
-_RELAY_TOKEN_ENV = "GEOLIBRE_RELAY_TOKEN"
+_RELAY_URL_ENV = "GEOINT_RELAY_URL"
+_RELAY_TOKEN_ENV = "GEOINT_RELAY_TOKEN"
 
 # Loopback round-trip to the local app. Short: a hung relay must not stall a
 # notebook, and the caller only loses a fire-and-forget command.
 _RELAY_TIMEOUT_SECONDS = 5.0
 
 _NOT_CONNECTED_HINT = (
-    "The command was not delivered to a GeoLibre map. Open GeoLibre Desktop and "
+    "The command was not delivered to a GeoInt map. Open GeoInt Desktop and "
     "its Notebook panel (Processing -> Jupyter Notebook) so the app is running "
     "and connected to this Jupyter server, then run the cell again."
 )
 
 
-class GeoLibreNotConnectedWarning(UserWarning):
-    """Warned when a map command could not be delivered to a GeoLibre window."""
+class GeoIntNotConnectedWarning(UserWarning):
+    """Warned when a map command could not be delivered to a GeoInt window."""
 
 
 def _relay_url() -> str | None:
@@ -136,7 +136,7 @@ def _post_to_relay(url: str, message: dict[str, Any]) -> tuple[int, str | None]:
         ) as response:
             payload = json.loads(response.read().decode("utf-8"))
     except (urllib.error.URLError, OSError, ValueError) as error:
-        return 0, f"the local GeoLibre relay could not be reached ({error})"
+        return 0, f"the local GeoInt relay could not be reached ({error})"
     delivered = payload.get("delivered")
     return (delivered if isinstance(delivered, int) else 0), None
 
@@ -169,14 +169,14 @@ def _post_message_via_display(message: dict[str, Any]) -> None:
 
 
 def is_connected() -> bool:
-    """Whether a GeoLibre window is currently listening for map commands.
+    """Whether a GeoInt window is currently listening for map commands.
 
     Only the relay transport can answer this. On the in-browser kernel
     (JupyterLite) commands travel through the notebook's own iframe and there is
     nothing to ask, so this reports True.
 
     Returns:
-        True when at least one GeoLibre window would receive a command now.
+        True when at least one GeoInt window would receive a command now.
     """
     url = _relay_url()
     if url is None:
@@ -199,18 +199,18 @@ def is_connected() -> bool:
 
 
 def _send(method: str, params: dict[str, Any] | None = None) -> None:
-    """Post one scripting command to the host GeoLibre app.
+    """Post one scripting command to the host GeoInt app.
 
     Prefers the relay (works from any Jupyter frontend, and reports delivery);
     falls back to the ``postMessage`` display transport (the embedded panel and
     JupyterLite). An empty ``requestId`` marks a fire-and-forget call (the host
     still replies; we just don't await it).
 
-    Warns with :class:`GeoLibreNotConnectedWarning` when the command provably did
+    Warns with :class:`GeoIntNotConnectedWarning` when the command provably did
     not reach a map, so a disconnected setup never looks like a silent success.
     """
     message = {
-        "type": "geolibre:command",
+        "type": "geoint:command",
         "requestId": "",
         "method": method,
         "params": params or {},
@@ -223,12 +223,12 @@ def _send(method: str, params: dict[str, Any] | None = None) -> None:
         # Last-ditch: an app old enough to lack the relay socket still listens on
         # postMessage, and this notebook may be embedded in its Notebook panel.
         _post_message_via_display(message)
-        reason = error or "no GeoLibre window is connected to this Jupyter server"
+        reason = error or "no GeoInt window is connected to this Jupyter server"
         # stacklevel=3: HostMap method -> _send -> the user's cell, so the warning
         # points at their code (and repeats in each new cell rather than once).
         warnings.warn(
-            f"GeoLibre: {reason}. {_NOT_CONNECTED_HINT}",
-            GeoLibreNotConnectedWarning,
+            f"GeoInt: {reason}. {_NOT_CONNECTED_HINT}",
+            GeoIntNotConnectedWarning,
             stacklevel=3,
         )
         return
@@ -236,10 +236,10 @@ def _send(method: str, params: dict[str, Any] | None = None) -> None:
     _post_message_via_display(message)
     if not _is_browser_kernel():
         warnings.warn(
-            "GeoLibre: this kernel is not running on a GeoLibre Jupyter server, "
+            "GeoInt: this kernel is not running on a GeoInt Jupyter server, "
             "so map commands can only be delivered when the notebook is rendered "
             f"inside the app's Notebook panel. {_NOT_CONNECTED_HINT}",
-            GeoLibreNotConnectedWarning,
+            GeoIntNotConnectedWarning,
             stacklevel=3,
         )
 
@@ -307,10 +307,10 @@ def _points_to_featurecollection(points: Iterable[Any]) -> dict[str, Any]:
 
 
 class HostMap:
-    """A handle to the live map in the surrounding GeoLibre app."""
+    """A handle to the live map in the surrounding GeoInt app."""
 
     def __repr__(self) -> str:
-        return "<GeoLibre map (commands are sent to the live app)>"
+        return "<GeoInt map (commands are sent to the live app)>"
 
     # -- camera ---------------------------------------------------------------
 
@@ -392,7 +392,7 @@ class HostMap:
         )
 
     # add_circle_markers is an alias today (styling is applied via set_style or
-    # the Style panel); kept for parity with the geolibre package's vocabulary.
+    # the Style panel); kept for parity with the geoint package's vocabulary.
     add_circle_markers = add_markers
 
     def remove_layer(self, layer_id: str) -> None:
@@ -423,21 +423,20 @@ class HostMap:
 
 
 def connect() -> HostMap:
-    """Return a handle to the live map in the surrounding GeoLibre app.
+    """Return a handle to the live map in the surrounding GeoInt app.
 
-    Warns with :class:`GeoLibreNotConnectedWarning` when no GeoLibre window is
+    Warns with :class:`GeoIntNotConnectedWarning` when no GeoInt window is
     listening, so a misconfigured session says so up front instead of at the
     first command that quietly goes nowhere.
     """
     if _relay_url() is not None and not is_connected():
         warnings.warn(
-            f"GeoLibre: no GeoLibre window is connected to this Jupyter server. "
-            f"{_NOT_CONNECTED_HINT}",
-            GeoLibreNotConnectedWarning,
+            f"GeoInt: no GeoInt window is connected to this Jupyter server. {_NOT_CONNECTED_HINT}",
+            GeoIntNotConnectedWarning,
             stacklevel=2,
         )
     return HostMap()
 
 
-# ``geolibre.Map()`` is accepted as an alias for ``geolibre.connect()``.
+# ``geoint.Map()`` is accepted as an alias for ``geoint.connect()``.
 Map = HostMap

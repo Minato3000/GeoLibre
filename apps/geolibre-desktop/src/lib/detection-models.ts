@@ -16,7 +16,7 @@
  * repos, not an official Ultralytics/ONNX-zoo source. The immutable commit-SHA
  * pin is the main mitigation (jsDelivr serves that exact byte content); the
  * remaining risk is availability if the account/repo is ever deleted. Follow-up:
- * mirror these files into a GeoLibre-controlled repo so the built-in option does
+ * mirror these files into a GeoInt-controlled repo so the built-in option does
  * not depend on an external account.
  */
 
@@ -136,7 +136,7 @@ export const BUILTIN_DETECTION_MODELS: readonly BuiltinDetectionModel[] = [
 ];
 
 /** Cache bucket holding downloaded model files so a model is fetched once. */
-const MODEL_CACHE = "geolibre-detection-models";
+const MODEL_CACHE = "geoint-detection-models";
 
 /**
  * Download a built-in model's bytes, caching the response so subsequent runs

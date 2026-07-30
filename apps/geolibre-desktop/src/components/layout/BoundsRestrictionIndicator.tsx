@@ -1,4 +1,4 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import { Lock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

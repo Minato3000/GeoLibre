@@ -1,4 +1,4 @@
-import type { LayerStyle } from "@geolibre/core";
+import type { LayerStyle } from "@geoint/core";
 
 export type StyledDeckLayerLike = {
   clone?: (props: Record<string, unknown>) => StyledDeckLayerLike;
@@ -12,7 +12,7 @@ export function asRecord(value: unknown): Record<string, unknown> {
 export function colorToRgba(color: string, alpha: number): [number, number, number, number] {
   const normalized = color.trim();
   // The Style panel's ColorField can emit the "transparent" sentinel
-  // (TRANSPARENT_COLOR in @geolibre/ui); render it invisible instead of
+  // (TRANSPARENT_COLOR in @geoint/ui); render it invisible instead of
   // letting it fall through to the invalid-color fallback blue.
   if (normalized.toLowerCase() === "transparent") return [0, 0, 0, 0];
   const hex =

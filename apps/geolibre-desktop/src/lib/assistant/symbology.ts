@@ -1,10 +1,10 @@
 import {
   createGraduatedClassBreaks,
   interpolateRampColors,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerStyle,
   type VectorStyleStop,
-} from "@geolibre/core";
+} from "@geoint/core";
 
 /** Styling mode the assistant can apply to a vector layer. */
 export type AssistantSymbologyMode = "graduated" | "categorized";
@@ -23,7 +23,7 @@ export interface SymbologyRequest {
 }
 
 /** Read every value a property takes across a layer's features. */
-function propertyValues(layer: GeoLibreLayer, property: string): unknown[] {
+function propertyValues(layer: GeoIntLayer, property: string): unknown[] {
   const features = layer.geojson?.features ?? [];
   const values: unknown[] = [];
   for (const feature of features) {
@@ -84,7 +84,7 @@ function categorizedStops(values: unknown[], colorRamp: string): VectorStyleStop
  * @throws If the property is missing, or graduated mode has too few numeric values.
  */
 export function buildSymbologyStyle(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   request: SymbologyRequest,
 ): Partial<LayerStyle> {
   const colorRamp = request.colorRamp?.trim() || "viridis";

@@ -48,7 +48,7 @@ def _isolate_listeners():
 def test_normalize_command_fills_in_the_bridge_envelope():
     message = jupyter_relay.normalize_command({"method": "flyTo", "params": {"zoom": 4}})
     assert message == {
-        "type": "geolibre:command",
+        "type": "geoint:command",
         "requestId": "",
         "method": "flyTo",
         "params": {"zoom": 4},
@@ -115,15 +115,14 @@ def test_rejects_foreign_origins(origin):
 
 def test_relay_base_url_joins_the_server_base_url():
     assert (
-        jupyter_relay.relay_base_url("127.0.0.1", 8766, "/")
-        == "http://127.0.0.1:8766/geolibre/relay"
+        jupyter_relay.relay_base_url("127.0.0.1", 8766, "/") == "http://127.0.0.1:8766/geoint/relay"
     )
 
 
 def test_relay_base_url_honors_a_prefixed_server():
     assert (
         jupyter_relay.relay_base_url("127.0.0.1", 8766, "/jupyter/")
-        == "http://127.0.0.1:8766/jupyter/geolibre/relay"
+        == "http://127.0.0.1:8766/jupyter/geoint/relay"
     )
 
 
@@ -140,7 +139,7 @@ def test_broadcast_reaches_every_listener_and_counts_them():
     first, second = FakeSocket(), FakeSocket()
     jupyter_relay._listeners.update({first, second})
 
-    delivered = jupyter_relay._broadcast({"type": "geolibre:command", "method": "flyTo"})
+    delivered = jupyter_relay._broadcast({"type": "geoint:command", "method": "flyTo"})
 
     assert delivered == 2
     assert json.loads(first.received[0])["method"] == "flyTo"
@@ -151,7 +150,7 @@ def test_broadcast_drops_a_dead_listener_instead_of_failing():
     alive, dead = FakeSocket(), FakeSocket(fails=True)
     jupyter_relay._listeners.update({alive, dead})
 
-    delivered = jupyter_relay._broadcast({"type": "geolibre:command", "method": "flyTo"})
+    delivered = jupyter_relay._broadcast({"type": "geoint:command", "method": "flyTo"})
 
     assert delivered == 1
     assert dead not in jupyter_relay._listeners
@@ -161,7 +160,7 @@ def test_broadcast_drops_a_dead_listener_instead_of_failing():
 def test_broadcast_with_no_listeners_reports_zero():
     # This zero is what the kernel client turns into a "nothing is listening"
     # warning rather than a silent no-op.
-    assert jupyter_relay._broadcast({"type": "geolibre:command", "method": "flyTo"}) == 0
+    assert jupyter_relay._broadcast({"type": "geoint:command", "method": "flyTo"}) == 0
 
 
 # -- extension load ----------------------------------------------------------
@@ -204,13 +203,13 @@ def test_load_registers_the_endpoints_and_publishes_them_to_kernels(monkeypatch)
 
     routes = [route for route, _ in serverapp.web_app.added]
     assert routes == [
-        "/geolibre/relay/socket",
-        "/geolibre/relay/command",
-        "/geolibre/relay/status",
+        "/geoint/relay/socket",
+        "/geoint/relay/command",
+        "/geoint/relay/status",
     ]
     # Kernels the server spawns inherit these, which is what makes an externally
     # driven kernel able to find the map with no configuration.
-    assert os.environ[jupyter_relay.ENV_RELAY_URL] == "http://127.0.0.1:8766/geolibre/relay"
+    assert os.environ[jupyter_relay.ENV_RELAY_URL] == "http://127.0.0.1:8766/geoint/relay"
     assert os.environ[jupyter_relay.ENV_RELAY_TOKEN] == "s3cret"
 
 

@@ -16,7 +16,7 @@ const GEOAGENT_BROWSER_BUNDLE = "maplibre-gl-geoagent/dist/browser-";
 const EARTH_ENGINE_CONTROL_BUNDLE = "maplibre-gl-earth-engine/dist/";
 const EARTH_ENGINE_BROWSER_BUNDLE = "@google/earthengine/build/browser.js";
 const GIS_CHUNK_WARNING_LIMIT_KB = 14000;
-const APP_BASE = process.env.GEOLIBRE_APP_BASE;
+const APP_BASE = process.env.GEOINT_APP_BASE;
 const APP_VERSION = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8"))
   .version as string;
 
@@ -47,7 +47,7 @@ const FILE_ENV = loadEnv(resolveViteMode(), CONFIG_DIR, "");
 // A managed build can use the server-side AI proxy without embedding any
 // provider credential. Only its public endpoint and selected model enter the
 // client bundle.
-for (const name of ["GEOLIBRE_AI_URL", "GEOLIBRE_AI_MODEL"] as const) {
+for (const name of ["GEOINT_AI_URL", "GEOINT_AI_MODEL"] as const) {
   const viteName = `VITE_${name}`;
   if (!process.env[viteName]) {
     const value = process.env[name] || FILE_ENV[viteName] || FILE_ENV[name];
@@ -113,7 +113,7 @@ const IS_TAURI_BUILD = !!process.env.TAURI_ENV_PLATFORM;
 // (postgis.tar is pre-gzipped, so brotli can't shrink it — it was the entire
 // 42 → 63 MB binary regression). By default it is fetched from jsDelivr at
 // runtime for every target — web, desktop, and embed — so it never inflates any
-// build output. Override with GEOLIBRE_PGLITE_CDN=0 to force-bundle it for a
+// build output. Override with GEOINT_PGLITE_CDN=0 to force-bundle it for a
 // fully offline build. The CDN URLs are pinned to the installed versions so they
 // cannot drift from the lockfile; PGlite resolves its own .wasm/.data/postgis.tar
 // relative to these. jsDelivr is already an allowed script-src in the web
@@ -121,18 +121,18 @@ const IS_TAURI_BUILD = !!process.env.TAURI_ENV_PLATFORM;
 // this adds no new external origin. Trade-off: the PostGIS SQL engine needs
 // network on FIRST use. After that, the web build's service worker runtime-caches
 // the jsDelivr-served Pyodide and PGlite/PostGIS engines (see the
-// "geolibre-cdn-engines" CacheFirst rule below), so both the browser SQL and
+// "geoint-cdn-engines" CacheFirst rule below), so both the browser SQL and
 // Python features keep working offline. (The desktop Tauri build has no service
 // worker and still fetches these per the same first-use rule.)
-const PGLITE_CDN = process.env.GEOLIBRE_PGLITE_CDN !== "0";
+const PGLITE_CDN = process.env.GEOINT_PGLITE_CDN !== "0";
 
 // PWA/offline support targets the standalone web build only. The Tauri desktop
 // shell already works offline (assets are bundled in the binary), and the
-// embedded Jupyter wheel (GEOLIBRE_EMBED=1) is served from inside a notebook
+// embedded Jupyter wheel (GEOINT_EMBED=1) is served from inside a notebook
 // where a service worker is meaningless and could even hijack the host page's
 // scope. This is deliberately independent of PGLITE_CDN: the web build CDN-loads
 // PGlite yet still ships a service worker.
-const IS_EMBED = process.env.GEOLIBRE_EMBED === "1";
+const IS_EMBED = process.env.GEOINT_EMBED === "1";
 const PWA_DISABLED = IS_TAURI_BUILD || IS_EMBED;
 
 // Microsoft Store MSIX build. Strips the in-app "Check for updates" flow (Help
@@ -142,7 +142,7 @@ const PWA_DISABLED = IS_TAURI_BUILD || IS_EMBED;
 // Store build path (.github/workflows/msix-store.yml); every other build (the
 // GitHub .exe/winget installer, the sideload MSIX, portable, macOS, Linux, web,
 // and the Jupyter embed) leaves it unset, so their update checker is untouched.
-const IS_STORE_BUILD = process.env.GEOLIBRE_STORE_BUILD === "1";
+const IS_STORE_BUILD = process.env.GEOINT_STORE_BUILD === "1";
 
 const pgliteCdnRequire = createRequire(import.meta.url);
 // The ESM entry of a package's manifest. Prefer the `module` field and the
@@ -201,13 +201,13 @@ const PGLITE_POSTGIS_CDN_URL = pgliteCdnUrl("@electric-sql/pglite-postgis");
 // installer growth in v1.3. Like PGlite above, fetch the wasm from jsDelivr at
 // runtime for every target (web, desktop, embed) so it never inflates any build
 // output; the small JS glue stays bundled and lazy-chunked. Override with
-// GEOLIBRE_CEREUS_CDN=0 to force-bundle the wasm for a fully offline build. The
+// GEOINT_CEREUS_CDN=0 to force-bundle the wasm for a fully offline build. The
 // URL is pinned to the installed version (so it tracks the lockfile) and jsDelivr
 // is already an allowed connect-src in both the web (docker/nginx.conf) and
 // desktop (tauri.conf.json) CSPs. Trade-off: the Sedona engine needs network on
 // first use (the desktop app already fetches PGlite, Pyodide, tiles, and the
 // DuckDB spatial extension the same way).
-const CEREUS_CDN = process.env.GEOLIBRE_CEREUS_CDN !== "0";
+const CEREUS_CDN = process.env.GEOINT_CEREUS_CDN !== "0";
 function cereusWasmCdnUrl(): string | null {
   if (!CEREUS_CDN) return null;
   const pkg = "@cereusdb/standard";
@@ -226,9 +226,9 @@ const CEREUS_WASM_CDN_URL = cereusWasmCdnUrl();
 // PGlite/Cereus above — fetch them from jsDelivr at runtime (version-pinned to
 // the lockfile) so they never inflate any build; the small JS glue stays
 // bundled and lazy-chunked, loaded only when the user exports. jsDelivr is
-// already an allowed connect-src in both CSPs. Set GEOLIBRE_GDAL_CDN=0 to force
+// already an allowed connect-src in both CSPs. Set GEOINT_GDAL_CDN=0 to force
 // network-free use (then the loader has no paths and export is unavailable).
-const GDAL_CDN = process.env.GEOLIBRE_GDAL_CDN !== "0";
+const GDAL_CDN = process.env.GEOINT_GDAL_CDN !== "0";
 function gdal3CdnPaths(): { wasm: string; data: string } | null {
   if (!GDAL_CDN) return null;
   const { manifest } = findPackageManifest(pgliteCdnRequire.resolve("gdal3.js"), "gdal3.js");
@@ -239,10 +239,10 @@ function gdal3CdnPaths(): { wasm: string; data: string } | null {
   };
 }
 const GDAL3_CDN_PATHS = gdal3CdnPaths();
-const WMS_PROXY_PATH = "/__geolibre_wms_proxy";
-const WFS_PROXY_PATH = "/__geolibre_wfs_proxy";
-const GPX_PROXY_PATH = "/__geolibre_gpx_proxy";
-const RASTER_PROXY_PATH = "/__geolibre_raster_proxy";
+const WMS_PROXY_PATH = "/__geoint_wms_proxy";
+const WFS_PROXY_PATH = "/__geoint_wfs_proxy";
+const GPX_PROXY_PATH = "/__geoint_gpx_proxy";
+const RASTER_PROXY_PATH = "/__geoint_raster_proxy";
 const DUCKDB_WORKER_PATH_PART = "/@duckdb/duckdb-wasm/dist/";
 const DUCKDB_WORKER_SOURCE_MAP_RE =
   /\n?\/\/# sourceMappingURL=duckdb-browser-(?:eh|mvp)\.worker\.js\.map\s*$/;
@@ -356,7 +356,7 @@ function onwarn(warning: RollupLog, defaultHandler: WarningHandlerWithDefault): 
 
 function wmsProxyPlugin(): Plugin {
   return {
-    name: "geolibre-wms-proxy",
+    name: "geoint-wms-proxy",
     configureServer(server) {
       server.middlewares.use(WMS_PROXY_PATH, async (req, res) => {
         try {
@@ -404,7 +404,7 @@ function wmsProxyPlugin(): Plugin {
 
 function stripDuckDbWorkerSourcemapPlugin(): Plugin {
   return {
-    name: "geolibre-strip-duckdb-worker-sourcemap",
+    name: "geoint-strip-duckdb-worker-sourcemap",
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         const requestUrl = new URL(req.url ?? "/", "http://localhost");
@@ -444,7 +444,7 @@ function stripDuckDbWorkerSourcemapPlugin(): Plugin {
 
 function selectiveJsMinifyPlugin(): Plugin {
   return {
-    name: "geolibre-selective-js-minify",
+    name: "geoint-selective-js-minify",
     apply: "build",
     async generateBundle(_, bundle) {
       if (process.env.TAURI_DEBUG) return;
@@ -492,7 +492,7 @@ function isDuckDbWorkerRequest(pathname: string): boolean {
 function pgliteCdnLoaderPlugin(): Plugin {
   const cdnLoader = path.resolve(__dirname, "src/lib/pglite-loader.cdn.ts");
   return {
-    name: "geolibre-pglite-cdn-loader",
+    name: "geoint-pglite-cdn-loader",
     enforce: "pre",
     resolveId(source) {
       // Match `./pglite-loader` (and `.ts`) but never `pglite-loader.cdn`.
@@ -517,7 +517,7 @@ const CEREUS_DEFAULT_WASM_URL = "new URL('cereusdb_bg.wasm', import.meta.url)";
 function cereusCdnLoaderPlugin(): Plugin {
   const cdnLoader = path.resolve(__dirname, "src/lib/cereus-loader.cdn.ts");
   return {
-    name: "geolibre-cereus-cdn-loader",
+    name: "geoint-cereus-cdn-loader",
     enforce: "pre",
     resolveId(source) {
       // Match `./cereus-loader` (and `.ts`) but never `cereus-loader.cdn`.
@@ -547,7 +547,7 @@ function cereusCdnLoaderPlugin(): Plugin {
       return {
         code: code.replaceAll(
           CEREUS_DEFAULT_WASM_URL,
-          "(()=>{throw new Error('CereusDB must be initialised with an explicit wasmUrl (GEOLIBRE_CEREUS_CDN build)')})()",
+          "(()=>{throw new Error('CereusDB must be initialised with an explicit wasmUrl (GEOINT_CEREUS_CDN build)')})()",
         ),
         map: null,
       };
@@ -561,7 +561,7 @@ function duckdbWasmBundlesPlugin(): Plugin {
     IS_TAURI_BUILD ? "src/lib/duckdb-wasm-bundles.tauri.ts" : "src/lib/duckdb-wasm-bundles.ts",
   );
   return {
-    name: "geolibre-duckdb-wasm-bundles",
+    name: "geoint-duckdb-wasm-bundles",
     enforce: "pre",
     resolveId(source) {
       return /(?:^|\/)duckdb-wasm-bundles(?:\.ts)?$/.test(source) ? modulePath : null;
@@ -571,7 +571,7 @@ function duckdbWasmBundlesPlugin(): Plugin {
 
 function removeJupyterLiteFromTauriDistPlugin(): Plugin {
   return {
-    name: "geolibre-remove-jupyterlite-from-tauri-dist",
+    name: "geoint-remove-jupyterlite-from-tauri-dist",
     apply: "build",
     closeBundle() {
       if (!IS_TAURI_BUILD) return;
@@ -585,7 +585,7 @@ function removeJupyterLiteFromTauriDistPlugin(): Plugin {
 
 function projectUrlQueryPlugin(): Plugin {
   return {
-    name: "geolibre-project-url-query",
+    name: "geoint-project-url-query",
     configureServer(server) {
       server.middlewares.use((req, _res, next) => {
         if (isProjectUrlDocumentRequest(req)) {
@@ -678,7 +678,7 @@ async function proxyBinaryRequest(
 // Pyodide runtime are fetched cross-origin from jsDelivr (see PGLITE_CDN above),
 // so they are not same-origin cacheable: the PostGIS SQL engine needs network on
 // first use and is not available offline. The pglite-*/*.wasm/*.data ignores
-// below still apply when GEOLIBRE_PGLITE_CDN=0 force-bundles PGlite into the
+// below still apply when GEOINT_PGLITE_CDN=0 force-bundles PGlite into the
 // web build, keeping that variant's first visit light.
 function pwaPlugin(): Plugin[] {
   // Hashed build chunks/binaries that are lazily fetched. Excluded from the
@@ -747,8 +747,8 @@ function pwaPlugin(): Plugin[] {
     injectRegister: false,
     includeAssets: ["favicon.ico", "favicon.png", "apple-touch-icon.png"],
     manifest: {
-      name: "GeoLibre",
-      short_name: "GeoLibre",
+      name: "GeoInt",
+      short_name: "GeoInt",
       description:
         "A free and open-source, lightweight, cloud-native GIS platform for visualizing, exploring, and analyzing geospatial data, running in the browser, on the desktop, on mobile, and inside Jupyter notebooks while keeping your data local and private.",
       theme_color: "#2f8f85",
@@ -781,7 +781,7 @@ function pwaPlugin(): Plugin[] {
       navigateFallback: "index.html",
       // Never SPA-fallback the sidecar proxy or any asset request; let those hit
       // the network/precache directly.
-      navigateFallbackDenylist: [/^\/sidecar\//, /^\/__geolibre_/, /\/[^/?]+\.[^/]+$/],
+      navigateFallbackDenylist: [/^\/sidecar\//, /^\/__geoint_/, /\/[^/?]+\.[^/]+$/],
       runtimeCaching: [
         {
           // Hashed build assets under /assets/ that the precache skips: the
@@ -799,7 +799,7 @@ function pwaPlugin(): Plugin[] {
             /\.(?:js|css|wasm|data|woff2?)$/.test(url.pathname),
           handler: "CacheFirst",
           options: {
-            cacheName: "geolibre-assets",
+            cacheName: "geoint-assets",
             expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 30 },
             cacheableResponse: { statuses: [0, 200] },
           },
@@ -815,7 +815,7 @@ function pwaPlugin(): Plugin[] {
           // use — closing the gap noted at the top of this file. jsDelivr sends
           // permissive CORS headers, so these come back as normal (non-opaque)
           // 200s and can be revalidated/evicted like any cache entry. When
-          // GEOLIBRE_PGLITE_CDN=0 / GEOLIBRE_CEREUS_CDN=0, those engines are
+          // GEOINT_PGLITE_CDN=0 / GEOINT_CEREUS_CDN=0, those engines are
           // bundled under /assets/ instead and this rule simply never matches them
           // (Pyodide is always CDN-loaded regardless).
           urlPattern: ({ url }: { url: URL }) =>
@@ -826,7 +826,7 @@ function pwaPlugin(): Plugin[] {
               url.pathname.startsWith("/npm/gdal3.js")),
           handler: "CacheFirst",
           options: {
-            cacheName: "geolibre-cdn-engines",
+            cacheName: "geoint-cdn-engines",
             expiration: { maxEntries: 400, maxAgeSeconds: 60 * 60 * 24 * 30 },
             cacheableResponse: { statuses: [0, 200] },
           },
@@ -842,7 +842,7 @@ function pwaPlugin(): Plugin[] {
             // Generous cap: the "Download Offline Area" feature
             // (lib/offline-tiles.ts) warms a whole region's tiles at once and
             // would otherwise evict its own freshly-cached tiles past 600.
-            cacheName: "geolibre-basemaps",
+            cacheName: "geoint-basemaps",
             expiration: { maxEntries: 8000, maxAgeSeconds: 60 * 60 * 24 * 30 },
             cacheableResponse: { statuses: [0, 200] },
           },
@@ -880,8 +880,8 @@ export default defineConfig({
   ],
   clearScreen: false,
   define: {
-    __GEOLIBRE_VERSION__: JSON.stringify(APP_VERSION),
-    __GEOLIBRE_STORE_BUILD__: JSON.stringify(IS_STORE_BUILD),
+    __GEOINT_VERSION__: JSON.stringify(APP_VERSION),
+    __GEOINT_STORE_BUILD__: JSON.stringify(IS_STORE_BUILD),
     __PGLITE_CDN_URL__: JSON.stringify(PGLITE_CDN_URL),
     __PGLITE_POSTGIS_CDN_URL__: JSON.stringify(PGLITE_POSTGIS_CDN_URL),
     __CEREUS_WASM_CDN_URL__: JSON.stringify(CEREUS_WASM_CDN_URL),
@@ -896,22 +896,7 @@ export default defineConfig({
   },
   envPrefix: ["VITE_", "TAURI_"],
   optimizeDeps: {
-    // Pre-bundle the AI Assistant's heavy deps at dev-server startup. They are
-    // only reached through the lazily-imported assistant panel (and, for the
-    // provider models, through dynamic import() inside it), so Vite would
-    // otherwise discover them on first open and trigger a full-page reload to
-    // re-optimize — which manifests as the map reloading and the panel needing
-    // a second click. Listing them here pre-bundles them up front instead.
     include: [
-      "@strands-agents/sdk",
-      "@strands-agents/sdk/models/google",
-      "@strands-agents/sdk/models/anthropic",
-      "@strands-agents/sdk/models/openai",
-      "@strands-agents/sdk/models/bedrock",
-      "@anthropic-ai/sdk",
-      "@google/genai",
-      "openai",
-      "zod",
       // cog-tiler-wasm's plain-JS deps (the wasm tiler itself is excluded below
       // so its asset URL survives). These are only reached through that lazy
       // engine, so without pre-bundling Vite discovers them on first use and
@@ -977,15 +962,7 @@ export default defineConfig({
     } satisfies RollupOptions,
   },
   resolve: {
-    // `@anthropic-ai/sdk` (and the other assistant provider SDKs) are optional
-    // peers of `@strands-agents/sdk`, which is hoisted to the monorepo root. When
-    // a provider SDK can't hoist to root alongside it (e.g. a duplicate version
-    // pulled in by another dependency), strands' bare `import '@anthropic-ai/sdk'`
-    // is unresolvable from the root and the production build emits a throwing stub
-    // ("Cannot destructure property 'AnthropicModel' … is undefined"). Deduping
-    // these forces resolution from this app's node_modules — where they are always
-    // installed — so the build is deterministic across environments (see #331).
-    dedupe: ["react", "react-dom", "maplibre-gl", "@anthropic-ai/sdk", "openai", "@google/genai"],
+    dedupe: ["react", "react-dom", "maplibre-gl"],
     alias: {
       "@": path.resolve(__dirname, "./src"),
       module: path.resolve(__dirname, "./src/lib/browser-node-module.ts"),

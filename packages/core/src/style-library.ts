@@ -24,7 +24,7 @@ export function isStyleLibraryTargetLayer(type: LayerType): boolean {
 }
 
 /** `type` discriminator of an exported Style Manager bundle file. */
-export const STYLE_LIBRARY_BUNDLE_TYPE = "geolibre-style-library";
+export const STYLE_LIBRARY_BUNDLE_TYPE = "geoint-style-library";
 
 /** Current bundle format version, for forward-compatible readers. */
 export const STYLE_LIBRARY_BUNDLE_VERSION = 1;

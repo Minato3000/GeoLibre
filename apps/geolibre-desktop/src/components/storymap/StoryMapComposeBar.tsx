@@ -1,8 +1,8 @@
 import { type RefObject, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useAppStore } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
-import { Button } from "@geolibre/ui";
+import { useAppStore } from "@geoint/core";
+import type { MapController } from "@geoint/map";
+import { Button } from "@geoint/ui";
 import { Check, Frame, X } from "lucide-react";
 
 interface StoryMapComposeBarProps {

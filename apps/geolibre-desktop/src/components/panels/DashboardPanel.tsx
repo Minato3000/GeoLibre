@@ -1,6 +1,6 @@
-import type { DashboardWidget, IndicatorAggregation } from "@geolibre/core";
-import { MAX_DASHBOARD_COLUMNS, MIN_DASHBOARD_COLUMNS, useAppStore } from "@geolibre/core";
-import { Button, Select } from "@geolibre/ui";
+import type { DashboardWidget, IndicatorAggregation } from "@geoint/core";
+import { MAX_DASHBOARD_COLUMNS, MIN_DASHBOARD_COLUMNS, useAppStore } from "@geoint/core";
+import { Button, Select } from "@geoint/ui";
 import {
   ChevronLeft,
   ChevronRight,

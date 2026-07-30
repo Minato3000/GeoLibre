@@ -1,8 +1,8 @@
 # Data Integrations
 
-Beyond the [Add Data](adding-data.md) menu, GeoLibre connects to several hosted catalogs and imagery providers through dedicated panels and plugins. This page is a map of what is available and where to find it.
+Beyond the [Add Data](adding-data.md) menu, GeoInt connects to several hosted catalogs and imagery providers through dedicated panels and plugins. This page is a map of what is available and where to find it.
 
-![Planetary Computer panel](https://data.geolibre.app/images/geolibre-planetary-computer.webp)
+![Planetary Computer panel](https://data.geolibre.app/images/geoint-planetary-computer.webp)
 
 ## Cloud catalogs
 
@@ -51,7 +51,7 @@ All of these are activated from the [Plugins menu](plugins.md), where you can al
 
 ## Geocoding
 
-GeoLibre can turn addresses into points and points into addresses. Both run through a selectable provider; the public [Nominatim](https://nominatim.openstreetmap.org/) service is the default and needs no key.
+GeoInt can turn addresses into points and points into addresses. Both run through a selectable provider; the public [Nominatim](https://nominatim.openstreetmap.org/) service is the default and needs no key.
 
 | Tool | Where | What it does |
 | --- | --- | --- |
@@ -72,11 +72,11 @@ Choose a backend in **Settings → Geocoding**. The selection, per-provider API 
 | **Mapbox** | Yes | Mapbox access token (`pk.…`). |
 | **Google** | Yes | Google Maps Geocoding API key. Google does not officially allow browser cross-origin requests to this API, so a same-origin proxy may be required. |
 
-API keys are stored in plain text in the `.geolibre.json` project file, so avoid sharing a project that carries them (the Project → Share flow can strip environment variables, but provider keys live under Geocoding settings).
+API keys are stored in plain text in the `.geoint.json` project file, so avoid sharing a project that carries them (the Project → Share flow can strip environment variables, but provider keys live under Geocoding settings).
 
 ### Usage policy and limits
 
-Requests to the public Nominatim endpoint are paced to one per second and a single batch run is capped at 1000 rows, in line with the [Nominatim usage policy](https://operations.osmfoundation.org/policies/nominatim/). Browsers cannot set a `User-Agent`, so the app identifies itself through the page `Referer` and the optional `email` parameter. Self-hosted Nominatim and the keyed providers (Mapbox, ArcGIS, Google, hosted Pelias) are not paced or capped by GeoLibre; their own quotas apply.
+Requests to the public Nominatim endpoint are paced to one per second and a single batch run is capped at 1000 rows, in line with the [Nominatim usage policy](https://operations.osmfoundation.org/policies/nominatim/). Browsers cannot set a `User-Agent`, so the app identifies itself through the page `Referer` and the optional `email` parameter. Self-hosted Nominatim and the keyed providers (Mapbox, ArcGIS, Google, hosted Pelias) are not paced or capped by GeoInt; their own quotas apply.
 
 ### Configuring with environment variables
 

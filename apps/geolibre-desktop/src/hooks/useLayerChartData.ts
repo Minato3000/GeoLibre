@@ -1,5 +1,5 @@
-import { isDuckDBQueryLayer, useAppStore, type GeoLibreLayer } from "@geolibre/core";
-import { getDuckDBLayerRows } from "@geolibre/plugins";
+import { isDuckDBQueryLayer, useAppStore, type GeoIntLayer } from "@geoint/core";
+import { getDuckDBLayerRows } from "@geoint/plugins";
 import { useMemo } from "react";
 import type { ChartRow } from "../lib/attribute-charts";
 
@@ -26,11 +26,11 @@ const EMPTY: LayerChartData = {
  * GeoJSON-backed vector layer or a DuckDB query layer. Tile/service/raster
  * layers have no per-feature attributes to chart.
  */
-export function isChartableLayer(layer: GeoLibreLayer | null | undefined): boolean {
+export function isChartableLayer(layer: GeoIntLayer | null | undefined): boolean {
   return Boolean(layer && (isDuckDBQueryLayer(layer) || layer.geojson));
 }
 
-function buildLayerChartData(layer: GeoLibreLayer | null): LayerChartData {
+function buildLayerChartData(layer: GeoIntLayer | null): LayerChartData {
   if (!layer) return EMPTY;
   // Mirror the attribute table's two row sources: DuckDB query layers fetch
   // their rows from the plugin's cache, every other vector layer reads its

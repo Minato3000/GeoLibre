@@ -1,6 +1,6 @@
 // collab.geolibre.app
 //
-// Relay for GeoLibre live-collaboration sessions. A thin router in front of the
+// Relay for GeoInt live-collaboration sessions. A thin router in front of the
 // CollabSession Durable Object:
 //
 //   POST /sessions          -> create a session, return its code + host token
@@ -94,7 +94,7 @@ export default {
     }
 
     if (url.pathname === "/" || url.pathname === "/health") {
-      return json({ ok: true, service: "geolibre-collab" });
+      return json({ ok: true, service: "geoint-collab" });
     }
 
     return json({ error: "Not found" }, 404);

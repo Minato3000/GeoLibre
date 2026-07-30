@@ -25,7 +25,7 @@ describe("shouldSuppressOnboarding", () => {
   });
 
   it("suppresses the wizard for every deep-link param form", () => {
-    const project = "https://example.com/foo.geolibre.json";
+    const project = "https://example.com/foo.geoint.json";
     for (const key of ["url", "project", "projectUrl", "project_url"]) {
       withSearch(`?${key}=${encodeURIComponent(project)}`);
       assert.equal(shouldSuppressOnboarding(), true, key);
@@ -33,7 +33,7 @@ describe("shouldSuppressOnboarding", () => {
   });
 
   it("suppresses the wizard for a bare URL query", () => {
-    withSearch(`?${encodeURIComponent("https://example.com/foo.geolibre.json")}`);
+    withSearch(`?${encodeURIComponent("https://example.com/foo.geoint.json")}`);
     assert.equal(shouldSuppressOnboarding(), true);
   });
 

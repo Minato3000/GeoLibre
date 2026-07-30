@@ -1,8 +1,4 @@
-import {
-  getEllipsoid,
-  type PlanetaryBasemap,
-  type PlanetaryBasemapSectionId,
-} from "@geolibre/core";
+import { getEllipsoid, type PlanetaryBasemap, type PlanetaryBasemapSectionId } from "@geoint/core";
 
 /**
  * The i18n key for a planetary basemap section heading. Shared by the New

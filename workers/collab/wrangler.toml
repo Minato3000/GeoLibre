@@ -1,4 +1,4 @@
-name = "geolibre-collab"
+name = "geoint-collab"
 main = "src/index.ts"
 compatibility_date = "2025-03-01"
 

@@ -5,9 +5,9 @@ import {
   getVectorColorRamp,
   useAppStore,
   VECTOR_COLOR_RAMPS,
-} from "@geolibre/core";
-import { loadMarkerSvgImage, type MapController } from "@geolibre/map";
-import { GRATICULE_LABEL_LAYER_ID } from "@geolibre/plugins";
+} from "@geoint/core";
+import { loadMarkerSvgImage, type MapController } from "@geoint/map";
+import { GRATICULE_LABEL_LAYER_ID } from "@geoint/plugins";
 import {
   Button,
   Dialog,
@@ -21,7 +21,7 @@ import {
   Separator,
   Slider,
   Textarea,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   ArrowDown,
   ArrowUp,

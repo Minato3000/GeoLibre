@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { GeoLibreLayer } from "../packages/core/src/types";
+import type { GeoIntLayer } from "../packages/core/src/types";
 import { isMaptoolkitBasemapActive } from "../apps/geolibre-desktop/src/lib/maptoolkit-basemap";
 
-/** Minimal GeoLibreLayer stub with just the fields the predicate reads. */
-function basemapLayer(overrides: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+/** Minimal GeoIntLayer stub with just the fields the predicate reads. */
+function basemapLayer(overrides: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id: "basemap-x",
     name: "x",
@@ -12,7 +12,7 @@ function basemapLayer(overrides: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
     source: {},
     visible: true,
     opacity: 1,
-    style: {} as GeoLibreLayer["style"],
+    style: {} as GeoIntLayer["style"],
     metadata: { basemapProvider: "maptoolkit" },
     ...overrides,
   };

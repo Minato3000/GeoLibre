@@ -5,12 +5,12 @@
  * desktop) the saved file path — so the panel's "Saved basemaps" list can
  * rename, delete, and re-apply them.
  *
- * Records are device-scoped (localStorage), not part of `.geolibre.json`: they
+ * Records are device-scoped (localStorage), not part of `.geoint.json`: they
  * mirror what this device has downloaded and would be meaningless elsewhere.
  */
 
 /** localStorage key for the persisted manifest (versioned for migrations). */
-export const OFFLINE_BASEMAPS_KEY = "geolibre.offlineBasemaps.v1";
+export const OFFLINE_BASEMAPS_KEY = "geoint.offlineBasemaps.v1";
 
 export interface OfflineBasemap {
   /** Stable id; also the synthetic pmtiles archive key used this session. */

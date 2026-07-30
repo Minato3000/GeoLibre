@@ -1,16 +1,16 @@
 import {
   DEFAULT_LAYER_STYLE,
   useAppStore,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type MapScaleUnit,
-} from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+} from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import {
   getNetworkTool,
   getVectorTool,
   runAlgorithmCapture,
   type ProcessingAlgorithm,
-} from "@geolibre/processing";
+} from "@geoint/processing";
 import type { Feature, FeatureCollection } from "geojson";
 import { beginProcessingRun } from "./processing-history";
 
@@ -27,7 +27,7 @@ import { beginProcessingRun } from "./processing-history";
  */
 
 /** Synthetic layer id for the clicked point fed to a point-input tool. */
-const CLICKED_POINT_LAYER_ID = "__geolibre_quick_analysis_point";
+const CLICKED_POINT_LAYER_ID = "__geoint_quick_analysis_point";
 
 /**
  * Travel-time contours (minutes) offered by the drive/walk-time actions, in the
@@ -100,7 +100,7 @@ export function formatBufferDistance(
 }
 
 /** Wrap a clicked coordinate as a one-feature layer a tool can consume. */
-export function clickedPointLayer(lng: number, lat: number): GeoLibreLayer {
+export function clickedPointLayer(lng: number, lat: number): GeoIntLayer {
   const feature: Feature = {
     type: "Feature",
     geometry: { type: "Point", coordinates: [lng, lat] },
@@ -179,7 +179,7 @@ export interface QuickAnalysisRequest {
    * used to hand a point-input tool the clicked coordinate without first
    * adding a throwaway layer to the map.
    */
-  extraLayers?: GeoLibreLayer[];
+  extraLayers?: GeoIntLayer[];
   /** Live map controller, used to frame the result. */
   mapControllerRef: { current: MapController | null };
 }

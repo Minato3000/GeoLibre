@@ -3,7 +3,7 @@
  *
  * Hugging Face hosts a growing amount of cloud-native geospatial data in
  * **dataset repos** — COG, GeoParquet, PMTiles, FlatGeobuf, GeoJSON — and,
- * unlike most catalogs GeoLibre browses, it is *writable*: with a user access
+ * unlike most catalogs GeoInt browses, it is *writable*: with a user access
  * token the same panel can create a dataset repo and push files into it.
  *
  * Three things shape this module:
@@ -30,7 +30,7 @@
  *
  * Deliberately DOM-free and framework-free so it can be unit tested under
  * `node --test`; everything that touches the map or the document lives in
- * `maplibre-huggingface.ts`. What GeoLibre can *do* with a listed file (format,
+ * `maplibre-huggingface.ts`. What GeoInt can *do* with a listed file (format,
  * reader, size limits) is shared with the other remote-browse panels and lives
  * in `remote-file-formats.ts`.
  */
@@ -198,7 +198,7 @@ export function datasetUrl(repoId: string): string {
 }
 
 /**
- * Whether GeoLibre can fetch a repo's files from the browser at all.
+ * Whether GeoInt can fetch a repo's files from the browser at all.
  *
  * Private and gated repos are readable only with an `Authorization` header, and
  * a map source is a plain URL with no place to put one — MapLibre, the PMTiles
@@ -975,7 +975,7 @@ export async function uploadDatasetFiles(
     JSON.stringify({
       key: "header",
       value: {
-        summary: spec.commitMessage?.trim() || `Upload ${staged.length} file(s) with GeoLibre`,
+        summary: spec.commitMessage?.trim() || `Upload ${staged.length} file(s) with GeoInt`,
         ...(spec.commitDescription ? { description: spec.commitDescription } : {}),
       },
     }),

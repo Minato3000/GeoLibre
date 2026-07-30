@@ -14,10 +14,10 @@ const SAMPLE_ASSET_BASE = "https://opengeos.org/maplibre-gl-storymaps/assets";
 export function createSampleStoryMap(): StoryMap {
   return {
     title: "A Tour of Five Cities",
-    subtitle: "A scrollytelling map experience built with GeoLibre",
-    byline: "By GeoLibre",
+    subtitle: "A scrollytelling map experience built with GeoInt",
+    byline: "By GeoInt",
     footer:
-      'Source: Wikipedia. Built with <a href="https://github.com/opengeos/GeoLibre" target="_blank">GeoLibre</a>, inspired by <a href="https://github.com/opengeos/maplibre-gl-storymaps" target="_blank">MapLibre Storytelling</a>.',
+      'Source: Wikipedia. Built with <a href="https://github.com/opengeos/GeoLibre" target="_blank">GeoInt</a>, inspired by <a href="https://github.com/opengeos/maplibre-gl-storymaps" target="_blank">MapLibre Storytelling</a>.',
     theme: "dark",
     showMarkers: true,
     markerColor: "#3fb1ce",

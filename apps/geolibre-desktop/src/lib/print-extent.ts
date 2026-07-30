@@ -12,9 +12,9 @@ import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent, MapTouchEvent } 
 /** A geographic bounding box as `[west, south, east, north]`. */
 export type PrintExtent = [number, number, number, number];
 
-const SOURCE_ID = "geolibre-print-extent";
-const FILL_LAYER_ID = "geolibre-print-extent-fill";
-const LINE_LAYER_ID = "geolibre-print-extent-line";
+const SOURCE_ID = "geoint-print-extent";
+const FILL_LAYER_ID = "geoint-print-extent-fill";
+const LINE_LAYER_ID = "geoint-print-extent-line";
 
 /** Wrap a longitude into the (-180, 180] range. Mapping the wrap point to +180
  * (not -180) avoids a near-world-wide bbox when a drag endpoint lands exactly on

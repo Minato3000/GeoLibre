@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { getCesiumIonToken } from "@geolibre/core";
+import { getCesiumIonToken } from "@geoint/core";
 
 describe("getCesiumIonToken", () => {
   it("returns undefined when env is missing or empty", () => {

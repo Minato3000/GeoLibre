@@ -1,4 +1,4 @@
-import { type NetworkToolKind, useAppStore } from "@geolibre/core";
+import { type NetworkToolKind, useAppStore } from "@geoint/core";
 import {
   Button,
   DropdownMenu,
@@ -10,7 +10,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { Wrench } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -64,7 +64,7 @@ export function ProcessingMenu({
   const mobile = useMemo(() => isMobile(), []);
   const uiProfile = useDesktopSettingsStore((s) => s.desktopSettings.uiProfile);
   const show = (id: string) => isMenuItemVisible(uiProfile, id);
-  // The Whitebox toolbox (and its WASI/GeoLibre tool catalog) runs entirely in
+  // The Whitebox toolbox (and its WASI/GeoInt tool catalog) runs entirely in
   // the browser via WebAssembly, so unlike the sidecar-backed tools it stays
   // available on mobile.
   const showWhitebox = show("processing.whitebox");
@@ -77,22 +77,22 @@ export function ProcessingMenu({
   };
 
   // Section visibility, so dividers never render with nothing on one side when a
-  // UI profile (or mobile) hides whole sections. `showGeolibreTools` are the
-  // client tool submenus; `showGeolibreActions` are geocode/model-builder/
+  // UI profile (or mobile) hides whole sections. `showGeointTools` are the
+  // client tool submenus; `showGeointActions` are geocode/model-builder/
   // segmentation below the in-submenu divider.
-  const showGeolibreTools =
+  const showGeointTools =
     (!mobile && show("processing.conversion")) ||
     show("processing.vector") ||
     show("processing.network") ||
     show("processing.statistics") ||
     (!mobile && show("processing.raster"));
-  const showGeolibreActions =
+  const showGeointActions =
     show("processing.geocode") ||
     show("processing.modelBuilder") ||
     (!mobile && show("processing.segmentation")) ||
     show("processing.objectDetection") ||
     show("processing.segmentEverything");
-  const showGeolibre = showGeolibreTools || showGeolibreActions;
+  const showGeoint = showGeointTools || showGeointActions;
   const showWorkspacesOrServices =
     show("processing.history") ||
     show("processing.sqlWorkspace") ||
@@ -164,15 +164,15 @@ export function ProcessingMenu({
               </DropdownMenuSubContent>
             </DropdownMenuSub>
           ))}
-        {/* GeoLibre's own tools (Turf vector, rasterio raster, format
+        {/* GeoInt's own tools (Turf vector, rasterio raster, format
             conversion, routing, spatial statistics) plus geocoding, batch &
-            models, and AI segmentation. Grouped under a single "GeoLibre"
+            models, and AI segmentation. Grouped under a single "GeoInt"
             submenu so their category names don't collide with the Whitebox
             category submenus above. Each child keeps its own visibility gate;
             the parent shows when any child does. */}
-        {showGeolibre && (
+        {showGeoint && (
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>{t("toolbar.item.geolibre")}</DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger>{t("toolbar.item.geoint")}</DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               {!mobile && show("processing.conversion") && (
                 <DropdownMenuSub>
@@ -460,7 +460,7 @@ export function ProcessingMenu({
                   </DropdownMenuSubContent>
                 </DropdownMenuSub>
               )}
-              {showGeolibreTools && showGeolibreActions && <DropdownMenuSeparator />}
+              {showGeointTools && showGeointActions && <DropdownMenuSeparator />}
               {show("processing.geocode") && (
                 <DropdownMenuItem onSelect={() => setGeocodeOpen(true)}>
                   {t("toolbar.item.geocode")}
@@ -493,9 +493,9 @@ export function ProcessingMenu({
             </DropdownMenuSubContent>
           </DropdownMenuSub>
         )}
-        {/* Divide the tool-category submenus (Whitebox, GeoLibre) from the
+        {/* Divide the tool-category submenus (Whitebox, GeoInt) from the
             workspaces and consoles below. Only when both sides are present. */}
-        {(showWhitebox || showGeolibre) && showWorkspacesOrServices && <DropdownMenuSeparator />}
+        {(showWhitebox || showGeoint) && showWorkspacesOrServices && <DropdownMenuSeparator />}
         {show("processing.sqlWorkspace") && (
           <DropdownMenuItem onSelect={() => setSqlWorkspaceOpen(true)}>
             {t("toolbar.command.sqlWorkspace")}

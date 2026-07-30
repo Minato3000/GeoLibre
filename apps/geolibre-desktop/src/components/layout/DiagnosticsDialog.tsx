@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   ScrollArea,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { Clipboard, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

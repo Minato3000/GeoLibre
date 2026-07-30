@@ -17,11 +17,11 @@ import {
   subscribeRightPanels,
   unregisterRightPanel,
 } from "../packages/plugins/src/right-panel-registry";
-import type { GeoLibreRightPanelRegistration } from "../packages/plugins/src/types";
+import type { GeoIntRightPanelRegistration } from "../packages/plugins/src/types";
 
 function testPanel(
-  patch: Partial<GeoLibreRightPanelRegistration> = {},
-): GeoLibreRightPanelRegistration {
+  patch: Partial<GeoIntRightPanelRegistration> = {},
+): GeoIntRightPanelRegistration {
   return {
     id: "workbench",
     title: "Workbench",
@@ -194,7 +194,7 @@ describe("right-panel registry", () => {
   it("falls back to right-of-style for an unknown declared dock", () => {
     registerRightPanel(
       testPanel({
-        dock: "nonsense" as unknown as GeoLibreRightPanelRegistration["dock"],
+        dock: "nonsense" as unknown as GeoIntRightPanelRegistration["dock"],
       }),
     );
     openRightPanel("workbench");
@@ -241,7 +241,7 @@ describe("right-panel registry", () => {
       registerRightPanel({
         id: "x",
         title: "x",
-      } as unknown as GeoLibreRightPanelRegistration),
+      } as unknown as GeoIntRightPanelRegistration),
     );
   });
 

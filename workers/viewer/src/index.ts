@@ -1,6 +1,6 @@
 // web.geolibre.app (and viewer.geolibre.app, the original alias)
 //
-// Serves the GeoLibre web viewer at a clean subdomain by proxying to the build
+// Serves the GeoInt web viewer at a clean subdomain by proxying to the build
 // already published at https://geolibre.app/demo (GitHub Pages). We proxy rather
 // than re-host the files because the viewer bundles a 32 MiB DuckDB WASM asset,
 // which exceeds Cloudflare's 25 MiB per-asset limit for Workers/Pages. GitHub

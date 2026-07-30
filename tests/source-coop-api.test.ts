@@ -260,7 +260,7 @@ describe("parseFeed", () => {
 });
 
 describe("classifyKey", () => {
-  it("recognizes the formats GeoLibre can render", () => {
+  it("recognizes the formats GeoInt can render", () => {
     assert.equal(classifyKey("openstreetmap/tiles/v3.pmtiles"), "pmtiles");
     assert.equal(classifyKey("nwi/wetlands/AK.parquet"), "geoparquet");
     assert.equal(classifyKey("x/y.geoparquet"), "geoparquet");

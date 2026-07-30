@@ -5,10 +5,10 @@ import { invoke } from "@tauri-apps/api/core";
 export const DEFAULT_GEE_OAUTH_CLIENT_ID =
   "937635412428-qc3albpo6dtm2jdp2o5mk8biqlh0i6vo.apps.googleusercontent.com";
 
-// The OAuth scopes GeoLibre requests for Earth Engine. Deliberately minimal so
+// The OAuth scopes GeoInt requests for Earth Engine. Deliberately minimal so
 // the app can pass Google's OAuth verification without the broad `cloud-platform`
 // scope: the @google/earthengine SDK requests earthengine + cloud-platform +
-// full drive by default, but GeoLibre only displays tiles/thumbnails and exports
+// full drive by default, but GeoInt only displays tiles/thumbnails and exports
 // to Drive — it never touches Cloud Storage, BigQuery, or project/asset
 // management, so cloud-platform is unnecessary. Keep this in sync with the scope
 // list in the desktop helper page (src-tauri/src/earth_engine_oauth.rs).

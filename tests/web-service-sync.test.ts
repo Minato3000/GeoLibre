@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import {
   createStoreLayer,
   createWebServiceStoreSync,
@@ -92,7 +92,7 @@ function makeAdapter(): {
   return { adapter, calls };
 }
 
-function otherStoreLayer(id = "unrelated"): GeoLibreLayer {
+function otherStoreLayer(id = "unrelated"): GeoIntLayer {
   return {
     id,
     name: "Unrelated",
@@ -109,7 +109,7 @@ function storeLayerIds(): string[] {
   return useAppStore.getState().layers.map((layer) => layer.id);
 }
 
-function storeLayer(id: string): GeoLibreLayer | undefined {
+function storeLayer(id: string): GeoIntLayer | undefined {
   return useAppStore.getState().layers.find((layer) => layer.id === id);
 }
 
@@ -182,7 +182,7 @@ describe("readNativeRasterSource", () => {
     const original = "https://example.com/wms?service=WMS&bbox={bbox-epsg-3857}";
     // Mimic the real dev proxy: encode the URL but keep the bbox placeholder
     // literal so MapLibre can substitute it per tile.
-    const proxied = `/__geolibre_wms_proxy?url=${encodeURIComponent(original).replaceAll(
+    const proxied = `/__geoint_wms_proxy?url=${encodeURIComponent(original).replaceAll(
       "%7Bbbox-epsg-3857%7D",
       "{bbox-epsg-3857}",
     )}`;

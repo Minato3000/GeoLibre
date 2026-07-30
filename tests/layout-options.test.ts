@@ -20,13 +20,13 @@ afterEach(() => {
 });
 
 describe("layoutOptionsFromLocation", () => {
-  it("keeps all chrome visible without query params", () => {
+  it("keeps chrome visible without query params, except Layers/Style (hidden by default)", () => {
     withSearch("");
     const options = layoutOptionsFromLocation(DEFAULT_DESKTOP_LAYOUT_SETTINGS);
     assert.equal(options.toolbarVisible, true);
     assert.equal(options.statusBarVisible, true);
-    assert.equal(options.layerPanelVisible, true);
-    assert.equal(options.stylePanelVisible, true);
+    assert.equal(options.layerPanelVisible, false);
+    assert.equal(options.stylePanelVisible, false);
     assert.equal(options.attributePanelVisible, true);
     assert.equal(options.panelsHidden, false);
   });
@@ -62,8 +62,8 @@ describe("layoutOptionsFromLocation", () => {
     assert.equal(options.toolbarVisible, true);
     assert.equal(options.statusBarVisible, true);
     assert.equal(options.compact, false);
-    assert.equal(options.layerPanelVisible, true);
-    assert.equal(options.stylePanelVisible, true);
+    assert.equal(options.layerPanelVisible, false);
+    assert.equal(options.stylePanelVisible, false);
     assert.equal(options.attributePanelVisible, true);
     assert.equal(options.panelsHidden, false);
   });
@@ -73,7 +73,7 @@ describe("layoutOptionsFromLocation", () => {
     const options = layoutOptionsFromLocation(DEFAULT_DESKTOP_LAYOUT_SETTINGS);
     assert.equal(options.toolbarVisible, true);
     assert.equal(options.statusBarVisible, true);
-    assert.equal(options.layerPanelVisible, true);
+    assert.equal(options.layerPanelVisible, false);
     assert.equal(options.panelsHidden, false);
   });
 

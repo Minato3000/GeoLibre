@@ -1,4 +1,4 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 
 /** True when `url`'s host is `maptoolkit.org` or a subdomain of it. */
 function isMaptoolkitHost(url: string): boolean {
@@ -23,7 +23,7 @@ function isMaptoolkitHost(url: string): boolean {
  */
 export function isMaptoolkitBasemapActive(
   basemapStyleUrl: string,
-  layers: ReadonlyArray<GeoLibreLayer>,
+  layers: ReadonlyArray<GeoIntLayer>,
 ): boolean {
   return (
     isMaptoolkitHost(basemapStyleUrl) ||

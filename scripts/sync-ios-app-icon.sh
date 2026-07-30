@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copy the real GeoLibre app icons over the ones `tauri ios init` generates.
+# Copy the real GeoInt app icons over the ones `tauri ios init` generates.
 #
 # Why this exists: `tauri ios init` populates
 # gen/apple/Assets.xcassets/AppIcon.appiconset/ from cargo-mobile2's *template*

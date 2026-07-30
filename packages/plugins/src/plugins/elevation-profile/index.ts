@@ -1,4 +1,4 @@
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../../types";
 import { ElevationProfileControl } from "./core/ElevationProfileControl";
 import type { ElevationProfileState } from "./core/types";
 import type { LngLat } from "./elevation/geometry";
@@ -12,24 +12,24 @@ import { ELEVATION_LINE_PARAM, maybeHandleDeepLink } from "./utils/deep-link";
  * profile along it — distance, ascent/descent, and min/max stats, a
  * metric/imperial toggle, hover readout, and CSV/SVG export — sampling
  * elevations from the key-less Open-Meteo API. Ported in-house from the
- * external `geolibre-elevation-profile` marketplace plugin so it ships as a
+ * external `geoint-elevation-profile` marketplace plugin so it ships as a
  * first-class built-in; the control code is unchanged, only the plugin entry is
- * rebound onto GeoLibre's built-in `GeoLibrePlugin` contract.
+ * rebound onto GeoInt's built-in `GeoIntPlugin` contract.
  *
  * The line, unit system, and collapsed state round-trip through the project
  * file, and a `?elevation-line=lng,lat;lng,lat` URL parameter restores a shared
  * profile on load.
  */
-export const ELEVATION_PROFILE_PLUGIN_ID = "geolibre-elevation-profile";
+export const ELEVATION_PROFILE_PLUGIN_ID = "geoint-elevation-profile";
 
 // Module-level singletons, mirroring the other built-in control plugins (see
 // maplibre-graticule / maplibre-swipe): one control instance whose state
 // survives deactivate → activate so a toggle off/on keeps the drawn profile.
 let control: ElevationProfileControl | null = null;
-let position: GeoLibreMapControlPosition = "top-left";
+let position: GeoIntMapControlPosition = "top-left";
 let pendingState: Partial<ElevationProfileState> | null = null;
 
-function createControl(app: GeoLibreAppAPI): ElevationProfileControl {
+function createControl(app: GeoIntAppAPI): ElevationProfileControl {
   const next = new ElevationProfileControl({
     collapsed: pendingState?.collapsed ?? true,
     unitSystem: pendingState?.unitSystem ?? "metric",
@@ -76,7 +76,7 @@ function isPluginState(value: unknown): value is Partial<ElevationProfileState> 
   return true;
 }
 
-export const maplibreElevationProfilePlugin: GeoLibrePlugin = {
+export const maplibreElevationProfilePlugin: GeoIntPlugin = {
   id: ELEVATION_PROFILE_PLUGIN_ID,
   name: "Elevation Profile",
   version: "0.1.0",
@@ -91,7 +91,7 @@ export const maplibreElevationProfilePlugin: GeoLibrePlugin = {
     }
   },
 
-  // Deep link: GeoLibre auto-activates the plugin for a URL like
+  // Deep link: GeoInt auto-activates the plugin for a URL like
   // ?elevation-line=13.41,52.52;8.23,46.85 and dispatches the params here.
   handleUrlParameters(_app, params) {
     if (control) return maybeHandleDeepLink(control, params);

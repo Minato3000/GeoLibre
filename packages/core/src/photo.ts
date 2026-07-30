@@ -1,7 +1,7 @@
 /**
  * Feature-property keys for inline photo images, shared by the app and the map
  * package so neither hardcodes a second copy that could drift. These keys are
- * part of the project schema: they are serialized into `.geolibre.json` on a
+ * part of the project schema: they are serialized into `.geoint.json` on a
  * geotagged-photo or field-collection layer.
  */
 

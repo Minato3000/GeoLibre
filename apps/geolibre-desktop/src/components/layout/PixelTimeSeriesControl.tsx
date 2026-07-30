@@ -1,4 +1,4 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import {
   bandOptionsFromResults,
   hasTimeSliderRasterStack,
@@ -8,8 +8,8 @@ import {
   seriesToFeatureCollection,
   TIME_SLIDER_PLUGIN_ID,
   valueAtBand,
-} from "@geolibre/plugins";
-import { Button, Input, Select } from "@geolibre/ui";
+} from "@geoint/plugins";
+import { Button, Input, Select } from "@geoint/ui";
 import { Crosshair, Download, GripVertical, LineChart, Loader2, Trash2, X } from "lucide-react";
 import {
   type PointerEvent as ReactPointerEvent,
@@ -23,7 +23,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import maplibregl from "maplibre-gl";
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import { clamp } from "../../lib/clamp";
 import { type ChartDomain, resolveChartDomain } from "../../lib/chart-domain";
 import { usePluginRegistry } from "../../hooks/usePlugins";

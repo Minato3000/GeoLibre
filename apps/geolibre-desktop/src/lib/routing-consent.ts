@@ -8,7 +8,7 @@
  * so coordinates are never sent without consent. Mirrors the directions and
  * reverse-geocode consent gates.
  */
-export const ROUTING_CONSENT_KEY = "geolibre:network-routing-valhalla-notice";
+export const ROUTING_CONSENT_KEY = "geoint:network-routing-valhalla-notice";
 
 /** Whether the user has acknowledged the network-routing privacy notice. */
 export function hasRoutingConsent(): boolean {

@@ -34,7 +34,7 @@ export interface DiagnosticsSnapshot {
 
 const MAX_DIAGNOSTIC_RECORDS = 500;
 const MAX_FIELD_LENGTH = 3000;
-const CAPTURE_NETWORK_INFO_STORAGE_KEY = "geolibre.diagnostics.captureNetworkInfo";
+const CAPTURE_NETWORK_INFO_STORAGE_KEY = "geoint.diagnostics.captureNetworkInfo";
 
 // On some WebView2 (Windows) and WKWebView (macOS) builds the first requests to
 // Tauri's custom IPC/asset protocols can momentarily fail while those schemes
@@ -90,7 +90,7 @@ function isBenignConsoleWarning(args: unknown[]): boolean {
 // non-ok response to such a request is recorded at info level instead of error,
 // so it does not surface as a problem in the diagnostics panel (issue follow-up
 // to #500: the optional admin-profile.json 404 on every load).
-export const OPTIONAL_RESOURCE_HEADER = "x-geolibre-optional-resource";
+export const OPTIONAL_RESOURCE_HEADER = "x-geoint-optional-resource";
 
 /** Read a single header value across the Headers/array/record init shapes. */
 function readHeader(headers: HeadersInit | undefined, name: string): string | null {

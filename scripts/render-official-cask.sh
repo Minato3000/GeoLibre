@@ -2,7 +2,7 @@
 #
 # Render the cask for the official homebrew/homebrew-cask repo.
 #
-# GeoLibre is published in the official repository as Casks/g/geolibre.rb, where
+# GeoInt is published in the official repository as Casks/g/geoint.rb, where
 # Homebrew's BrewTestBot auto-bumps the version on each new GitHub release via
 # the `livecheck` block below. Use this script to regenerate that cask (e.g. when
 # editing metadata or re-submitting). Unlike scripts/render-homebrew-cask.sh
@@ -14,18 +14,18 @@
 #
 # Usage:
 #   # auto: resolve the latest release, download both DMGs, compute sha256
-#   scripts/render-official-cask.sh > geolibre.rb
+#   scripts/render-official-cask.sh > geoint.rb
 #
 #   # pin a version (still downloads that release's DMGs to hash them):
-#   VERSION=1.4.1 scripts/render-official-cask.sh > geolibre.rb
+#   VERSION=1.4.1 scripts/render-official-cask.sh > geoint.rb
 #
 #   # supply the hashes directly (skips the download entirely):
 #   VERSION=1.4.1 SHA256_ARM=<hex> SHA256_INTEL=<hex> \
-#     scripts/render-official-cask.sh > geolibre.rb
+#     scripts/render-official-cask.sh > geoint.rb
 #
 # Requires: gh (for the auto-download path) and sha256sum or shasum. The
-# rendered cask is written to stdout. Run `brew audit --new --cask geolibre`
-# and `brew install --cask ./geolibre.rb` on a Mac before opening the PR.
+# rendered cask is written to stdout. Run `brew audit --new --cask geoint`
+# and `brew install --cask ./geoint.rb` on a Mac before opening the PR.
 set -euo pipefail
 
 REPO="${REPO:-opengeos/GeoLibre}"
@@ -52,8 +52,8 @@ fi
   exit 1
 }
 
-arm_dmg="GeoLibre.Desktop_${VERSION}_aarch64.dmg"
-intel_dmg="GeoLibre.Desktop_${VERSION}_x64.dmg"
+arm_dmg="GeoInt.Desktop_${VERSION}_aarch64.dmg"
+intel_dmg="GeoInt.Desktop_${VERSION}_x64.dmg"
 
 # Download and hash the DMGs unless both hashes were supplied.
 if [[ -z "${SHA256_ARM:-}" || -z "${SHA256_INTEL:-}" ]]; then
@@ -105,16 +105,16 @@ SHA256_INTEL="$(printf '%s' "$SHA256_INTEL" | tr '[:upper:]' '[:lower:]')"
 }
 
 cat <<RUBY
-cask "geolibre" do
+cask "geoint" do
   arch arm: "aarch64", intel: "x64"
 
   version "${VERSION}"
   sha256 arm:   "${SHA256_ARM}",
          intel: "${SHA256_INTEL}"
 
-  url "https://github.com/${REPO}/releases/download/v#{version}/GeoLibre.Desktop_#{version}_#{arch}.dmg",
+  url "https://github.com/${REPO}/releases/download/v#{version}/GeoInt.Desktop_#{version}_#{arch}.dmg",
       verified: "github.com/${REPO}/"
-  name "GeoLibre Desktop"
+  name "GeoInt Desktop"
   desc "Lightweight, cloud-native GIS platform"
   homepage "https://geolibre.app/"
 
@@ -125,14 +125,14 @@ cask "geolibre" do
 
   depends_on :macos
 
-  app "GeoLibre Desktop.app"
+  app "GeoInt Desktop.app"
 
   zap trash: [
-    "~/Library/Application Support/org.geolibre.desktop",
-    "~/Library/Caches/org.geolibre.desktop",
-    "~/Library/Preferences/org.geolibre.desktop.plist",
-    "~/Library/Saved Application State/org.geolibre.desktop.savedState",
-    "~/Library/WebKit/org.geolibre.desktop",
+    "~/Library/Application Support/org.geoint.desktop",
+    "~/Library/Caches/org.geoint.desktop",
+    "~/Library/Preferences/org.geoint.desktop.plist",
+    "~/Library/Saved Application State/org.geoint.desktop.savedState",
+    "~/Library/WebKit/org.geoint.desktop",
   ]
 end
 RUBY

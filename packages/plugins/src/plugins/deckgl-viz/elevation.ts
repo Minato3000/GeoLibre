@@ -1,12 +1,12 @@
 import {
-  type GeoLibreLayer,
+  type GeoIntLayer,
   geojsonHasZCoordinates,
   styleValue,
   transformGeojsonElevation,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { Layer } from "@deck.gl/core";
 import type { Feature, FeatureCollection, Geometry, GeometryCollection, Position } from "geojson";
-import type { GeoLibreDeckGL } from "../../types";
+import type { GeoIntDeckGL } from "../../types";
 import { colorToRgba } from "../deck-style-utils";
 
 /**
@@ -25,7 +25,7 @@ import { colorToRgba } from "../deck-style-utils";
  *
  * @param layer - The store layer to test.
  */
-export function isElevation3dLayer(layer: GeoLibreLayer): boolean {
+export function isElevation3dLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "geojson" &&
     !!layer.geojson &&
@@ -160,7 +160,7 @@ function splitPointFeatures(data: FeatureCollection): {
  * @param layer - The store layer to render (must satisfy
  *   {@link isElevation3dLayer}).
  */
-export function buildElevation3dLayers(deckGL: GeoLibreDeckGL, layer: GeoLibreLayer): Layer[] {
+export function buildElevation3dLayers(deckGL: GeoIntDeckGL, layer: GeoIntLayer): Layer[] {
   const style = layer.style;
   const rawScale = styleValue(style, "elevation3dVerticalScale");
   const rawOffset = styleValue(style, "elevation3dOffset");

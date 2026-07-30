@@ -3,11 +3,11 @@
 // available in both the browser build and the Tauri webview, so one code path
 // covers web and desktop. Mirrors the thin self-contained wrapper style of
 // plugin-archive-store.ts; project-scoped entries are NOT stored here (they
-// serialize into the .geolibre.json file instead).
+// serialize into the .geoint.json file instead).
 
-import type { StyleLibraryEntry } from "@geolibre/core";
+import type { StyleLibraryEntry } from "@geoint/core";
 
-const DB_NAME = "geolibre-style-library";
+const DB_NAME = "geoint-style-library";
 const DB_VERSION = 1;
 const STORE_NAME = "entries";
 

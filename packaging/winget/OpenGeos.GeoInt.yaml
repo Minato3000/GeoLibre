@@ -3,7 +3,7 @@
 # and submits the per-version manifests to microsoft/winget-pkgs on every release,
 # so PackageVersion here may lag the published package. See the "How CI keeps it
 # current" section of README.md in this directory for the version-lag policy.
-PackageIdentifier: OpenGeos.GeoLibre
+PackageIdentifier: OpenGeos.GeoInt
 PackageVersion: 1.5.0
 DefaultLocale: en-US
 ManifestType: version

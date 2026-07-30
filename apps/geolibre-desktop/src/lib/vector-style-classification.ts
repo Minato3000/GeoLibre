@@ -3,7 +3,7 @@ import {
   type VectorStyleStop,
   createGraduatedClassBreaks,
   interpolateRampColors,
-} from "@geolibre/core";
+} from "@geoint/core";
 
 export interface ClassifiableLayer {
   geojson?: {

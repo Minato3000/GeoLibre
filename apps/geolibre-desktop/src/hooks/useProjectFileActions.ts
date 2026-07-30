@@ -4,9 +4,9 @@ import {
   projectFromStore,
   serializeProject,
   useAppStore,
-  type GeoLibreLayer,
-} from "@geolibre/core";
-import { materializeEmbeddableVectorLayers } from "@geolibre/plugins";
+  type GeoIntLayer,
+} from "@geoint/core";
+import { materializeEmbeddableVectorLayers } from "@geoint/plugins";
 import type { FeatureCollection } from "geojson";
 import { type FormEvent, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -29,7 +29,7 @@ import { ensureHtmlFileName, ensureProjectFileName } from "../lib/file-names";
 import { mergeStringLists } from "../lib/string-lists";
 import { fetchProjectFromUrl } from "../lib/project-url";
 import { getShareFetch } from "../lib/share-fetch";
-import { resolveShareBaseUrl } from "../lib/share-geolibre";
+import { resolveShareBaseUrl } from "../lib/share-geoint";
 import { shareAuthorizedFetch } from "../lib/share-gallery";
 import { normalizeProjectUrl } from "../lib/urls";
 import { resolveProjectXyzLayers } from "../lib/xyz-url";
@@ -88,7 +88,7 @@ export interface SaveNamePrompt {
  * @param layer - A store layer.
  * @returns True when the layer's features should be saved as a path, not embedded.
  */
-function isReloadableLocalFileLayer(layer: GeoLibreLayer): boolean {
+function isReloadableLocalFileLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "geojson" &&
     Boolean(layer.geojson) &&
@@ -294,7 +294,7 @@ export function useProjectFileActions(mapControllerRef: MapControllerRef) {
   // Build the current project from live store + map state and serialize it.
   // Shared by Save/Save As and the Share action so they all capture identical
   // project content (including the current map view and plugin state).
-  const buildCurrentProject = (nameOverride?: string, layersOverride?: GeoLibreLayer[]) => {
+  const buildCurrentProject = (nameOverride?: string, layersOverride?: GeoIntLayer[]) => {
     const state = useAppStore.getState();
     const defaultProjectName =
       nameOverride?.trim() || state.projectName.trim() || DEFAULT_PROJECT_NAME;
@@ -388,9 +388,9 @@ export function useProjectFileActions(mapControllerRef: MapControllerRef) {
   // embedded data — not a file path that may not exist elsewhere — is what
   // restores. Used by the save dialog's Embed choice and by Share (always).
   const buildEmbeddedLayers = async (
-    layers: GeoLibreLayer[],
+    layers: GeoIntLayer[],
     prebuilt?: Map<string, FeatureCollection>,
-  ): Promise<GeoLibreLayer[]> => {
+  ): Promise<GeoIntLayer[]> => {
     // Reuse a map the caller already materialized (the Embed save path) so each
     // layer's features aren't read from the control twice, but materialize any
     // layer it doesn't cover — e.g. one added while the save dialog was open —
@@ -418,7 +418,7 @@ export function useProjectFileActions(mapControllerRef: MapControllerRef) {
   // prompt's size warning. Vector control layers are materialized; plain
   // GeoJSON layers use their `geojson`.
   const estimateEmbedBytes = (
-    layers: GeoLibreLayer[],
+    layers: GeoIntLayer[],
     embeddable: Map<string, FeatureCollection>,
   ): number => {
     const encoder = new TextEncoder();
@@ -440,7 +440,7 @@ export function useProjectFileActions(mapControllerRef: MapControllerRef) {
   // reload from disk on reopen, so the prompt offers Embed or Save file
   // references. Returns the layers override to serialize, an empty result to use
   // the live layers as-is, or "cancel" to abort the save.
-  const resolveLayersForSave = async (): Promise<{ layers?: GeoLibreLayer[] } | "cancel"> => {
+  const resolveLayersForSave = async (): Promise<{ layers?: GeoIntLayer[] } | "cancel"> => {
     const state = useAppStore.getState();
     const embeddable = await materializeEmbeddableVectorLayers(state.layers);
     const localFileLayers = isTauri() ? state.layers.filter(isReloadableLocalFileLayer) : [];
@@ -554,7 +554,7 @@ export function useProjectFileActions(mapControllerRef: MapControllerRef) {
     // download under a fixed name, so Save As (and a first Save) would otherwise
     // reuse a default name — exactly the bug users hit. Prompt for the name so
     // they can choose it; later in-place Saves reuse the chosen name silently.
-    let saveName = `${defaultProjectName}.geolibre.json`;
+    let saveName = `${defaultProjectName}.geoint.json`;
     const promptForName =
       browserSaveFallsBackToDownload() && (options?.saveAs === true || !existingLocalPath);
     if (promptForName) {
@@ -625,7 +625,7 @@ export function useProjectFileActions(mapControllerRef: MapControllerRef) {
         projectName
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-+|-+$/g, "") || "geolibre-map";
+          .replace(/^-+|-+$/g, "") || "geoint-map";
       // Browsers without the File System Access save picker (Firefox, Safari)
       // would otherwise download immediately under the generated name, with no
       // chance to rename the file (issue #991). Prompt for the name first;

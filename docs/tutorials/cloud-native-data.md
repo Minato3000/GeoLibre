@@ -1,6 +1,6 @@
 # Cloud-Native Data
 
-GeoLibre is built for cloud-native geospatial formats: GeoParquet and FlatGeobuf for vector, Cloud-Optimized GeoTIFF (COG) for raster, and PMTiles for tiles. This tutorial loads them from remote URLs and converts a local dataset.
+GeoInt is built for cloud-native geospatial formats: GeoParquet and FlatGeobuf for vector, Cloud-Optimized GeoTIFF (COG) for raster, and PMTiles for tiles. This tutorial loads them from remote URLs and converts a local dataset.
 
 ## Load a remote GeoParquet
 
@@ -11,7 +11,7 @@ GeoParquet is a compressed, columnar vector format that reads well over HTTP.
    ```text
    https://data.source.coop/giswqs/opengeos/countries.parquet
    ```
-3. To avoid copying a large file into memory, enable **Stream GeoParquet (no copy)**, which queries it in place with HTTP range requests. This works best for large remote files whose rows are spatially sorted (for example, Hilbert order, as written by GeoLibre's own Conversion tools), so only the relevant row groups are fetched.
+3. To avoid copying a large file into memory, enable **Stream GeoParquet (no copy)**, which queries it in place with HTTP range requests. This works best for large remote files whose rows are spatially sorted (for example, Hilbert order, as written by GeoInt's own Conversion tools), so only the relevant row groups are fetched.
 4. Click **Load**.
 
 ## Load a FlatGeobuf
@@ -19,7 +19,7 @@ GeoParquet is a compressed, columnar vector format that reads well over HTTP.
 FlatGeobuf is a streaming-friendly vector format with a spatial index.
 
 1. Open **Add Data → FlatGeobuf Layer**.
-2. Enter a `.fgb` URL and load it. GeoLibre fetches only the features in view where the format allows.
+2. Enter a `.fgb` URL and load it. GeoInt fetches only the features in view where the format allows.
 
 ## Load a COG
 

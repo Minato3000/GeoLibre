@@ -1,8 +1,8 @@
 import { type RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import { useTranslation } from "react-i18next";
-import type { StoryActiveSlideMode, StoryChapter, StoryMap } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+import type { StoryActiveSlideMode, StoryChapter, StoryMap } from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import {
   Button,
   Dialog,
@@ -15,7 +15,7 @@ import {
   ScrollArea,
   Select,
   Separator,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { FileDown, Loader2 } from "lucide-react";
 import { captureMapImage } from "../../lib/print-layout-export";
 import { PAPER_SIZES, type Orientation, type PaperSizeId } from "../../lib/print-layout";

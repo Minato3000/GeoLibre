@@ -6,11 +6,13 @@ import {
   PLANETARY_BASEMAP_GROUPS,
   PLANETARY_BASEMAPS,
   PROTOMAPS_BASEMAPS,
+  RASTER_BASEMAPS,
   useAppStore,
   type MapViewState,
-} from "@geolibre/core";
-import { PROTOMAPS_FLAVORS, type ProtomapsFlavor } from "@geolibre/map";
+} from "@geoint/core";
+import { PROTOMAPS_FLAVORS, type ProtomapsFlavor } from "@geoint/map";
 import {
+  getRasterBasemapPresets,
   LIBERTY_3D_ID,
   resolveProtomapsPresets,
   type PresetBasemap,
@@ -29,12 +31,12 @@ import {
   Input,
   Label,
   Select,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import type { FormEvent } from "react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const DEFAULT_BASEMAP_ID = "liberty";
+const DEFAULT_BASEMAP_ID = "google-satellite";
 const CUSTOM_BASEMAP_ID = "custom";
 const BLANK_BASEMAP_ID = "blank";
 const DEFAULT_PROJECT_NAME = "Untitled Project";
@@ -51,6 +53,7 @@ const THREE_D_MAP_VIEW: MapViewState = {
 // so the union catches typos and stale sentinel values.
 type BasemapChoice =
   | (typeof OPENFREEMAP_BASEMAPS)[number]["id"]
+  | (typeof RASTER_BASEMAPS)[number]["id"]
   | (typeof PROTOMAPS_BASEMAPS)[number]["id"]
   | (typeof PLANETARY_BASEMAPS)[number]["id"]
   | typeof CUSTOM_BASEMAP_ID
@@ -122,8 +125,8 @@ export function NewProjectDialog({
     if (!open) return;
     const refresh = () => setProtomapsPresets(resolveProtomapsPresets());
     refresh();
-    window.addEventListener("geolibre:runtime-env-change", refresh);
-    return () => window.removeEventListener("geolibre:runtime-env-change", refresh);
+    window.addEventListener("geoint:runtime-env-change", refresh);
+    return () => window.removeEventListener("geoint:runtime-env-change", refresh);
   }, [open]);
   // Move focus into the custom URL field the moment the user selects the
   // "Custom URL" basemap, so the now-unlocked input is ready to type into.
@@ -140,12 +143,13 @@ export function NewProjectDialog({
   useLayoutEffect(() => {
     if (open) setShowSavePrompt(useAppStore.getState().isDirty);
   }, [open]);
+  const rasterPresets = useMemo(() => getRasterBasemapPresets(), []);
   const selectedPreset = useMemo<PresetBasemap | undefined>(
     () =>
-      [...OPENFREEMAP_BASEMAPS, ...protomapsPresets].find(
+      [...OPENFREEMAP_BASEMAPS, ...rasterPresets, ...protomapsPresets].find(
         (basemap) => basemap.id === selectedBasemapId,
       ),
-    [protomapsPresets, selectedBasemapId],
+    [rasterPresets, protomapsPresets, selectedBasemapId],
   );
   // Planetary basemaps are a separate list because selecting one also sets the
   // project's celestial body (so measurements use that body's radius).
@@ -342,6 +346,22 @@ export function NewProjectDialog({
                   </p>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                     {OPENFREEMAP_BASEMAPS.map((basemap) => (
+                      <BasemapButton
+                        key={basemap.id}
+                        id={basemap.id}
+                        name={basemap.name}
+                        selected={selectedBasemapId === basemap.id}
+                        onSelect={setSelectedBasemapId}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  {/* Not run through t() yet, matching the rest of the raster-basemap wiring. */}
+                  <p className="text-xs font-medium text-muted-foreground">Satellite</p>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    {rasterPresets.map((basemap) => (
                       <BasemapButton
                         key={basemap.id}
                         id={basemap.id}

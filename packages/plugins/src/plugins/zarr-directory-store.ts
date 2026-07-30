@@ -133,7 +133,7 @@ let localZarrStoreSequence = 0;
  * the query string keeps them apart while leaving the path — which is what the
  * layer is *named* from — as the folder name.
  *
- * GeoLibre mints this itself rather than letting the control derive one, so the
+ * GeoInt mints this itself rather than letting the control derive one, so the
  * app can key its own per-store bookkeeping (the Time Slider's attribute
  * reader) by the same string.
  *

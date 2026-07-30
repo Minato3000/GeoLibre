@@ -1,4 +1,4 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 
 /** Placeholder layer types — no MapLibre source is added until implemented. */
 export const PLACEHOLDER_LAYER_TYPES = new Set([
@@ -9,7 +9,7 @@ export const PLACEHOLDER_LAYER_TYPES = new Set([
   "duckdb-query",
 ]);
 
-export function isPlaceholderLayer(layer: GeoLibreLayer): boolean {
+export function isPlaceholderLayer(layer: GeoIntLayer): boolean {
   if (Array.isArray(layer.metadata.nativeLayerIds) && layer.metadata.nativeLayerIds.length > 0) {
     return false;
   }
@@ -19,7 +19,7 @@ export function isPlaceholderLayer(layer: GeoLibreLayer): boolean {
   return PLACEHOLDER_LAYER_TYPES.has(layer.type) || layer.metadata.placeholder === true;
 }
 
-export function placeholderMessage(layer: GeoLibreLayer): string {
+export function placeholderMessage(layer: GeoIntLayer): string {
   switch (layer.type) {
     // PMTiles, COG, FlatGeobuf, and GeoParquet now render natively (each creates
     // its own `nativeLayerIds`, which short-circuits isPlaceholderLayer above).

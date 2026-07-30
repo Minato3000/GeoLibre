@@ -1,4 +1,4 @@
-import type { VectorToolRequest, VectorToolResult } from "@geolibre/processing";
+import type { VectorToolRequest, VectorToolResult } from "@geoint/processing";
 import vectorOpsSource from "./vector_ops.generated.py?raw";
 import { getPyodideIndexUrl } from "./pyodide-config";
 

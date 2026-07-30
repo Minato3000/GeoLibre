@@ -1,7 +1,7 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import type maplibregl from "maplibre-gl";
 import { type RefObject, useEffect } from "react";
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import { createScriptingHandlers } from "../lib/scripting/scriptingApi";
 
 // The host side of the notebook scripting bridge. This is the MIRROR of
@@ -9,13 +9,13 @@ import { createScriptingHandlers } from "../lib/scripting/scriptingApi";
 // here, the app is the host talking down to the notebook it embeds in the
 // Notebook panel (JupyterLite on web, a JupyterLab server on desktop).
 //
-// A `geolibre` client running in the notebook kernel posts scripting commands to
+// A `geoint` client running in the notebook kernel posts scripting commands to
 // `window.parent` (this app); we run them against the SAME createScriptingHandlers
 // surface used by the in-app console and the Jupyter widget, and post events
 // (click/selection/layer changes) back down to the iframe.
 
 interface CommandMessage {
-  type: "geolibre:command";
+  type: "geoint:command";
   requestId: string;
   method: string;
   params?: Record<string, unknown>;
@@ -24,11 +24,11 @@ interface CommandMessage {
 /**
  * Bridge the live app (as host) with a notebook embedded in the Notebook panel.
  *
- * Inbound: `geolibre:command` `{requestId, method, params}` from the notebook
- * iframe → the matching handler runs and a `geolibre:result`
+ * Inbound: `geoint:command` `{requestId, method, params}` from the notebook
+ * iframe → the matching handler runs and a `geoint:result`
  * `{requestId, ok, value?, error?}` is posted back (even on failure). A
- * `geolibre:notebook-ready` handshake marks the channel live so events flow.
- * Outbound: `geolibre:event` `{event, payload}` for user interaction.
+ * `geoint:notebook-ready` handshake marks the channel live so events flow.
+ * Outbound: `geoint:event` `{event, payload}` for user interaction.
  *
  * Trust: only messages whose `event.source` is the notebook iframe's own
  * `contentWindow` are accepted, so an unrelated frame cannot drive the map.
@@ -70,7 +70,7 @@ export function useNotebookBridge(
     const reply = (requestId: string, ok: boolean, extra: object) => {
       const win = frameWindow();
       if (!win) return;
-      win.postMessage({ type: "geolibre:result", requestId, ok, ...extra }, frameOrigin);
+      win.postMessage({ type: "geoint:result", requestId, ok, ...extra }, frameOrigin);
     };
 
     const handleCommand = async (message: CommandMessage) => {
@@ -105,11 +105,11 @@ export function useNotebookBridge(
       if (event.origin && event.origin !== "null") frameOrigin = event.origin;
       const data = event.data as { type?: string; requestId?: unknown } | null;
       if (!data || typeof data !== "object") return;
-      if (data.type === "geolibre:notebook-ready") {
+      if (data.type === "geoint:notebook-ready") {
         connected = true;
         return;
       }
-      if (data.type === "geolibre:command" && typeof data.requestId === "string") {
+      if (data.type === "geoint:command" && typeof data.requestId === "string") {
         void handleCommand(data as CommandMessage);
       }
     };
@@ -118,7 +118,7 @@ export function useNotebookBridge(
       if (!connected) return;
       const win = frameWindow();
       if (!win) return;
-      win.postMessage({ type: "geolibre:event", event: eventName, payload }, frameOrigin);
+      win.postMessage({ type: "geoint:event", event: eventName, payload }, frameOrigin);
     };
 
     window.addEventListener("message", handleMessage);

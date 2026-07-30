@@ -1,4 +1,4 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import {
   colormapColors,
   getTimeSliderSymbology,
@@ -6,15 +6,8 @@ import {
   setTimeSliderSymbology,
   type TimeSliderSymbology,
   warmColormapColors,
-} from "@geolibre/plugins";
-import {
-  type ColorRampOption,
-  ColorRampSelect,
-  Input,
-  Label,
-  Select,
-  Separator,
-} from "@geolibre/ui";
+} from "@geoint/plugins";
+import { type ColorRampOption, ColorRampSelect, Input, Label, Select, Separator } from "@geoint/ui";
 import { COLORMAP_OPTIONS } from "maplibre-gl-raster";
 import { boundText, nextRescaleWindow } from "../../lib/rescale-window";
 import { useEffect, useReducer, useState } from "react";
@@ -45,7 +38,7 @@ const SORTED_COLORMAPS = [...COLORMAP_OPTIONS].sort((a, b) =>
   a.label.localeCompare(b.label, "en", { sensitivity: "base" }),
 );
 
-export function TimeSliderSymbologySection({ layer }: { layer: GeoLibreLayer }) {
+export function TimeSliderSymbologySection({ layer }: { layer: GeoIntLayer }) {
   const { t } = useTranslation();
   // Read live on every render rather than captured into state. The spec lives on
   // the dock's control, not the store, and that control is created a tick after

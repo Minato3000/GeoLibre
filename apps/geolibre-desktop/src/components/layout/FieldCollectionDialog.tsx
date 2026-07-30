@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import maplibregl from "maplibre-gl";
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import {
   getAttributeFormField,
   isAttributeFormFieldVisible,
   useAppStore,
   validateAttributeFormValues,
   type AttributeFormConfig,
-  type GeoLibreLayer,
-} from "@geolibre/core";
+  type GeoIntLayer,
+} from "@geoint/core";
 import {
   Button,
   Dialog,
@@ -22,7 +22,7 @@ import {
   ScrollArea,
   Select,
   Separator,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   Check,
   ClipboardList,
@@ -727,7 +727,7 @@ export function FieldCollectionDialog({
                     }
                   }}
                 >
-                  {collectionLayers.map((l: GeoLibreLayer) => (
+                  {collectionLayers.map((l: GeoIntLayer) => (
                     <option key={l.id} value={l.id}>
                       {l.name}
                     </option>

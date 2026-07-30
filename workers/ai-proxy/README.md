@@ -1,10 +1,10 @@
-# GeoLibre AI proxy
+# GeoInt AI proxy
 
-Cloudflare Worker that gives GeoLibre an OpenAI-compatible
+Cloudflare Worker that gives GeoInt an OpenAI-compatible
 `/v1/chat/completions` endpoint without shipping an AI provider key in the
 application. It routes through Cloudflare AI Gateway's unified API, which
 supports OpenAI, Anthropic, Google Gemini, and Workers AI with one request
-format. It streams responses and requires a server-side GeoLibre instance
+format. It streams responses and requires a server-side GeoInt instance
 token in addition to enforcing a model allowlist, request-size cap,
 output-token cap, and per-client rate limit.
 
@@ -20,7 +20,7 @@ output-token cap, and per-client rate limit.
    cd workers/ai-proxy
    npx wrangler secret put CF_AI_GATEWAY_TOKEN
    npx wrangler secret put CLOUDFLARE_ACCOUNT_ID
-   npx wrangler secret put GEOLIBRE_AI_PROXY_TOKEN
+   npx wrangler secret put GEOINT_AI_PROXY_TOKEN
    ```
 
    Generate the instance token with `openssl rand -hex 32`. Store the same
@@ -40,27 +40,27 @@ output-token cap, and per-client rate limit.
 
 ```sh
 docker run --rm -p 8080:80 \
-  -e GEOLIBRE_AUTH_USER=admin \
-  -e GEOLIBRE_AUTH_PASSWORD='change-me' \
-  -e GEOLIBRE_AI_URL=/ai \
-  -e GEOLIBRE_AI_MODEL=openai/gpt-5.5 \
-  -e GEOLIBRE_AI_PROXY_URL=https://ai.geolibre.app \
-  -e GEOLIBRE_AI_PROXY_TOKEN="$GEOLIBRE_AI_PROXY_TOKEN" \
+  -e GEOINT_AUTH_USER=admin \
+  -e GEOINT_AUTH_PASSWORD='change-me' \
+  -e GEOINT_AI_URL=/ai \
+  -e GEOINT_AI_MODEL=openai/gpt-5.5 \
+  -e GEOINT_AI_PROXY_URL=https://ai.geolibre.app \
+  -e GEOINT_AI_PROXY_TOKEN="$GEOINT_AI_PROXY_TOKEN" \
   ghcr.io/opengeos/geolibre:latest
 ```
 
-`GEOLIBRE_AI_PROXY_TOKEN` must match the Worker secret. The browser receives
+`GEOINT_AI_PROXY_TOKEN` must match the Worker secret. The browser receives
 only `/ai` and the model ID; nginx removes the user's Basic credentials, and
 the Worker rejects calls without the instance token. The entrypoint injects the
 token on every `/ai` request, so gate the route yourself -- with
-`GEOLIBRE_AUTH_USER`/`GEOLIBRE_AUTH_PASSWORD` or your own authentication -- or
+`GEOINT_AUTH_USER`/`GEOINT_AUTH_PASSWORD` or your own authentication -- or
 anyone who can reach the container spends against your account. Use HTTPS in
-front of Docker on untrusted networks, and set `GEOLIBRE_TRUSTED_PROXIES` to
+front of Docker on untrusted networks, and set `GEOINT_TRUSTED_PROXIES` to
 that proxy's IP or CIDR so rate limiting still sees individual clients.
 
-Do not set `GEOLIBRE_AI_URL=https://ai.geolibre.app` in a public browser build:
+Do not set `GEOINT_AI_URL=https://ai.geolibre.app` in a public browser build:
 the Worker deliberately requires a token that must not be shipped to a browser.
-Change `GEOLIBRE_AI_MODEL` to another Chat Completions-compatible allowlisted
+Change `GEOINT_AI_MODEL` to another Chat Completions-compatible allowlisted
 model, such as `anthropic/claude-opus-5` or `google/gemini-3.6-flash`, to
 change provider without changing the client protocol.
 

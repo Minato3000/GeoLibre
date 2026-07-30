@@ -3,7 +3,7 @@
 //
 // Tools such as `reproject_vector` and `assign_projection_vector` take their
 // target CRS as a bare EPSG code, which the dialog used to render as a plain
-// number box: the code had to be recalled from memory (GeoLibre#1538). These
+// number box: the code had to be recalled from memory (GeoInt#1538). These
 // entries back a QGIS-style picker that searches by name or code and separates
 // geographic from projected systems. The free-text field stays the source of
 // truth, so a code that is not listed here can still be typed.

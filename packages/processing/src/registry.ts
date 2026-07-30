@@ -1,8 +1,8 @@
 import bbox from "@turf/bbox";
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import type { ProcessingAlgorithm, ProcessingContext } from "./types";
 
-function getLayer(ctx: ProcessingContext, paramId = "layer"): GeoLibreLayer | undefined {
+function getLayer(ctx: ProcessingContext, paramId = "layer"): GeoIntLayer | undefined {
   const layerId = ctx.parameters[paramId] as string | undefined;
   return ctx.layers.find((l) => l.id === layerId);
 }

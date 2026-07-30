@@ -5,7 +5,7 @@ import {
   styleValue,
   type LayerStyle,
   type MarkerShape,
-} from "@geolibre/core";
+} from "@geoint/core";
 import {
   hashText,
   registerGeneratedImage,
@@ -127,7 +127,7 @@ function loadSvgMarker(markup: string, size: number): Promise<GeneratedImageResu
 /**
  * The pixel size the marker sprite is baked at. Normally the configured
  * `markerSize`, but with proportional sizing active (the shared
- * `proportionalSizeRange` guard from `@geolibre/core`, so marker activation
+ * `proportionalSizeRange` guard from `@geoint/core`, so marker activation
  * can never drift from circle-radius activation) the bake grows to cover
  * the largest proportional diameter (clamped to the canvas-safety maximum), so
  * `icon-size` mostly scales the sprite *down* instead of blowing a small bake
@@ -149,7 +149,7 @@ function markerBakedSize(style: LayerStyle): number {
  * proportional (graduated) symbol sizing. The marker sprite is baked at
  * {@link markerBakedSize}, so the constant value is `1`; when proportional
  * sizing applies (the shared `proportionalSizeRange` guard from
- * `@geolibre/core`), returns an `interpolate` whose outputs scale the sprite
+ * `@geoint/core`), returns an `interpolate` whose outputs scale the sprite
  * so its on-screen width matches the diameter a proportional circle of the
  * same radius would span (`2 * radius / bakedSize`).
  *
@@ -200,7 +200,7 @@ export function prepareMarker(style: LayerStyle): string | null {
   if (shape === "custom") {
     const markup = styleValue(style, "markerSvg").trim();
     if (!markup) return null;
-    const id = `geolibre-marker-svg-${hashText(markup)}-${size}`;
+    const id = `geoint-marker-svg-${hashText(markup)}-${size}`;
     // Capture the markup in the factory closure so the lazy generator never
     // depends on a separate, evictable cache (which could blank the marker).
     registerGeneratedImage(id, () => loadSvgMarker(markup, size));
@@ -209,7 +209,7 @@ export function prepareMarker(style: LayerStyle): string | null {
 
   if (!BUILTIN_SHAPES.has(shape)) return null;
   const color = markerColor(style);
-  const id = `geolibre-marker-${shape}-${color.replace("#", "")}-${size}`;
+  const id = `geoint-marker-${shape}-${color.replace("#", "")}-${size}`;
   registerGeneratedImage(id, () => drawBuiltinMarker(shape, color, size));
   return id;
 }

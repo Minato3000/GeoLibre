@@ -1,5 +1,5 @@
-import { addArcGISLayer, type ArcGISLayerType, type ArcGISSourceType } from "@geolibre/plugins";
-import { Input, Label, Select } from "@geolibre/ui";
+import { addArcGISLayer, type ArcGISLayerType, type ArcGISSourceType } from "@geoint/plugins";
+import { Input, Label, Select } from "@geoint/ui";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { createAppAPI } from "../../../../hooks/usePlugins";

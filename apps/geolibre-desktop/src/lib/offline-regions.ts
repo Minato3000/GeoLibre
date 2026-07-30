@@ -3,7 +3,7 @@
  * user has downloaded for offline use (see lib/offline-tiles.ts for the
  * download mechanism).
  *
- * The service worker's `geolibre-basemaps` cache stores tiles keyed by URL and
+ * The service worker's `geoint-basemaps` cache stores tiles keyed by URL and
  * keeps no metadata about *which region* a tile belongs to, so there is nothing
  * to list, size, update, or delete after the fact. This module fills that gap by
  * persisting one record per download — its bounds, zoom range, and the exact
@@ -11,7 +11,7 @@
  * show each region's footprint, re-warm it (bulk update), and delete it to
  * reclaim space.
  *
- * Records are device-scoped, not part of the `.geolibre.json` project: they
+ * Records are device-scoped, not part of the `.geoint.json` project: they
  * mirror the SW cache on *this* device and would be meaningless elsewhere.
  *
  * Deletion safety: a region stores `tileUrls` (its own raster/vector tiles)
@@ -23,10 +23,10 @@
 import type { Bbox } from "./offline-tiles";
 
 /** The Workbox runtime cache that holds basemap tiles (see vite.config.ts). */
-export const BASEMAP_CACHE_NAME = "geolibre-basemaps";
+export const BASEMAP_CACHE_NAME = "geoint-basemaps";
 
 /** localStorage key for the persisted region manifest (versioned for migrations). */
-export const OFFLINE_REGIONS_KEY = "geolibre.offlineRegions.v1";
+export const OFFLINE_REGIONS_KEY = "geoint.offlineRegions.v1";
 
 export interface OfflineRegion {
   /** Stable id; derived from bounds + zoom so re-downloading an area updates it. */

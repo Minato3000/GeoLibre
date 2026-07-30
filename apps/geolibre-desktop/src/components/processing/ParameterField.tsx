@@ -1,5 +1,5 @@
-import type { AlgorithmParameter } from "@geolibre/processing";
-import { Input, Label, Select } from "@geolibre/ui";
+import type { AlgorithmParameter } from "@geoint/processing";
+import { Input, Label, Select } from "@geoint/ui";
 import type { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 

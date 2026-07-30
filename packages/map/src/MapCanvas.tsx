@@ -4,8 +4,8 @@ import {
   PHOTO_FULL_PROPERTY,
   PHOTO_PROPERTY,
   useAppStore,
-  type GeoLibreLayer,
-} from "@geolibre/core";
+  type GeoIntLayer,
+} from "@geoint/core";
 import maplibregl from "maplibre-gl";
 import { memo, useEffect, useMemo, useRef } from "react";
 import {
@@ -25,9 +25,9 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import "maplibre-gl-layer-control/style.css";
 import "./layer-control-overrides.css";
 
-const PANEL_RESIZE_START_EVENT = "geolibre:panel-resize-start";
-const PANEL_RESIZE_END_EVENT = "geolibre:panel-resize-end";
-const WMS_PROXY_PATH = "/__geolibre_wms_proxy";
+const PANEL_RESIZE_START_EVENT = "geoint:panel-resize-start";
+const PANEL_RESIZE_END_EVENT = "geoint:panel-resize-end";
+const WMS_PROXY_PATH = "/__geoint_wms_proxy";
 const WEB_MERCATOR_MAX_LATITUDE = 85.0511287798066;
 const WEB_MERCATOR_EARTH_RADIUS = 6378137;
 const WEB_MERCATOR_WORLD_SIZE = 2 * Math.PI * WEB_MERCATOR_EARTH_RADIUS;
@@ -56,7 +56,7 @@ interface DuckDBIdentifyBridgeResult {
   properties: Record<string, unknown>;
 }
 
-interface GeoLibreDuckDBBridge {
+interface GeoIntDuckDBBridge {
   getFeatureBounds?: (
     layerId: string,
     featureId: string,
@@ -83,7 +83,7 @@ interface TimeSliderPixelIdentifyBridgeResult {
   bands: TimeSliderBandReading[];
 }
 
-interface GeoLibreTimeSliderBridge {
+interface GeoIntTimeSliderBridge {
   identifyPixelAt?: (
     sourceId: string,
     lngLat: [number, number],
@@ -104,7 +104,7 @@ function createIdentifyPopupElement(
 ): HTMLElement {
   const root = document.createElement("div");
   root.className =
-    "geolibre-identify-popup-root flex min-w-[min(18rem,calc(100vw-48px))] max-w-[min(520px,calc(100vw-48px))] flex-col text-xs";
+    "geoint-identify-popup-root flex min-w-[min(18rem,calc(100vw-48px))] max-w-[min(520px,calc(100vw-48px))] flex-col text-xs";
 
   const title = document.createElement("div");
   title.className = "mb-2 font-semibold text-foreground";
@@ -112,7 +112,7 @@ function createIdentifyPopupElement(
   root.appendChild(title);
 
   const rows = document.createElement("div");
-  rows.className = "geolibre-identify-popup-rows pe-2";
+  rows.className = "geoint-identify-popup-rows pe-2";
   root.appendChild(rows);
 
   const appendRow = (key: string, value: unknown) => {
@@ -172,7 +172,7 @@ function createIdentifyMessagePopupElement(layerName: string, message: string): 
 const INLINE_IMAGE_DATA_URL = /^data:image\/(?!svg)[\w.+-]+;base64,/i;
 
 // Feature-property keys for geotagged/field-collection photos, from the shared
-// @geolibre/core schema: the popup shows the light thumbnail while the fullscreen
+// @geoint/core schema: the popup shows the light thumbnail while the fullscreen
 // viewer and "Save image" use the embedded full-resolution image.
 const PHOTO_THUMBNAIL_KEY = PHOTO_PROPERTY;
 const PHOTO_FULL_KEY = PHOTO_FULL_PROPERTY;
@@ -219,7 +219,7 @@ const PHOTO_ZOOM_STEP = 1.15;
  */
 function openPhotoFullscreen(src: string, alt: string): void {
   const overlay = document.createElement("div");
-  overlay.className = "geolibre-photo-fullscreen";
+  overlay.className = "geoint-photo-fullscreen";
   overlay.setAttribute("role", "dialog");
   overlay.setAttribute("aria-modal", "true");
   overlay.setAttribute("aria-label", alt);
@@ -227,17 +227,17 @@ function openPhotoFullscreen(src: string, alt: string): void {
   const image = document.createElement("img");
   image.src = src;
   image.alt = alt;
-  image.className = "geolibre-photo-fullscreen-img";
+  image.className = "geoint-photo-fullscreen-img";
   overlay.appendChild(image);
 
   const badge = document.createElement("div");
-  badge.className = "geolibre-photo-fullscreen-badge";
+  badge.className = "geoint-photo-fullscreen-badge";
   badge.setAttribute("aria-hidden", "true");
   overlay.appendChild(badge);
 
   const closeButton = document.createElement("button");
   closeButton.type = "button";
-  closeButton.className = "geolibre-photo-fullscreen-close";
+  closeButton.className = "geoint-photo-fullscreen-close";
   closeButton.setAttribute("aria-label", "Close");
   closeButton.textContent = "×";
   overlay.appendChild(closeButton);
@@ -463,7 +463,7 @@ function openPhotoFullscreen(src: string, alt: string): void {
  */
 function createPhotoPopupElement(properties: Record<string, unknown>): HTMLElement {
   const root = document.createElement("div");
-  root.className = "geolibre-photo-popup";
+  root.className = "geoint-photo-popup";
 
   // The popup shows the light thumbnail; the fullscreen viewer prefers the
   // embedded full-resolution image (falling back to the thumbnail when no
@@ -478,7 +478,7 @@ function createPhotoPopupElement(properties: Record<string, unknown>): HTMLEleme
     const image = document.createElement("img");
     image.src = thumbnail;
     image.alt = typeof properties.name === "string" ? properties.name : "Photo";
-    image.className = "geolibre-photo-popup-img";
+    image.className = "geoint-photo-popup-img";
     // Only promise "full resolution" when the native original is actually
     // embedded; otherwise the double-click just opens the thumbnail fullscreen.
     image.title = fullImage
@@ -494,7 +494,7 @@ function createPhotoPopupElement(properties: Record<string, unknown>): HTMLEleme
     root.appendChild(image);
   } else {
     const placeholder = document.createElement("div");
-    placeholder.className = "geolibre-photo-popup-placeholder";
+    placeholder.className = "geoint-photo-popup-placeholder";
     placeholder.textContent = "No preview available";
     root.appendChild(placeholder);
   }
@@ -505,7 +505,7 @@ function createPhotoPopupElement(properties: Record<string, unknown>): HTMLEleme
     .join(" · ");
   if (caption) {
     const captionEl = document.createElement("div");
-    captionEl.className = "geolibre-photo-popup-caption";
+    captionEl.className = "geoint-photo-popup-caption";
     captionEl.textContent = caption;
     captionEl.title = caption;
     root.appendChild(captionEl);
@@ -514,14 +514,14 @@ function createPhotoPopupElement(properties: Record<string, unknown>): HTMLEleme
   return root;
 }
 
-function nativeIdentifyLayerIds(layer: GeoLibreLayer): string[] {
+function nativeIdentifyLayerIds(layer: GeoIntLayer): string[] {
   const nativeLayerIds = layer.metadata.nativeLayerIds;
   return Array.isArray(nativeLayerIds)
     ? nativeLayerIds.filter((id): id is string => typeof id === "string")
     : [];
 }
 
-function identifyStyleLayerIds(layer: GeoLibreLayer): string[] {
+function identifyStyleLayerIds(layer: GeoIntLayer): string[] {
   return [
     ...nativeIdentifyLayerIds(layer),
     ...nativeIdentifyLayerIds(layer).map(externalExtrusionLayerId),
@@ -534,7 +534,7 @@ function identifyStyleLayerIds(layer: GeoLibreLayer): string[] {
   ];
 }
 
-function findFeatureId(layer: GeoLibreLayer, feature: maplibregl.MapGeoJSONFeature): string | null {
+function findFeatureId(layer: GeoIntLayer, feature: maplibregl.MapGeoJSONFeature): string | null {
   if (feature.id != null) return String(feature.id);
   if (!layer.geojson) return null;
 
@@ -548,7 +548,7 @@ function findFeatureId(layer: GeoLibreLayer, feature: maplibregl.MapGeoJSONFeatu
   return index >= 0 ? String(layer.geojson.features[index].id ?? index) : null;
 }
 
-function isWmsLayer(layer: GeoLibreLayer): boolean {
+function isWmsLayer(layer: GeoIntLayer): boolean {
   return layer.type === "wms";
 }
 
@@ -566,17 +566,17 @@ function resolveHighlightIds(state: {
   return state.selectedFeatureId ? [state.selectedFeatureId] : [];
 }
 
-function duckDBBridge(): GeoLibreDuckDBBridge | undefined {
+function duckDBBridge(): GeoIntDuckDBBridge | undefined {
   return typeof window === "undefined"
     ? undefined
-    : (window as Window & { __GEOLIBRE_DUCKDB__?: GeoLibreDuckDBBridge }).__GEOLIBRE_DUCKDB__;
+    : (window as Window & { __GEOINT_DUCKDB__?: GeoIntDuckDBBridge }).__GEOINT_DUCKDB__;
 }
 
-function timeSliderBridge(): GeoLibreTimeSliderBridge | undefined {
+function timeSliderBridge(): GeoIntTimeSliderBridge | undefined {
   return typeof window === "undefined"
     ? undefined
-    : (window as Window & { __GEOLIBRE_TIME_SLIDER__?: GeoLibreTimeSliderBridge })
-        .__GEOLIBRE_TIME_SLIDER__;
+    : (window as Window & { __GEOINT_TIME_SLIDER__?: GeoIntTimeSliderBridge })
+        .__GEOINT_TIME_SLIDER__;
 }
 
 /**
@@ -584,7 +584,7 @@ function timeSliderBridge(): GeoLibreTimeSliderBridge | undefined {
  * query vector features. Set by the Time Slider for its COG/mosaic sources,
  * which resolve to a different file per timeline date.
  */
-function isPixelIdentifyLayer(layer: GeoLibreLayer): boolean {
+function isPixelIdentifyLayer(layer: GeoIntLayer): boolean {
   return layer.metadata.pixelIdentify === true;
 }
 
@@ -691,7 +691,7 @@ function proxyWmsRequestUrl(url: string): string {
 }
 
 function createWmsGetFeatureInfoUrl(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   map: maplibregl.Map,
   event: maplibregl.MapMouseEvent,
   infoFormat: string,
@@ -801,7 +801,7 @@ function parseWmsJsonProperties(value: unknown): {
 }
 
 async function fetchWmsIdentifyProperties(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   map: maplibregl.Map,
   event: maplibregl.MapMouseEvent,
   signal: AbortSignal,
@@ -1238,7 +1238,7 @@ export const MapCanvas = memo(function MapCanvas({
       const showIdentifyPopup = (content: HTMLElement) => {
         identifyPopup.current?.remove();
         identifyPopup.current = new maplibregl.Popup({
-          className: "geolibre-identify-popup",
+          className: "geoint-identify-popup",
           closeButton: true,
           closeOnClick: false,
           maxWidth: "560px",
@@ -1425,7 +1425,7 @@ export const MapCanvas = memo(function MapCanvas({
         geometry.type === "Point" ? (geometry.coordinates as [number, number]) : event.lngLat;
       removePhotoPopup();
       photoPopup.current = new maplibregl.Popup({
-        className: "geolibre-photo-popup-root",
+        className: "geoint-photo-popup-root",
         closeButton: true,
         closeOnClick: true,
         maxWidth: "none",
@@ -1470,7 +1470,7 @@ export const MapCanvas = memo(function MapCanvas({
     // syncLayers creates the circle/marker style layers and then dispatches this
     // event, so re-bind on it to catch layers that did not exist yet when this
     // effect first ran (e.g. before the style finished loading).
-    window.addEventListener("geolibre-layer-labels-change", bind);
+    window.addEventListener("geoint-layer-labels-change", bind);
     // Close the photo popup when the Identify tool is turned on (which may
     // happen via a toolbar button, with no map click to dismiss it), so the
     // photo and identify popups never coexist.
@@ -1487,7 +1487,7 @@ export const MapCanvas = memo(function MapCanvas({
     });
 
     return () => {
-      window.removeEventListener("geolibre-layer-labels-change", bind);
+      window.removeEventListener("geoint-layer-labels-change", bind);
       unsubscribeIdentify();
       unbind();
       removePhotoPopup();

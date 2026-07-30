@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type LayerStyle } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type LayerStyle } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import {
   buildSld,
@@ -508,7 +508,7 @@ describe("buildSld", () => {
   });
 
   it("does not crash on an invalid (non-string) stop color", () => {
-    // Reachable via a hand-edited .geolibre.json; the exporter must not throw.
+    // Reachable via a hand-edited .geoint.json; the exporter must not throw.
     const { sld } = buildSld(
       layer({
         style: style({

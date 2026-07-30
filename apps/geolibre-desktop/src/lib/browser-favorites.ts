@@ -12,11 +12,11 @@
 
 import type { ServiceLibraryKind } from "../components/layout/add-data/service-library";
 
-export const FAVORITES_STORAGE_KEY = "geolibre.browser.favorites";
+export const FAVORITES_STORAGE_KEY = "geoint.browser.favorites";
 export const MAX_FAVORITES = 100;
 
 /** Fired on `window` after the favorites list is written (same-tab refresh). */
-export const FAVORITES_CHANGED_EVENT = "geolibre:favorites-changed";
+export const FAVORITES_CHANGED_EVENT = "geoint:favorites-changed";
 
 /**
  * The kinds of node that can be favorited. Database connections are excluded on

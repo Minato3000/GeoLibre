@@ -1,7 +1,7 @@
 import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
 import type { Feature, LineString, Point } from "geojson";
 import type { Layer } from "@deck.gl/core";
-import type { GeoLibreAppAPI, GeoLibreDeckGL, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntDeckGL, GeoIntPlugin } from "../types";
 import { colorToRgba } from "./deck-style-utils";
 import { ensureSharedDeckOverlay, setSharedDeckLayers } from "./shared-deck-overlay";
 import {
@@ -37,10 +37,10 @@ const FLAT_ELEVATION: RouteElevationConfig = {
 const ROUTE_ANIM_DECK_SOURCE = "route-anim";
 
 /**
- * GeoLibre route-animation plugin.
+ * GeoInt route-animation plugin.
  *
  * Animates a marker along any line layer already loaded in the project — the
- * GeoLibre take on MapLibre's "update a feature in realtime" example. A floating
+ * GeoInt take on MapLibre's "update a feature in realtime" example. A floating
  * panel (rendered by the desktop shell) picks the line layer and drives play /
  * pause / speed / loop, plus an optional camera chase (tilt / zoom / rotate),
  * heading rotation, and a growing trail. In flat 2D the marker, trail, and the
@@ -56,14 +56,14 @@ const ROUTE_ANIM_DECK_SOURCE = "route-anim";
  * without embedding geometry.
  */
 
-export const ROUTE_ANIMATION_PLUGIN_ID = "geolibre-route-animation";
+export const ROUTE_ANIMATION_PLUGIN_ID = "geoint-route-animation";
 
-const MARKER_SOURCE_ID = "geolibre-route-anim-marker-source";
-const MARKER_LAYER_ID = "geolibre-route-anim-marker-layer";
-const POINT_LAYER_ID = "geolibre-route-anim-point-layer";
-const TRAIL_SOURCE_ID = "geolibre-route-anim-trail-source";
-const TRAIL_LAYER_ID = "geolibre-route-anim-trail-layer";
-const ARROW_ICON_ID = "geolibre-route-anim-arrow";
+const MARKER_SOURCE_ID = "geoint-route-anim-marker-source";
+const MARKER_LAYER_ID = "geoint-route-anim-marker-layer";
+const POINT_LAYER_ID = "geoint-route-anim-point-layer";
+const TRAIL_SOURCE_ID = "geoint-route-anim-trail-source";
+const TRAIL_LAYER_ID = "geoint-route-anim-trail-layer";
+const ARROW_ICON_ID = "geoint-route-anim-arrow";
 
 /**
  * How the moving position is drawn:
@@ -278,7 +278,7 @@ class RouteAnimationEngine {
   private iconColor = "";
   // Lazily-resolved deck.gl bundle used to draw the elevated 3D marker/trail;
   // null until the host resolves it (2D marker renders in the meantime).
-  private readonly getDeck: () => GeoLibreDeckGL | null;
+  private readonly getDeck: () => GeoIntDeckGL | null;
   // Whether deck layers are currently contributed to the shared overlay, so we
   // only clear the "route-anim" source when it actually holds something.
   private deckActive = false;
@@ -289,7 +289,7 @@ class RouteAnimationEngine {
     coords: LngLat[],
     elevations: number[],
     elevation: RouteElevationConfig,
-    getDeck: () => GeoLibreDeckGL | null,
+    getDeck: () => GeoIntDeckGL | null,
   ) {
     this.map = map;
     this.settings = settings;
@@ -388,7 +388,7 @@ class RouteAnimationEngine {
         type: "line",
         source: TRAIL_SOURCE_ID,
         // Mark as internal "chrome" so it stays out of the Layer Control list.
-        metadata: { "geolibre:internal": true },
+        metadata: { "geoint:internal": true },
         layout: { "line-cap": "round", "line-join": "round" },
         paint: {
           "line-color": this.settings.color,
@@ -410,7 +410,7 @@ class RouteAnimationEngine {
         id: POINT_LAYER_ID,
         type: "circle",
         source: MARKER_SOURCE_ID,
-        metadata: { "geolibre:internal": true },
+        metadata: { "geoint:internal": true },
         paint: {
           "circle-radius": 4,
           "circle-color": this.settings.color,
@@ -425,7 +425,7 @@ class RouteAnimationEngine {
         id: MARKER_LAYER_ID,
         type: "symbol",
         source: MARKER_SOURCE_ID,
-        metadata: { "geolibre:internal": true },
+        metadata: { "geoint:internal": true },
         layout: {
           "icon-image": ARROW_ICON_ID,
           "icon-size": 0.6,
@@ -594,7 +594,7 @@ class RouteAnimationEngine {
 
   /** The deck marker (arrow/point) for the current position, or null for "none". */
   private deckMarkerLayer(
-    deck: GeoLibreDeckGL,
+    deck: GeoIntDeckGL,
     point: { coord: LngLat; bearing: number; elevation: number },
     lift: (z: number) => number,
     color: string,
@@ -721,7 +721,7 @@ let routeElevations: number[] = [];
 let routeElevation: RouteElevationConfig = FLAT_ELEVATION;
 // The host's deck.gl bundle, resolved lazily the first time the panel attaches
 // (the 3D marker needs it). Null until ready; the marker renders 2D meanwhile.
-let deckGLBundle: GeoLibreDeckGL | null = null;
+let deckGLBundle: GeoIntDeckGL | null = null;
 let deckGLPending = false;
 
 const panelListeners = new Set<() => void>();
@@ -736,7 +736,7 @@ function notifyState(): void {
 
 // Resolve the deck.gl bundle and the shared interleaved overlay once, then
 // re-render so an already-elevated route swaps its flat marker for the 3D one.
-function ensureDeck(app: GeoLibreAppAPI): void {
+function ensureDeck(app: GeoIntAppAPI): void {
   if (deckGLBundle || deckGLPending || !app.getDeckGL) return;
   deckGLPending = true;
   void app
@@ -747,14 +747,14 @@ function ensureDeck(app: GeoLibreAppAPI): void {
       engine?.render();
     })
     .catch((error) => {
-      console.warn("[GeoLibre] route-animation: deck.gl unavailable", error);
+      console.warn("[GeoInt] route-animation: deck.gl unavailable", error);
     })
     .finally(() => {
       deckGLPending = false;
     });
 }
 
-function attachEngine(app: GeoLibreAppAPI): boolean {
+function attachEngine(app: GeoIntAppAPI): boolean {
   const map = app.getMap?.();
   if (!map) return false;
   if (engine && engine.getMapInstance() !== map) detachEngine();
@@ -778,7 +778,7 @@ function detachEngine(): void {
 }
 
 /** Open the route-animation panel and attach the marker engine. Idempotent. */
-export function openRouteAnimationPanel(app: GeoLibreAppAPI): void {
+export function openRouteAnimationPanel(app: GeoIntAppAPI): void {
   if (!panelVisible) {
     panelVisible = true;
     notifyPanel();
@@ -787,7 +787,7 @@ export function openRouteAnimationPanel(app: GeoLibreAppAPI): void {
 }
 
 /** Close the panel, stop the animation, and remove the marker/trail. */
-export function closeRouteAnimationPanel(_app?: GeoLibreAppAPI): void {
+export function closeRouteAnimationPanel(_app?: GeoIntAppAPI): void {
   if (settings.playing) {
     settings = { ...settings, playing: false };
   }
@@ -945,7 +945,7 @@ export function advanceRouteProgress(delta: number): void {
  * sun plugin's restore path; the only place allowed to change open/closed state
  * from stored data.
  */
-export function restoreRouteAnimation(app: GeoLibreAppAPI, state?: unknown): boolean {
+export function restoreRouteAnimation(app: GeoIntAppAPI, state?: unknown): boolean {
   const next = normalizeRouteAnimationSettings(state, {
     ...DEFAULT_ROUTE_ANIMATION_SETTINGS,
   });
@@ -983,7 +983,7 @@ export function restoreRouteAnimation(app: GeoLibreAppAPI, state?: unknown): boo
  * Re-bind the engine to the current map without touching open/closed state.
  * Called after a map re-init or basemap change; must never reset the panel.
  */
-export function reattachRouteAnimation(app: GeoLibreAppAPI): void {
+export function reattachRouteAnimation(app: GeoIntAppAPI): void {
   if (panelVisible) attachEngine(app);
   else detachEngine();
 }
@@ -1283,13 +1283,13 @@ export async function recordRouteAnimation({
   return { blob, mimeType, extension };
 }
 
-export const maplibreRouteAnimationPlugin: GeoLibrePlugin = {
+export const maplibreRouteAnimationPlugin: GeoIntPlugin = {
   id: ROUTE_ANIMATION_PLUGIN_ID,
   name: "Route Animation",
   version: "1.0.0",
   activeByDefault: false,
-  activate: (app: GeoLibreAppAPI) => openRouteAnimationPanel(app),
-  deactivate: (app: GeoLibreAppAPI) => closeRouteAnimationPanel(app),
+  activate: (app: GeoIntAppAPI) => openRouteAnimationPanel(app),
+  deactivate: (app: GeoIntAppAPI) => closeRouteAnimationPanel(app),
   // Persist the panel-open flag plus settings so a saved project reopens on the
   // same layer. Nothing is stored while closed and at defaults. `playing` is
   // never persisted as true — playback is an explicit user action on load.
@@ -1297,5 +1297,5 @@ export const maplibreRouteAnimationPlugin: GeoLibrePlugin = {
     if (!panelVisible && isDefaultSettings(settings)) return undefined;
     return { open: panelVisible, ...settings, playing: false };
   },
-  applyProjectState: (app: GeoLibreAppAPI, state: unknown) => restoreRouteAnimation(app, state),
+  applyProjectState: (app: GeoIntAppAPI, state: unknown) => restoreRouteAnimation(app, state),
 };

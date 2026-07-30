@@ -22,7 +22,7 @@ export interface ExportFileOptions {
 }
 
 /**
- * Host text-file save callback. GeoLibre's `exportTextFile` implements this and
+ * Host text-file save callback. GeoInt's `exportTextFile` implements this and
  * picks the right mechanism per runtime (a native save dialog under Tauri, a
  * browser download on the web).
  */
@@ -50,14 +50,14 @@ export interface ElevationProfileControlOptions {
    */
   maxSamples?: number;
   /**
-   * Host text-file save (e.g. GeoLibre's `exportTextFile`). Used for the CSV and
+   * Host text-file save (e.g. GeoInt's `exportTextFile`). Used for the CSV and
    * SVG exports so they work under Tauri's native save dialog as well as in the
    * browser. Falls back to a browser download when not provided.
    */
   exportTextFile?: ExportTextFile;
 }
 
-/** Serializable state persisted with a GeoLibre project. */
+/** Serializable state persisted with a GeoInt project. */
 export interface ElevationProfileState {
   /** Whether the panel is collapsed. */
   collapsed: boolean;

@@ -1,6 +1,6 @@
 import type { FeatureCollection, Geometry } from "geojson";
 import bbox from "@turf/bbox";
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import type {
   DuckDbCapability,
   DuckDbGeoJsonSource,
@@ -180,7 +180,7 @@ function requireDuckDb(ctx: ProcessingContext): DuckDbCapability {
 // Mirrors the same helper in vector-tools.ts and registry.ts; intentionally
 // duplicated because vector-tools.ts imports from this file, so importing the
 // other direction would create a cycle. Keep the three copies in sync.
-function getLayer(ctx: ProcessingContext, paramId = "layer"): GeoLibreLayer | undefined {
+function getLayer(ctx: ProcessingContext, paramId = "layer"): GeoIntLayer | undefined {
   const id = ctx.parameters[paramId] as string | undefined;
   return ctx.layers.find((l) => l.id === id);
 }

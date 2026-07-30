@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, type LayerStyle } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, type LayerStyle } from "@geoint/core";
 import { syncLayer } from "../packages/map/src/layer-sync";
 
 // Stateful fake MapLibre map: tracks sources and layers across sync passes so a
@@ -49,7 +49,7 @@ function makeMap() {
   return { map, sources, layers, calls };
 }
 
-function pointLayer(style: Partial<LayerStyle> = {}): GeoLibreLayer {
+function pointLayer(style: Partial<LayerStyle> = {}): GeoIntLayer {
   return {
     id: "pts",
     name: "Points",
@@ -159,7 +159,7 @@ describe("point renderer sync", () => {
   // arrowheads and highlight shapes rendered as outline-only).
   it("never passes a null paint value to addLayer for a polygon fill", () => {
     const { map, layers, calls } = makeMap();
-    const polygon: GeoLibreLayer = {
+    const polygon: GeoIntLayer = {
       id: "poly",
       name: "Polygon",
       type: "geojson",

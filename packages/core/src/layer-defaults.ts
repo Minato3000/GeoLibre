@@ -1,5 +1,5 @@
 import type { FeatureCollection } from "geojson";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, type LayerStyle } from "./types";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, type LayerStyle } from "./types";
 
 /**
  * Initial styling for a newly added vector layer (issue #1519).
@@ -87,7 +87,7 @@ function wearsPaletteColor(style: LayerStyle | undefined): boolean {
  *   palette assignment count; see {@link wearsPaletteColor}.
  * @returns A `#rrggbb` color from {@link LAYER_PALETTE}.
  */
-export function nextLayerPaletteColor(layers: readonly GeoLibreLayer[]): string {
+export function nextLayerPaletteColor(layers: readonly GeoIntLayer[]): string {
   const styled = layers.filter((layer) => wearsPaletteColor(layer.style));
   const used = new Set(styled.map((layer) => layer.style.fillColor.trim().toLowerCase()));
   const free = LAYER_PALETTE.find((color) => !used.has(color));
@@ -168,7 +168,7 @@ export interface InitialLayerStyleOptions {
   /** The layer's data, used to pick geometry-appropriate sizes. */
   geojson?: FeatureCollection;
   /** Current project layers, so the new layer gets an unused palette color. */
-  layers?: readonly GeoLibreLayer[];
+  layers?: readonly GeoIntLayer[];
   /** Style values that win over the computed defaults (e.g. a restored style). */
   overrides?: Partial<LayerStyle>;
 }

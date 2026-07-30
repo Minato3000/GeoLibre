@@ -1,6 +1,6 @@
-import { Button, cn, Input, Label, Select } from "@geolibre/ui";
-import { useAppStore } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+import { Button, cn, Input, Label, Select } from "@geoint/ui";
+import { useAppStore } from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import {
   buildEditorSaveCollection,
   getGeoEditorFeatureCount,
@@ -14,7 +14,7 @@ import {
   subscribeGeometryEdit,
   type ViewImportMap,
   type ViewVectorLayer,
-} from "@geolibre/plugins";
+} from "@geoint/plugins";
 import type { Feature } from "geojson";
 import { ChevronDown, ChevronUp, GripVertical, RefreshCw, X } from "lucide-react";
 import {
@@ -41,7 +41,7 @@ interface LoadFeaturesIntoEditorDialogProps {
 }
 
 /** localStorage key for the optional editor-name field (stamped onto changes). */
-const EDITOR_NAME_KEY = "geolibre-editor-name";
+const EDITOR_NAME_KEY = "geoint-editor-name";
 
 /**
  * Above this many features, warn before loading: Geoman keeps every feature

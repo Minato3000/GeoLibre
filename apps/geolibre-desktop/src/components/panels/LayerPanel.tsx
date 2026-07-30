@@ -24,8 +24,8 @@ import {
   pluginOwnsPaint,
   supportsBridgedOpacity,
   useAppStore,
-} from "@geolibre/core";
-import type { EllipsoidId, GeoLibreLayer, LayerGroup } from "@geolibre/core";
+} from "@geoint/core";
+import type { EllipsoidId, GeoIntLayer, LayerGroup } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import {
   buildTimeBindingFromRecords,
@@ -48,8 +48,8 @@ import {
   TIME_SLIDER_PLUGIN_ID,
   type TimePropertyCandidate,
   type TimePropertyRecord,
-} from "@geolibre/plugins";
-import type { MapController } from "@geolibre/map";
+} from "@geoint/plugins";
+import type { MapController } from "@geoint/map";
 import {
   applyMapboxStyleImport,
   applyQmlImport,
@@ -63,7 +63,7 @@ import {
   parseQml,
   parseSld,
   placeholderMessage,
-} from "@geolibre/map";
+} from "@geoint/map";
 import { getIsMobileViewport } from "../../hooks/useIsMobileViewport";
 import {
   activateTimeSliderForBinding,
@@ -103,7 +103,7 @@ import {
   Select,
   Slider,
   cn,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   CalendarClock,
   ChevronDown,
@@ -189,7 +189,7 @@ import {
 } from "../../lib/vector-export";
 import { openLocalDataFileWithFallback, saveTextFileWithFallback } from "../../lib/tauri-io";
 import { isQmlStyleXml } from "../../lib/style-format";
-import { readPostgisTable, writePostgisTable, writeVectorToSource } from "@geolibre/processing";
+import { readPostgisTable, writePostgisTable, writeVectorToSource } from "@geoint/processing";
 import {
   postgisBaselineKeys,
   postgisFeatureKeys,
@@ -211,14 +211,14 @@ interface LayerPanelProps {
   /** Discard the active geometry-edit session without saving. */
   onCancelGeometryEdit: () => void;
   /** Materialize a DuckDB query layer into an editable GeoJSON layer. */
-  onMaterializeDuckDBLayer: (layer: GeoLibreLayer) => void;
+  onMaterializeDuckDBLayer: (layer: GeoIntLayer) => void;
   /** Open the floating Add Raster Layer panel for advanced raster styling. */
   onOpenRasterStylePanel: () => void;
   /**
    * Open the floating Extract Subset panel for a COG/WMS/XYZ layer, letting the
    * user draw a bounding box and export a clipped GeoTIFF.
    */
-  onOpenRasterSubset: (layer: GeoLibreLayer) => void;
+  onOpenRasterSubset: (layer: GeoIntLayer) => void;
   /**
    * When this flips to `true` the panel collapses to its thin rail (it is not
    * unmounted). Used to clear room for a story map presentation; the user can
@@ -243,7 +243,7 @@ interface LayerPanelProps {
   hideOwnRail?: boolean;
 }
 
-const BACKGROUND_SELECTION_ID = "__geolibre-background__";
+const BACKGROUND_SELECTION_ID = "__geoint-background__";
 
 const REFRESH_INTERVAL_OPTIONS: ReadonlyArray<{
   labelKey: ParseKeys;
@@ -258,6 +258,9 @@ const REFRESH_INTERVAL_OPTIONS: ReadonlyArray<{
 ];
 const CUSTOM_REFRESH_INTERVAL_VALUE = "custom";
 const REFRESH_STATUS_DURATION_MS = 4_000;
+
+/** Hides the planet/celestial-body switcher from the Layers panel header. */
+const SHOW_PLANET_SWITCHER = false;
 
 /** Menu labels for the planet switcher, keyed by celestial body. */
 const PLANET_SWITCHER_LABEL_KEYS: Record<EllipsoidId, ParseKeys> = {
@@ -285,7 +288,7 @@ type LayerRefreshTimer = {
   timer: number;
 };
 
-function layerTypeLabel(layer: GeoLibreLayer, t: TFunction): string {
+function layerTypeLabel(layer: GeoIntLayer, t: TFunction): string {
   if (layer.metadata?.sourceKind === "maplibre-basemap-control") {
     return t("layers.typeBasemap");
   }
@@ -295,7 +298,7 @@ function layerTypeLabel(layer: GeoLibreLayer, t: TFunction): string {
   return layer.type;
 }
 
-function sourceUrlsFromLayer(layer: GeoLibreLayer): string[] {
+function sourceUrlsFromLayer(layer: GeoIntLayer): string[] {
   if (layer.type !== "video" || !Array.isArray(layer.source.urls)) {
     return [];
   }
@@ -313,7 +316,7 @@ const WRITEBACK_EXTENSIONS = ["gpkg", "geojson", "json"];
  * (loaded via Add Data > PostgreSQL in editable mode). The sidecar diffs the
  * features against the source table by that key on save.
  */
-function isPostgisEditableLayer(layer: GeoLibreLayer): boolean {
+function isPostgisEditableLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "geojson" &&
     layer.metadata.sourceKind === "postgis-table" &&
@@ -328,7 +331,7 @@ function isPostgisEditableLayer(layer: GeoLibreLayer): boolean {
  * supported format or from a PostGIS table with a primary key. The sidecar
  * needs real filesystem/database access, so this is false on the web build.
  */
-function canWriteEditsToSource(layer: GeoLibreLayer): boolean {
+function canWriteEditsToSource(layer: GeoIntLayer): boolean {
   if (!isTauri() || layer.type !== "geojson") return false;
   if (isPostgisEditableLayer(layer)) return true;
   const path = typeof layer.sourcePath === "string" ? layer.sourcePath.trim() : "";
@@ -358,7 +361,7 @@ type RasterInfoState = { layerId: string } & (
  * @param layer - The layer whose metadata dialog is open.
  * @returns A fetchable GeoTIFF URL, or null.
  */
-function rasterInfoUrl(layer: GeoLibreLayer): string | null {
+function rasterInfoUrl(layer: GeoIntLayer): string | null {
   if (layer.type !== "cog" && layer.type !== "raster") return null;
   return rasterExportUrl(layer);
 }
@@ -373,7 +376,7 @@ function rasterInfoUrl(layer: GeoLibreLayer): string | null {
  * @returns The payload to serialize into the dialog.
  */
 function layerMetadataPayload(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   rasterInfo?: RasterInfo | null,
 ): Record<string, unknown> {
   const videoSourceUrls = sourceUrlsFromLayer(layer);
@@ -522,7 +525,7 @@ function parseCustomRefreshIntervalMs(value: string): number | null {
   return Math.max(MIN_REFRESH_INTERVAL_MS, Math.round(seconds * 1000));
 }
 
-function hasNativeIdentifyLayers(layer: GeoLibreLayer): boolean {
+function hasNativeIdentifyLayers(layer: GeoIntLayer): boolean {
   if (layer.metadata.identifiable === false) return false;
 
   return Array.isArray(layer.metadata.nativeLayerIds) && layer.metadata.nativeLayerIds.length > 0;
@@ -608,7 +611,7 @@ export function LayerPanel({
   const [editingLayerId, setEditingLayerId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState("");
   const [basemapPickerOpen, setBasemapPickerOpen] = useState(false);
-  const [metadataLayer, setMetadataLayer] = useState<GeoLibreLayer | null>(null);
+  const [metadataLayer, setMetadataLayer] = useState<GeoIntLayer | null>(null);
   const [metadataCopied, setMetadataCopied] = useState(false);
   // GeoTIFF header facts (CRS, pixel size, storage) for the raster whose
   // metadata dialog is open. The store layer does not carry them, so they are
@@ -627,7 +630,7 @@ export function LayerPanel({
   } | null>(null);
   const metadataResizeCleanupRef = useRef<(() => void) | null>(null);
   useEffect(() => () => metadataResizeCleanupRef.current?.(), []);
-  const [layerPendingRemoval, setLayerPendingRemoval] = useState<GeoLibreLayer | null>(null);
+  const [layerPendingRemoval, setLayerPendingRemoval] = useState<GeoIntLayer | null>(null);
   const [refreshSettingsLayerId, setRefreshSettingsLayerId] = useState<string | null>(null);
   const [refreshStatuses, setRefreshStatuses] = useState<Record<string, LayerRefreshStatus>>({});
   const [refreshIntervalChoice, setRefreshIntervalChoice] = useState("0");
@@ -685,7 +688,7 @@ export function LayerPanel({
   );
 
   const runLayerQuickTool = useCallback(
-    (layer: GeoLibreLayer, toolId: string, parameters: Record<string, unknown>, name: string) => {
+    (layer: GeoIntLayer, toolId: string, parameters: Record<string, unknown>, name: string) => {
       void runQuickAnalysis({
         toolId,
         parameters: { layer: layer.id, ...parameters },
@@ -935,7 +938,7 @@ export function LayerPanel({
     if (basemap) applyPlanetaryBasemap(basemap);
   };
 
-  const beginRename = (layer: GeoLibreLayer) => {
+  const beginRename = (layer: GeoIntLayer) => {
     // Clear any flag left set by a prior cancel/commit whose blur never fired,
     // so it cannot swallow the first commit of this rename session.
     suppressBlurCommitRef.current = false;
@@ -994,7 +997,7 @@ export function LayerPanel({
   );
 
   const handleCopyStyle = useCallback(
-    (layer: GeoLibreLayer) => {
+    (layer: GeoIntLayer) => {
       // Only confirm when a style was actually captured; the action no-ops on a
       // non-copyable layer.
       if (!copyLayerStyle(layer.id)) return;
@@ -1009,7 +1012,7 @@ export function LayerPanel({
   );
 
   const handlePasteStyle = useCallback(
-    (layer: GeoLibreLayer) => {
+    (layer: GeoIntLayer) => {
       // Read the source name before pasting; the message names the layer the
       // clipboard style came from.
       const sourceName = useAppStore.getState().copiedLayerStyle?.sourceName ?? "";
@@ -1027,7 +1030,7 @@ export function LayerPanel({
   );
 
   const handleRefreshLayer = useCallback(
-    async (layer: GeoLibreLayer, automatic = false) => {
+    async (layer: GeoIntLayer, automatic = false) => {
       if (refreshingLayerIdsRef.current.has(layer.id)) return;
 
       refreshingLayerIdsRef.current.add(layer.id);
@@ -1191,7 +1194,7 @@ export function LayerPanel({
   );
 
   const handleExportLayer = useCallback(
-    async (layer: GeoLibreLayer, format: VectorExportFormat) => {
+    async (layer: GeoIntLayer, format: VectorExportFormat) => {
       clearRefreshStatusTimer(layer.id);
       try {
         const geojson = await resolveLayerGeojson(
@@ -1257,7 +1260,7 @@ export function LayerPanel({
   // exporter needs embedded features), or `{ text, warnings }` to save.
   const exportLayerStyle = useCallback(
     async (
-      layer: GeoLibreLayer,
+      layer: GeoIntLayer,
       build: (
         geojson: FeatureCollection | null,
       ) => { text: string; warnings: string[] } | { error: string },
@@ -1312,9 +1315,9 @@ export function LayerPanel({
 
   // Export a vector layer's symbology as a self-contained Mapbox GL / MapLibre
   // style document, so the cartography can be reused in another map or handed to
-  // a teammate instead of being locked inside the .geolibre.json project.
+  // a teammate instead of being locked inside the .geoint.json project.
   const handleExportStyle = useCallback(
-    (layer: GeoLibreLayer) =>
+    (layer: GeoIntLayer) =>
       exportLayerStyle(
         layer,
         (geojson) => {
@@ -1352,7 +1355,7 @@ export function LayerPanel({
   // export, SLD carries no data, so a layer whose features are not readable can
   // still export (geometry detection falls back to a symbolizer superset).
   const handleExportSldStyle = useCallback(
-    (layer: GeoLibreLayer) =>
+    (layer: GeoIntLayer) =>
       exportLayerStyle(
         layer,
         (geojson) => {
@@ -1375,10 +1378,10 @@ export function LayerPanel({
   );
 
   // Export a vector layer's symbology as a QGIS QML style, the native style
-  // format QGIS users have on disk, so GeoLibre cartography can be opened in
+  // format QGIS users have on disk, so GeoInt cartography can be opened in
   // QGIS without rebuilding it by hand.
   const handleExportQmlStyle = useCallback(
-    (layer: GeoLibreLayer) =>
+    (layer: GeoIntLayer) =>
       exportLayerStyle(
         layer,
         (geojson) => {
@@ -1397,12 +1400,12 @@ export function LayerPanel({
 
   // Import a symbology file (Mapbox GL / MapLibre style JSON or an OGC SLD) and
   // apply it to a vector layer, so cartography authored elsewhere (QGIS,
-  // GeoServer, another map, or a style exported from GeoLibre) can be brought
+  // GeoServer, another map, or a style exported from GeoInt) can be brought
   // back in instead of being rebuilt by hand. The format is detected from the
   // file content (XML vs JSON). Anything the style could not represent is
   // surfaced as a warning rather than dropped silently.
   const handleImportStyle = useCallback(
-    async (layer: GeoLibreLayer) => {
+    async (layer: GeoIntLayer) => {
       clearRefreshStatusTimer(layer.id);
       try {
         const picked = await openLocalDataFileWithFallback({
@@ -1435,7 +1438,7 @@ export function LayerPanel({
           | ReturnType<typeof parseSld>
           | ReturnType<typeof parseQml>;
         let matched: number;
-        let applyImport: (base: GeoLibreLayer["style"]) => GeoLibreLayer["style"];
+        let applyImport: (base: GeoIntLayer["style"]) => GeoIntLayer["style"];
 
         if (isQml) {
           const qmlResult = parseQml(picked.text);
@@ -1515,7 +1518,7 @@ export function LayerPanel({
   // or diffing against the PostGIS table by primary key. Unlike Export, there
   // is no save dialog: write-back targets the known source.
   const handleSaveEditsToSource = useCallback(
-    async (layer: GeoLibreLayer) => {
+    async (layer: GeoIntLayer) => {
       clearRefreshStatusTimer(layer.id);
       const isPostgis = isPostgisEditableLayer(layer);
       const path = typeof layer.sourcePath === "string" ? layer.sourcePath.trim() : "";
@@ -1664,7 +1667,7 @@ export function LayerPanel({
   // preselect the best-covered one. `candidates` stays null until detection
   // finishes so the dialog can show a "scanning" state for large layers.
   const openBindTimeSliderDialog = useCallback(
-    async (layer: GeoLibreLayer) => {
+    async (layer: GeoIntLayer) => {
       // Tag this request with a fresh token so a stale async scan (open ->
       // close/reopen, even for the same layer) cannot populate this dialog.
       const token = (bindRequestRef.current += 1);
@@ -1778,7 +1781,7 @@ export function LayerPanel({
   // the adapter already knows the axis, so the binding is written and the dock
   // opens in one step rather than through the property-picking dialog.
   const handleBindTemporalLayer = useCallback(
-    (layer: GeoLibreLayer) => {
+    (layer: GeoIntLayer) => {
       const adapter = getTemporalLayerAdapter(layer.id);
       if (!adapter) return;
       if (bindTemporalLayer(layer.id, adapter, mapControllerRef)) return;
@@ -1794,7 +1797,7 @@ export function LayerPanel({
   // Remove a layer's binding and clear its transient time filter so it shows
   // every feature again. The Time Slider stays active for any other bindings.
   const handleUnbindTimeSlider = useCallback(
-    (layer: GeoLibreLayer) => {
+    (layer: GeoIntLayer) => {
       const { timeBinding: _removed, ...metadata } = layer.metadata as Record<string, unknown>;
       updateLayer(layer.id, { metadata, timeFilter: undefined });
       // Switch the plugin off once it has nothing left to drive, so the dock
@@ -1810,7 +1813,7 @@ export function LayerPanel({
   );
 
   const handleExportRasterLayer = useCallback(
-    async (layer: GeoLibreLayer) => {
+    async (layer: GeoIntLayer) => {
       clearRefreshStatusTimer(layer.id);
       try {
         const savedPath = await exportRasterLayer(layer, sanitizeExportFileName(layer.name));
@@ -1917,7 +1920,7 @@ export function LayerPanel({
       })
       .catch((error: unknown) => {
         if (cancelled) return;
-        console.warn("[GeoLibre] Failed to read raster metadata", error);
+        console.warn("[GeoInt] Failed to read raster metadata", error);
         setRasterInfoState({ layerId, status: "error" });
       });
 
@@ -2031,7 +2034,7 @@ export function LayerPanel({
           // watcher and show a spurious error while watching is actually active.
           if (cancelled) return;
           watchUnsubsRef.current.delete(layer.id);
-          console.warn(`[GeoLibre] Could not watch "${path}" for changes.`, error);
+          console.warn(`[GeoInt] Could not watch "${path}" for changes.`, error);
           setRefreshStatuses((current) => ({
             ...current,
             [layer.id]: {
@@ -2069,7 +2072,7 @@ export function LayerPanel({
   }, []);
 
   const setRefreshInterval = useCallback(
-    (layer: GeoLibreLayer, intervalMs: number) => {
+    (layer: GeoIntLayer, intervalMs: number) => {
       // Read the latest layer from the store so a concurrent refresh's
       // metadata (e.g. featureCount) is not overwritten by a stale snapshot.
       const latest =
@@ -2086,7 +2089,7 @@ export function LayerPanel({
   );
 
   const toggleWatchLayer = useCallback(
-    (layer: GeoLibreLayer, enabled: boolean) => {
+    (layer: GeoIntLayer, enabled: boolean) => {
       // Read the latest layer so a concurrent reload's metadata is not
       // overwritten by a stale snapshot (mirrors setRefreshInterval).
       const latest =
@@ -2370,36 +2373,38 @@ export function LayerPanel({
       <div className="flex items-center justify-between border-b px-3 py-1.5">
         <span className="text-sm font-semibold">{t("sharedRail.layers")}</span>
         <div className="flex items-center gap-1">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7"
-                title={t("planetSwitcher.label")}
-                aria-label={t("planetSwitcher.label")}
-              >
-                <Orbit
-                  className={cn(
-                    "h-4 w-4",
-                    selectedPlanet && selectedPlanet !== "earth" && "text-primary",
-                  )}
-                />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuLabel>{t("planetSwitcher.label")}</DropdownMenuLabel>
-              {PLANET_SWITCHER_OPTIONS.map((option) => (
-                <DropdownMenuCheckboxItem
-                  key={option.ellipsoidId}
-                  checked={selectedPlanet === option.ellipsoidId}
-                  onCheckedChange={(checked) => togglePlanet(option.ellipsoidId, checked)}
+          {SHOW_PLANET_SWITCHER && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7"
+                  title={t("planetSwitcher.label")}
+                  aria-label={t("planetSwitcher.label")}
                 >
-                  {t(PLANET_SWITCHER_LABEL_KEYS[option.ellipsoidId])}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  <Orbit
+                    className={cn(
+                      "h-4 w-4",
+                      selectedPlanet && selectedPlanet !== "earth" && "text-primary",
+                    )}
+                  />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuLabel>{t("planetSwitcher.label")}</DropdownMenuLabel>
+                {PLANET_SWITCHER_OPTIONS.map((option) => (
+                  <DropdownMenuCheckboxItem
+                    key={option.ellipsoidId}
+                    checked={selectedPlanet === option.ellipsoidId}
+                    onCheckedChange={(checked) => togglePlanet(option.ellipsoidId, checked)}
+                  >
+                    {t(PLANET_SWITCHER_LABEL_KEYS[option.ellipsoidId])}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           <Button
             variant="ghost"
             size="icon"

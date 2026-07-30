@@ -55,7 +55,7 @@ const DEFAULT_DEPS: SwipeCogMirrorDeps = {
 };
 
 /**
- * Renders a copy of GeoLibre's deck.gl COG rasters onto the Layer Swipe
+ * Renders a copy of GeoInt's deck.gl COG rasters onto the Layer Swipe
  * comparison map, so a raster assigned to the right (or both) side of the swipe
  * shows there. The comparison map's canvas is already clipped to the swipe
  * region by the swipe control, so the mirror inherits that clip for free and
@@ -103,7 +103,7 @@ export class SwipeCogMirror {
       },
       (error: unknown) => {
         this.controlPromise = null;
-        console.warn("[GeoLibre] swipe COG mirror: control load", error);
+        console.warn("[GeoInt] swipe COG mirror: control load", error);
         return null;
       },
     );
@@ -177,7 +177,7 @@ export class SwipeCogMirror {
           });
         }
       } catch (error) {
-        console.debug("[GeoLibre] swipe COG mirror: addLayer", error);
+        console.debug("[GeoInt] swipe COG mirror: addLayer", error);
       }
     }
   }
@@ -197,7 +197,7 @@ export class SwipeCogMirror {
       this.deps.removeControl(this.map, control);
     } catch (error) {
       // The comparison map may already be gone (removed by the swipe control).
-      console.debug("[GeoLibre] swipe COG mirror: removeControl", error);
+      console.debug("[GeoInt] swipe COG mirror: removeControl", error);
     }
   }
 }

@@ -1,5 +1,5 @@
-import { useAppStore } from "@geolibre/core";
-import { Button } from "@geolibre/ui";
+import { useAppStore } from "@geoint/core";
+import { Button } from "@geoint/ui";
 import { Loader2, TriangleAlert, X } from "lucide-react";
 import { useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";

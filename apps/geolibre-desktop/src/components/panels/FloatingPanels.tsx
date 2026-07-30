@@ -1,5 +1,5 @@
-import { closeFloatingPanel, focusFloatingPanel, getFloatingPanel } from "@geolibre/plugins";
-import { Button } from "@geolibre/ui";
+import { closeFloatingPanel, focusFloatingPanel, getFloatingPanel } from "@geoint/plugins";
+import { Button } from "@geoint/ui";
 import { GripVertical, X } from "lucide-react";
 import {
   type CSSProperties,

@@ -1,6 +1,6 @@
-import type { ConversionToolKind, RasterToolKind, VectorToolKind } from "@geolibre/core";
-import { type BuiltInMapControl, type MapController } from "@geolibre/map";
-import type { GeoLibreMapControlPosition } from "@geolibre/plugins";
+import type { ConversionToolKind, RasterToolKind, VectorToolKind } from "@geoint/core";
+import { type BuiltInMapControl, type MapController } from "@geoint/map";
+import type { GeoIntMapControlPosition } from "@geoint/plugins";
 import type { ParseKeys } from "i18next";
 import type { createAppAPI } from "../../../hooks/usePlugins";
 import type { AddDataKind } from "../AddDataDialog";
@@ -77,7 +77,7 @@ export const ALL_BUILT_IN_CONTROL_IDS: BuiltInMapControl[] = [
 ];
 
 export const PLUGIN_POSITION_ITEMS: Array<{
-  value: GeoLibreMapControlPosition;
+  value: GeoIntMapControlPosition;
   labelKey: ParseKeys;
 }> = [
   { value: "top-left", labelKey: "toolbar.position.topLeft" },

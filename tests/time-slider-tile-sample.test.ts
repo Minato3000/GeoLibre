@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import {
   isTileVectorLayer,
   resolveTileQueryTargets,
@@ -9,7 +9,7 @@ import {
   type TileSampleStyle,
 } from "../packages/plugins/src/plugins/time-slider-tile-sample";
 
-function layer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function layer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id: "vt",
     name: "vt",
@@ -100,7 +100,7 @@ describe("resolveTileQueryTargets", () => {
   });
 
   it("finds a saved GeoLens layer that records no source or native layer ids", () => {
-    // The shape a vector-tiles layer restored from a .geolibre.json has: the
+    // The shape a vector-tiles layer restored from a .geoint.json has: the
     // core sync path builds `source-<id>` and `layer-<id>-vector-*` itself, and
     // records neither back onto the layer. Matching on recorded sources alone
     // finds nothing here, so the layer-id prefix is what resolves it.

@@ -1,8 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 import { strToU8, zipSync } from "fflate";
 
-// A minimal but valid external GeoLibre plugin: the entry is a self-contained
-// ESM module exporting a GeoLibrePlugin whose id/name/version match the
+// A minimal but valid external GeoInt plugin: the entry is a self-contained
+// ESM module exporting a GeoIntPlugin whose id/name/version match the
 // manifest. activate/deactivate are no-ops so the plugin registers without
 // needing a live map control.
 const PLUGIN_ID = "e2e-sample-plugin";

@@ -1,6 +1,6 @@
 # Shared vector-tool golden fixtures
 
-The GeoLibre vector geometry tools are implemented **twice**, in two languages,
+The GeoInt vector geometry tools are implemented **twice**, in two languages,
 and kept in sync by hand:
 
 - **TypeScript / Turf.js** — `packages/processing/src/vector-tools.ts` (the

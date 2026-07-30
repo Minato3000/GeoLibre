@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
-import { type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { type GeoIntLayer, useAppStore } from "@geoint/core";
 import { syncLayer } from "../packages/map/src/layer-sync";
 
 // Records the maplibre operations a sync performs so a test can assert the
@@ -134,7 +134,7 @@ describe("store.addTileLayer", () => {
 describe("native raster tile sync", () => {
   // A native XYZ layer (no externalNativeLayer metadata) takes the
   // syncRasterTileLayer path, which must now forward bounds/attribution/zoom.
-  function nativeTileLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+  function nativeTileLayer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
     const id = useAppStore.getState().addTileLayer("Imagery", {
       tiles: ["https://tiles.example.com/{z}/{x}/{y}.png"],
       tileSize: 512,

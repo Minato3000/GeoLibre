@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type LayerStyle } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type LayerStyle } from "@geoint/core";
 import { applyQmlImport, parseQml } from "../packages/map/src/qml-import";
 
 /** Wrap renderer/labeling XML in a minimal <qgis> document. */
@@ -222,7 +222,7 @@ describe("parseQml", () => {
     );
     assert.equal(result.labels, null);
     assert.ok(
-      result.warnings.some((w) => /"rule-based" labeling has no GeoLibre equivalent/.test(w)),
+      result.warnings.some((w) => /"rule-based" labeling has no GeoInt equivalent/.test(w)),
     );
   });
 

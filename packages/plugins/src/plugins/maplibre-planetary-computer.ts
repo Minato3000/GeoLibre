@@ -1,4 +1,4 @@
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import type {
   ActiveLayer,
   PlanetaryComputerControl,
@@ -10,17 +10,17 @@ import type {
   TiTilerClient,
   TileParams,
 } from "maplibre-gl-planetary-computer";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition } from "../types";
 
 type PlanetaryComputerControlConstructor =
   (typeof import("maplibre-gl-planetary-computer"))["PlanetaryComputerControl"];
 type STACClientConstructor = (typeof import("maplibre-gl-planetary-computer"))["STACClient"];
 type TiTilerClientConstructor = (typeof import("maplibre-gl-planetary-computer"))["TiTilerClient"];
 
-const planetaryComputerControlPosition: GeoLibreMapControlPosition = "top-left";
+const planetaryComputerControlPosition: GeoIntMapControlPosition = "top-left";
 
 const PLANETARY_COMPUTER_OPTIONS = {
-  className: "geolibre-planetary-computer-control",
+  className: "geoint-planetary-computer-control",
   collapsed: false,
   panelWidth: 380,
   title: "Planetary Computer",
@@ -45,11 +45,11 @@ let planetaryComputerRestoreToken = 0;
 let planetaryComputerRestorePreservedLayerIds = new Set<string>();
 let planetaryComputerStoreSyncSuspended = 0;
 
-export function openPlanetaryComputerPanel(app: GeoLibreAppAPI): void {
+export function openPlanetaryComputerPanel(app: GeoIntAppAPI): void {
   void openStandalonePlanetaryComputerControl(app);
 }
 
-export function closePlanetaryComputerPanel(app: GeoLibreAppAPI): void {
+export function closePlanetaryComputerPanel(app: GeoIntAppAPI): void {
   if (planetaryComputerControl && planetaryComputerControlMounted) {
     app.removeMapControl(planetaryComputerControl);
     return;
@@ -57,7 +57,7 @@ export function closePlanetaryComputerPanel(app: GeoLibreAppAPI): void {
   resetPlanetaryComputerControl(planetaryComputerControl);
 }
 
-async function openStandalonePlanetaryComputerControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandalonePlanetaryComputerControl(app: GeoIntAppAPI): Promise<boolean> {
   const control = await ensurePlanetaryComputerControl(app, {
     hiddenOnMount: false,
   });
@@ -78,10 +78,10 @@ async function openStandalonePlanetaryComputerControl(app: GeoLibreAppAPI): Prom
 // whole control until it is reopened from the Processing menu.
 function wirePlanetaryComputerCloseButton(control: PlanetaryComputerControl | null): void {
   const closeButton = control?.getPanelElement()?.querySelector<HTMLElement>(".pc-control-close");
-  if (!closeButton || closeButton.dataset.geolibreCloseWired === "true") {
+  if (!closeButton || closeButton.dataset.geointCloseWired === "true") {
     return;
   }
-  closeButton.dataset.geolibreCloseWired = "true";
+  closeButton.dataset.geointCloseWired = "true";
   closeButton.addEventListener("click", () => hidePlanetaryComputerControl(control));
 }
 
@@ -109,7 +109,7 @@ function getPlanetaryComputerConstructors(): Promise<{
 }
 
 async function ensurePlanetaryComputerControl(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: { hiddenOnMount?: boolean } = {},
 ): Promise<PlanetaryComputerControl | null> {
   // Unlike the deck.gl-based plugins (GeoParquet, DuckDB), no
@@ -222,7 +222,7 @@ function syncPlanetaryComputerLayersToStore(event: PlanetaryComputerEventData): 
   }
 }
 
-function createPlanetaryComputerStoreLayer(activeLayer: ActiveLayer): GeoLibreLayer {
+function createPlanetaryComputerStoreLayer(activeLayer: ActiveLayer): GeoIntLayer {
   const bbox = activeLayer.item?.bbox ?? activeLayer.collection?.extent?.spatial?.bbox?.[0];
   const collectionId = activeLayer.item?.collection ?? activeLayer.collection?.id ?? "";
 
@@ -262,11 +262,11 @@ function createPlanetaryComputerStoreLayer(activeLayer: ActiveLayer): GeoLibreLa
  * Replays saved Planetary Computer raster layers into the upstream control.
  * The upstream addItemLayer/addCollectionLayer methods generate fresh IDs, so
  * project restore has to recreate the native MapLibre layers with the saved
- * GeoLibre IDs and register them with the control's runtime layer manager.
+ * GeoInt IDs and register them with the control's runtime layer manager.
  *
- * @param app - The GeoLibre app API.
+ * @param app - The GeoInt app API.
  */
-export function restorePlanetaryComputerLayers(app: GeoLibreAppAPI): void {
+export function restorePlanetaryComputerLayers(app: GeoIntAppAPI): void {
   const hasPlanetaryComputerLayers = useAppStore.getState().layers.some(isPlanetaryComputerLayer);
   if (!hasPlanetaryComputerLayers && !planetaryComputerControl) return;
 
@@ -288,7 +288,7 @@ export function restorePlanetaryComputerLayers(app: GeoLibreAppAPI): void {
 
     const activeLayerIds = new Set(control.getState().activeLayers.map((layer) => layer.id));
 
-    const layersToRestore: GeoLibreLayer[] = [];
+    const layersToRestore: GeoIntLayer[] = [];
     for (const layer of storeLayers) {
       if (activeLayerIds.has(layer.id)) {
         control.updateLayer(layer.id, {
@@ -323,7 +323,7 @@ export function restorePlanetaryComputerLayers(app: GeoLibreAppAPI): void {
           transientFailures.push(failure);
         }
         console.error(
-          `[GeoLibre] Failed to restore Planetary Computer layer "${layer?.name ?? "unknown"}"`,
+          `[GeoInt] Failed to restore Planetary Computer layer "${layer?.name ?? "unknown"}"`,
           result.reason,
         );
       }
@@ -337,7 +337,7 @@ export function restorePlanetaryComputerLayers(app: GeoLibreAppAPI): void {
     if (invalidLayers.length > 0) {
       removeInvalidPlanetaryComputerStoreLayers(control, invalidLayers);
       console.warn(
-        "[GeoLibre] Some Planetary Computer layers had invalid saved " +
+        "[GeoInt] Some Planetary Computer layers had invalid saved " +
           `metadata and were removed from the layer list: ${invalidLayers
             .map((layer) => layer.name)
             .join(", ")}`,
@@ -351,7 +351,7 @@ export function restorePlanetaryComputerLayers(app: GeoLibreAppAPI): void {
         }
       }
       console.warn(
-        "[GeoLibre] Some Planetary Computer layers could not be restored " +
+        "[GeoInt] Some Planetary Computer layers could not be restored " +
           `and were kept in the layer list: ${transientFailures
             .map((layer) => layer.name)
             .join(", ")}`,
@@ -362,13 +362,13 @@ export function restorePlanetaryComputerLayers(app: GeoLibreAppAPI): void {
       emitPlanetaryComputerRestore(control);
     }
   })().catch((error) => {
-    console.error("[GeoLibre] Failed to restore Planetary Computer layers", error);
+    console.error("[GeoInt] Failed to restore Planetary Computer layers", error);
   });
 }
 
 async function restorePlanetaryComputerLayer(
   control: PlanetaryComputerControl,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   restoreToken: number,
 ): Promise<string | null> {
   const collectionId = stringMetadata(layer, "stacCollectionId");
@@ -410,7 +410,7 @@ async function restorePlanetaryComputerLayer(
 
 function registerRestoredPlanetaryComputerLayer(
   control: PlanetaryComputerControl,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   source:
     | { collectionId: string; item: STACItem; type: "item" }
     | { collection: STACCollection; type: "collection" | "mosaic" },
@@ -505,7 +505,7 @@ function removeInvalidPlanetaryComputerStoreLayers(
 
 function rollbackSupersededPlanetaryComputerRestore(
   control: PlanetaryComputerControl,
-  layersToRestore: GeoLibreLayer[],
+  layersToRestore: GeoIntLayer[],
   restoredLayerIds: Set<string>,
 ): void {
   if (restoredLayerIds.size === 0) return;
@@ -532,9 +532,9 @@ function rollbackSupersededPlanetaryComputerRestore(
 
 function currentRestorablePlanetaryComputerLayer(
   control: PlanetaryComputerControl,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   restoreToken: number,
-): GeoLibreLayer | null {
+): GeoIntLayer | null {
   if (restoreToken !== planetaryComputerRestoreToken || control !== planetaryComputerControl) {
     return null;
   }
@@ -548,7 +548,7 @@ function currentRestorablePlanetaryComputerLayer(
   return currentLayer;
 }
 
-function currentStoreLayerMatchesPlanetaryComputerRestore(restoredLayer: GeoLibreLayer): boolean {
+function currentStoreLayerMatchesPlanetaryComputerRestore(restoredLayer: GeoIntLayer): boolean {
   const currentLayer = useAppStore
     .getState()
     .layers.find((candidate) => candidate.id === restoredLayer.id);
@@ -560,8 +560,8 @@ function currentStoreLayerMatchesPlanetaryComputerRestore(restoredLayer: GeoLibr
 }
 
 function hasSamePlanetaryComputerRestoreSource(
-  currentLayer: GeoLibreLayer,
-  restoredLayer: GeoLibreLayer,
+  currentLayer: GeoIntLayer,
+  restoredLayer: GeoIntLayer,
 ): boolean {
   return (
     stringMetadata(currentLayer, "stacCollectionId") ===
@@ -599,7 +599,7 @@ function nextRenderedStoreLayerId(
   return undefined;
 }
 
-function renderedLayerIds(layer: GeoLibreLayer): string[] {
+function renderedLayerIds(layer: GeoIntLayer): string[] {
   const nativeLayerIds = Array.isArray(layer.metadata.nativeLayerIds)
     ? layer.metadata.nativeLayerIds.filter(
         (value): value is string => typeof value === "string" && value.trim().length > 0,
@@ -610,14 +610,14 @@ function renderedLayerIds(layer: GeoLibreLayer): string[] {
 
 function emitPlanetaryComputerRestore(control: PlanetaryComputerControl): void {
   // Private API verified against maplibre-gl-planetary-computer 0.4.0. These
-  // calls are needed so the upstream panel and GeoLibre store see restored
+  // calls are needed so the upstream panel and GeoInt store see restored
   // layers that were re-registered with saved IDs. In 0.4.0, _emit constructs
   // PlanetaryComputerEventData from _state.activeLayers synchronously, which is
   // why one "layer:add" emit is enough to reconcile all restored layers.
   const internals = control as unknown as PlanetaryComputerControlInternals;
   if (!internals._emit) {
     console.warn(
-      "[GeoLibre] Planetary Computer _emit not found; " +
+      "[GeoInt] Planetary Computer _emit not found; " +
         "the restored panel state may not refresh. " +
         "Re-verify against maplibre-gl-planetary-computer internals.",
     );
@@ -696,7 +696,7 @@ function showPlanetaryComputerControl(control: PlanetaryComputerControl | null):
   if (panel) panel.style.display = "";
 }
 
-function isPlanetaryComputerLayer(layer: GeoLibreLayer): boolean {
+function isPlanetaryComputerLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "raster" &&
     layer.metadata.sourceKind === "planetary-computer-raster" &&
@@ -755,12 +755,12 @@ function requiredPlanetaryComputerRestoreInternals(
   return { activeLayers, layerManagerLayers };
 }
 
-function stringMetadata(layer: GeoLibreLayer, key: string): string | undefined {
+function stringMetadata(layer: GeoIntLayer, key: string): string | undefined {
   const value = layer.metadata[key];
   return typeof value === "string" && value ? value : undefined;
 }
 
-function stringArrayMetadata(layer: GeoLibreLayer, key: string): string[] | undefined {
+function stringArrayMetadata(layer: GeoIntLayer, key: string): string[] | undefined {
   const value = layer.metadata[key];
   return Array.isArray(value) && value.every((entry) => typeof entry === "string")
     ? value
@@ -768,14 +768,14 @@ function stringArrayMetadata(layer: GeoLibreLayer, key: string): string[] | unde
 }
 
 function numberArrayMetadata(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   key: string,
 ): [number, number, number, number] | undefined {
   const value = layer.metadata[key];
   return boundsTuple(value);
 }
 
-function tileParamsMetadata(layer: GeoLibreLayer, key: string): TileParams {
+function tileParamsMetadata(layer: GeoIntLayer, key: string): TileParams {
   const value = layer.metadata[key];
   return value && typeof value === "object" && !Array.isArray(value) ? (value as TileParams) : {};
 }

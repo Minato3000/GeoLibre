@@ -12,8 +12,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@geolibre/ui";
-import { useAppStore } from "@geolibre/core";
+} from "@geoint/ui";
+import { useAppStore } from "@geoint/core";
 import {
   ArrowLeft,
   ArrowRight,

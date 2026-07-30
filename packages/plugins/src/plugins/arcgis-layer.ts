@@ -1,10 +1,10 @@
 /// <reference path="../arcgis-maplibre.d.ts" />
 
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import type { HostedLayer, VectorTileLayer } from "@esri/maplibre-arcgis";
 import type { FeatureCollection } from "geojson";
 import type maplibregl from "maplibre-gl";
-import type { GeoLibreAppAPI } from "../types";
+import type { GeoIntAppAPI } from "../types";
 
 export type ArcGISLayerType = "feature" | "vector-tile";
 export type ArcGISSourceType = "url" | "portal-item";
@@ -70,7 +70,7 @@ const arcgisLayerInstances = new Map<string, ArcGISRuntimeLayer>();
 let arcgisStoreUnsubscribe: (() => void) | null = null;
 
 export async function addArcGISLayer(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: ArcGISLayerOptions,
 ): Promise<string> {
   const input = getArcGISInput(options);
@@ -195,10 +195,10 @@ function addArcGISRuntimeLayerToMap(hostedLayer: ArcGISRuntimeLayer, map: maplib
  * @param app - The host app API (used to fit the view to the layer extent).
  * @param options - The ArcGIS layer options (source type, URL/item, token).
  * @param input - The resolved service URL or portal item id from the options.
- * @returns The new GeoLibre layer's id.
+ * @returns The new GeoInt layer's id.
  */
 async function addArcGISFeatureLayerAsGeoJson(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: ArcGISLayerOptions,
   input: string,
 ): Promise<string> {
@@ -291,7 +291,7 @@ async function fetchArcGISGeoJson(url: string): Promise<FeatureCollection> {
   // is surfaced so the caller knows the layer is not the complete dataset.
   if (json.exceededTransferLimit) {
     console.warn(
-      `[GeoLibre] ArcGIS feature query was truncated at the service record ` +
+      `[GeoInt] ArcGIS feature query was truncated at the service record ` +
         `limit; loaded ${json.features.length} features (partial dataset).`,
     );
   }
@@ -497,7 +497,7 @@ function createArcGISStoreLayer(args: {
   nativeLayerIds: string[];
   options: ArcGISLayerOptions;
   sourceIds: string[];
-}): GeoLibreLayer {
+}): GeoIntLayer {
   const { bounds, id, input, nativeLayerIds, options, sourceIds } = args;
   const sourceKind = `arcgis-${options.layerType}-${options.sourceType}`;
   const sourceType = options.layerType === "feature" ? "geojson" : "vector";

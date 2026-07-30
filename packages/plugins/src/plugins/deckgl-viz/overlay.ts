@@ -1,6 +1,6 @@
-import { type GeoLibreLayer, styleValue, useAppStore } from "@geolibre/core";
+import { type GeoIntLayer, styleValue, useAppStore } from "@geoint/core";
 import type { Layer } from "@deck.gl/core";
-import type { GeoLibreAppAPI, GeoLibreDeckGL } from "../../types";
+import type { GeoIntAppAPI, GeoIntDeckGL } from "../../types";
 import { ensureMercatorProjection } from "../map-projection-utils";
 import { ensureSharedDeckOverlay, setSharedDeckLayers } from "../shared-deck-overlay";
 import { buildDiagramLayers, isDiagramLayer } from "./diagrams";
@@ -23,8 +23,8 @@ import { deckVizRows, isDeckVizLayer, readDeckVizConfig } from "./store-layer";
 const ANIMATION_SPEED = 60;
 
 let storeUnsubscribe: (() => void) | null = null;
-let deckGL: GeoLibreDeckGL | null = null;
-let appRef: GeoLibreAppAPI | null = null;
+let deckGL: GeoIntDeckGL | null = null;
+let appRef: GeoIntAppAPI | null = null;
 
 let rafHandle: number | null = null;
 // Signature of the current animated-layer set; when it changes the loop length
@@ -42,7 +42,7 @@ let animationEpoch = 0;
  *
  * @param app - The host application API.
  */
-export async function activateDeckViz(app: GeoLibreAppAPI): Promise<void> {
+export async function activateDeckViz(app: GeoIntAppAPI): Promise<void> {
   await ensureDeckVizOverlay(app);
 }
 
@@ -55,7 +55,7 @@ export async function activateDeckViz(app: GeoLibreAppAPI): Promise<void> {
  * @param app - The host application API.
  * @param active - Whether the plugin is currently active.
  */
-export function restoreDeckViz(app: GeoLibreAppAPI, active: boolean): void {
+export function restoreDeckViz(app: GeoIntAppAPI, active: boolean): void {
   if (!active) {
     deactivateDeckViz(app);
     return;
@@ -68,7 +68,7 @@ export function restoreDeckViz(app: GeoLibreAppAPI, active: boolean): void {
 // never created for the same map.
 let ensureInFlight: Promise<void> | null = null;
 
-function ensureDeckVizOverlay(app: GeoLibreAppAPI): Promise<void> {
+function ensureDeckVizOverlay(app: GeoIntAppAPI): Promise<void> {
   if (ensureInFlight) return ensureInFlight;
   ensureInFlight = runEnsureDeckVizOverlay(app).finally(() => {
     ensureInFlight = null;
@@ -76,7 +76,7 @@ function ensureDeckVizOverlay(app: GeoLibreAppAPI): Promise<void> {
   return ensureInFlight;
 }
 
-async function runEnsureDeckVizOverlay(app: GeoLibreAppAPI): Promise<void> {
+async function runEnsureDeckVizOverlay(app: GeoIntAppAPI): Promise<void> {
   appRef = app;
   if (!app.getDeckGL) return;
   deckGL ??= await app.getDeckGL();
@@ -99,7 +99,7 @@ async function runEnsureDeckVizOverlay(app: GeoLibreAppAPI): Promise<void> {
  * @param _app - The host application API (unused; the shared overlay owns the
  *   MapboxOverlay lifecycle).
  */
-export function deactivateDeckViz(_app: GeoLibreAppAPI): void {
+export function deactivateDeckViz(_app: GeoIntAppAPI): void {
   storeUnsubscribe?.();
   storeUnsubscribe = null;
   stopAnimation();
@@ -196,7 +196,7 @@ function renderDeckVizLayers(): void {
         deckLayers.push(...buildElevation3dLayers(deckGL, layer));
       }
     } catch (error) {
-      console.warn("[GeoLibre] deckgl-viz: failed to build layer", error);
+      console.warn("[GeoInt] deckgl-viz: failed to build layer", error);
     }
   }
 
@@ -215,7 +215,7 @@ interface RenderEntry {
   ctx: DeckVizBuildContext;
 }
 
-function buildContext(layer: GeoLibreLayer): RenderEntry | null {
+function buildContext(layer: GeoIntLayer): RenderEntry | null {
   const config = readDeckVizConfig(layer);
   if (!config) return null;
   const def = getDeckVizLayerDef(config.layerKind);

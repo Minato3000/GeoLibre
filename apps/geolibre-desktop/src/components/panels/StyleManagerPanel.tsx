@@ -3,7 +3,7 @@
 // and previews. Entries live in the app-level library (persisted across
 // projects via IndexedDB, see useStyleLibraryPersistence) or embedded in the
 // current project file; built-in presets seed the library so it is never
-// empty. Import accepts GeoLibre style-library bundles plus QGIS QML and OGC
+// empty. Import accepts GeoInt style-library bundles plus QGIS QML and OGC
 // SLD (converted through the existing packages/map importers); export writes
 // a shareable JSON bundle.
 //
@@ -25,9 +25,9 @@ import {
   useAppStore,
   type StyleLibraryEntry,
   type StyleLibraryEntryKind,
-} from "@geolibre/core";
-import { applyQmlImport, applySldImport, parseQml, parseSld } from "@geolibre/map";
-import { Button, cn, Input, Label, ScrollArea, Select } from "@geolibre/ui";
+} from "@geoint/core";
+import { applyQmlImport, applySldImport, parseQml, parseSld } from "@geoint/map";
+import { Button, cn, Input, Label, ScrollArea, Select } from "@geoint/ui";
 import { Check, Download, GripVertical, Palette, Save, Trash2, Upload, X } from "lucide-react";
 import {
   type PointerEvent as ReactPointerEvent,
@@ -458,7 +458,7 @@ export function StyleManagerPanel() {
     }
     try {
       const savedPath = await saveTextFileWithFallback(serializeStyleLibrary(entries), {
-        defaultName: "geolibre-styles.json",
+        defaultName: "geoint-styles.json",
         filters: [{ name: t("styleManager.exportFilterName"), extensions: ["json"] }],
         browserTypes: [
           {

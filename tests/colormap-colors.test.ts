@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { getVectorColorRamp } from "@geolibre/core";
+import { getVectorColorRamp } from "@geoint/core";
 import {
   colormapColors,
   warmColormapColors,
@@ -12,7 +12,7 @@ describe("colormapColors", () => {
   });
 
   it("returns null for a sprite colormap that has not been sampled", () => {
-    // 'ylorbr' is a renderer sprite colormap, not one of GeoLibre's built-ins.
+    // 'ylorbr' is a renderer sprite colormap, not one of GeoInt's built-ins.
     assert.equal(colormapColors("ylorbr"), null);
   });
 });

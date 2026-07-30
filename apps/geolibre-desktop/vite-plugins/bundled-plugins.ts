@@ -33,7 +33,7 @@ export function bundledPlugins(pluginsDir: string): Plugin {
   };
 
   return {
-    name: "geolibre:bundled-plugins",
+    name: "geoint:bundled-plugins",
     resolveId: (id) => (id === VIRTUAL_ID ? RESOLVED_ID : undefined),
     load(id) {
       if (id !== RESOLVED_ID) return;

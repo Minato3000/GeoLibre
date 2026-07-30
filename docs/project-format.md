@@ -1,6 +1,6 @@
-# GeoLibre Project Format
+# GeoInt Project Format
 
-Projects are saved as **`.geolibre.json`** files.
+Projects are saved as **`.geoint.json`** files.
 
 ## Schema
 
@@ -87,8 +87,8 @@ enter/exit. The section is omitted entirely when the project has no chapters.
 ```json
 {
   "title": "A Tour of Three Cities",
-  "subtitle": "Built with GeoLibre",
-  "byline": "By the GeoLibre team",
+  "subtitle": "Built with GeoInt",
+  "byline": "By the GeoInt team",
   "footer": "Source: OpenStreetMap",
   "theme": "dark",
   "showMarkers": true,
@@ -240,7 +240,7 @@ output self-heals if the join table changed.
 
 When a `geojson` layer enables `style.simpleStyleEnabled`, individual features
 may override the layer style with [simplestyle-spec](https://github.com/mapbox/simplestyle-spec)
-properties (`stroke`, `fill`, `stroke-width`, `fill-opacity`, ...). GeoLibre also
+properties (`stroke`, `fill`, `stroke-width`, `fill-opacity`, ...). GeoInt also
 honors a per-feature `text-color` on text-marker points (used by the Annotations
 layer), falling back to `style.textColor` when a feature does not set it.
 
@@ -272,5 +272,5 @@ import {
   createEmptyProject,
   parseProject,
   serializeProject,
-} from "@geolibre/core";
+} from "@geoint/core";
 ```

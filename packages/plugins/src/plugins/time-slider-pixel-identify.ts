@@ -207,7 +207,7 @@ export async function identifyTimeSliderPixel(
 }
 
 /**
- * The bridge shape consumed by `@geolibre/map` (MapCanvas), which cannot import
+ * The bridge shape consumed by `@geoint/map` (MapCanvas), which cannot import
  * this package directly.
  */
 export interface TimeSliderGlobalBridge {
@@ -216,14 +216,14 @@ export interface TimeSliderGlobalBridge {
 
 declare global {
   interface Window {
-    __GEOLIBRE_TIME_SLIDER__?: TimeSliderGlobalBridge;
+    __GEOINT_TIME_SLIDER__?: TimeSliderGlobalBridge;
   }
 }
 
 if (typeof window !== "undefined") {
   // Frozen so its members cannot be swapped out by other scripts after
   // construction, mirroring the DuckDB bridge. Do not widen this API.
-  window.__GEOLIBRE_TIME_SLIDER__ = Object.freeze({
+  window.__GEOINT_TIME_SLIDER__ = Object.freeze({
     identifyPixelAt: identifyTimeSliderPixel,
   });
 }

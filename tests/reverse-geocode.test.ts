@@ -5,7 +5,7 @@ import {
   REVERSE_GEOCODE_PLUGIN_ID,
   restoreReverseGeocode,
 } from "../packages/plugins/src/plugins/maplibre-reverse-geocode";
-import type { GeoLibreAppAPI } from "../packages/plugins/src/types";
+import type { GeoIntAppAPI } from "../packages/plugins/src/types";
 
 /** A minimal fake MapLibre map recording click-listener registration. */
 function fakeMap() {
@@ -25,8 +25,8 @@ function fakeMap() {
   };
 }
 
-function fakeApp(map: ReturnType<typeof fakeMap>): GeoLibreAppAPI {
-  return { getMap: () => map } as unknown as GeoLibreAppAPI;
+function fakeApp(map: ReturnType<typeof fakeMap>): GeoIntAppAPI {
+  return { getMap: () => map } as unknown as GeoIntAppAPI;
 }
 
 describe("maplibreReverseGeocodePlugin", () => {

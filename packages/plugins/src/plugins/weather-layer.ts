@@ -1,6 +1,6 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import type { Map as MapLibreMap, RasterTileSource } from "maplibre-gl";
-import type { GeoLibreAppAPI } from "../types";
+import type { GeoIntAppAPI } from "../types";
 
 /**
  * Shared engine for the Weather overlays (Clouds, Precipitation).
@@ -68,7 +68,7 @@ export interface WeatherLayerConfig {
 }
 
 export interface WeatherLayerController {
-  activate: (app: GeoLibreAppAPI) => Promise<boolean>;
+  activate: (app: GeoIntAppAPI) => Promise<boolean>;
   deactivate: () => void;
   getState: () => WeatherAnimationState;
   setFrame: (index: number) => void;
@@ -76,7 +76,7 @@ export interface WeatherLayerController {
   subscribe: (listener: () => void) => () => void;
 }
 
-/** The live raster source id the map assigns to a store layer (`@geolibre/map`'s `sourceId`). */
+/** The live raster source id the map assigns to a store layer (`@geoint/map`'s `sourceId`). */
 function rasterSourceId(layerId: string): string {
   return `source-${layerId}`;
 }
@@ -100,7 +100,7 @@ function metadataEqual(a: Record<string, unknown>, b: Record<string, unknown>): 
 }
 
 export function createWeatherLayer(config: WeatherLayerConfig): WeatherLayerController {
-  let appRef: GeoLibreAppAPI | null = null;
+  let appRef: GeoIntAppAPI | null = null;
   /** Id of the store layer this engine owns, or null when inactive. */
   let layerId: string | null = null;
   let frames: WeatherFrame[] = [];
@@ -219,7 +219,7 @@ export function createWeatherLayer(config: WeatherLayerConfig): WeatherLayerCont
   };
 
   return {
-    activate: async (app: GeoLibreAppAPI): Promise<boolean> => {
+    activate: async (app: GeoIntAppAPI): Promise<boolean> => {
       const generation = (activationGeneration += 1);
       // Nothing is mutated until after the await + the supersede check, so a
       // toggle-off/on during the fetch can't leave partial state behind.

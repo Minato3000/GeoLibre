@@ -15,7 +15,7 @@ import {
   scaleDenomination,
   type MapScaleUnit,
   type MarkerShape,
-} from "@geolibre/core";
+} from "@geoint/core";
 
 export type PaperSizeId =
   | "a4"
@@ -178,7 +178,7 @@ export function pagePx(size: ResolvedPageSize, dpi: number): { width: number; he
  * A point layer's marker, carried on its legend swatch so the legend can draw
  * the actual marker (a built-in shape recolored, or a custom SVG icon) instead
  * of a plain color square. Mirrors the map's marker sprite (`prepareMarker` in
- * `@geolibre/map`).
+ * `@geoint/map`).
  */
 export interface LegendMarker {
   /** Built-in shape, or `"custom"` for an SVG icon in {@link svg}. */
@@ -319,9 +319,9 @@ export interface LayoutOptions {
   showDate?: boolean;
   /** The formatted date string drawn when {@link showDate} is true. */
   dateText?: string;
-  /** Draw the "Created with GeoLibre" attribution (left side of the footer row). */
+  /** Draw the "Created with GeoInt" attribution (left side of the footer row). */
   showAttribution?: boolean;
-  /** Attribution text; defaults to "Created with GeoLibre" when omitted. */
+  /** Attribution text; defaults to "Created with GeoInt" when omitted. */
   attributionText?: string;
   /** Outer page padding preset: full margins, narrow, or borderless. */
   pageMargin?: "normal" | "narrow" | "none";
@@ -477,10 +477,10 @@ function resolveContentFlags(opts: LayoutOptions): ContentFlags {
   const hasTitleText = opts.showTitle && opts.title.trim().length > 0;
   const hasSubtitleText = showSubtitle && opts.subtitle.trim().length > 0;
   // Attribution is opt-out (on unless explicitly disabled), deliberately unlike
-  // the other new booleans: GH #526 wants a pre-checked "Created with GeoLibre"
+  // the other new booleans: GH #526 wants a pre-checked "Created with GeoInt"
   // credit so it survives a user replacing the footer text.
   const attributionText =
-    opts.showAttribution !== false && (opts.attributionText ?? "Created with GeoLibre").trim();
+    opts.showAttribution !== false && (opts.attributionText ?? "Created with GeoInt").trim();
   const footerText = opts.showFooter && opts.footerText.trim();
   const dateText = (opts.showDate && (opts.dateText ?? "").trim()) || false;
   return {

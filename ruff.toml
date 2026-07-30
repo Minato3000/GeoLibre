@@ -1,4 +1,4 @@
-# Ruff config for the GeoLibre monorepo's Python (python/ + backend/).
+# Ruff config for the GeoInt monorepo's Python (python/ + backend/).
 # Scope is deliberately narrow: formatting + import sorting + the basic
 # pyflakes/pep8 error classes. Heavier rule sets (UP, B, SIM) are intentionally
 # left off to avoid a large churny cleanup across the existing codebase, mirroring
@@ -11,7 +11,7 @@ target-version = "py310"
 
 extend-exclude = [
   # Bundled web app baked into the Python wheel; generated, not hand-edited.
-  "python/src/geolibre/static",
+  "python/src/geoint/static",
   # Staged into JupyterLite by scripts/build-jupyterlite.mjs; generated copies.
   "apps/geolibre-desktop/jupyterlite",
   "apps/geolibre-desktop/public/jupyterlite",
@@ -28,7 +28,7 @@ extend-exclude = [
 select = ["F", "I", "W", "E"]
 
 [lint.isort]
-known-first-party = ["geolibre", "geolibre_server"]
+known-first-party = ["geoint", "geolibre_server"]
 
 [lint.per-file-ignores]
 # These files embed long string literals that must NOT be reformatted:

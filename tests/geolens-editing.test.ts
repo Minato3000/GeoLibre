@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import {
   normalizeBaseUrl,

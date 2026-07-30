@@ -235,8 +235,8 @@ pub fn run() {
             read_mbtiles_tile,
             start_martin_server,
             stop_martin_server,
-            start_geolibre_sidecar,
-            stop_geolibre_sidecar,
+            start_geoint_sidecar,
+            stop_geoint_sidecar,
             start_jupyter_server,
             stop_jupyter_server,
             start_earth_engine_oauth,
@@ -247,21 +247,21 @@ pub fn run() {
             Ok(())
         })
         .run(tauri::generate_context!())
-        .expect("error while running GeoLibre Desktop");
+        .expect("error while running GeoInt Desktop");
 }
 
 /// Whether `read_project_file` may read `path`: an absolute local path (POSIX
 /// `/...` or a Windows drive-letter `C:\...`, never a UNC `\\host\share`), free
-/// of `..` traversal, ending in a GeoLibre project extension — `.geolibre` or
-/// `.geolibre.json`. These are the canonical formats `saveProject` writes and
-/// `isGeoLibreProjectPath` recognizes in `tauri-io.ts`.
+/// of `..` traversal, ending in a GeoInt project extension — `.geoint` or
+/// `.geoint.json`. These are the canonical formats `saveProject` writes and
+/// `isGeoIntProjectPath` recognizes in `tauri-io.ts`.
 ///
 /// Without this, the command was an arbitrary local-file reader: any webview JS
 /// or loaded plugin could `invoke("read_project_file", { path: "~/.ssh/id_rsa" })`
 /// and receive the contents. A bare `.json` extension is deliberately NOT
 /// accepted: plenty of real secrets are JSON (GCP service-account keys,
 /// `application_default_credentials.json`, editor/CLI configs with tokens), so
-/// requiring the `.geolibre` marker keeps those out while still reading every
+/// requiring the `.geoint` marker keeps those out while still reading every
 /// real project. Byte-oriented like `is_allowed_local_vector_path` so Windows
 /// paths behave the same on any host.
 pub(crate) fn is_allowed_project_path(path: &str) -> bool {
@@ -287,7 +287,7 @@ pub(crate) fn is_allowed_project_path(path: &str) -> bool {
     }
 
     let lower = path.to_ascii_lowercase();
-    lower.ends_with(".geolibre") || lower.ends_with(".geolibre.json")
+    lower.ends_with(".geoint") || lower.ends_with(".geoint.json")
 }
 
 #[tauri::command]
@@ -298,14 +298,14 @@ fn read_project_file(path: String) -> Result<String, String> {
         ));
     }
     // Resolve symlinks and re-check the extension, so a symlink named
-    // `*.geolibre`/`*.geolibre.json` can't redirect the read to an arbitrary
-    // target (e.g. `~/notes.geolibre.json -> ~/.ssh/id_rsa`). Only the resolved
+    // `*.geoint`/`*.geoint.json` can't redirect the read to an arbitrary
+    // target (e.g. `~/notes.geoint.json -> ~/.ssh/id_rsa`). Only the resolved
     // extension is re-checked (not the full guard): `canonicalize` yields a
     // `\\?\C:\…` verbatim path on Windows, which the UNC check would reject.
     let canonical =
         fs::canonicalize(&path).map_err(|error| format!("Could not read project file: {error}"))?;
     let resolved = canonical.to_string_lossy().to_ascii_lowercase();
-    if !(resolved.ends_with(".geolibre") || resolved.ends_with(".geolibre.json")) {
+    if !(resolved.ends_with(".geoint") || resolved.ends_with(".geoint.json")) {
         return Err(format!(
             "Refusing to read \"{path}\": resolves to a non-project file"
         ));
@@ -375,7 +375,7 @@ pub(crate) fn is_allowed_local_vector_path(path: &str) -> bool {
 /// can be re-read when the project is reopened.
 ///
 /// On reopen, a layer saved as a file reference carries only its absolute
-/// `sourcePath` (stored in the `.geolibre.json`); that path was never picked or
+/// `sourcePath` (stored in the `.geoint.json`); that path was never picked or
 /// dropped this session, so it sits outside the `fs` plugin's runtime scope and
 /// the JS `readFile`/`readTextFile` reject it. This reads the file directly,
 /// mirroring `read_project_file` (which bypasses the same scope to read the
@@ -537,8 +537,8 @@ fn read_admin_profile(app: tauri::AppHandle) -> Result<Option<String>, String> {
 /// `OS_ENV_VAR_NAMES` in `apps/geolibre-desktop/src/lib/assistant/provider.ts`
 /// — the `assistant-os-env` test parses this list and asserts the two match.
 const ALLOWED_ENV_VARS: &[&str] = &[
-    "GEOLIBRE_ASSISTANT_PROVIDER",
-    "GEOLIBRE_ASSISTANT_MODEL",
+    "GEOINT_ASSISTANT_PROVIDER",
+    "GEOINT_ASSISTANT_MODEL",
     "GEMINI_API_KEY",
     "GOOGLE_API_KEY",
     "GOOGLE_GENAI_API_KEY",
@@ -559,7 +559,7 @@ const ALLOWED_ENV_VARS: &[&str] = &[
 /// process environment — nor any variable outside the allowlist — into the
 /// webview. This lets the assistant source provider API keys from the user's
 /// system/shell environment instead of the project file (issue #1141), keeping
-/// secrets out of the saved `.geolibre.json`.
+/// secrets out of the saved `.geoint.json`.
 #[tauri::command]
 fn read_env_vars(names: Vec<String>) -> std::collections::HashMap<String, String> {
     names
@@ -601,14 +601,14 @@ const SSRF_BLOCKED_MESSAGE: &str =
 
 /// Path to a PEM bundle of extra CA certificate(s) to trust for server
 /// verification, on top of the OS trust store (issue #1220).
-const HTTP_CA_CERT_ENV: &str = "GEOLIBRE_HTTP_CA_CERT";
+const HTTP_CA_CERT_ENV: &str = "GEOINT_HTTP_CA_CERT";
 /// Path to the client certificate to present for mutual TLS. A `.pem` file
 /// (certificate chain plus an unencrypted PKCS#8 private key) or a PKCS#12
 /// bundle (`.p12`/`.pfx`, optionally passphrase-protected).
-const HTTP_CLIENT_CERT_ENV: &str = "GEOLIBRE_HTTP_CLIENT_CERT";
+const HTTP_CLIENT_CERT_ENV: &str = "GEOINT_HTTP_CLIENT_CERT";
 /// Passphrase for a PKCS#12 client certificate. Its presence also forces the
 /// PKCS#12 code path for a client cert that lacks a recognised extension.
-const HTTP_CLIENT_CERT_PASSWORD_ENV: &str = "GEOLIBRE_HTTP_CLIENT_CERT_PASSWORD";
+const HTTP_CLIENT_CERT_PASSWORD_ENV: &str = "GEOINT_HTTP_CLIENT_CERT_PASSWORD";
 
 /// Whether an IP sits in a range a webview- or plugin-triggered fetch must not
 /// reach. This is the SSRF guard for [`fetch_url_bytes`] and
@@ -905,7 +905,7 @@ fn build_guarded_http_client() -> Result<reqwest::blocking::Client, String> {
         .connect_timeout(Duration::from_secs(REMOTE_TILE_CONNECT_TIMEOUT_SECS))
         .redirect(guarded_redirect_policy())
         .dns_resolver(std::sync::Arc::new(GuardedDnsResolver))
-        .user_agent("GeoLibre Desktop");
+        .user_agent("GeoInt Desktop");
 
     for certificate in extra_ca_certificates()? {
         builder = builder.add_root_certificate(certificate);
@@ -954,7 +954,7 @@ fn fetch_url_bytes_blocking(url: String) -> Result<Vec<u8>, String> {
         .map_err(|error| format!("Could not read response body: {error}"))
 }
 
-/// Install a packaged plugin from a local `.zip` archive into GeoLibre's
+/// Install a packaged plugin from a local `.zip` archive into GeoInt's
 /// app-data `plugins/` directory so it persists across restarts and is picked up
 /// by the regular plugin scan. The archive is validated first (parsing
 /// `plugin.json`, enforcing the manifest rules, and confirming the entry and
@@ -1603,13 +1603,13 @@ fn stop_martin_server(state: tauri::State<MartinServerState>) -> Result<(), Stri
 }
 
 #[tauri::command]
-async fn start_geolibre_sidecar(app: tauri::AppHandle) -> Result<SidecarServerInfo, String> {
-    tauri::async_runtime::spawn_blocking(move || start_geolibre_sidecar_blocking(app))
+async fn start_geoint_sidecar(app: tauri::AppHandle) -> Result<SidecarServerInfo, String> {
+    tauri::async_runtime::spawn_blocking(move || start_geoint_sidecar_blocking(app))
         .await
         .map_err(|error| format!("Could not join sidecar startup task: {error}"))?
 }
 
-fn start_geolibre_sidecar_blocking(app: tauri::AppHandle) -> Result<SidecarServerInfo, String> {
+fn start_geoint_sidecar_blocking(app: tauri::AppHandle) -> Result<SidecarServerInfo, String> {
     let base_url = sidecar_base_url();
     let state = app.state::<SidecarServerState>();
     let _lifecycle = state
@@ -1658,9 +1658,9 @@ fn start_geolibre_sidecar_blocking(app: tauri::AppHandle) -> Result<SidecarServe
         // an opaque uvicorn "address already in use" instead of this message.
         if !wait_for_port_free(SIDECAR_PORT) {
             return Err(
-                "A GeoLibre processing server from a previous session is still \
+                "A GeoInt processing server from a previous session is still \
                  running on port 8765 but does not accept this session's token. \
-                 Quit any stray GeoLibre processes and try again."
+                 Quit any stray GeoInt processes and try again."
                     .to_string(),
             );
         }
@@ -1695,9 +1695,9 @@ fn start_geolibre_sidecar_blocking(app: tauri::AppHandle) -> Result<SidecarServe
         .arg("--port")
         .arg(SIDECAR_PORT.to_string())
         .current_dir(&project_dir)
-        .env("GEOLIBRE_UV", &uv)
-        .env("GEOLIBRE_SIDECAR_TOKEN", sidecar_token())
-        .env("GEOLIBRE_RUNTIME_DIR", &runtime_dir)
+        .env("GEOINT_UV", &uv)
+        .env("GEOINT_SIDECAR_TOKEN", sidecar_token())
+        .env("GEOINT_RUNTIME_DIR", &runtime_dir)
         .env("UV_CACHE_DIR", runtime_dir.join("uv-cache"))
         .env("UV_PYTHON_INSTALL_DIR", runtime_dir.join("uv-python"))
         .env("UV_PROJECT_ENVIRONMENT", runtime_dir.join("sidecar-server"))
@@ -1708,7 +1708,7 @@ fn start_geolibre_sidecar_blocking(app: tauri::AppHandle) -> Result<SidecarServe
 
     let mut child = command
         .spawn()
-        .map_err(|error| format!("Could not start GeoLibre sidecar: {error}"))?;
+        .map_err(|error| format!("Could not start GeoInt sidecar: {error}"))?;
     // Drain both pipes from the moment we spawn. Reading them only after the
     // child exits (the old shape) deadlocks a cold-cache `uv sync`, whose
     // per-package output overflows the 64 KB pipe long before uvicorn can bind:
@@ -1740,13 +1740,13 @@ fn start_geolibre_sidecar_blocking(app: tauri::AppHandle) -> Result<SidecarServe
 }
 
 #[tauri::command]
-async fn stop_geolibre_sidecar(app: tauri::AppHandle) -> Result<(), String> {
-    tauri::async_runtime::spawn_blocking(move || stop_geolibre_sidecar_blocking(app))
+async fn stop_geoint_sidecar(app: tauri::AppHandle) -> Result<(), String> {
+    tauri::async_runtime::spawn_blocking(move || stop_geoint_sidecar_blocking(app))
         .await
         .map_err(|error| format!("Could not join sidecar stop task: {error}"))?
 }
 
-fn stop_geolibre_sidecar_blocking(app: tauri::AppHandle) -> Result<(), String> {
+fn stop_geoint_sidecar_blocking(app: tauri::AppHandle) -> Result<(), String> {
     let state = app.state::<SidecarServerState>();
     let _lifecycle = state
         .lifecycle
@@ -1776,7 +1776,7 @@ fn stop_geolibre_sidecar_blocking(app: tauri::AppHandle) -> Result<(), String> {
     }
     if sidecar_health_is_ready(&base_url) {
         return Err(format!(
-            "GeoLibre sidecar is still running on port {SIDECAR_PORT}."
+            "GeoInt sidecar is still running on port {SIDECAR_PORT}."
         ));
     }
     Ok(())
@@ -1859,15 +1859,15 @@ fn start_jupyter_server_blocking(app: tauri::AppHandle) -> Result<JupyterServerI
             &welcome_dest,
         );
     }
-    // Make the kernel-side `geolibre` client importable from any notebook: copy
+    // Make the kernel-side `geoint` client importable from any notebook: copy
     // it out of the bundled backend resource into a dedicated lib dir placed on
-    // the kernel's PYTHONPATH (so `import geolibre` works regardless of where the
+    // the kernel's PYTHONPATH (so `import geoint` works regardless of where the
     // notebook lives).
     let lib_dir = runtime_dir.join("notebook-lib");
     let _ = fs::create_dir_all(&lib_dir);
     let _ = fs::copy(
         project_dir.join("notebook_client.py"),
-        lib_dir.join("geolibre.py"),
+        lib_dir.join("geoint.py"),
     );
     let token = generate_jupyter_token();
 
@@ -1877,7 +1877,7 @@ fn start_jupyter_server_blocking(app: tauri::AppHandle) -> Result<JupyterServerI
         // Read the bundled uv.lock as-is. Without this uv re-locks whenever it
         // thinks the lock is stale and WRITES uv.lock back into the project
         // directory — which in an installed build is the read-only resource dir
-        // (C:\Program Files\..., /usr/lib/GeoLibre Desktop/...). That write fails
+        // (C:\Program Files\..., /usr/lib/GeoInt Desktop/...). That write fails
         // with "Permission denied" and uv exits 2, which reached the user as the
         // opaque "Jupyter server exited before it was ready (exit code: 2)".
         // `--frozen` also keeps a released build pinned to the versions it was
@@ -1901,12 +1901,12 @@ fn start_jupyter_server_blocking(app: tauri::AppHandle) -> Result<JupyterServerI
         .arg(format!("--ServerApp.root_dir={}", notebooks_dir.display()))
         .arg(format!("--IdentityProvider.token={token}"))
         .current_dir(&project_dir)
-        .env("GEOLIBRE_UV", &uv)
-        .env("GEOLIBRE_RUNTIME_DIR", &runtime_dir)
+        .env("GEOINT_UV", &uv)
+        .env("GEOINT_RUNTIME_DIR", &runtime_dir)
         .env("UV_CACHE_DIR", runtime_dir.join("uv-cache"))
         .env("UV_PYTHON_INSTALL_DIR", runtime_dir.join("uv-python"))
         .env("UV_PROJECT_ENVIRONMENT", runtime_dir.join("jupyter-server"))
-        // Prepend the bundled `geolibre` client to the kernel import path,
+        // Prepend the bundled `geoint` client to the kernel import path,
         // preserving any inherited PYTHONPATH rather than replacing it.
         .env("PYTHONPATH", prepend_pythonpath(&lib_dir))
         .stdin(Stdio::null())
@@ -1969,7 +1969,7 @@ fn stop_jupyter_server_blocking(app: tauri::AppHandle) -> Result<(), String> {
             .lock()
             .map_err(|_| "Could not lock Jupyter process state.".to_string())?;
         // JupyterProcess::Drop terminates the child's process group; taking the
-        // value out is enough (see stop_geolibre_sidecar_blocking).
+        // value out is enough (see stop_geoint_sidecar_blocking).
         let taken = process.take();
         drop(process);
         drop(taken);
@@ -2107,9 +2107,9 @@ fn sidecar_base_url() -> String {
 /// a cross-origin simple POST (CSRF) or a DNS-rebinding read; this token does.
 ///
 /// Generated once per desktop process (128 CSPRNG bits) and reused for the
-/// process lifetime so the early-return paths of `start_geolibre_sidecar` (when
+/// process lifetime so the early-return paths of `start_geoint_sidecar` (when
 /// the sidecar is already running) hand back the same token that was injected
-/// via `GEOLIBRE_SIDECAR_TOKEN` at spawn time. A sidecar started outside this
+/// via `GEOINT_SIDECAR_TOKEN` at spawn time. A sidecar started outside this
 /// process (e.g. a `python -m` dev run) leaves the env var unset and simply does
 /// not enforce the token, so those flows keep working.
 fn sidecar_token() -> &'static str {
@@ -2138,7 +2138,7 @@ fn sidecar_health_is_ready(base_url: &str) -> bool {
 /// sidecar from a previous launch — started with a different per-launch token,
 /// and not killed because `Drop` doesn't run on `SIGKILL` — is detected rather
 /// than silently 401ing every later request. A tokenless dev sidecar
-/// (`GEOLIBRE_SIDECAR_TOKEN` unset) accepts any header and returns 200, so it is
+/// (`GEOINT_SIDECAR_TOKEN` unset) accepts any header and returns 200, so it is
 /// still reused.
 fn sidecar_accepts_token(base_url: &str, token: &str) -> bool {
     let Ok(client) = reqwest::blocking::Client::builder()
@@ -2149,7 +2149,7 @@ fn sidecar_accepts_token(base_url: &str, token: &str) -> bool {
     };
     client
         .get(format!("{base_url}/algorithms"))
-        .header("x-geolibre-token", token)
+        .header("x-geoint-token", token)
         .send()
         .map(|response| response.status().is_success())
         .unwrap_or(false)
@@ -2166,7 +2166,7 @@ fn request_sidecar_shutdown(base_url: &str) {
         // through to the force-kill path, as before.
         let _ = client
             .post(format!("{base_url}/shutdown"))
-            .header("x-geolibre-token", sidecar_token())
+            .header("x-geoint-token", sidecar_token())
             .send();
     }
 }
@@ -2191,7 +2191,7 @@ fn wait_for_sidecar_health(
             .map_err(|error| format!("Could not inspect sidecar process: {error}"))?
         {
             return Err(child_failure_message(
-                &format!("GeoLibre sidecar exited before it was ready: {status}"),
+                &format!("GeoInt sidecar exited before it was ready: {status}"),
                 output,
             ));
         }
@@ -2204,7 +2204,7 @@ fn wait_for_sidecar_health(
     }
 
     Err(child_failure_message(
-        "GeoLibre sidecar did not become ready in time.",
+        "GeoInt sidecar did not become ready in time.",
         output,
     ))
 }
@@ -2385,7 +2385,7 @@ fn clear_appimage_python_env(command: &mut Command) {
     for name in ["LD_LIBRARY_PATH", "PYTHONPATH"] {
         // The Jupyter launch sets its own PYTHONPATH (already AppDir-free, via
         // prepend_pythonpath) before this runs, and overwriting it here would
-        // drop the notebook-lib directory that makes `import geolibre` work.
+        // drop the notebook-lib directory that makes `import geoint` work.
         if command
             .get_envs()
             .any(|(key, value)| key == OsStr::new(name) && value.is_some())
@@ -2443,7 +2443,7 @@ fn terminate_sidecar_process_group(_child: &mut Child) {}
 
 #[cfg(target_os = "linux")]
 fn terminate_sidecar_listeners_on_port(port: u16) -> Result<(), String> {
-    terminate_listeners_on_port(port, is_geolibre_sidecar_process)
+    terminate_listeners_on_port(port, is_geoint_sidecar_process)
 }
 
 // Reap a stale Jupyter server that still holds the port (e.g. orphaned by a
@@ -2451,7 +2451,7 @@ fn terminate_sidecar_listeners_on_port(port: u16) -> Result<(), String> {
 // never touch an unrelated jupyter (the user's own JupyterHub, etc.).
 #[cfg(target_os = "linux")]
 fn terminate_jupyter_listeners_on_port(port: u16) -> Result<(), String> {
-    terminate_listeners_on_port(port, is_geolibre_jupyter_process)
+    terminate_listeners_on_port(port, is_geoint_jupyter_process)
 }
 
 // Known gap: this is a no-op on macOS/Windows (the /proc-based listener lookup is
@@ -2564,7 +2564,7 @@ fn process_has_socket(pid: i32, inodes: &HashSet<String>) -> Result<bool, String
 }
 
 #[cfg(target_os = "linux")]
-fn is_geolibre_sidecar_process(pid: i32) -> bool {
+fn is_geoint_sidecar_process(pid: i32) -> bool {
     let path = format!("/proc/{pid}/cmdline");
     let Ok(command_line) = fs::read(path) else {
         return false;
@@ -2578,7 +2578,7 @@ fn is_geolibre_sidecar_process(pid: i32) -> bool {
 // config path on its command line — specific enough not to match the user's own
 // jupyter/JupyterHub processes.
 #[cfg(target_os = "linux")]
-fn is_geolibre_jupyter_process(pid: i32) -> bool {
+fn is_geoint_jupyter_process(pid: i32) -> bool {
     let path = format!("/proc/{pid}/cmdline");
     let Ok(command_line) = fs::read(path) else {
         return false;
@@ -2593,7 +2593,7 @@ fn terminate_pid(pid: i32, signal: i32) {
 }
 
 fn sidecar_project_dir(app: &tauri::AppHandle) -> Result<PathBuf, String> {
-    if let Ok(path) = env::var("GEOLIBRE_SIDECAR_PROJECT_DIR") {
+    if let Ok(path) = env::var("GEOINT_SIDECAR_PROJECT_DIR") {
         return validate_sidecar_project_dir(PathBuf::from(path));
     }
 
@@ -2649,14 +2649,14 @@ fn validate_sidecar_project_dir(path: PathBuf) -> Result<PathBuf, String> {
         Ok(path)
     } else {
         Err(format!(
-            "Could not find GeoLibre sidecar project at {}",
+            "Could not find GeoInt sidecar project at {}",
             path.display()
         ))
     }
 }
 
 fn ensure_managed_uv(app: &tauri::AppHandle) -> Result<PathBuf, String> {
-    if let Ok(path) = env::var("GEOLIBRE_UV") {
+    if let Ok(path) = env::var("GEOINT_UV") {
         let path = PathBuf::from(path);
         if path.exists() {
             return Ok(path);
@@ -2725,7 +2725,7 @@ fn download_uv_installer(app: &tauri::AppHandle) -> Result<PathBuf, String> {
         format!("{UV_INSTALL_BASE_URL}/install.sh")
     };
     let response = reqwest::blocking::Client::builder()
-        .user_agent("GeoLibre Desktop")
+        .user_agent("GeoInt Desktop")
         .build()
         .map_err(|error| format!("Could not create HTTP client: {error}"))?
         .get(url)
@@ -2862,7 +2862,7 @@ fn martin_executable_name() -> &'static str {
 fn download_martin_asset(asset_name: &str) -> Result<Vec<u8>, String> {
     let url = format!("{MARTIN_RELEASE_BASE_URL}/{MARTIN_VERSION}/{asset_name}");
     let response = reqwest::blocking::Client::builder()
-        .user_agent("GeoLibre Desktop")
+        .user_agent("GeoInt Desktop")
         .build()
         .map_err(|error| format!("Could not create HTTP client: {error}"))?
         .get(url)
@@ -3268,7 +3268,7 @@ fn create_main_window(app: &mut tauri::App) -> tauri::Result<()> {
         .windows
         .first()
         .cloned()
-        .expect("GeoLibre Desktop requires a main window config");
+        .expect("GeoInt Desktop requires a main window config");
 
     let builder = tauri::WebviewWindowBuilder::from_config(app, &window_config)?;
 
@@ -3388,7 +3388,7 @@ mod tests {
 
     impl ScratchDir {
         fn new(name: &str) -> Self {
-            let dir = std::env::temp_dir().join(format!("geolibre-{name}-{}", std::process::id()));
+            let dir = std::env::temp_dir().join(format!("geoint-{name}-{}", std::process::id()));
             let _ = std::fs::remove_dir_all(&dir);
             std::fs::create_dir_all(&dir).unwrap();
             Self(dir)
@@ -3523,18 +3523,18 @@ mod tests {
 
     #[test]
     fn project_path_guard_allows_projects_and_blocks_secrets() {
-        assert!(is_allowed_project_path("/home/u/map.geolibre.json"));
-        assert!(is_allowed_project_path("/home/u/map.geolibre"));
-        assert!(is_allowed_project_path("C:\\Users\\u\\map.geolibre.json"));
+        assert!(is_allowed_project_path("/home/u/map.geoint.json"));
+        assert!(is_allowed_project_path("/home/u/map.geoint"));
+        assert!(is_allowed_project_path("C:\\Users\\u\\map.geoint.json"));
         // Secrets and traversal are refused.
         assert!(!is_allowed_project_path("/home/u/.ssh/id_rsa"));
         assert!(!is_allowed_project_path("/home/u/.aws/credentials"));
         assert!(!is_allowed_project_path(
-            "/home/u/../../etc/hosts.geolibre.json"
+            "/home/u/../../etc/hosts.geoint.json"
         ));
-        assert!(!is_allowed_project_path("relative/map.geolibre.json"));
+        assert!(!is_allowed_project_path("relative/map.geoint.json"));
         assert!(!is_allowed_project_path(
-            "\\\\server\\share\\map.geolibre.json"
+            "\\\\server\\share\\map.geoint.json"
         ));
         // A bare .json file (e.g. a JSON credential store) is NOT a project.
         assert!(!is_allowed_project_path(
@@ -3788,7 +3788,7 @@ mod tests {
     #[test]
     fn appimage_python_env_is_stripped_from_children() {
         let _guard = ENV_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-        let appdir = "/tmp/.mount_GeoLibreXXXX";
+        let appdir = "/tmp/.mount_GeoIntXXXX";
         // Reproduce what AppRun exports.
         env::set_var("APPDIR", appdir);
         env::set_var("PYTHONHOME", format!("{appdir}/usr/"));
@@ -3844,13 +3844,13 @@ mod tests {
     }
 
     // The Jupyter launch sets PYTHONPATH itself (notebook-lib, so `import
-    // geolibre` works) before the sanitizer runs; the sanitizer must not
+    // geoint` works) before the sanitizer runs; the sanitizer must not
     // overwrite it.
     #[test]
     fn a_pythonpath_the_caller_already_set_is_preserved() {
         let _guard = ENV_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-        env::set_var("APPDIR", "/tmp/.mount_GeoLibreXXXX");
-        env::set_var("PYTHONPATH", "/tmp/.mount_GeoLibreXXXX/usr/share/pyshared/");
+        env::set_var("APPDIR", "/tmp/.mount_GeoIntXXXX");
+        env::set_var("PYTHONPATH", "/tmp/.mount_GeoIntXXXX/usr/share/pyshared/");
 
         let mut command = Command::new("true");
         command.env("PYTHONPATH", "/app/runtime/notebook-lib");

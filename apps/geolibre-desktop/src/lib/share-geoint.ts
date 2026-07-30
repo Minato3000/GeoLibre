@@ -1,8 +1,8 @@
-// Uploads a serialized GeoLibre project to share.geolibre.app via its
+// Uploads a serialized GeoInt project to share.geolibre.app via its
 // `POST /api/projects` endpoint, authenticated with a personal API token the
 // user created on the website. Used by the Project > Share action.
 
-import { DEFAULT_PROJECT_NAME } from "@geolibre/core";
+import { DEFAULT_PROJECT_NAME } from "@geoint/core";
 import { getShareFetch } from "./share-fetch";
 
 export type ShareVisibility = "public" | "unlisted" | "private";
@@ -66,7 +66,7 @@ export const DEFAULT_SHARE_BASE_URL = "https://share.geolibre.app";
 const UPLOAD_TIMEOUT_MS = 30_000;
 
 // The placeholder name a project gets before the user names it, sourced from
-// @geolibre/core so the Share guard stays in sync with the save fallback.
+// @geoint/core so the Share guard stays in sync with the save fallback.
 // Sharing under this title is unhelpful, so the Share dialog requires a real
 // title first.
 export const DEFAULT_PROJECT_TITLE = DEFAULT_PROJECT_NAME;
@@ -95,7 +95,7 @@ export function isShareableTitle(title: string): boolean {
  * in tests.
  */
 export function resolveShareBaseUrl(
-  configured: unknown = import.meta.env?.VITE_GEOLIBRE_SHARE_URL,
+  configured: unknown = import.meta.env?.VITE_GEOINT_SHARE_URL,
 ): string {
   if (typeof configured === "string" && configured.trim()) {
     const trimmed = configured.trim().replace(/\/+$/, "");

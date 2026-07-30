@@ -5,8 +5,8 @@ import { getRuntimeEnvironment } from "./runtime-env";
  * Geocoding client and pure helpers shared by the batch-geocode dialog and the
  * reverse-geocode plugin.
  *
- * This module lives in `@geolibre/core` rather than `@geolibre/processing`
- * because `@geolibre/plugins` depends on core but not on processing, and the
+ * This module lives in `@geoint/core` rather than `@geoint/processing`
+ * because `@geoint/plugins` depends on core but not on processing, and the
  * reverse-geocode plugin needs the same client. The pure helpers (URL builders,
  * result mappers, pacing) carry no React or MapLibre dependency so they can be
  * unit-tested without a browser or network.

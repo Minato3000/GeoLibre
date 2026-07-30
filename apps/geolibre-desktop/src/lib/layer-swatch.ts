@@ -4,13 +4,13 @@
  * polygon/raster → square). Reuses {@link legendSwatchesForLayer} for the color
  * so the panel symbol and the legend never disagree.
  */
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import { legendSwatchesForLayer } from "./print-legend";
 
 export type LayerSwatchShape = "circle" | "line" | "square" | "raster";
 
 /** Layer types styled as vectors (a colored dot/line/fill represents them). */
-const VECTOR_TYPES = new Set<GeoLibreLayer["type"]>([
+const VECTOR_TYPES = new Set<GeoIntLayer["type"]>([
   "geojson",
   "flatgeobuf",
   "geoparquet",
@@ -25,7 +25,7 @@ const VECTOR_TYPES = new Set<GeoLibreLayer["type"]>([
  * clouds, media). They get the neutral geometry fallback, not the raster glyph.
  * Mirrors NON_LEGEND_TYPES in print-legend.ts.
  */
-const NON_RASTER_TYPES = new Set<GeoLibreLayer["type"]>([
+const NON_RASTER_TYPES = new Set<GeoIntLayer["type"]>([
   "lidar",
   "gaussian-splat",
   "3d-tiles",
@@ -34,7 +34,7 @@ const NON_RASTER_TYPES = new Set<GeoLibreLayer["type"]>([
 ]);
 
 /** Whether a layer is raster/imagery (COG, XYZ, WMS/WMTS, raster MBTiles, …). */
-export function isRasterLike(layer: GeoLibreLayer): boolean {
+export function isRasterLike(layer: GeoIntLayer): boolean {
   if (VECTOR_TYPES.has(layer.type) || NON_RASTER_TYPES.has(layer.type)) return false;
   if (layer.type === "mbtiles") {
     return layer.metadata.tileType === "raster" || layer.source.type === "raster";
@@ -62,7 +62,7 @@ function stringMetadata(value: unknown): string | null {
  * plugin — the only signal a tile layer has), then falls back to sampling local
  * GeoJSON geometry, then a neutral square for raster/service/unknown layers.
  */
-export function layerSwatchShape(layer: GeoLibreLayer): LayerSwatchShape {
+export function layerSwatchShape(layer: GeoIntLayer): LayerSwatchShape {
   // Raster/imagery layers get an image glyph, not a solid square.
   if (isRasterLike(layer)) return "raster";
 
@@ -92,7 +92,7 @@ export function layerSwatchShape(layer: GeoLibreLayer): LayerSwatchShape {
 }
 
 /** The Layers-panel symbol for a layer: a color plus a geometry-driven shape. */
-export function layerSwatch(layer: GeoLibreLayer): LayerSwatch {
+export function layerSwatch(layer: GeoIntLayer): LayerSwatch {
   const swatches = legendSwatchesForLayer(layer);
   return {
     color: swatches[0]?.color ?? NEUTRAL,

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type maplibregl from "maplibre-gl";
-import type { MapController } from "@geolibre/map";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import type { MapController } from "@geoint/map";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import {
   Button,
   cn,
@@ -15,7 +15,7 @@ import {
   ScrollArea,
   Select,
   Slider,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   Crosshair,
   Download,
@@ -273,7 +273,7 @@ export function GeoreferencerDialog({
       return;
     }
     const bounds = cornersToBounds(coordinates);
-    const layer: GeoLibreLayer = {
+    const layer: GeoIntLayer = {
       id: createId(),
       name: image.name || t("georeferencer.defaultName"),
       type: "image",

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
-import { setActiveEllipsoidId } from "@geolibre/core";
+import { setActiveEllipsoidId } from "@geoint/core";
 import type { FeatureCollection, Geometry } from "geojson";
 import { calculateField } from "../apps/geolibre-desktop/src/lib/attribute-columns";
 import { compileExpression } from "../apps/geolibre-desktop/src/lib/attribute-expression";

@@ -1,4 +1,4 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import {
   ALGORITHMS,
   VECTOR_TOOLS,
@@ -6,10 +6,10 @@ import {
   STATISTICS_TOOLS,
   type ProcessingAlgorithm,
   type ProcessingContext,
-} from "@geolibre/processing";
-import { SKETCHES_SOURCE_KIND } from "@geolibre/plugins";
+} from "@geoint/processing";
+import { SKETCHES_SOURCE_KIND } from "@geoint/plugins";
 import type { Feature, FeatureCollection } from "geojson";
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import { beginProcessingRun } from "../processing-history";
 import { captureMapImage } from "../print-layout-export";
 

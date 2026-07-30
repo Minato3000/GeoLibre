@@ -1,6 +1,6 @@
 """AI segmentation sidecar endpoints (SamGeo / SAM3).
 
-These endpoints back the GeoLibre segmentation toolbox (issue #301): draw a box,
+These endpoints back the GeoInt segmentation toolbox (issue #301): draw a box,
 click points, or type a text prompt on imagery and get GeoJSON polygons back.
 The heavy model stack (PyTorch + SAM3) is **not** loaded into this sidecar
 process. Instead this module is a thin reverse-proxy in front of the
@@ -15,12 +15,12 @@ in its own process (or on a separate GPU host) mirrors how ``conversion`` and
 
 Configuration (environment variables):
 
-- ``GEOLIBRE_ML_SAMGEO_URL`` — base URL of an already-running ``samgeo-api``
+- ``GEOINT_ML_SAMGEO_URL`` — base URL of an already-running ``samgeo-api``
   (e.g. ``http://127.0.0.1:8000``). When set, no child process is launched;
   requests are forwarded here. Use this to run the model server in a GPU env.
-- ``GEOLIBRE_ML_SAMGEO_CMD`` — command used to launch ``samgeo-api`` on demand
+- ``GEOINT_ML_SAMGEO_CMD`` — command used to launch ``samgeo-api`` on demand
   (default ``samgeo-api``). ``--host``/``--port`` are appended automatically.
-- ``GEOLIBRE_ML_DEFAULT_MODEL`` — model_version the UI should default to
+- ``GEOINT_ML_DEFAULT_MODEL`` — model_version the UI should default to
   (default ``sam3``; see issue #301 decision to use SAM3, not SAM2).
 
 All endpoints degrade gracefully: ``GET /ml/status`` reports ``available:
@@ -52,14 +52,14 @@ from .runtime import (
 )
 
 router = APIRouter(prefix="/ml", tags=["ml"])
-logger = logging.getLogger("geolibre.ml")
+logger = logging.getLogger("geoint.ml")
 
 # Default model for the segmentation toolbox. SAM3 covers automatic, box/point,
 # and text prompts; SAM2 is intentionally not used (issue #301 decision).
-DEFAULT_MODEL = os.environ.get("GEOLIBRE_ML_DEFAULT_MODEL", "sam3")
+DEFAULT_MODEL = os.environ.get("GEOINT_ML_DEFAULT_MODEL", "sam3")
 
-_EXTERNAL_URL = os.environ.get("GEOLIBRE_ML_SAMGEO_URL")
-_LAUNCH_CMD = os.environ.get("GEOLIBRE_ML_SAMGEO_CMD", "samgeo-api")
+_EXTERNAL_URL = os.environ.get("GEOINT_ML_SAMGEO_URL")
+_LAUNCH_CMD = os.environ.get("GEOINT_ML_SAMGEO_CMD", "samgeo-api")
 
 # How long to wait for a freshly launched samgeo-api to answer /health. The
 # server imports FastAPI/numpy at startup but loads models lazily on first
@@ -85,7 +85,7 @@ def _require_httpx():
         import httpx  # noqa: PLC0415
     except ImportError as exc:  # pragma: no cover - exercised via status path
         raise RuntimeBootstrapError(
-            "The 'ml' extra is not installed. Install with: pip install geolibre-server[ml]"
+            "The 'ml' extra is not installed. Install with: pip install geoint-server[ml]"
         ) from exc
     return httpx
 
@@ -100,7 +100,7 @@ def _free_port() -> int:
 def _redact_url(url: str) -> str:
     """Strip embedded credentials from a URL before surfacing it to clients.
 
-    A configured ``GEOLIBRE_ML_SAMGEO_URL`` may carry ``user:pass@host``; the
+    A configured ``GEOINT_ML_SAMGEO_URL`` may carry ``user:pass@host``; the
     status payload and error messages are shown in the browser, so credentials
     must not leak there.
 
@@ -150,7 +150,7 @@ def _launch_command() -> Optional[list[str]]:
 def _ensure_server() -> str:
     """Return the base URL of a ready samgeo-api, launching one if needed.
 
-    Reuses a configured external server (``GEOLIBRE_ML_SAMGEO_URL``) or a
+    Reuses a configured external server (``GEOINT_ML_SAMGEO_URL``) or a
     previously launched child process. Otherwise launches ``samgeo-api`` on a
     free port and waits for it to become healthy.
 
@@ -165,7 +165,7 @@ def _ensure_server() -> str:
         if _is_healthy(base):
             return base
         raise RuntimeBootstrapError(
-            f"GEOLIBRE_ML_SAMGEO_URL is set to {_redact_url(base)} but no "
+            f"GEOINT_ML_SAMGEO_URL is set to {_redact_url(base)} but no "
             "samgeo-api server answered there."
         )
 
@@ -187,7 +187,7 @@ def _ensure_server() -> str:
                 raise RuntimeBootstrapError(
                     "samgeo-api was not found on PATH. Install the segmentation "
                     "stack with: pip install segment-geospatial[api,samgeo3], or set "
-                    "GEOLIBRE_ML_SAMGEO_URL to an existing samgeo-api server."
+                    "GEOINT_ML_SAMGEO_URL to an existing samgeo-api server."
                 )
 
             port = _free_port()
@@ -311,7 +311,7 @@ def ml_status():
 
     if _EXTERNAL_URL:
         payload["message"] = (
-            f"GEOLIBRE_ML_SAMGEO_URL is set to {_redact_url(_EXTERNAL_URL)} but "
+            f"GEOINT_ML_SAMGEO_URL is set to {_redact_url(_EXTERNAL_URL)} but "
             "the server is not responding."
         )
         return payload
@@ -333,7 +333,7 @@ def ml_status():
     payload["message"] = (
         "Segmentation backend is unavailable. Install it with: "
         "pip install segment-geospatial[api,samgeo3], or set "
-        "GEOLIBRE_ML_SAMGEO_URL to an existing samgeo-api server."
+        "GEOINT_ML_SAMGEO_URL to an existing samgeo-api server."
     )
     return payload
 

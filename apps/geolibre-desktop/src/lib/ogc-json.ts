@@ -3,7 +3,7 @@
  *
  * An OGC API service is browsed by walking its JSON documents (landing page,
  * `/collections`, TileJSON, `/items`), and those hosts frequently send no CORS
- * headers. This module centralizes the three ways GeoLibre can reach them:
+ * headers. This module centralizes the three ways GeoInt can reach them:
  *
  * - **Desktop (Tauri):** the Rust `fetch_url_bytes` command, which is not
  *   subject to browser CORS, so any service works.
@@ -18,7 +18,7 @@ import { isTauri } from "./is-tauri";
  * Dev-server CORS proxy path. The proxy is a generic pass-through; the
  * `GPX_PROXY_PATH` name it is bound under in vite.config.ts is historical.
  */
-const OGC_PROXY_PATH = "/__geolibre_gpx_proxy";
+const OGC_PROXY_PATH = "/__geoint_gpx_proxy";
 
 /** Default deadline for a single request when the caller supplies no signal. */
 const REQUEST_TIMEOUT_MS = 30_000;

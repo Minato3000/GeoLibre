@@ -1,4 +1,4 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -76,7 +76,7 @@ export function useBrowserTree(): BrowserTreeState {
     const services = [...BUILTIN_SERVICES, ...readUserServices()];
     const byId = new Map(services.map((entry) => [entry.id, entry]));
     // Shown on every platform for discovery; the PostgreSQL add flow itself
-    // reports when it needs GeoLibre Desktop (Martin has no mobile build).
+    // reports when it needs GeoInt Desktop (Martin has no mobile build).
     // Kept in the saved list's order (most-recently-used first), deliberately
     // unlike the alphabetized Services list — this mirrors the Recent section.
     const databaseConnections = readSavedPostgresConnections().map((connectionString) => ({

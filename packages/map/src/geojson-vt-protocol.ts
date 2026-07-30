@@ -1,7 +1,7 @@
 // Client-side vector tiling for large local vector layers.
 //
 // Above a feature-count threshold (see `shouldUseTiledRendering` in
-// `@geolibre/core`), a local GeoJSON layer is rendered through vector tiles
+// `@geoint/core`), a local GeoJSON layer is rendered through vector tiles
 // generated in-browser rather than one in-memory geojson source pushed via
 // `setData`. We build a `GeoJSONVT` index (or a `Supercluster` index for
 // clustered point layers — both ship in `@maplibre/geojson-vt`, the same engine
@@ -14,7 +14,7 @@ import { GeoJSONVT, Supercluster, type GeoJSONVTTile } from "@maplibre/geojson-v
 import { fromGeojsonVt } from "@maplibre/vt-pbf";
 
 /** Custom protocol scheme handled by {@link ensureGeoJsonVtProtocol}. */
-export const GEOJSONVT_PROTOCOL = "geolibre-gjvt";
+export const GEOJSONVT_PROTOCOL = "geoint-gjvt";
 
 /**
  * The single source-layer name carried by every generated tile. Render layers
@@ -46,7 +46,7 @@ interface RegistryEntry {
 
 // Keyed by layer id. Module-level rather than on the Zustand record because tile
 // indexes are large, non-serializable objects that must not enter app state or
-// be written to `.geolibre.json`.
+// be written to `.geoint.json`.
 const registry = new Map<string, RegistryEntry>();
 
 export interface GeoJsonVtSourceOptions {
@@ -164,12 +164,12 @@ async function geojsonVtProtocolHandler(
       data: pbf.buffer.slice(pbf.byteOffset, pbf.byteOffset + pbf.byteLength) as ArrayBuffer,
     };
   } catch (err) {
-    console.warn("[GeoLibre] geojson-vt tile encode failed", err);
+    console.warn("[GeoInt] geojson-vt tile encode failed", err);
     return { data: new ArrayBuffer(0) };
   }
 }
 
-// Parse `geolibre-gjvt://<layerId>/<z>/<x>/<y>` and return the encoded tile, or
+// Parse `geoint-gjvt://<layerId>/<z>/<x>/<y>` and return the encoded tile, or
 // null when the layer is unknown or the tile is empty/out of range.
 function lookupTile(url: string): GeoJSONVTTile | null {
   const path = url.slice(`${GEOJSONVT_PROTOCOL}://`.length);

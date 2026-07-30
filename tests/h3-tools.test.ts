@@ -15,7 +15,7 @@ import {
   rowsToFeatureCollection,
   suggestResolution,
 } from "../packages/processing/src/h3-tools";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import type { DuckDbCapability, ProcessingContext } from "../packages/processing/src/types";
 
 describe("h3 resolution math", () => {
@@ -71,7 +71,7 @@ describe("h3 resolution math", () => {
   });
 });
 
-function polygonLayer(): GeoLibreLayer {
+function polygonLayer(): GeoIntLayer {
   return {
     id: "poly",
     name: "Poly",
@@ -105,7 +105,7 @@ function polygonLayer(): GeoLibreLayer {
   };
 }
 
-function pointLayer(): GeoLibreLayer {
+function pointLayer(): GeoIntLayer {
   return {
     ...polygonLayer(),
     id: "pts",
@@ -154,7 +154,7 @@ function mockDuckDb(): DuckDbCapability & {
 }
 
 function baseCtx(
-  layers: GeoLibreLayer[],
+  layers: GeoIntLayer[],
   parameters: Record<string, unknown>,
 ): {
   ctx: ProcessingContext;

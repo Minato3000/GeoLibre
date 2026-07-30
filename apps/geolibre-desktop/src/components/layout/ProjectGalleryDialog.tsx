@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   Input,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   AlertCircle,
   Eye,
@@ -46,7 +46,7 @@ interface ProjectGalleryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   /**
-   * Load a project from its raw `.geolibre.json` URL into the app. `authToken`
+   * Load a project from its raw `.geoint.json` URL into the app. `authToken`
    * is passed for the user's own (unlisted/private) projects so the share host
    * authorizes the fetch. Resolves on success and rejects with a descriptive
    * error the dialog surfaces inline.
@@ -92,7 +92,7 @@ function galleryErrorMessage(error: unknown, t: TFunction): string {
 }
 
 /**
- * Browse public projects shared on share.geolibre.app and open one in GeoLibre.
+ * Browse public projects shared on share.geolibre.app and open one in GeoInt.
  *
  * The listing endpoint only paginates (no server-side search), so this loads
  * pages on demand via "Load more" and filters the already-loaded set in the

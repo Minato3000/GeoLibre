@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import { calculateField } from "../apps/geolibre-desktop/src/lib/attribute-columns";
 import {
@@ -14,7 +14,7 @@ function fc(features: FeatureCollection["features"]): FeatureCollection {
   return { type: "FeatureCollection", features };
 }
 
-function makeLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function makeLayer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id: "layer-1",
     name: "Test",

@@ -10,9 +10,9 @@ import {
   ARCGIS_I3S_SOURCE_KIND,
   THREE_D_TILES_DECK_LOAD_OPTIONS,
 } from "../packages/plugins/src/plugins/arcgis-i3s-tiles";
-import type { GeoLibreDeckGL } from "../packages/plugins/src/types";
+import type { GeoIntDeckGL } from "../packages/plugins/src/types";
 import { useAppStore } from "../packages/core/src/store";
-import type { GeoLibreLayer } from "../packages/core/src/types";
+import type { GeoIntLayer } from "../packages/core/src/types";
 
 describe("isArcgisI3sSceneLayerUrl", () => {
   it("matches SceneServer endpoints", () => {
@@ -43,7 +43,7 @@ describe("isArcgisI3sSceneLayerUrl", () => {
 });
 
 describe("isArcgisI3sTilesLayer", () => {
-  const base: GeoLibreLayer = {
+  const base: GeoIntLayer = {
     id: "x",
     name: "x",
     type: "3d-tiles",
@@ -52,7 +52,7 @@ describe("isArcgisI3sTilesLayer", () => {
     opacity: 1,
     style: {},
     metadata: { sourceKind: ARCGIS_I3S_SOURCE_KIND },
-  } as unknown as GeoLibreLayer;
+  } as unknown as GeoIntLayer;
 
   it("matches a 3d-tiles layer with the arcgis-i3s source kind", () => {
     assert.equal(isArcgisI3sTilesLayer(base), true);
@@ -63,14 +63,14 @@ describe("isArcgisI3sTilesLayer", () => {
       isArcgisI3sTilesLayer({
         ...base,
         metadata: { sourceKind: "google-photorealistic-3d-tiles" },
-      } as unknown as GeoLibreLayer),
+      } as unknown as GeoIntLayer),
       false,
     );
     assert.equal(
       isArcgisI3sTilesLayer({
         ...base,
         type: "raster",
-      } as unknown as GeoLibreLayer),
+      } as unknown as GeoIntLayer),
       false,
     );
   });
@@ -141,7 +141,7 @@ describe("buildArcgisI3sTilesDeckLayer", () => {
     opacity: 0.5,
     style: {},
     metadata: { sourceKind: ARCGIS_I3S_SOURCE_KIND },
-  } as unknown as GeoLibreLayer;
+  } as unknown as GeoIntLayer;
 
   function build() {
     const props: Record<string, unknown>[] = [];
@@ -152,7 +152,7 @@ describe("buildArcgisI3sTilesDeckLayer", () => {
     }
     const deckGL = {
       geoLayers: { Tile3DLayer: FakeTile3DLayer },
-    } as unknown as GeoLibreDeckGL;
+    } as unknown as GeoIntDeckGL;
     buildArcgisI3sTilesDeckLayer(layer, { deckGL, loader: {} });
     return props[0];
   }
@@ -171,7 +171,7 @@ describe("buildArcgisI3sTilesDeckLayer", () => {
     assert.equal(buildArcgisI3sTilesDeckLayer(layer, { deckGL: null, loader: {} }), null);
     assert.equal(
       buildArcgisI3sTilesDeckLayer(layer, {
-        deckGL: { geoLayers: { Tile3DLayer: class {} } } as unknown as GeoLibreDeckGL,
+        deckGL: { geoLayers: { Tile3DLayer: class {} } } as unknown as GeoIntDeckGL,
         loader: null,
       }),
       null,
@@ -198,7 +198,7 @@ describe("i3sTilesetLngLat", () => {
 });
 
 describe("persistI3sTilesetCenter", () => {
-  function seedI3sLayer(): GeoLibreLayer {
+  function seedI3sLayer(): GeoIntLayer {
     const layer = {
       id: "i3s-1",
       name: "Scene",
@@ -208,7 +208,7 @@ describe("persistI3sTilesetCenter", () => {
       opacity: 1,
       style: {},
       metadata: { sourceKind: ARCGIS_I3S_SOURCE_KIND },
-    } as unknown as GeoLibreLayer;
+    } as unknown as GeoIntLayer;
     useAppStore.setState({ layers: [layer] });
     return layer;
   }

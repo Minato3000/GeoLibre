@@ -7,8 +7,8 @@ resizable panel at the bottom of the window (drag its top edge to resize, and th
 
 Python runs in your browser via [Pyodide](https://pyodide.org) (CPython compiled
 to WebAssembly), so it works in both the web and desktop builds with nothing to
-install. The console exposes a single object, **`geolibre`**, that drives the
-live app — its methods mirror the [`geolibre` Python package](../python.md), so
+install. The console exposes a single object, **`geoint`**, that drives the
+live app — its methods mirror the [`geoint` Python package](../python.md), so
 what you learn here transfers to notebooks and back.
 
 ## First run
@@ -30,15 +30,15 @@ execute it. Output, return values, and errors appear in the scrollback above.
 | **↑ / ↓** | Recall previous / next command (when the caret is on the first / last line) |
 | **Tab** or **Ctrl + Space** | Autocomplete the name or attribute at the caret |
 
-Autocomplete introspects the **live** runtime, so `geolibre.` lists its real
+Autocomplete introspects the **live** runtime, so `geoint.` lists its real
 methods, and your own variables and any imported modules complete too. When more
 than one candidate matches, a list appears — use **↑/↓** to choose and
 **Enter/Tab** to accept, or **Esc** to dismiss.
 
 ```python
-geolibre.get_center()        # [lng, lat] of the current view
-geolibre.get_bounds()        # [west, south, east, north]
-geolibre.fly_to(-122.4, 37.8, zoom=10)
+geoint.get_center()        # [lng, lat] of the current view
+geoint.get_bounds()        # [west, south, east, north]
+geoint.fly_to(-122.4, 37.8, zoom=10)
 ```
 
 ## Script editor
@@ -62,21 +62,21 @@ define in a script is immediately usable in the console, and vice-versa.
 
 ```python
 # Add data (a GeoJSON dict, a geometry, or anything with __geo_interface__)
-layer_id = geolibre.add_geojson(
+layer_id = geoint.add_geojson(
     {"type": "Point", "coordinates": [-122.4, 37.8]}, name="Pin"
 )
 
 # Style, toggle, and inspect layers
-layer = geolibre.get_layer(layer_id)
+layer = geoint.get_layer(layer_id)
 layer.opacity = 0.6
 layer.visible = False
 layer.set_style(circleRadius=8, fillColor="#ff0000")
 
-for layer in geolibre.layers:
+for layer in geoint.layers:
     print(layer.name, layer.type, layer.visible)
 
 # Identify features at a point (like clicking the map)
-hits = geolibre.identify(-122.4, 37.8)
+hits = geoint.identify(-122.4, 37.8)
 ```
 
 ## Async operations
@@ -86,11 +86,11 @@ must be awaited:
 
 ```python
 # Fetch a remote GeoJSON URL and add it
-await geolibre.load_geojson("https://example.com/data.geojson", name="Data")
+await geoint.load_geojson("https://example.com/data.geojson", name="Data")
 
 # Run a processing algorithm; result layers are added to the map
-geolibre.list_algorithms()            # discover ids + parameters
-result = await geolibre.run_algorithm("buffer", {"layer": layer_id, "distance": 1000})
+geoint.list_algorithms()            # discover ids + parameters
+result = await geoint.run_algorithm("buffer", {"layer": layer_id, "distance": 1000})
 print(result["logs"], result["resultLayerIds"])
 ```
 
@@ -100,17 +100,17 @@ To keep startup fast, only the base runtime loads up front. Pull in additional
 packages on demand:
 
 ```python
-await geolibre.load_package("numpy")
+await geoint.load_package("numpy")
 import numpy as np
 np.array([1, 2, 3]).mean()
 
-await geolibre.load_package("geopandas")   # also pulls shapely/pyproj/pandas
+await geoint.load_package("geopandas")   # also pulls shapely/pyproj/pandas
 ```
 
 Any package in the [Pyodide distribution](https://pyodide.org/en/stable/usage/packages-in-pyodide.html)
 is available this way.
 
-## `geolibre` API reference
+## `geoint` API reference
 
 | Method | Description |
 | --- | --- |
@@ -133,7 +133,7 @@ is available this way.
 
 ### `Layer`
 
-A handle returned by `geolibre.layers` / `geolibre.get_layer(...)`.
+A handle returned by `geoint.layers` / `geoint.get_layer(...)`.
 
 | Member | Description |
 | --- | --- |
@@ -155,10 +155,10 @@ convenience accessors `.geometry`, `.properties`, `.id`, and `__geo_interface__`
 
 - **Runs on the main thread**, by design, so Python can drive the live map
   synchronously. A long-running cell briefly pauses the UI — avoid tight loops
-  and prefer `await geolibre.run_algorithm(...)` for heavy work.
+  and prefer `await geoint.run_algorithm(...)` for heavy work.
 - **Sandboxed.** Pyodide cannot read your computer's filesystem or reach the
   desktop app's local tools; network access follows the app's content-security
   policy. `to_image()` therefore returns bytes rather than writing a file.
-- **Same API as notebooks.** The [`geolibre` Python package](../python.md)
+- **Same API as notebooks.** The [`geoint` Python package](../python.md)
   exposes the same methods from a Jupyter `Map` object, so console snippets and
   notebook code are interchangeable.

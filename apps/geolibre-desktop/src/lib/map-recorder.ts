@@ -736,7 +736,7 @@ export async function recordMapCanvas({
       // canvas (it sits behind the map and would blank it).
       const canvases = map.getContainer().querySelectorAll("canvas");
       canvases.forEach((c) => {
-        if (c.classList.contains("geolibre-effects-canvas")) return;
+        if (c.classList.contains("geoint-effects-canvas")) return;
         if (!isFullViewportMapCanvas(c, base)) return;
         try {
           ctx.drawImage(

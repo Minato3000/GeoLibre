@@ -8,13 +8,13 @@ import {
   parseProject,
   serializeProject,
   useAppStore,
-  type GeoLibreLayer,
-  type GeoLibreProject,
+  type GeoIntLayer,
+  type GeoIntProject,
   type ProjectTemplateEntry,
-} from "@geolibre/core";
+} from "@geoint/core";
 
-function sampleProject(patch: Partial<GeoLibreProject> = {}): GeoLibreProject {
-  const layerA: GeoLibreLayer = {
+function sampleProject(patch: Partial<GeoIntProject> = {}): GeoIntProject {
+  const layerA: GeoIntLayer = {
     id: "layer-env-1",
     name: "River Water Quality",
     type: "geojson",

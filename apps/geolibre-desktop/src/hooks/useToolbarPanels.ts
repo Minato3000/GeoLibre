@@ -1,4 +1,4 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import {
   closeBookmarkPanel,
   closeColorbarPanel,
@@ -51,7 +51,7 @@ import {
   subscribeSunPanel,
   subscribeViewStatePanel,
   toggleEarthEnginePanel,
-} from "@geolibre/plugins";
+} from "@geoint/plugins";
 import { useSyncExternalStore } from "react";
 import type { AppApi } from "../components/layout/toolbar/constants";
 

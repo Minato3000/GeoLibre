@@ -2,12 +2,10 @@ import {
   DEFAULT_LAYER_STYLE,
   OPENFREEMAP_BASEMAPS,
   useAppStore,
-  type GeoLibreLayer,
-} from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
-import type { InvokableTool, JSONValue } from "@strands-agents/sdk";
+  type GeoIntLayer,
+} from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import maplibregl from "maplibre-gl";
-import { tool } from "@strands-agents/sdk";
 import type { FeatureCollection } from "geojson";
 import { z } from "zod";
 import { projectedGeoJsonCrs } from "../crs-utils";
@@ -18,6 +16,28 @@ import { createXyzTileUrlTemplate } from "../xyz-url";
 import { findNamedTileBasemap, NAMED_TILE_BASEMAPS } from "./basemaps";
 import { buildSymbologyStyle } from "./symbology";
 import { webSearch } from "./web-search";
+
+/**
+ * Reference system prompt for a future model integration describing the
+ * assistant's role and how to use the tools below. Nothing sends this today —
+ * kept here as the natural home for "what can the assistant do" guidance
+ * alongside the tool catalog itself.
+ */
+export const ASSISTANT_SYSTEM_PROMPT = `You are GeoInt's geospatial assistant. You help the user explore and analyze the data already loaded in their map by calling the provided tools.
+
+Guidelines:
+- Always act through the tools. Never claim to have changed the map unless a tool call succeeded.
+- Call list_layers to discover the current layers, their attribute fields, and the SQL table names before referencing them.
+- For data questions, prefer run_sql with a single read-only DuckDB Spatial SQL statement against the SQL table names from list_layers. Show the SQL you ran. Only add the result as a layer when the user asks to map it or when geometry is clearly wanted.
+- For styling requests, use apply_symbology with the layer's real field names.
+- For geoprocessing (buffer, clip, dissolve, intersection, difference, union, spatial join, simplify, centroids, H3 grids, …), call list_algorithms to discover ids and typed parameters, then run_algorithm with the algorithm id and parameters. A 'layer' parameter takes a layer id. Build a multi-step pipeline by feeding one run's returned result layer id into the next.
+- To add satellite/aerial imagery or other earth-observation data, use search_stac and add_stac_layer against the Planetary Computer (collections such as sentinel-2-l2a, landsat-c2-l2, naip, cop-dem-glo-30); the bounding box defaults to the current view.
+- To add tile basemaps (OpenStreetMap, OpenTopoMap, CARTO Dark Matter, etc.), use add_tile_layer with a known name or an XYZ url, rather than asking the user or saying you cannot.
+- Use web_search when you need current information from the internet.
+- When no dedicated tool fits the request (e.g. changing the map projection to globe, enabling terrain or sky, setting a custom paint/layout property), do not say you can't — use run_maplibre_js to accomplish it with a small JavaScript snippet against the live \`map\` object.
+- For data processing or computation (numpy/pandas/geopandas, custom analysis), use run_python; a \`geoint\` object is available there to drive the map.
+- Keep replies short. Report exactly what each tool did (e.g. the SQL run, the rows returned, the layer added/styled). Every change is undoable, so prefer acting over asking when the request is clear.
+- Never fabricate field names, layer names, or results — read them with the tools first.`;
 
 /** Dependencies the assistant tools need beyond the global store. */
 export interface AssistantToolDeps {
@@ -36,6 +56,22 @@ export interface AssistantToolDeps {
     tool: "run_python" | "run_maplibre_js";
     code: string;
   }) => Promise<boolean>;
+}
+
+/** A framework-agnostic assistant tool: name, description, input schema, handler. */
+export interface AssistantTool<Input = unknown, Output = unknown> {
+  name: string;
+  description: string;
+  inputSchema: z.ZodType<Input>;
+  handler: (input: Input, deps: AssistantToolDeps) => Promise<Output> | Output;
+  /**
+   * Static metadata only — this tool runs model-authored code and should be
+   * gated behind explicit user confirmation once something actually invokes
+   * it. Not enforced by the registry itself; each such handler already calls
+   * `deps.confirmCodeExecution` inline. Lets "what needs approval" be listed
+   * without executing anything.
+   */
+  requiresConfirmation?: boolean;
 }
 
 /** A short, model-facing description of one layer (no feature data leaked). */
@@ -142,12 +178,12 @@ function concatBytes(chunks: Uint8Array[], total: number): Uint8Array {
 }
 
 /** Detect a layer's geometry family from its first feature. */
-function geometryTypeOf(layer: GeoLibreLayer): string | null {
+function geometryTypeOf(layer: GeoIntLayer): string | null {
   return layer.geojson?.features?.[0]?.geometry?.type ?? null;
 }
 
 /** Summarize a layer's identity and schema without exposing row data. */
-function summarizeLayer(layer: GeoLibreLayer): LayerSummary {
+function summarizeLayer(layer: GeoIntLayer): LayerSummary {
   const features = layer.geojson?.features ?? [];
   return {
     id: layer.id,
@@ -166,10 +202,10 @@ function summarizeLayer(layer: GeoLibreLayer): LayerSummary {
 
 /**
  * Build a compact, model-facing description of the current layers and the SQL
- * table names they map to. Used to seed the agent's system prompt with names
+ * table names they map to. Used to seed a future model integration with names
  * and schemas only — never full datasets.
  */
-export function describeLayers(layers: GeoLibreLayer[]): string {
+export function describeLayers(layers: GeoIntLayer[]): string {
   if (layers.length === 0) return "No layers are currently loaded.";
   // previewLayerTables returns one entry per layer in order, so align by index —
   // keying by name would collapse layers that share a name onto one table.
@@ -192,7 +228,7 @@ export function describeLayers(layers: GeoLibreLayer[]): string {
 }
 
 /** Resolve a layer by id first, then case-insensitive name match. */
-function resolveLayer(reference: string): GeoLibreLayer | null {
+function resolveLayer(reference: string): GeoIntLayer | null {
   const layers = useAppStore.getState().layers;
   const byId = layers.find((layer) => layer.id === reference);
   if (byId) return byId;
@@ -231,81 +267,95 @@ function asFeatureCollection(data: unknown): FeatureCollection {
   throw new Error("URL did not return a GeoJSON Feature or FeatureCollection.");
 }
 
+/** The current map viewport as [west, south, east, north], or null. */
+function viewBboxFor(deps: AssistantToolDeps): [number, number, number, number] | null {
+  const map = deps.getMapController()?.getMap();
+  if (!map) return null;
+  const b = map.getBounds();
+  return [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
+}
+
+/** Reduce a STAC bbox (2D or 3D) to a 2D [w, s, e, n]. */
+function bbox2d(bbox: number[]): [number, number, number, number] | null {
+  return bbox.length >= 6
+    ? [bbox[0], bbox[1], bbox[3], bbox[4]]
+    : bbox.length >= 4
+      ? [bbox[0], bbox[1], bbox[2], bbox[3]]
+      : null;
+}
+
 /**
- * Build the GeoLibre-native tool set the Strands agent can call. Every tool acts
- * through the Zustand store, the SQL Workspace, or the symbology helpers — never
- * by mutating MapLibre directly — so all changes flow through the app's one-way
- * data flow and are covered by undo/redo.
- *
- * @param deps Map-controller accessor for camera tools.
- * @returns The tools to register on the agent.
+ * Gate model-authored code behind the user's confirmation hook. Returns true
+ * when execution may proceed (approved, or no hook configured).
  */
-export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unknown, unknown>[] {
-  const store = () => useAppStore.getState();
-  // Tool results are serialized to the model; the data we return is JSON-safe by
-  // construction, so this asserts the shape against Strands' strict JSONValue.
-  const json = (value: unknown): JSONValue => value as JSONValue;
-  // Shared Pyodide scripting context for run_python (exposes the `geolibre`
-  // facade that drives the live map).
-  const pyDeps = consoleDeps(deps.getMapController);
+function approveCodeExecution(
+  deps: AssistantToolDeps,
+  toolName: "run_python" | "run_maplibre_js",
+  code: string,
+): Promise<boolean> {
+  return deps.confirmCodeExecution
+    ? deps.confirmCodeExecution({ tool: toolName, code })
+    : Promise.resolve(true);
+}
 
-  /**
-   * Gate model-authored code behind the user's confirmation hook. Returns true
-   * when execution may proceed (approved, or no hook configured).
-   */
-  const approveCodeExecution = (
-    toolName: "run_python" | "run_maplibre_js",
-    code: string,
-  ): Promise<boolean> =>
-    deps.confirmCodeExecution
-      ? deps.confirmCodeExecution({ tool: toolName, code })
-      : Promise.resolve(true);
+// Lazily load the shared processing executor (Phase 2). It pulls in the
+// algorithm registries (Turf, DuckDB), so it is imported only when used.
+type ScriptingHandlers = {
+  listAlgorithms: () => unknown;
+  runAlgorithm: (input: {
+    id: string;
+    params: Record<string, unknown>;
+  }) => Promise<{ logs?: string[]; resultLayerIds?: string[] }>;
+};
+let scriptingPromise: Promise<ScriptingHandlers> | null = null;
+function getScripting(deps: AssistantToolDeps): Promise<ScriptingHandlers> {
+  scriptingPromise ??= import("../scripting/scriptingApi").then(
+    ({ createScriptingHandlers }) =>
+      createScriptingHandlers({
+        getController: deps.getMapController,
+      }) as unknown as ScriptingHandlers,
+  );
+  return scriptingPromise;
+}
 
-  /** The current map viewport as [west, south, east, north], or null. */
-  const viewBbox = (): [number, number, number, number] | null => {
-    const map = deps.getMapController()?.getMap();
-    if (!map) return null;
-    const b = map.getBounds();
-    return [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
-  };
+/**
+ * Define one tool, inferring its handler's input type from `inputSchema`
+ * (mirroring how Strands' own `tool()` helper worked) and widening the result
+ * to the registry's shared `AssistantTool` shape. Keeps each handler body
+ * fully typed against its own schema while letting `ASSISTANT_TOOLS` hold a
+ * single, uniformly-typed array.
+ */
+function defineTool<Schema extends z.ZodTypeAny>(tool: {
+  name: string;
+  description: string;
+  inputSchema: Schema;
+  handler: (input: z.infer<Schema>, deps: AssistantToolDeps) => Promise<unknown> | unknown;
+  requiresConfirmation?: boolean;
+}): AssistantTool {
+  // The schema-specific handler type is intentionally narrower than
+  // AssistantTool's boxed `unknown`, so a direct `as` isn't accepted — this is
+  // the deliberate widening step, exactly mirroring runAssistantTool's
+  // `inputSchema.parse(rawInput)` validating before a handler ever sees it.
+  return tool as unknown as AssistantTool;
+}
 
-  /** Reduce a STAC bbox (2D or 3D) to a 2D [w, s, e, n]. */
-  const bbox2d = (bbox: number[]): [number, number, number, number] | null =>
-    bbox.length >= 6
-      ? [bbox[0], bbox[1], bbox[3], bbox[4]]
-      : bbox.length >= 4
-        ? [bbox[0], bbox[1], bbox[2], bbox[3]]
-        : null;
-
-  // Lazily load the shared processing executor (Phase 2). It pulls in the
-  // algorithm registries (Turf, DuckDB), so it is imported only when used.
-  type ScriptingHandlers = {
-    listAlgorithms: () => unknown;
-    runAlgorithm: (input: {
-      id: string;
-      params: Record<string, unknown>;
-    }) => Promise<{ logs?: string[]; resultLayerIds?: string[] }>;
-  };
-  let scriptingPromise: Promise<ScriptingHandlers> | null = null;
-  const getScripting = (): Promise<ScriptingHandlers> => {
-    scriptingPromise ??= import("../scripting/scriptingApi").then(
-      ({ createScriptingHandlers }) =>
-        createScriptingHandlers({
-          getController: deps.getMapController,
-        }) as unknown as ScriptingHandlers,
-    );
-    return scriptingPromise;
-  };
-
-  const listLayers = tool({
+/**
+ * The full GeoInt-native tool catalog. Every tool acts through the Zustand
+ * store, the SQL Workspace, or the symbology helpers — never by mutating
+ * MapLibre directly — so all changes flow through the app's one-way data flow
+ * and are covered by undo/redo. Nothing invokes these yet (no model backend
+ * is wired up); this is the catalog a future integration will call into via
+ * {@link runAssistantTool}.
+ */
+export const ASSISTANT_TOOLS: readonly AssistantTool[] = [
+  defineTool({
     name: "list_layers",
     description:
       "List the layers currently loaded in the map, with their id, type, geometry, feature count, attribute field names, and the SQL table name to use in run_sql. Call this before referring to a layer.",
     inputSchema: z.object({}),
-    callback: () => json({ layers: store().layers.map(summarizeLayer) }),
-  });
-
-  const runSql = tool({
+    handler: () => ({ layers: useAppStore.getState().layers.map(summarizeLayer) }),
+  }),
+  defineTool({
     name: "run_sql",
     description:
       "Run a single read-only DuckDB Spatial SQL statement against the loaded layers (use the SQL table names from list_layers) and/or remote files. Returns column names, the row count, and a small preview. Set add_as_layer to add a geometry result to the map.",
@@ -320,36 +370,34 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
         .optional()
         .describe("Name for the added layer (when add_as_layer is true)."),
     }),
-    callback: async (input) => {
+    handler: async (input) => {
       if (!isReadOnlySql(input.sql)) {
         throw new Error("Only read-only SELECT/WITH queries are allowed.");
       }
-      const result = await runSqlQuery(input.sql, store().layers);
+      const result = await runSqlQuery(input.sql, useAppStore.getState().layers);
       let addedLayerId: string | null = null;
       if (input.add_as_layer && result.geojson) {
-        addedLayerId = store().addGeoJsonLayer(
-          input.layer_name?.trim() || "SQL result",
-          result.geojson,
-        );
+        addedLayerId = useAppStore
+          .getState()
+          .addGeoJsonLayer(input.layer_name?.trim() || "SQL result", result.geojson);
       }
-      return json({
+      return {
         columns: result.columns,
         rowCount: result.rowCount,
         hasGeometry: Boolean(result.geojson),
         preview: result.rows.slice(0, 10),
         addedLayerId,
-      });
+      };
     },
-  });
-
-  const addLayerFromUrl = tool({
+  }),
+  defineTool({
     name: "add_layer_from_url",
     description: "Fetch a public GeoJSON URL and add it to the map as a new vector layer.",
     inputSchema: z.object({
       url: z.string().describe("A public URL returning GeoJSON."),
       name: z.string().optional().describe("Optional layer name."),
     }),
-    callback: async (input) => {
+    handler: async (input) => {
       assertPublicHttpUrl(input.url);
       const MAX_BYTES = 100 * 1024 * 1024; // 100 MB guard against OOM.
       const controller = new AbortController();
@@ -377,63 +425,59 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
           : parsed;
         const name =
           input.name?.trim() || input.url.split("/").pop()?.split("?")[0] || "Remote layer";
-        const id = store().addGeoJsonLayer(name, geojson, input.url);
-        return json({
+        const id = useAppStore.getState().addGeoJsonLayer(name, geojson, input.url);
+        return {
           addedLayerId: id,
           name,
           featureCount: geojson.features.length,
-        });
+        };
       } finally {
         clearTimeout(timeout);
       }
     },
-  });
-
-  const removeLayer = tool({
+  }),
+  defineTool({
     name: "remove_layer",
     description: "Remove a layer from the map by name or id.",
     inputSchema: z.object({
       layer: z.string().describe("Layer name or id."),
     }),
-    callback: (input) => {
+    handler: (input) => {
       const layer = resolveLayer(input.layer);
       if (!layer) throw new Error(`No layer matching "${input.layer}".`);
-      store().removeLayer(layer.id);
-      return json({ removedLayerId: layer.id, name: layer.name });
+      useAppStore.getState().removeLayer(layer.id);
+      return { removedLayerId: layer.id, name: layer.name };
     },
-  });
-
-  const setLayerVisibility = tool({
+  }),
+  defineTool({
     name: "set_layer_visibility",
     description: "Show or hide a layer by name or id.",
     inputSchema: z.object({
       layer: z.string().describe("Layer name or id."),
       visible: z.boolean(),
     }),
-    callback: (input) => {
+    handler: (input) => {
       const layer = resolveLayer(input.layer);
       if (!layer) throw new Error(`No layer matching "${input.layer}".`);
-      store().setLayerVisibility(layer.id, input.visible);
-      return json({ layerId: layer.id, visible: input.visible });
+      useAppStore.getState().setLayerVisibility(layer.id, input.visible);
+      return { layerId: layer.id, visible: input.visible };
     },
-  });
-
-  const setLayerOpacity = tool({
+  }),
+  defineTool({
     name: "set_layer_opacity",
     description: "Set a layer's opacity (0 transparent to 1 opaque) by name or id.",
     inputSchema: z.object({
       layer: z.string().describe("Layer name or id."),
       opacity: z.number().min(0).max(1),
     }),
-    callback: (input) => {
+    handler: (input) => {
       const layer = resolveLayer(input.layer);
       if (!layer) throw new Error(`No layer matching "${input.layer}".`);
-      store().setLayerOpacity(layer.id, input.opacity);
-      return json({ layerId: layer.id, opacity: input.opacity });
+      useAppStore.getState().setLayerOpacity(layer.id, input.opacity);
+      return { layerId: layer.id, opacity: input.opacity };
     },
-  });
-
-  const addTileLayer = tool({
+  }),
+  defineTool({
     name: "add_tile_layer",
     description: `Add an XYZ raster tile basemap/layer to the map. Use a known name (${NAMED_TILE_BASEMAPS.map((basemap) => basemap.id).join(", ")}) or a custom XYZ url template containing {z}/{x}/{y}. The layer is placed underneath existing layers so it acts as a basemap.`,
     inputSchema: z.object({
@@ -450,7 +494,7 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
       name: z.string().optional(),
       attribution: z.string().optional(),
     }),
-    callback: (input) => {
+    handler: (input) => {
       let url = input.url?.trim();
       let name = input.name?.trim();
       let attribution = input.attribution?.trim();
@@ -470,7 +514,7 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
         throw new Error("Provide a known basemap name or an XYZ url template with {z}/{x}/{y}.");
       }
       const tileUrl = createXyzTileUrlTemplate(url);
-      const layer: GeoLibreLayer = {
+      const layer: GeoIntLayer = {
         id: crypto.randomUUID(),
         name: name || "Tile layer",
         type: "xyz",
@@ -487,59 +531,56 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
         metadata: { sourceKind: "xyz-url" },
       };
       // Insert at the bottom of the stack (index 0) so imagery sits under data.
-      const bottomBeforeId = store().layers[0]?.id ?? null;
-      store().addLayer(layer, bottomBeforeId);
-      return json({
+      const bottomBeforeId = useAppStore.getState().layers[0]?.id ?? null;
+      useAppStore.getState().addLayer(layer, bottomBeforeId);
+      return {
         addedLayerId: layer.id,
         name: layer.name,
         url: tileUrl.originalUrl,
-      });
+      };
     },
-  });
-
-  const webSearchTool = tool({
+  }),
+  defineTool({
     name: "web_search",
     description:
       "Search the web for current information (news, recent data, documentation). Returns top results with title, url, and snippet, plus a short answer when available. Most reliable when TAVILY_API_KEY is configured; the keyless fallback is best-effort and may be blocked by the browser.",
     inputSchema: z.object({
       query: z.string().describe("The search query."),
     }),
-    callback: async (input) => {
+    handler: async (input) => {
       try {
         const response = await webSearch(input.query);
-        return json({
+        return {
           provider: response.provider,
           answer: response.answer ?? null,
           results: response.results.slice(0, 8),
-        });
+        };
       } catch (error) {
         // Don't surface a raw fetch/CORS error as a tool crash — tell the model
         // search is unavailable so it can fall back gracefully.
-        return json({
+        return {
           error:
             "Web search is unavailable from the browser. Configure TAVILY_API_KEY in Settings → Environment Variables for reliable search.",
           detail: error instanceof Error ? error.message : String(error),
           results: [],
-        });
+        };
       }
     },
-  });
-
-  const setBasemap = tool({
+  }),
+  defineTool({
     name: "set_basemap",
     description: `Switch the basemap. Accepts a known name (${OPENFREEMAP_BASEMAPS.map((basemap) => basemap.id).join(", ")}) or a full style URL.`,
     inputSchema: z.object({
       basemap: z.string().describe("A basemap name/id or a style URL."),
     }),
-    callback: (input) => {
+    handler: (input) => {
       const styleUrl = resolveBasemap(input.basemap);
       if (!styleUrl) throw new Error(`Unknown basemap "${input.basemap}".`);
-      store().setBasemapStyleUrl(styleUrl);
-      return json({ basemap: styleUrl });
+      useAppStore.getState().setBasemapStyleUrl(styleUrl);
+      return { basemap: styleUrl };
     },
-  });
-
-  const zoomTo = tool({
+  }),
+  defineTool({
     name: "zoom_to",
     description:
       "Move the camera to fit a layer (by name or id) or an explicit bounding box [west, south, east, north].",
@@ -555,37 +596,38 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
       .refine((value) => value.layer !== undefined || value.bbox !== undefined, {
         message: "Provide either a layer or a bbox.",
       }),
-    callback: (input) => {
+    handler: (input, deps) => {
       const controller = deps.getMapController();
       if (!controller) throw new Error("The map is not ready yet.");
       if (input.bbox) {
         controller.fitBounds(input.bbox as [number, number, number, number]);
-        return json({ fit: "bbox", bbox: input.bbox });
+        return { fit: "bbox", bbox: input.bbox };
       }
       if (input.layer) {
         const layer = resolveLayer(input.layer);
         if (!layer) throw new Error(`No layer matching "${input.layer}".`);
         controller.fitLayer(layer);
-        return json({ fit: "layer", layerId: layer.id });
+        return { fit: "layer", layerId: layer.id };
       }
       throw new Error("Provide either a layer or a bbox.");
     },
-  });
-
-  const runPython = tool({
+  }),
+  defineTool({
     name: "run_python",
     description:
-      "Run a Python snippet in the in-app Pyodide runtime for data/compute tasks (numpy, pandas, etc.). A `geolibre` object is in scope to drive the live map, e.g. `geolibre.get_center()` or `geolibre.add_geojson(name, data)`; `await geolibre.load_package('geopandas')` installs packages. Returns captured stdout and the repr of the last expression. The first call boots the Python runtime and can take several seconds. Prefer run_sql for querying layer attributes.",
+      "Run a Python snippet in the in-app Pyodide runtime for data/compute tasks (numpy, pandas, etc.). A `geoint` object is in scope to drive the live map, e.g. `geoint.get_center()` or `geoint.add_geojson(name, data)`; `await geoint.load_package('geopandas')` installs packages. Returns captured stdout and the repr of the last expression. The first call boots the Python runtime and can take several seconds. Prefer run_sql for querying layer attributes.",
     inputSchema: z.object({
       code: z.string().describe("Python source to execute."),
     }),
-    callback: async (input) => {
-      if (!(await approveCodeExecution("run_python", input.code))) {
-        return json({
+    requiresConfirmation: true,
+    handler: async (input, deps) => {
+      if (!(await approveCodeExecution(deps, "run_python", input.code))) {
+        return {
           output: "",
           error: "The user declined to run this Python code.",
-        });
+        };
       }
+      const pyDeps = consoleDeps(deps.getMapController);
       const result = await runConsoleCode(pyDeps, input.code);
       // Cap stdout so a snippet printing megabytes can't blow the model's
       // context window on the next turn.
@@ -594,20 +636,20 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
         result.output.length > MAX_OUTPUT
           ? `${result.output.slice(0, MAX_OUTPUT)}\n[truncated]`
           : result.output;
-      return json({ output, error: result.error });
+      return { output, error: result.error };
     },
-  });
-
-  const runMaplibreJs = tool({
+  }),
+  defineTool({
     name: "run_maplibre_js",
     description:
       "Fallback for tasks with no dedicated tool (e.g. globe projection, terrain, sky, custom paint/layout properties, controls, markers). Runs a small JavaScript snippet against the live map. The snippet is a function body with `map` (the MapLibre GL JS map) and `maplibregl` (the MapLibre GL JS module, e.g. `maplibregl.TerrainControl`, `maplibregl.Marker`) in scope, and may `return` a JSON-serializable value. Example — switch to globe: `map.setProjection({ type: 'globe' })`. Prefer dedicated tools when one exists; changes made here bypass the store and are NOT undoable.",
     inputSchema: z.object({
       code: z.string().describe("JavaScript function body; `map` and `maplibregl` are in scope."),
     }),
-    callback: async (input) => {
-      if (!(await approveCodeExecution("run_maplibre_js", input.code))) {
-        return json({ ok: false, error: "The user declined to run this code." });
+    requiresConfirmation: true,
+    handler: async (input, deps) => {
+      if (!(await approveCodeExecution(deps, "run_maplibre_js", input.code))) {
+        return { ok: false, error: "The user declined to run this code." };
       }
       const map = deps.getMapController()?.getMap();
       if (!map) throw new Error("The map is not ready yet.");
@@ -619,17 +661,16 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
       const result = run(map, maplibregl);
       // Coerce to a JSON-safe value so non-serializable returns (e.g. the map
       // object itself) don't blow up the tool result.
-      let safe: JSONValue = null;
+      let safe: unknown = null;
       try {
-        safe = JSON.parse(JSON.stringify(result ?? null)) as JSONValue;
+        safe = JSON.parse(JSON.stringify(result ?? null));
       } catch {
         safe = String(result);
       }
-      return json({ ok: true, result: safe });
+      return { ok: true, result: safe };
     },
-  });
-
-  const applySymbology = tool({
+  }),
+  defineTool({
     name: "apply_symbology",
     description:
       "Color a vector layer by one of its attribute fields using a graduated (numeric) or categorized (text) color ramp. Use list_layers to find field names and color ramps like reds, blues, viridis.",
@@ -641,7 +682,7 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
       class_count: z.number().optional().describe("Number of classes for graduated mode."),
       scheme: z.enum(["equal-interval", "quantile"]).optional(),
     }),
-    callback: (input) => {
+    handler: (input) => {
       const layer = resolveLayer(input.layer);
       if (!layer) throw new Error(`No layer matching "${input.layer}".`);
       const style = buildSymbologyStyle(layer, {
@@ -651,25 +692,23 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
         classCount: input.class_count,
         scheme: input.scheme,
       });
-      store().setLayerStyle(layer.id, style);
-      return json({
+      useAppStore.getState().setLayerStyle(layer.id, style);
+      return {
         layerId: layer.id,
         mode: input.mode,
         property: input.property,
         classes: style.vectorStyleStops?.length ?? 0,
-      });
+      };
     },
-  });
-
-  const listAlgorithms = tool({
+  }),
+  defineTool({
     name: "list_algorithms",
     description:
       "List the available client-side processing algorithms (vector geometry/overlay tools like buffer, clip, dissolve, intersection, difference, union, spatial-join; plus H3 grids) with their id, name, group, and typed parameters. Call this before run_algorithm.",
     inputSchema: z.object({}),
-    callback: async () => json({ algorithms: (await getScripting()).listAlgorithms() }),
-  });
-
-  const runAlgorithm = tool({
+    handler: async (_input, deps) => ({ algorithms: (await getScripting(deps)).listAlgorithms() }),
+  }),
+  defineTool({
     name: "run_algorithm",
     description:
       "Run a processing algorithm by id (from list_algorithms) and add its result as a new layer. `params` is an object keyed by parameter id; a 'layer' parameter takes a layer id (from list_layers). Build a pipeline by running one algorithm, then passing its returned result layer id into the next. Returns the run log and the new layer id(s).",
@@ -680,21 +719,20 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
         .optional()
         .describe("Parameter values keyed by parameter id; layer params take a layer id."),
     }),
-    callback: async (input) => {
+    handler: async (input, deps) => {
       const result = await (
-        await getScripting()
+        await getScripting(deps)
       ).runAlgorithm({
         id: input.id,
         params: (input.params as Record<string, unknown>) ?? {},
       });
-      return json({
+      return {
         logs: result.logs ?? [],
         resultLayerIds: result.resultLayerIds ?? [],
-      });
+      };
     },
-  });
-
-  const searchStac = tool({
+  }),
+  defineTool({
     name: "search_stac",
     description:
       "Search the Microsoft Planetary Computer STAC catalog for earth-observation items in a collection (e.g. 'sentinel-2-l2a', 'landsat-c2-l2', 'naip', 'cop-dem-glo-30'). Defaults the bounding box to the current map view and sorts newest-first. Returns matching items (id, datetime, cloud cover, bbox).",
@@ -711,10 +749,12 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
         .describe("RFC3339 datetime or range, e.g. '2024-06-01/2024-09-30'."),
       limit: z.number().optional().describe("Max items (default 10)."),
     }),
-    callback: async (input) => {
+    handler: async (input, deps) => {
       const { STACClient } = await import("maplibre-gl-planetary-computer");
       const bbox =
-        (input.bbox as [number, number, number, number] | undefined) ?? viewBbox() ?? undefined;
+        (input.bbox as [number, number, number, number] | undefined) ??
+        viewBboxFor(deps) ??
+        undefined;
       const items = await new STACClient().search({
         collections: [input.collection],
         bbox,
@@ -722,7 +762,7 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
         limit: input.limit ?? 10,
         sortby: [{ field: "datetime", direction: "desc" }],
       });
-      return json({
+      return {
         count: items.length,
         items: items.map((item) => ({
           id: item.id,
@@ -730,11 +770,10 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
           cloudCover: item.properties["eo:cloud_cover"] ?? null,
           bbox: item.bbox,
         })),
-      });
+      };
     },
-  });
-
-  const addStacLayer = tool({
+  }),
+  defineTool({
     name: "add_stac_layer",
     description:
       "Add a Planetary Computer STAC item as a raster tile layer (tiles are signed server-side — no credentials needed). Give a collection and optionally a specific itemId from search_stac; otherwise the newest item over the current view is used. Renders with the collection's default band/colormap preset.",
@@ -748,7 +787,7 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
       datetime: z.string().optional(),
       name: z.string().optional(),
     }),
-    callback: async (input) => {
+    handler: async (input, deps) => {
       const { STACClient, TiTilerClient, getDefaultPreset } =
         await import("maplibre-gl-planetary-computer");
       const stac = new STACClient();
@@ -757,7 +796,9 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
         item = await stac.getItem(input.collection, input.itemId);
       } else {
         const bbox =
-          (input.bbox as [number, number, number, number] | undefined) ?? viewBbox() ?? undefined;
+          (input.bbox as [number, number, number, number] | undefined) ??
+          viewBboxFor(deps) ??
+          undefined;
         const items = await stac.search({
           collections: [input.collection],
           bbox,
@@ -773,7 +814,7 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
       const preset = getDefaultPreset(input.collection);
       const tileUrl = new TiTilerClient().getItemTileUrl(input.collection, item.id, preset?.params);
       const bounds = bbox2d(item.bbox);
-      const layer: GeoLibreLayer = {
+      const layer: GeoIntLayer = {
         id: crypto.randomUUID(),
         name: input.name?.trim() || `${input.collection} ${item.properties.datetime ?? item.id}`,
         type: "xyz",
@@ -792,34 +833,35 @@ export function createAssistantTools(deps: AssistantToolDeps): InvokableTool<unk
           stacItemId: item.id,
         },
       };
-      const bottomBeforeId = store().layers[0]?.id ?? null;
-      store().addLayer(layer, bottomBeforeId);
+      const bottomBeforeId = useAppStore.getState().layers[0]?.id ?? null;
+      useAppStore.getState().addLayer(layer, bottomBeforeId);
       if (bounds) deps.getMapController()?.fitBounds(bounds);
-      return json({
+      return {
         addedLayerId: layer.id,
         itemId: item.id,
         datetime: item.properties.datetime ?? null,
-      });
+      };
     },
-  });
+  }),
+];
 
-  return [
-    listLayers,
-    runSql,
-    addLayerFromUrl,
-    addTileLayer,
-    listAlgorithms,
-    runAlgorithm,
-    searchStac,
-    addStacLayer,
-    webSearchTool,
-    removeLayer,
-    setLayerVisibility,
-    setLayerOpacity,
-    setBasemap,
-    zoomTo,
-    applySymbology,
-    runMaplibreJs,
-    runPython,
-  ] as InvokableTool<unknown, unknown>[];
+/** List every tool's id and description without executing anything. */
+export function listAssistantTools(): Array<Pick<AssistantTool, "name" | "description">> {
+  return ASSISTANT_TOOLS.map(({ name, description }) => ({ name, description }));
+}
+
+/** Look up a tool by name. */
+export function getAssistantTool(name: string): AssistantTool | undefined {
+  return ASSISTANT_TOOLS.find((tool) => tool.name === name);
+}
+
+/** Validate `rawInput` against the tool's schema and run its handler. */
+export async function runAssistantTool(
+  name: string,
+  rawInput: unknown,
+  deps: AssistantToolDeps,
+): Promise<unknown> {
+  const tool = getAssistantTool(name);
+  if (!tool) throw new Error(`Unknown tool "${name}".`);
+  return tool.handler(tool.inputSchema.parse(rawInput), deps);
 }

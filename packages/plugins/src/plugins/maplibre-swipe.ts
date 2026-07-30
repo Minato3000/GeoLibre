@@ -6,7 +6,7 @@ import {
   type SwipeLayerSide,
   type SwipeState,
 } from "maplibre-gl-swipe";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 import { INTERNAL_HELPER_LAYER_PATTERNS } from "./internal-layers";
 import {
   getCogRasterMainVisibility,
@@ -23,14 +23,14 @@ import { SwipeCogMirror } from "./swipe-cog-mirror";
  */
 export const SWIPE_PLUGIN_ID = "maplibre-gl-swipe";
 
-let swipeControlPosition: GeoLibreMapControlPosition = "top-left";
+let swipeControlPosition: GeoIntMapControlPosition = "top-left";
 
 let swipeControl: SwipeControl | null = null;
 let savedSwipeState: SwipeState | null = null;
 let unsubscribeBasemap: (() => void) | null = null;
 
 // --- COG raster swipe integration ------------------------------------------
-// GeoLibre renders COG rasters on a deck.gl overlay, so they are MapLibre custom
+// GeoInt renders COG rasters on a deck.gl overlay, so they are MapLibre custom
 // layers that the swipe control cannot see through getStyle(). This provider
 // (passed to SwipeControl via the layerProvider option) lists them in the swipe
 // panel and renders each per its side assignment: right/both/none rasters are
@@ -153,11 +153,11 @@ function teardownCogSwipe(): void {
   cogMainForced.clear();
 }
 
-export const maplibreSwipePlugin: GeoLibrePlugin = {
+export const maplibreSwipePlugin: GeoIntPlugin = {
   id: SWIPE_PLUGIN_ID,
   name: "Layer Swipe",
   version: "0.9.1",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     swipeControl = new SwipeControl(getSwipeControlOptions(app, savedSwipeState ?? undefined));
 
     const added = app.addMapControl(swipeControl, swipeControlPosition);
@@ -186,7 +186,7 @@ export const maplibreSwipePlugin: GeoLibrePlugin = {
       expandSwipeControl(previousState);
     });
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     unsubscribeBasemap?.();
     unsubscribeBasemap = null;
     unsubscribeCogRasterChanges?.();
@@ -201,7 +201,7 @@ export const maplibreSwipePlugin: GeoLibrePlugin = {
     swipeControl = null;
   },
   getMapControlPosition: () => swipeControlPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     swipeControlPosition = position;
     if (!swipeControl) return;
     const currentState = swipeControl.getState();
@@ -215,7 +215,7 @@ export const maplibreSwipePlugin: GeoLibrePlugin = {
     expandSwipeControl(currentState);
   },
   getProjectState: () => swipeControl?.getState() ?? savedSwipeState ?? undefined,
-  applyProjectState: (app: GeoLibreAppAPI, state: unknown) => {
+  applyProjectState: (app: GeoIntAppAPI, state: unknown) => {
     const nextState = normalizeSwipeProjectState(state);
     const currentState = swipeControl?.getState() ?? savedSwipeState;
     if (areSwipeStatesEqual(currentState, nextState)) return false;
@@ -235,7 +235,7 @@ export const maplibreSwipePlugin: GeoLibrePlugin = {
 };
 
 function getSwipeControlOptions(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   previousState?: SwipeState,
 ): SwipeControlOptions {
   return {

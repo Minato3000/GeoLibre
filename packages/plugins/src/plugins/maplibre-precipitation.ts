@@ -1,4 +1,4 @@
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 import { createWeatherLayer, type WeatherAnimationState, type WeatherFrame } from "./weather-layer";
 
 /**
@@ -170,10 +170,10 @@ export function subscribePrecipitation(listener: () => void): () => void {
   return controller.subscribe(listener);
 }
 
-export const maplibrePrecipitationPlugin: GeoLibrePlugin = {
+export const maplibrePrecipitationPlugin: GeoIntPlugin = {
   id: PRECIPITATION_PLUGIN_ID,
   name: "Precipitation",
   version: "0.1.0",
-  activate: (app: GeoLibreAppAPI) => controller.activate(app),
+  activate: (app: GeoIntAppAPI) => controller.activate(app),
   deactivate: () => controller.deactivate(),
 };

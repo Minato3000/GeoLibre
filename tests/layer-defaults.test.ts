@@ -9,12 +9,12 @@ import {
   isInitialLayerStyle,
   nextLayerPaletteColor,
   useAppStore,
-  type GeoLibreLayer,
-} from "@geolibre/core";
+  type GeoIntLayer,
+} from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 
 /** A layer wearing a real palette assignment: the fill paired with its outline. */
-function styled(id: string, fillColor: string): GeoLibreLayer {
+function styled(id: string, fillColor: string): GeoIntLayer {
   return {
     id,
     name: id,
@@ -29,7 +29,7 @@ function styled(id: string, fillColor: string): GeoLibreLayer {
 
 /** A layer built straight from the schema defaults, as every add path that
  *  paints from no collection does — its fill happens to equal LAYER_PALETTE[0]. */
-function schemaStyled(id: string, type: GeoLibreLayer["type"] = "geojson"): GeoLibreLayer {
+function schemaStyled(id: string, type: GeoIntLayer["type"] = "geojson"): GeoIntLayer {
   return {
     id,
     name: id,
@@ -131,7 +131,7 @@ describe("nextLayerPaletteColor", () => {
   });
 
   it("matches a palette assignment whatever the hex casing", () => {
-    const upper: GeoLibreLayer = {
+    const upper: GeoIntLayer = {
       ...styled("a", LAYER_PALETTE[0]),
       style: {
         ...DEFAULT_LAYER_STYLE,

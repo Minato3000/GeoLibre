@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
-import { useAppStore } from "@geolibre/core";
-import type { GeoLibreAppAPI } from "../packages/plugins/src/types";
+import { useAppStore } from "@geoint/core";
+import type { GeoIntAppAPI } from "../packages/plugins/src/types";
 import { addArcGISLayer } from "../packages/plugins/src/plugins/arcgis-layer";
 
 // Minimal ArcGIS FeatureServer layer metadata (the `?f=json` response) with a
@@ -55,7 +55,7 @@ function makeArcGISFetch(): typeof fetch {
 
 describe("addArcGISLayer (feature layer)", () => {
   let fitBoundsCalls: Array<[number, number, number, number]>;
-  let app: GeoLibreAppAPI;
+  let app: GeoIntAppAPI;
   let originalFetch: typeof fetch;
 
   beforeEach(() => {
@@ -70,7 +70,7 @@ describe("addArcGISLayer (feature layer)", () => {
       fitBounds: (bounds) => {
         fitBoundsCalls.push(bounds);
       },
-    } as unknown as GeoLibreAppAPI;
+    } as unknown as GeoIntAppAPI;
   });
 
   afterEach(() => {

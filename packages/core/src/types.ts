@@ -48,7 +48,24 @@ export const PROTOMAPS_BASEMAPS = [
   { id: "protomaps-black", name: "Black", flavor: "black" },
 ] as const;
 
-export const DEFAULT_BASEMAP = "https://tiles.openfreemap.org/styles/liberty";
+/**
+ * Sentinel styleUrl for the Google Satellite raster basemap, resolved by
+ * `resolveMapStyle` (`packages/map/src/map-controller.ts`) into an inline
+ * single-source raster `StyleSpecification` — mirroring how planetary
+ * basemaps (`createPlanetaryMapStyle`) are resolved, since Google does not
+ * publish a fetchable vector/raster *style* JSON, only raw XYZ tiles.
+ */
+export const GOOGLE_SATELLITE_BASEMAP_SENTINEL = "geoint://google-satellite";
+
+export const RASTER_BASEMAPS = [
+  {
+    id: "google-satellite",
+    name: "Google Satellite",
+    styleUrl: GOOGLE_SATELLITE_BASEMAP_SENTINEL,
+  },
+] as const;
+
+export const DEFAULT_BASEMAP = GOOGLE_SATELLITE_BASEMAP_SENTINEL;
 
 export const BLANK_BASEMAP = "";
 
@@ -461,7 +478,7 @@ export interface LayerStyle {
    * Per-feature chart symbology (QGIS-style diagrams). `"none"` disables it;
    * any other value renders one {@link DiagramType} chart per feature over the
    * layer's normal symbology, built from the numeric attributes in
-   * {@link diagramFields}. See `@geolibre/core`'s `diagram.ts` helpers.
+   * {@link diagramFields}. See `@geoint/core`'s `diagram.ts` helpers.
    */
   diagramType: DiagramType;
   /** Attributes (and their colors) charted by the diagram renderer, in order. */
@@ -645,7 +662,7 @@ export const DEFAULT_LAYER_STYLE: LayerStyle = {
 
 /**
  * Read a layer style property, falling back to the shared default when the
- * layer does not define it. Shared by `@geolibre/map` and the desktop app so
+ * layer does not define it. Shared by `@geoint/map` and the desktop app so
  * the two consumers cannot drift.
  */
 export function styleValue<K extends keyof LayerStyle>(style: LayerStyle, key: K): LayerStyle[K] {
@@ -694,7 +711,7 @@ export interface LayerJoinStats {
  * Delimited Text with no coordinate fields) matched on a key field. Unlike the
  * Processing → Vector attribute join, the layer keeps its identity — styles,
  * labels, and position — and the joined columns refresh whenever the join
- * table's data changes. Definitions persist in `.geolibre.json` and re-resolve
+ * table's data changes. Definitions persist in `.geoint.json` and re-resolve
  * on project load. See `joins.ts` for the engine.
  */
 export interface LayerJoin {
@@ -795,7 +812,7 @@ export interface AttributeFormConfig {
  * feature properties — so the attribute table, Expression Builder,
  * data-driven styling, labels, and selection all see the column with no
  * further wiring — and re-derives them whenever the layer's data (or its
- * joins) change. Definitions persist in `.geolibre.json` and re-resolve on
+ * joins) change. Definitions persist in `.geoint.json` and re-resolve on
  * project load; the expression is a declarative MapLibre expression (never
  * arbitrary code), so re-evaluating it from a shared project file is safe.
  */
@@ -830,7 +847,7 @@ export interface LayerVirtualField {
   errorCount?: number;
 }
 
-export interface GeoLibreLayer {
+export interface GeoIntLayer {
   id: string;
   name: string;
   type: LayerType;
@@ -878,7 +895,7 @@ export interface GeoLibreLayer {
    * Id of the {@link LayerGroup} this layer belongs to, or `undefined` when the
    * layer sits at the top level of the layer panel. Layers sharing a `groupId`
    * are kept contiguous in the store's flat `layers` array so the group renders
-   * as one block; see `@geolibre/core`'s `layer-groups` helpers.
+   * as one block; see `@geoint/core`'s `layer-groups` helpers.
    */
   groupId?: string;
 }
@@ -952,18 +969,18 @@ export interface LayerGroup {
  * Metadata `sourceKind` marking a live SQL query layer: a GeoJSON-backed layer
  * created from a SQL Workspace result whose DuckDB statement is stored on the
  * layer metadata and re-executed on refresh. Defined here so the desktop app
- * (which owns the query/refresh logic) and `@geolibre/plugins` (which excludes
+ * (which owns the query/refresh logic) and `@geoint/plugins` (which excludes
  * these layers from in-place geometry editing) share one value.
  */
 export const SQL_QUERY_SOURCE_KIND = "sql-query";
 
 /**
  * Detect a DuckDB query layer rendered through the plugin's external deck.gl
- * overlay. Shared by `@geolibre/map`, `@geolibre/plugins`, and the desktop
+ * overlay. Shared by `@geoint/map`, `@geoint/plugins`, and the desktop
  * app so the detection criteria cannot drift.
  */
 export function isDuckDBQueryLayer(
-  layer: Pick<GeoLibreLayer, "metadata" | "type"> | undefined,
+  layer: Pick<GeoIntLayer, "metadata" | "type"> | undefined,
 ): boolean {
   return (
     layer?.type === "duckdb-query" &&
@@ -1036,7 +1053,7 @@ export const MAX_MAP_GRID_DIM = 4;
 /**
  * Live multi-user collaboration (issue #307). These types describe the
  * *ephemeral* session state the store holds while a live session is active. It
- * is intentionally never written to the `.geolibre.json` project file (the
+ * is intentionally never written to the `.geoint.json` project file (the
  * `project.ts` serializers never read it) and never tracked in undo history (the
  * store's `partialize` never lists it), so it resets cleanly on reload.
  */
@@ -1122,7 +1139,7 @@ export interface MapPreferences {
   projection: MapProjection;
   /**
    * Celestial body / ellipsoid the project's coordinates describe (keys into the
-   * ellipsoid registry in `@geolibre/core`). Drives measurement radii and pairs
+   * ellipsoid registry in `@geoint/core`). Drives measurement radii and pairs
    * with planetary basemaps. Defaults to `"earth"` (WGS 84).
    */
   ellipsoidId: string;
@@ -1143,13 +1160,13 @@ declare global {
   interface Window {
     // Runtime environment variables published from project preferences. Shared
     // here so the desktop app and plugins type the global from one source.
-    __GEOLIBRE_RUNTIME_ENV__?: Record<string, string>;
+    __GEOINT_RUNTIME_ENV__?: Record<string, string>;
   }
 }
 
 /**
  * Geocoding backend selection persisted in the project. The provider id keys
- * into the geocoding registry in `@geolibre/core`; API keys are stored per
+ * into the geocoding registry in `@geoint/core`; API keys are stored per
  * provider so switching backends does not discard the others' keys. Empty
  * endpoint overrides fall back to the provider's default endpoints.
  */
@@ -1255,7 +1272,7 @@ export type LegendPanelPosition = "top-left" | "top-right" | "bottom-left" | "bo
  * Layout legend). The legend itself is always derived from the visible layers'
  * symbology; this record only stores the edits layered on top (title, ordering,
  * per-item rename/hide, hand-authored entries), so it survives layer additions
- * and removals and is persisted in the `.geolibre.json` project.
+ * and removals and is persisted in the `.geoint.json` project.
  */
 export interface LegendConfig {
   /** Heading drawn above the legend entries. */
@@ -1321,7 +1338,7 @@ export type StoryChapterAnimation = "flyTo" | "easeTo" | "jumpTo";
 export interface StoryLayerOpacityChange {
   /** Stable identity for React list keys; optional for older project files. */
   id?: string;
-  /** GeoLibre store layer id whose opacity should change. */
+  /** GeoInt store layer id whose opacity should change. */
   layerId: string;
   opacity: number;
   /** Transition duration in milliseconds. */
@@ -1363,7 +1380,7 @@ export type StorySlideMode = "none" | "blank" | "black" | "global" | "adjacent";
 /** A start/closing slide that is actually shown (every mode except `"none"`). */
 export type StoryActiveSlideMode = Exclude<StorySlideMode, "none">;
 
-/** Scroll-driven story map authored on top of a GeoLibre project. */
+/** Scroll-driven story map authored on top of a GeoInt project. */
 export interface StoryMap {
   title: string;
   subtitle: string;
@@ -1613,12 +1630,12 @@ export interface ProjectTemplateEntry {
   id: string;
   name: string;
   description?: string;
-  project: GeoLibreProject;
+  project: GeoIntProject;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface GeoLibreProject {
+export interface GeoIntProject {
   id?: string;
   version: string;
   name: string;
@@ -1626,7 +1643,7 @@ export interface GeoLibreProject {
   basemapStyleUrl: string;
   basemapVisible: boolean;
   basemapOpacity: number;
-  layers: GeoLibreLayer[];
+  layers: GeoIntLayer[];
   /**
    * Layer selected in the Layers panel when the project was saved. Omitted by
    * legacy projects; `null` deliberately restores no active layer.

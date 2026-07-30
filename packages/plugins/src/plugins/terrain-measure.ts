@@ -21,7 +21,7 @@
  * Measure tool behaves exactly as before.
  */
 
-import { getActiveEllipsoid, getActiveMeanRadiusMeters } from "@geolibre/core";
+import { getActiveEllipsoid, getActiveMeanRadiusMeters } from "@geoint/core";
 import type { MeasureControl, Measurement } from "maplibre-gl-components";
 import {
   fetchElevations,
@@ -340,7 +340,7 @@ export function attachTerrainMeasure(
   }
 
   const section = document.createElement("div");
-  section.className = "geolibre-terrain-measure";
+  section.className = "geoint-terrain-measure";
   section.style.borderTop = "1px solid hsl(var(--border))";
   // The panel's children carry their own margins (it has no padding), so
   // inset the section on all sides to keep text off the panel border.

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 /**
- * The viewport width at/below which GeoLibre treats the layout as "mobile":
+ * The viewport width at/below which GeoInt treats the layout as "mobile":
  * side panels default to collapsed and, when expanded, overlay the map instead
  * of squeezing it. Kept in sync with the `md` Tailwind breakpoint (768px) used
  * for the panels' responsive classes.

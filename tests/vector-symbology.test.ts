@@ -16,7 +16,7 @@ import {
   vectorStrokeWidthValue,
   type LayerStyle,
   type VectorRule,
-} from "@geolibre/core";
+} from "@geoint/core";
 import { markerIconSizeValue } from "../packages/map/src/markers";
 
 function style(patch: Partial<LayerStyle> = {}): LayerStyle {

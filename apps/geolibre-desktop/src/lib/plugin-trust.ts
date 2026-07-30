@@ -1,6 +1,6 @@
 // Trust gating for plugin manifest URLs carried inside a project file.
 //
-// A `.geolibre.json` project is opened as data and can come from anyone (a
+// A `.geoint.json` project is opened as data and can come from anyone (a
 // shared file, a URL, a gallery card). It can carry `plugins.manifestUrls`,
 // each of which the app would otherwise fetch and dynamically `import()` as a
 // JavaScript module in the privileged renderer context (with access to the
@@ -12,7 +12,7 @@
 // build (bundled drop-ins) are trusted to load automatically; every other
 // project URL is held back until the user approves it in a trust prompt.
 
-import { isAllowedPluginManifestUrl } from "@geolibre/core";
+import { isAllowedPluginManifestUrl } from "@geoint/core";
 import { normalizeStringList } from "./string-lists";
 
 export interface PartitionedProjectPluginUrls {

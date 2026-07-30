@@ -1,5 +1,5 @@
 import type { FeatureCollection } from "geojson";
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 
 export type ParameterType = "layer" | "number" | "string" | "boolean" | "select" | "field" | "path";
 
@@ -70,7 +70,7 @@ export interface DuckDbCapability {
 }
 
 export interface ProcessingContext {
-  layers: GeoLibreLayer[];
+  layers: GeoIntLayer[];
   parameters: Record<string, unknown>;
   log: (message: string) => void;
   fitBounds?: (bounds: [number, number, number, number]) => void;

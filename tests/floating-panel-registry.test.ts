@@ -13,11 +13,11 @@ import {
   subscribeFloatingPanels,
   unregisterFloatingPanel,
 } from "../packages/plugins/src/floating-panel-registry";
-import type { GeoLibreFloatingPanelRegistration } from "../packages/plugins/src/types";
+import type { GeoIntFloatingPanelRegistration } from "../packages/plugins/src/types";
 
 function testPanel(
-  patch: Partial<GeoLibreFloatingPanelRegistration> = {},
-): GeoLibreFloatingPanelRegistration {
+  patch: Partial<GeoIntFloatingPanelRegistration> = {},
+): GeoIntFloatingPanelRegistration {
   return {
     id: "viewer",
     title: "Viewer",
@@ -156,7 +156,7 @@ describe("floating-panel registry", () => {
       registerFloatingPanel({
         id: "x",
         title: "x",
-      } as unknown as GeoLibreFloatingPanelRegistration),
+      } as unknown as GeoIntFloatingPanelRegistration),
     );
   });
 

@@ -1,10 +1,10 @@
 import {
   DEFAULT_LAYER_STYLE,
   isDuckDBQueryLayer,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerStyle,
   useAppStore,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type {
   DuckDBControl,
   DuckDBControlEventHandler,
@@ -12,7 +12,7 @@ import type {
   DuckDBLayerState,
   DuckDBState,
 } from "maplibre-gl-duckdb";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition } from "../types";
 import {
   asRecord,
   colorToRgba,
@@ -42,9 +42,9 @@ type DuckDBRendererLike = {
     index: number,
   ) => StyledDeckLayerLike[];
   setData?: (layers: DuckDBRenderedLayerLike[]) => void;
-  __geolibreOriginalSetData?: DuckDBRendererLike["setData"];
-  __geolibreStylePatched?: boolean;
-  __geolibreOriginalCreateLayers?: DuckDBRendererLike["createLayers"];
+  __geointOriginalSetData?: DuckDBRendererLike["setData"];
+  __geointStylePatched?: boolean;
+  __geointOriginalCreateLayers?: DuckDBRendererLike["createLayers"];
   overlay?: DuckDBDeckOverlayLike;
   setSelectedFeature?: (layerId: string | null, index: number | null) => void;
 };
@@ -99,8 +99,8 @@ type MutableDuckDBControl = {
   selectedFeature?: DuckDBSelection | null;
   setPickable?: (pickable: boolean) => void;
   showAttributePopup?: (coordinate: [number, number] | null) => void;
-  __geolibreOriginalShowAttributePopup?: MutableDuckDBControl["showAttributePopup"];
-  __geolibreSelectionPatched?: boolean;
+  __geointOriginalShowAttributePopup?: MutableDuckDBControl["showAttributePopup"];
+  __geointSelectionPatched?: boolean;
 };
 
 interface DuckDBRenderedStyle {
@@ -164,11 +164,11 @@ type DuckDBGlobalBridge = {
   updateLayerRows: typeof updateDuckDBLayerRows;
 };
 
-const duckdbControlPosition: GeoLibreMapControlPosition = "top-left";
+const duckdbControlPosition: GeoIntMapControlPosition = "top-left";
 const DUCKDB_SAMPLE_DATABASE_URL = "https://data.source.coop/giswqs/opengeos/nyc_data.db";
 
 const DUCKDB_OPTIONS = {
-  className: "geolibre-duckdb-control",
+  className: "geoint-duckdb-control",
   collapsed: false,
   geometryColumn: "geom",
   layerName: "DuckDB query",
@@ -199,15 +199,15 @@ const DUCKDB_SELECTED_STROKE_COLOR: [number, number, number, number] = [17, 24, 
 
 declare global {
   interface Window {
-    __GEOLIBRE_DUCKDB__?: DuckDBGlobalBridge;
+    __GEOINT_DUCKDB__?: DuckDBGlobalBridge;
   }
 }
 
 if (typeof window !== "undefined") {
-  // Bridge consumed only by @geolibre/map (MapCanvas), which cannot import
+  // Bridge consumed only by @geoint/map (MapCanvas), which cannot import
   // this package directly. Do not widen this API; frozen so its members
   // cannot be swapped out by other scripts after construction.
-  window.__GEOLIBRE_DUCKDB__ = Object.freeze({
+  window.__GEOINT_DUCKDB__ = Object.freeze({
     getFeatureBounds: getDuckDBFeatureBounds,
     getLayerRows: getDuckDBLayerRows,
     identifyLayerAtPoint: identifyDuckDBLayerAtPoint,
@@ -216,11 +216,11 @@ if (typeof window !== "undefined") {
   });
 }
 
-export function openDuckDBLayerPanel(app: GeoLibreAppAPI): void {
+export function openDuckDBLayerPanel(app: GeoIntAppAPI): void {
   void openStandaloneDuckDBControl(app);
 }
 
-export function closeDuckDBLayerPanel(app: GeoLibreAppAPI): void {
+export function closeDuckDBLayerPanel(app: GeoIntAppAPI): void {
   duckdbStoreUnsubscribe?.();
   duckdbStoreUnsubscribe = null;
   clearDuckDBRenderedLayers();
@@ -359,7 +359,7 @@ export function identifyDuckDBLayerAtPoint(
   };
 }
 
-async function openStandaloneDuckDBControl(app: GeoLibreAppAPI): Promise<boolean> {
+async function openStandaloneDuckDBControl(app: GeoIntAppAPI): Promise<boolean> {
   ensureMercatorProjection(app.getMap?.());
 
   const { DuckDBControl: DuckDBControlClass } = await getDuckDBConstructors();
@@ -518,7 +518,7 @@ function createDuckDBStateChangeHandler(): DuckDBControlEventHandler {
   };
 }
 
-function createDuckDBStoreLayer(state: DuckDBState, layerState: DuckDBLayerState): GeoLibreLayer {
+function createDuckDBStoreLayer(state: DuckDBState, layerState: DuckDBLayerState): GeoIntLayer {
   const controlLayer = getMutableDuckDBControl()?.layer;
   const results = controlLayer?.results ?? controlLayer?.geoArrowResults ?? [];
   const bounds = combineResultBounds(results);
@@ -594,12 +594,12 @@ function syncDuckDBPickableFromStore(
 
 function patchDuckDBControlSelection(control: DuckDBControl): void {
   const mutableControl = getMutableDuckDBControl(control);
-  if (!mutableControl || mutableControl.__geolibreSelectionPatched) return;
+  if (!mutableControl || mutableControl.__geointSelectionPatched) return;
 
   const originalHandleMapSelect = mutableControl.handleMapSelect?.bind(mutableControl);
-  // Keep the original around (matching the __geolibreOriginalSetData pattern)
+  // Keep the original around (matching the __geointOriginalSetData pattern)
   // so future patches can inspect or restore the library behavior.
-  mutableControl.__geolibreOriginalShowAttributePopup =
+  mutableControl.__geointOriginalShowAttributePopup =
     mutableControl.showAttributePopup?.bind(mutableControl);
   // While identify mode targets a DuckDB layer, MapCanvas already handles the
   // click via identifyDuckDBLayerAtPoint and the selection store; letting the
@@ -608,13 +608,13 @@ function patchDuckDBControlSelection(control: DuckDBControl): void {
   // syncDuckDBPickableFromStore), so outside it the originals run unchanged.
   mutableControl.showAttributePopup = (coordinate) => {
     if (isDuckDBIdentifyModeActive()) return;
-    mutableControl.__geolibreOriginalShowAttributePopup?.(coordinate);
+    mutableControl.__geointOriginalShowAttributePopup?.(coordinate);
   };
   mutableControl.handleMapSelect = (selection) => {
     if (isDuckDBIdentifyModeActive()) return;
     originalHandleMapSelect?.(selection);
   };
-  mutableControl.__geolibreSelectionPatched = true;
+  mutableControl.__geointSelectionPatched = true;
 }
 
 function isDuckDBIdentifyModeActive(): boolean {
@@ -648,7 +648,7 @@ function syncDuckDBControlSelection(layerId: string, index: number | null): void
   control.renderContent?.();
 }
 
-function syncDuckDBRenderedLayersFromStore(layers: GeoLibreLayer[]): void {
+function syncDuckDBRenderedLayersFromStore(layers: GeoIntLayer[]): void {
   duckdbLayerOrder.clear();
   layers
     .filter(isDuckDBQueryLayer)
@@ -680,7 +680,7 @@ function renderDuckDBCachedLayers(): void {
 
   patchDuckDBRenderer(renderer);
   const orderedLayers = getOrderedDuckDBRenderedLayers();
-  (renderer.__geolibreOriginalSetData ?? renderer.setData)?.(orderedLayers);
+  (renderer.__geointOriginalSetData ?? renderer.setData)?.(orderedLayers);
 }
 
 function getOrderedDuckDBRenderedLayers(): DuckDBRenderedLayerLike[] {
@@ -698,10 +698,10 @@ function compareDuckDBLayerOrder(
 }
 
 function patchDuckDBRenderer(renderer: DuckDBRendererLike | null | undefined) {
-  if (!renderer || renderer.__geolibreStylePatched) return;
+  if (!renderer || renderer.__geointStylePatched) return;
 
-  if (renderer.setData && !renderer.__geolibreOriginalSetData) {
-    renderer.__geolibreOriginalSetData = renderer.setData.bind(renderer);
+  if (renderer.setData && !renderer.__geointOriginalSetData) {
+    renderer.__geointOriginalSetData = renderer.setData.bind(renderer);
     renderer.setData = (layers: DuckDBRenderedLayerLike[]) => {
       // The control's own follow-up renders (feature select, pickable
       // toggle) pass only its current layer, which would wipe the other
@@ -711,7 +711,7 @@ function patchDuckDBRenderer(renderer: DuckDBRendererLike | null | undefined) {
         const cached = duckdbRenderedLayers.get(incoming.id);
         if (cached) cached.results = incoming.results;
       }
-      renderer.__geolibreOriginalSetData?.(getOrderedDuckDBRenderedLayers());
+      renderer.__geointOriginalSetData?.(getOrderedDuckDBRenderedLayers());
     };
   }
 
@@ -720,12 +720,12 @@ function patchDuckDBRenderer(renderer: DuckDBRendererLike | null | undefined) {
   // idempotent.
   if (!renderer.createLayers) return;
 
-  renderer.__geolibreOriginalCreateLayers = renderer.createLayers.bind(renderer);
+  renderer.__geointOriginalCreateLayers = renderer.createLayers.bind(renderer);
   renderer.createLayers = (layerId: string, result: DuckDBResultLike, index: number) => {
     const renderedStyle = duckdbRenderedStyles.get(layerId);
     if (renderedStyle && !renderedStyle.visible) return [];
 
-    const originalLayers = renderer.__geolibreOriginalCreateLayers?.(layerId, result, index);
+    const originalLayers = renderer.__geointOriginalCreateLayers?.(layerId, result, index);
     if (!originalLayers) return [];
 
     if (!renderedStyle) return originalLayers;
@@ -734,7 +734,7 @@ function patchDuckDBRenderer(renderer: DuckDBRendererLike | null | undefined) {
       cloneStyledDeckLayer(layerId, deckLayer, result.geometryType, renderedStyle),
     );
   };
-  renderer.__geolibreStylePatched = true;
+  renderer.__geointStylePatched = true;
 }
 
 function cloneStyledDeckLayer(
@@ -1119,7 +1119,7 @@ function createDuckDBQueryLayerId(baseId: string): string {
   return `${baseId}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-function createUniqueDuckDBLayerName(baseName: string, existingLayers: GeoLibreLayer[]): string {
+function createUniqueDuckDBLayerName(baseName: string, existingLayers: GeoIntLayer[]): string {
   const trimmedBaseName = baseName.trim() || "DuckDB query";
   const existingNames = new Set(existingLayers.map((layer) => layer.name));
   if (!existingNames.has(trimmedBaseName)) return trimmedBaseName;
@@ -1130,7 +1130,7 @@ function createUniqueDuckDBLayerName(baseName: string, existingLayers: GeoLibreL
   }
 }
 
-function duckdbLayerOrderSignature(layers: GeoLibreLayer[]): string {
+function duckdbLayerOrderSignature(layers: GeoIntLayer[]): string {
   return layers
     .filter(isDuckDBQueryLayer)
     .map((layer) => layer.id)

@@ -2,8 +2,8 @@ const SWIPE_STYLE_ID = "maplibre-gl-swipe-style-fixes";
 const SWIPE_SELECT_PROXY_CLASS = "swipe-select-proxy";
 const SWIPE_SELECT_MENU_CLASS = "swipe-select-menu";
 
-interface GeoLibreLayerLabelWindow extends Window {
-  __GEOLIBRE_LAYER_LABELS__?: Record<string, string>;
+interface GeoIntLayerLabelWindow extends Window {
+  __GEOINT_LAYER_LABELS__?: Record<string, string>;
 }
 
 const SWIPE_SELECT_FIXES = `
@@ -254,7 +254,7 @@ let swipeEnhanceFrame: number | null = null;
 const SWIPE_BASEMAP_LABEL = "Background";
 
 const getSwipeLayerLabel = (layerId: string): string => {
-  const labels = (window as GeoLibreLayerLabelWindow).__GEOLIBRE_LAYER_LABELS__;
+  const labels = (window as GeoIntLayerLabelWindow).__GEOINT_LAYER_LABELS__;
   if (layerId === "__basemap__") return labels?.[layerId] ?? SWIPE_BASEMAP_LABEL;
   return labels?.[layerId] ?? layerId;
 };
@@ -300,7 +300,7 @@ const scheduleEnhanceSwipePanel = () => {
 if (typeof document !== "undefined") {
   document.addEventListener("click", closeSwipeSelectMenu);
   window.addEventListener("resize", closeSwipeSelectMenu);
-  window.addEventListener("geolibre-layer-labels-change", scheduleEnhanceSwipePanel);
+  window.addEventListener("geoint-layer-labels-change", scheduleEnhanceSwipePanel);
   window.addEventListener(
     "scroll",
     (event) => {

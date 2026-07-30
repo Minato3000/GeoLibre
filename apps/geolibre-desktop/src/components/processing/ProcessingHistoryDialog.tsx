@@ -5,7 +5,7 @@ import {
   type RasterToolKind,
   type StatisticsToolKind,
   type VectorToolKind,
-} from "@geolibre/core";
+} from "@geoint/core";
 import { allAlgorithms } from "../../lib/scripting/scriptingApi";
 import {
   Button,
@@ -16,7 +16,7 @@ import {
   DialogTitle,
   ScrollArea,
   cn,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { Braces, CheckCircle2, FileCode2, Pencil, Play, Trash2, XCircle } from "lucide-react";
 import { useCallback, useMemo, useRef, useState, type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
@@ -72,7 +72,7 @@ function formatDuration(ms: number): string {
  * the tool dialogs and the scripting bridge, newest first. Each entry offers
  * Re-run (client tools, runs immediately), Edit & re-run (reopens the tool
  * dialog pre-filled), Copy parameters as JSON, and Copy as Python for tools
- * reachable from the `geolibre` Python API. History persists in the project
+ * reachable from the `geoint` Python API. History persists in the project
  * file, so a saved project documents how its derived layers were produced.
  */
 export function ProcessingHistoryDialog(): ReactElement {

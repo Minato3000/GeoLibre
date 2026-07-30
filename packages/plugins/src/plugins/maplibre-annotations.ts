@@ -1,7 +1,7 @@
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import type { Feature, FeatureCollection, Position } from "geojson";
 import type maplibregl from "maplibre-gl";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 
 /**
  * Annotation layer plugin: lightweight cartographic decoration (free text,
@@ -11,7 +11,7 @@ import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from 
  * editing engine. Instead this plugin draws with plain MapLibre interactions
  * and writes the result into a single tagged GeoJSON layer, so it renders
  * through the standard layer-sync path (and is therefore captured by the Print
- * layout and persisted in `.geolibre.json`) with no special rendering code.
+ * layout and persisted in `.geoint.json`) with no special rendering code.
  *
  * Annotation features carry simplestyle-spec properties (`stroke`, `fill`,
  * `stroke-width`, `fill-opacity`) so each shape keeps its own color/width via
@@ -27,9 +27,9 @@ const ANNOTATIONS_SOURCE_PATH = "annotations://layer";
 // a `text` property is drawn as a label rather than a circle.
 const TEXT_MARKER_SHAPE = "text_marker";
 
-const PREVIEW_SOURCE_ID = "geolibre-annotation-preview";
-const PREVIEW_FILL_LAYER_ID = "geolibre-annotation-preview-fill";
-const PREVIEW_LINE_LAYER_ID = "geolibre-annotation-preview-line";
+const PREVIEW_SOURCE_ID = "geoint-annotation-preview";
+const PREVIEW_FILL_LAYER_ID = "geoint-annotation-preview-fill";
+const PREVIEW_LINE_LAYER_ID = "geoint-annotation-preview-line";
 
 const DEFAULT_COLOR = "#ef4444";
 const DEFAULT_WIDTH = 3;
@@ -47,9 +47,9 @@ type AnnotationTool = "text" | "arrow" | "rectangle" | "ellipse" | "freehand";
 // fine for the single-map desktop/web/embed builds; it would need per-instance
 // state to support several independent maps on one page (e.g. a multi-cell
 // notebook), which is not a target for this first version.
-let annotationsPosition: GeoLibreMapControlPosition = "top-left";
+let annotationsPosition: GeoIntMapControlPosition = "top-left";
 let toolbarControl: AnnotationToolbarControl | null = null;
-let appApi: GeoLibreAppAPI | null = null;
+let appApi: GeoIntAppAPI | null = null;
 let pluginActive = false;
 let activeTool: AnnotationTool | null = null;
 let strokeColor = DEFAULT_COLOR;
@@ -66,11 +66,11 @@ let activeTextInput: HTMLInputElement | null = null;
 // Idempotent finisher for the open text input (commits or discards once).
 let finishTextInput: ((save: boolean) => void) | null = null;
 
-export const maplibreAnnotationsPlugin: GeoLibrePlugin = {
+export const maplibreAnnotationsPlugin: GeoIntPlugin = {
   id: "maplibre-gl-annotations",
   name: "Annotations",
   version: "0.1.0",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     appApi = app;
     pluginActive = true;
 
@@ -87,7 +87,7 @@ export const maplibreAnnotationsPlugin: GeoLibrePlugin = {
     if (map) bindMap(map);
     rediscoverAnnotationLayer();
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     setActiveTool(null);
     cancelTextInput();
     unbindMap();
@@ -102,7 +102,7 @@ export const maplibreAnnotationsPlugin: GeoLibrePlugin = {
     appApi = null;
   },
   getMapControlPosition: () => annotationsPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     if (!toolbarControl) {
       annotationsPosition = position;
       return;
@@ -220,13 +220,13 @@ class AnnotationToolbarControl implements maplibregl.IControl {
 
   onAdd(): HTMLElement {
     const container = document.createElement("div");
-    container.className = "maplibregl-ctrl maplibregl-ctrl-group geolibre-annotations-control";
+    container.className = "maplibregl-ctrl maplibregl-ctrl-group geoint-annotations-control";
     this.relabelers = [() => container.setAttribute("aria-label", labels.toolbar)];
 
     for (const tool of TOOL_ORDER) {
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "geolibre-annotations-tool";
+      button.className = "geoint-annotations-tool";
       button.innerHTML = TOOL_ICONS[tool];
       button.addEventListener("click", () => {
         setActiveTool(activeTool === tool ? null : tool);
@@ -238,7 +238,7 @@ class AnnotationToolbarControl implements maplibregl.IControl {
 
     const color = document.createElement("input");
     color.type = "color";
-    color.className = "geolibre-annotations-color";
+    color.className = "geoint-annotations-color";
     color.value = strokeColor;
     color.addEventListener("input", () => {
       strokeColor = color.value;
@@ -252,7 +252,7 @@ class AnnotationToolbarControl implements maplibregl.IControl {
     // toolbar). The line in the icon thickens with the selected width.
     const width = document.createElement("button");
     width.type = "button";
-    width.className = "geolibre-annotations-width";
+    width.className = "geoint-annotations-width";
     const renderWidth = () => {
       const display = strokeWidth <= 2 ? 2 : strokeWidth >= 5 ? 6 : 4;
       width.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="${display}" stroke-linecap="round"><line x1="4" y1="12" x2="20" y2="12"/></svg>`;
@@ -315,7 +315,7 @@ class AnnotationToolbarControl implements maplibregl.IControl {
   ): HTMLButtonElement {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "geolibre-annotations-action";
+    button.className = "geoint-annotations-action";
     button.innerHTML = icon;
     button.addEventListener("click", onClick);
     this.applyLabel(button, getLabel);
@@ -565,7 +565,7 @@ function openTextInput(event: maplibregl.MapMouseEvent): void {
   const lngLat = event.lngLat;
   const input = document.createElement("input");
   input.type = "text";
-  input.className = "geolibre-annotation-text-input";
+  input.className = "geoint-annotation-text-input";
   input.placeholder = labels.textPlaceholder;
   input.style.position = "absolute";
   input.style.left = `${event.point.x}px`;
@@ -869,11 +869,11 @@ function clearPreview(map: maplibregl.Map): void {
 // Store integration
 // ---------------------------------------------------------------------------
 
-function isAnnotationLayer(layer: GeoLibreLayer): boolean {
+function isAnnotationLayer(layer: GeoIntLayer): boolean {
   return layer.metadata.sourceKind === ANNOTATIONS_SOURCE_KIND;
 }
 
-function findAnnotationLayer(layers: GeoLibreLayer[]): GeoLibreLayer | undefined {
+function findAnnotationLayer(layers: GeoIntLayer[]): GeoIntLayer | undefined {
   if (annotationLayerId) {
     const tracked = layers.find((layer) => layer.id === annotationLayerId);
     // Verify the tracked layer is still an annotation layer: after a project
@@ -911,7 +911,7 @@ function appendAnnotationFeatures(features: Feature[]): void {
   // carry their own `text-color`, shapes/arrows their own stroke/fill, so no
   // layer-level color needs setting here.
   const id = crypto.randomUUID();
-  const layer: GeoLibreLayer = {
+  const layer: GeoIntLayer = {
     id,
     name: labels.layerName,
     type: "geojson",

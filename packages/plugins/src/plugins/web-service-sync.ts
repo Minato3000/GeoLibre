@@ -1,4 +1,4 @@
-import { DEFAULT_LAYER_STYLE, useAppStore, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, useAppStore, type GeoIntLayer } from "@geoint/core";
 
 /**
  * Shared store-sync engine for the Web Services plugins (FEMA NFHL, NASA
@@ -6,9 +6,9 @@ import { DEFAULT_LAYER_STYLE, useAppStore, type GeoLibreLayer } from "@geolibre/
  *
  * Each of those packages ships a panel control that adds raster layers
  * directly to the maplibre map. The engine mirrors those native layers into
- * the GeoLibre layer store so they show up in the Layers panel, persist in
+ * the GeoInt layer store so they show up in the Layers panel, persist in
  * projects, and survive style reloads (rebuilt by the
- * `syncWebServiceTileRasterLayer` branch in `@geolibre/map`'s layer-sync).
+ * `syncWebServiceTileRasterLayer` branch in `@geoint/map`'s layer-sync).
  *
  * Sync is bidirectional:
  * - control events reconcile control state into the store (add/update/remove)
@@ -19,7 +19,7 @@ import { DEFAULT_LAYER_STYLE, useAppStore, type GeoLibreLayer } from "@geolibre/
 /**
  * Plugin ids grouped under the Plugins menu's "Web Services" submenu.
  * The corresponding store-layer `metadata.sourceKind` values live in
- * WEB_SERVICE_SOURCE_KINDS in `@geolibre/map`'s layer-sync, which rebuilds
+ * WEB_SERVICE_SOURCE_KINDS in `@geoint/map`'s layer-sync, which rebuilds
  * these layers after style reloads.
  */
 export const WEB_SERVICE_PLUGIN_IDS = [
@@ -29,7 +29,7 @@ export const WEB_SERVICE_PLUGIN_IDS = [
   "maplibre-gl-national-map",
   "maplibre-gl-earthdata-gis",
   "maplibre-gl-openaerialmap",
-  "geolibre-stac-catalogs",
+  "geoint-stac-catalogs",
   "maplibre-gl-source-coop",
   "maplibre-gl-natural-earth",
   "maplibre-gl-huggingface",
@@ -40,7 +40,7 @@ export const WEB_SERVICE_PLUGIN_IDS = [
 export interface WebServiceLayerEntry {
   /** Store layer id. Must equal the control's native maplibre layer id. */
   id: string;
-  /** Display name shown in the GeoLibre Layers panel. */
+  /** Display name shown in the GeoInt Layers panel. */
   name: string;
   /** The control's native maplibre source id. */
   sourceId: string;
@@ -79,7 +79,7 @@ export interface WebServiceAdapter<C> {
    * panel lists them again. May complete asynchronously; the control's own
    * events drive the follow-up reconcile.
    */
-  adopt: (control: C, layers: GeoLibreLayer[]) => void;
+  adopt: (control: C, layers: GeoIntLayer[]) => void;
 }
 
 export interface WebServiceStoreSync<C> {
@@ -253,13 +253,13 @@ export function createWebServiceStoreSync<C>(
 }
 
 /**
- * Builds the GeoLibre store layer for one active web service entry.
+ * Builds the GeoInt store layer for one active web service entry.
  *
  * @param sourceKind - The adapter's `metadata.sourceKind`
  * @param entry - The active layer reported by the control
  * @returns The store layer mirroring the control's native layer
  */
-export function createStoreLayer(sourceKind: string, entry: WebServiceLayerEntry): GeoLibreLayer {
+export function createStoreLayer(sourceKind: string, entry: WebServiceLayerEntry): GeoIntLayer {
   return {
     id: entry.id,
     name: entry.name,
@@ -290,7 +290,7 @@ export function createStoreLayer(sourceKind: string, entry: WebServiceLayerEntry
   };
 }
 
-function shouldUpdateStoreLayer(existingLayer: GeoLibreLayer, nextLayer: GeoLibreLayer): boolean {
+function shouldUpdateStoreLayer(existingLayer: GeoIntLayer, nextLayer: GeoIntLayer): boolean {
   return (
     existingLayer.type !== nextLayer.type ||
     existingLayer.name !== nextLayer.name ||
@@ -354,11 +354,11 @@ export function readNativeRasterSource(
   return { tiles, source };
 }
 
-// Mirrors WMS_PROXY_PATH in @geolibre/map's layer-sync. In dev the map's
+// Mirrors WMS_PROXY_PATH in @geoint/map's layer-sync. In dev the map's
 // native sources can carry proxied tile URLs; those must be unwrapped before
 // they are persisted into store layers, or project files would record
 // dev-only proxy URLs (and re-proxying would nest them).
-const WMS_PROXY_PREFIX = "/__geolibre_wms_proxy?url=";
+const WMS_PROXY_PREFIX = "/__geoint_wms_proxy?url=";
 
 function unproxyWmsTileUrl(tile: string): string {
   if (!tile.startsWith(WMS_PROXY_PREFIX)) return tile;
@@ -370,7 +370,7 @@ function unproxyWmsTileUrl(tile: string): string {
 }
 
 /**
- * Picks the GeoLibre layer type for a set of tile templates. Templates with
+ * Picks the GeoInt layer type for a set of tile templates. Templates with
  * a `{bbox-epsg-3857}` placeholder are WMS-style exports that need the dev
  * proxy; everything else is a plain XYZ raster.
  *

@@ -20,7 +20,7 @@
  *
  * The metadata endpoint itself is only CORS-enabled for the official OAM web app
  * origin, so a plain browser fetch from another origin may be blocked. On the
- * GeoLibre desktop app the plugin routes the request through the native
+ * GeoInt desktop app the plugin routes the request through the native
  * (CORS-bypassing) fetch; on the web build a proxy is required.
  */
 

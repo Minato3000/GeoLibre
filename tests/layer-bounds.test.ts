@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import { getLayerBounds } from "../packages/map/src/geojson-loader";
 
-function layerWith(features: GeoLibreLayer["geojson"]): GeoLibreLayer {
+function layerWith(features: GeoIntLayer["geojson"]): GeoIntLayer {
   return {
     id: "layer-1",
     name: "Test",
@@ -13,7 +13,7 @@ function layerWith(features: GeoLibreLayer["geojson"]): GeoLibreLayer {
     source: { type: "geojson", url: "" },
     metadata: {},
     geojson: features,
-  } as unknown as GeoLibreLayer;
+  } as unknown as GeoIntLayer;
 }
 
 describe("getLayerBounds", () => {

@@ -35,10 +35,10 @@ export interface TimeWindow {
 }
 
 /**
- * The persisted configuration that binds a GeoLibre vector layer to the Time
+ * The persisted configuration that binds a GeoInt vector layer to the Time
  * Slider. Stored on `layer.metadata.timeBinding` so it survives a project
  * round-trip; the live filter it produces is transient (see
- * `GeoLibreLayer.timeFilter`).
+ * `GeoIntLayer.timeFilter`).
  */
 export interface TimeBinding {
   /** Feature property holding the timestamp. */
@@ -431,7 +431,7 @@ export function addGranularityUnits(date: Date, unit: TimeGranularity, amount: n
  *
  * @param binding - The layer's time binding.
  * @param date - The timeline's current date.
- * @returns A MapLibre filter expression (assignable to `GeoLibreLayer.timeFilter`).
+ * @returns A MapLibre filter expression (assignable to `GeoIntLayer.timeFilter`).
  */
 export function buildTimeFilter(binding: TimeBinding, date: Date): unknown[] {
   const { window, property, valueKind } = binding;

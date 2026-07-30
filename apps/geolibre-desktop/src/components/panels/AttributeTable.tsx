@@ -7,15 +7,15 @@ import {
   type AttributeFormConfig,
   type AttributeFormFieldConfig,
   type AttributeFormFieldError,
-} from "@geolibre/core";
+} from "@geoint/core";
 import {
   getDuckDBLayerRows,
   getGeometryEditTargetLayerId,
   subscribeGeometryEdit,
   updateDuckDBLayerRows,
   type DuckDBAttributeRow,
-} from "@geolibre/plugins";
-import type { MapController } from "@geolibre/map";
+} from "@geoint/plugins";
+import type { MapController } from "@geoint/map";
 import type { GeoJSONSource } from "maplibre-gl";
 import {
   Button,
@@ -41,7 +41,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { Feature, FeatureCollection } from "geojson";
 import {
@@ -1696,7 +1696,7 @@ export function AttributeTable({ mapControllerRef }: AttributeTableProps) {
           />
           {t("attributeTable.zoomToSelection")}
         </label>
-        {/* A native <select> (not the @geolibre/ui Select, which hardcodes h-9
+        {/* A native <select> (not the @geoint/ui Select, which hardcodes h-9
             and w-full) so it matches the h-7 toolbar and self-sizes to its
             content instead of clipping the longest label. */}
         <select

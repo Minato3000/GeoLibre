@@ -22,7 +22,7 @@ import type { LayerVirtualField } from "./types";
  * properties.
  *
  * Expressions are declarative MapLibre expressions compiled through the
- * style spec — never arbitrary code — so persisting them in `.geolibre.json`
+ * style spec — never arbitrary code — so persisting them in `.geoint.json`
  * and re-evaluating them on project load is safe (unlike the attribute
  * table's Field Calculator, whose JavaScript evaluator must never run
  * persisted expressions). Fields apply in list order and each sees the

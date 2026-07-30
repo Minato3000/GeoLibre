@@ -3,10 +3,10 @@
  * circle / line stroke / polygon square / raster glyph), sized proportional
  * symbols, point-marker previews, and continuous gradient bars.
  *
- * Adapted from the GeoLens viewer legend design (Apache-2.0) to GeoLibre's
+ * Adapted from the GeoLens viewer legend design (Apache-2.0) to GeoInt's
  * layer model.
  */
-import { drawMarkerPath, type MarkerShape } from "@geolibre/core";
+import { drawMarkerPath, type MarkerShape } from "@geoint/core";
 import { Image as RasterIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 import type { LayerSwatchShape } from "../../lib/layer-swatch";

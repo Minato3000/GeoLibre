@@ -1,6 +1,6 @@
-import { useAppStore } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
-import { Button, Textarea } from "@geolibre/ui";
+import { useAppStore } from "@geoint/core";
+import type { MapController } from "@geoint/map";
+import { Button, Textarea } from "@geoint/ui";
 import {
   ChevronDown,
   ChevronUp,
@@ -54,12 +54,12 @@ interface PythonConsolePanelProps {
 
 /**
  * The in-app Python Console: a bottom-docked, resizable panel that runs Python
- * via main-thread Pyodide and exposes a `geolibre` object that drives the live
+ * via main-thread Pyodide and exposes a `geoint` object that drives the live
  * app. A "Show Editor" toggle splits in a script editor (left) that shares the
  * same interpreter, à la QGIS. Rendered only while open.
  *
  * @param mapControllerRef - Ref to the live map controller, read lazily by the
- *   Pyodide `geolibre` facade so Python can drive the current map.
+ *   Pyodide `geoint` facade so Python can drive the current map.
  */
 export function PythonConsolePanel({ mapControllerRef }: PythonConsolePanelProps) {
   const { t } = useTranslation();

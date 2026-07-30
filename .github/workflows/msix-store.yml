@@ -39,7 +39,7 @@ jobs:
           # Strip the in-app "Check for updates" flow from this Store-only build
           # so the package updates solely through the Store (Microsoft policy
           # 10.2.5). Set only here — the release.yml installers keep the updater.
-          GEOLIBRE_STORE_BUILD: "1"
+          GEOINT_STORE_BUILD: "1"
         run: npm run tauri:build -- --no-sign
 
       - name: Build MSIX package
@@ -50,6 +50,6 @@ jobs:
       - name: Upload MSIX artifact
         uses: actions/upload-artifact@v7
         with:
-          name: geolibre-store-msix
+          name: geoint-store-msix
           path: ${{ steps.build_msix.outputs.msix_path }}
           if-no-files-found: error

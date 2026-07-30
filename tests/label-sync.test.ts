@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, type LabelStyle } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, type LabelStyle } from "@geoint/core";
 import { syncLayer } from "../packages/map/src/layer-sync";
 
 // Stateful fake MapLibre map (mirrors point-renderer-sync.test.ts) so a test can
@@ -51,7 +51,7 @@ function makeMap() {
 
 type Geom = "point" | "line";
 
-function labeledLayer(labelPatch: Partial<LabelStyle>, geometry: Geom = "point"): GeoLibreLayer {
+function labeledLayer(labelPatch: Partial<LabelStyle>, geometry: Geom = "point"): GeoIntLayer {
   const coords =
     geometry === "line"
       ? {
@@ -234,7 +234,7 @@ describe("label sync", () => {
     assert.equal(label.layout["text-transform"], "uppercase");
   });
 
-  function colocatedPointLayer(labelPatch: Partial<LabelStyle>): GeoLibreLayer {
+  function colocatedPointLayer(labelPatch: Partial<LabelStyle>): GeoIntLayer {
     return {
       id: "lyr",
       name: "Layer",
@@ -280,7 +280,7 @@ describe("label sync", () => {
     };
     assert.ok(sources.has(LABEL_SOURCE_ID), "dedup source should exist");
     assert.equal(label.source, LABEL_SOURCE_ID);
-    assert.deepEqual(label.layout["text-field"], ["get", "__geolibre_label"]);
+    assert.deepEqual(label.layout["text-field"], ["get", "__geoint_label"]);
     const data = (sources.get(LABEL_SOURCE_ID) as { data: GeoJSON.FeatureCollection }).data;
     assert.equal(data.features.length, 1);
   });
@@ -304,7 +304,7 @@ describe("label sync", () => {
 
   it("does not dedup a mixed-geometry layer (would drop non-point labels)", () => {
     const { map, layers, sources } = makeMap();
-    const mixed: GeoLibreLayer = {
+    const mixed: GeoIntLayer = {
       id: "lyr",
       name: "Layer",
       type: "geojson",

@@ -1,4 +1,4 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 import {
   DuckDBDataProtocol,
@@ -22,11 +22,11 @@ import { GDAL_AUTO_FID_COLUMN, stripAutoFidColumn } from "./duckdb-geometry";
 // GeoJSON for the "Add as layer" / export paths without disturbing the columns
 // the user sees in the results grid. This is a reserved name: a user column of
 // the same name is filtered out of both the grid and the GeoJSON properties.
-export const GEOMETRY_JSON_COLUMN = "__geolibre_sql_geometry_geojson";
+export const GEOMETRY_JSON_COLUMN = "__geoint_sql_geometry_geojson";
 
 // Reserved alias wrapping the user's statement when geometry is detected; kept
 // deliberately obscure so it does not collide with a user's own CTE/subquery.
-const SQL_SUBQUERY_ALIAS = "__geolibre_sql_subquery";
+const SQL_SUBQUERY_ALIAS = "__geoint_sql_subquery";
 
 // DuckDB reserved keywords cannot be used as unquoted identifiers, so a layer
 // named e.g. "Group" would sanitize to `group` and break `SELECT * FROM group`.
@@ -262,9 +262,9 @@ function sanitizeTableName(layerName: string, layerId: string): string {
  * names cannot drift.
  */
 export function assignTableNames(
-  layers: GeoLibreLayer[],
-): Array<{ layer: GeoLibreLayer; tableName: string }> {
-  const assigned: Array<{ layer: GeoLibreLayer; tableName: string }> = [];
+  layers: GeoIntLayer[],
+): Array<{ layer: GeoIntLayer; tableName: string }> {
+  const assigned: Array<{ layer: GeoIntLayer; tableName: string }> = [];
   const usedNames = new Set<string>();
   for (const layer of layers) {
     if (!layer.geojson) continue;
@@ -289,7 +289,7 @@ export function assignTableNames(
  * @param layers Current app layers; those without `geojson` are skipped.
  * @returns The tables, in the same order and naming as registration.
  */
-export function previewLayerTables(layers: GeoLibreLayer[]): SqlWorkspaceTable[] {
+export function previewLayerTables(layers: GeoIntLayer[]): SqlWorkspaceTable[] {
   return assignTableNames(layers).map(({ layer, tableName }) => ({
     tableName,
     layerName: layer.name,
@@ -329,7 +329,7 @@ const COLUMN_SCAN_FEATURE_LIMIT = 50;
  * @returns Table name and its column names, in the same naming as registration.
  */
 export function previewLayerColumns(
-  layers: GeoLibreLayer[],
+  layers: GeoIntLayer[],
   geometryColumn: string = DEFAULT_LAYER_GEOMETRY_COLUMN,
 ): SqlWorkspaceTableColumns[] {
   return assignTableNames(layers).map(({ layer, tableName }) => {
@@ -382,7 +382,7 @@ export function previewLayerColumns(
 export async function registerLayerTables(
   db: AsyncDuckDB,
   connection: AsyncDuckDBConnection,
-  layers: GeoLibreLayer[],
+  layers: GeoIntLayer[],
   filePrefix: string,
   registeredFiles?: string[],
 ): Promise<SqlWorkspaceTable[]> {
@@ -749,7 +749,7 @@ export function rowsToFeatureCollection(
  * @returns Columns, rows, row count, geometry column name, and GeoJSON result.
  * @throws Whatever DuckDB throws for invalid SQL (surfaced to the caller).
  */
-export async function runSqlQuery(sql: string, layers: GeoLibreLayer[]): Promise<SqlQueryResult> {
+export async function runSqlQuery(sql: string, layers: GeoIntLayer[]): Promise<SqlQueryResult> {
   // Strip a trailing semicolon and any trailing comment (literal-aware) so the
   // statement can be wrapped in the geometry-detection subquery `... FROM
   // (<sql>) AS ...` without the terminator or a line comment breaking it.
@@ -836,7 +836,7 @@ function statementHasRemoteReader(statement: string): boolean {
  */
 async function runSqlStatementOnce(
   rewritten: string,
-  layers: GeoLibreLayer[],
+  layers: GeoIntLayer[],
   db: AsyncDuckDB,
 ): Promise<SqlQueryResult> {
   const connection = await db.connect();
@@ -844,7 +844,7 @@ async function runSqlStatementOnce(
   // or drop one another's VFS files. Populated by registerLayerTables and
   // registerRemoteSources as they create handles so cleanup matches exactly
   // what was registered.
-  const filePrefix = `__geolibre_sql_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+  const filePrefix = `__geoint_sql_${Date.now()}_${Math.random().toString(36).slice(2)}`;
   const registeredFiles: string[] = [];
 
   try {

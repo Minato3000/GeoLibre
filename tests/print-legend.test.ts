@@ -2,7 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
   DEFAULT_LEGEND_CONFIG,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerStyle,
   type LegendConfig,
 } from "../packages/core/src/types";
@@ -19,7 +19,7 @@ function config(overrides: Partial<LegendConfig> = {}): LegendConfig {
   return { ...DEFAULT_LEGEND_CONFIG, order: [], overrides: {}, ...overrides };
 }
 
-function makeLayer(overrides: Partial<GeoLibreLayer>): GeoLibreLayer {
+function makeLayer(overrides: Partial<GeoIntLayer>): GeoIntLayer {
   return {
     id: "layer-1",
     name: "Layer 1",
@@ -30,7 +30,7 @@ function makeLayer(overrides: Partial<GeoLibreLayer>): GeoLibreLayer {
     style: {} as LayerStyle,
     metadata: {},
     ...overrides,
-  } as unknown as GeoLibreLayer;
+  } as unknown as GeoIntLayer;
 }
 
 describe("buildLegend rule-based swatches", () => {

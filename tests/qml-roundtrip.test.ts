@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type LayerStyle, type VectorRule } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type LayerStyle, type VectorRule } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import { buildQml, type QmlExportableLayer } from "../packages/map/src/qml-export";
 import { applyQmlImport, parseQml } from "../packages/map/src/qml-import";

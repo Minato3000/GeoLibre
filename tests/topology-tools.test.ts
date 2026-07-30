@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { after, before, describe, it } from "node:test";
 import type { FeatureCollection } from "geojson";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import type { DuckDbCapability, ProcessingContext } from "../packages/processing/src/types";
 import {
   IDX_PROPERTY,
@@ -22,7 +22,7 @@ import {
   tagFeatureIndexes,
 } from "../packages/processing/src/topology-tools";
 
-function layerOf(fc: FeatureCollection, id = "layer-1"): GeoLibreLayer {
+function layerOf(fc: FeatureCollection, id = "layer-1"): GeoIntLayer {
   return {
     id,
     name: id,

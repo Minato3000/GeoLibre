@@ -1,6 +1,6 @@
-import { useAppStore } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
-import { Button, cn, Input, Label, Select } from "@geolibre/ui";
+import { useAppStore } from "@geoint/core";
+import type { MapController } from "@geoint/map";
+import { Button, cn, Input, Label, Select } from "@geoint/ui";
 import {
   ArrowDown,
   ArrowUp,

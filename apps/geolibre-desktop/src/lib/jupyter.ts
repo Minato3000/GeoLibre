@@ -67,6 +67,6 @@ export async function stopJupyterServer(): Promise<void> {
 
 function assertTauri(): void {
   if (!isTauri()) {
-    throw new Error("Running a Jupyter server requires GeoLibre Desktop.");
+    throw new Error("Running a Jupyter server requires GeoInt Desktop.");
   }
 }

@@ -1,5 +1,5 @@
 // CDN PGlite loader: used only by the embed (Jupyter wheel) build, which aliases
-// `./pglite-loader` to this module when GEOLIBRE_PGLITE_CDN=1 (see vite.config.ts).
+// `./pglite-loader` to this module when GEOINT_PGLITE_CDN=1 (see vite.config.ts).
 // It fetches PGlite and its PostGIS extension from jsDelivr at runtime instead of
 // vendoring their ~25 MB of WASM/data/postgis.tar into the wheel. PGlite resolves
 // its own .wasm/.data/postgis.tar relative to the loaded module URL, so the pinned
@@ -24,7 +24,7 @@ export async function loadPgliteModules(): Promise<PgliteModules> {
   if (!__PGLITE_CDN_URL__ || !__PGLITE_POSTGIS_CDN_URL__) {
     throw new Error(
       "PGlite CDN URLs were not injected. This loader is only meant for the " +
-        "embed build (GEOLIBRE_PGLITE_CDN=1).",
+        "embed build (GEOINT_PGLITE_CDN=1).",
     );
   }
   let modules: { PGlite: unknown; postgis: unknown };
@@ -44,7 +44,7 @@ export async function loadPgliteModules(): Promise<PgliteModules> {
     // failure is diagnosable.
     throw new Error(
       "Could not load the PostGIS SQL engine from the CDN. The embedded " +
-        "GeoLibre app fetches PGlite from jsDelivr on first use, so this " +
+        "GeoInt app fetches PGlite from jsDelivr on first use, so this " +
         "feature needs network access and a Content-Security-Policy that " +
         "allows loading scripts from cdn.jsdelivr.net.",
       { cause: err },

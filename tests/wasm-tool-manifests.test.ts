@@ -7,7 +7,7 @@ import {
   normalizeVectorOutputFormat,
   type ToolManifest,
   type WhiteboxTool,
-} from "@geolibre/processing";
+} from "@geoint/processing";
 
 // The Whitebox catalog snapshot (from the Python sidecar) names reproject_vector's
 // destination-CRS parameter `dst_epsg` and carries sidecar-only extras. The WASM
@@ -37,10 +37,10 @@ const wasmReprojectVector: WhiteboxTool = {
   ],
 };
 
-const geolibreOnlyTool: WhiteboxTool = {
+const geointOnlyTool: WhiteboxTool = {
   id: "write_geoparquet",
   display_name: "Write GeoParquet",
-  source: "geolibre",
+  source: "geoint",
   params: [{ name: "input", data_kind: "vector", io_role: "input" }],
 };
 
@@ -67,14 +67,14 @@ describe("mergeWasmToolManifests", () => {
     );
   });
 
-  it("appends GeoLibre-authored tools absent from the catalog", () => {
+  it("appends GeoInt-authored tools absent from the catalog", () => {
     const merged = mergeWasmToolManifests(
       [catalogReprojectVector],
-      [wasmReprojectVector, geolibreOnlyTool],
+      [wasmReprojectVector, geointOnlyTool],
     );
     assert.ok(
       merged.some((tool) => tool.id === "write_geoparquet"),
-      "GeoLibre-only tool should be appended",
+      "GeoInt-only tool should be appended",
     );
     // The WASM whitebox match is consumed, not duplicated as a WASM-only entry.
     assert.equal(merged.filter((tool) => tool.id === "reproject_vector").length, 1);
@@ -104,10 +104,10 @@ describe("mergeWasmToolManifests", () => {
     assert.equal(merged.filter((tool) => tool.id === "reproject_vector").length, 1);
   });
 
-  it("consumes a matched GeoLibre tool once and preserves its source", () => {
-    // A GeoLibre-authored tool that also has a catalog stub must be merged once
-    // (never appended a second time via the GeoLibre-only leftovers), take the
-    // WASM manifest's params, and keep its "geolibre" source so the source
+  it("consumes a matched GeoInt tool once and preserves its source", () => {
+    // A GeoInt-authored tool that also has a catalog stub must be merged once
+    // (never appended a second time via the GeoInt-only leftovers), take the
+    // WASM manifest's params, and keep its "geoint" source so the source
     // filter still recognises it.
     const catalogStub: WhiteboxTool = {
       id: "write_geoparquet",
@@ -116,7 +116,7 @@ describe("mergeWasmToolManifests", () => {
     };
     const wasmTool: WhiteboxTool = {
       id: "write_geoparquet",
-      source: "geolibre",
+      source: "geoint",
       params: [
         { name: "input", data_kind: "vector", io_role: "input" },
         { name: "compression", data_kind: "string" },
@@ -128,7 +128,7 @@ describe("mergeWasmToolManifests", () => {
       merged[0].params?.map((param) => param.name),
       ["input", "compression"],
     );
-    assert.equal(merged[0].source, "geolibre");
+    assert.equal(merged[0].source, "geoint");
     // Catalog display metadata is retained.
     assert.equal(merged[0].display_name, "Write GeoParquet");
   });
@@ -241,7 +241,7 @@ describe("mergeWasmToolManifests", () => {
   });
 
   it("appends a WASM-only Whitebox tool even when the catalog is empty", () => {
-    // This used to assert the opposite: only `source: "geolibre"` leftovers were
+    // This used to assert the opposite: only `source: "geoint"` leftovers were
     // appended, on the assumption that every Whitebox tool worth listing was in
     // the catalog snapshot. It is not — the WASM ships buffer_vector, the
     // variogram/cokriging tools and the >=/<= comparisons, which the snapshot

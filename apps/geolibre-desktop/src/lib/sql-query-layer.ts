@@ -1,5 +1,5 @@
 import type { FeatureCollection } from "geojson";
-import { SQL_QUERY_SOURCE_KIND, type GeoLibreLayer } from "@geolibre/core";
+import { SQL_QUERY_SOURCE_KIND, type GeoIntLayer } from "@geoint/core";
 
 /**
  * Live SQL query layers (issue #1295): GeoJSON-backed layers whose features are
@@ -49,7 +49,7 @@ export function sqlQueryLayerMetadata(sql: string): Record<string, unknown> {
  * @returns The validated config, or null when the layer is not a query layer.
  */
 export function getSqlQueryLayerConfig(
-  layer: Pick<GeoLibreLayer, "metadata">,
+  layer: Pick<GeoIntLayer, "metadata">,
 ): SqlQueryLayerConfig | null {
   if (layer.metadata.sourceKind !== SQL_QUERY_SOURCE_KIND) return null;
   const candidate = layer.metadata.sqlQuery;
@@ -69,7 +69,7 @@ export function getSqlQueryLayerConfig(
  * @param layer The candidate layer.
  * @returns Whether the layer refreshes by re-executing its SQL.
  */
-export function isSqlQueryLayer(layer: Pick<GeoLibreLayer, "metadata" | "type">): boolean {
+export function isSqlQueryLayer(layer: Pick<GeoIntLayer, "metadata" | "type">): boolean {
   return layer.type === "geojson" && getSqlQueryLayerConfig(layer) !== null;
 }
 
@@ -85,9 +85,9 @@ export function isSqlQueryLayer(layer: Pick<GeoLibreLayer, "metadata" | "type">)
  * @returns The layers to expose as queryable tables.
  */
 export function sourceLayersForQueryRefresh(
-  layer: Pick<GeoLibreLayer, "id">,
-  layers: GeoLibreLayer[],
-): GeoLibreLayer[] {
+  layer: Pick<GeoIntLayer, "id">,
+  layers: GeoIntLayer[],
+): GeoIntLayer[] {
   return layers.filter((candidate) => candidate.id !== layer.id);
 }
 
@@ -111,8 +111,8 @@ export function sourceLayersForQueryRefresh(
  *   geometry column (e.g. after a source schema change).
  */
 export async function refreshSqlQueryLayer(
-  layer: GeoLibreLayer,
-  layers: GeoLibreLayer[],
+  layer: GeoIntLayer,
+  layers: GeoIntLayer[],
 ): Promise<{ geojson: FeatureCollection; featureCount: number }> {
   const config = getSqlQueryLayerConfig(layer);
   if (!config) {

@@ -1,11 +1,11 @@
-import { useAppStore } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
-import { fetchPostgisStatus, listPostgisTables } from "@geolibre/processing";
-import { Input, ScrollArea } from "@geolibre/ui";
+import { useAppStore } from "@geoint/core";
+import type { MapController } from "@geoint/map";
+import { fetchPostgisStatus, listPostgisTables } from "@geoint/processing";
+import { Input, ScrollArea } from "@geoint/ui";
 import { Search } from "lucide-react";
 import { useCallback, useMemo, useRef, useState, type KeyboardEvent, type RefObject } from "react";
 import { useTranslation } from "react-i18next";
-import { startGeoLibreSidecar } from "../../lib/sidecar";
+import { startGeoIntSidecar } from "../../lib/sidecar";
 import { isLoadableFilePath, isTauri, listDirectory, pickLocalDirectory } from "../../lib/tauri-io";
 import { pinFolder, unpinFolder } from "../../lib/browser-folders";
 import { addFavorite, isFavoritableKind, removeFavorite } from "../../lib/browser-favorites";
@@ -118,8 +118,8 @@ export function BrowserPanel({
       if (connFetchedRef.current.has(connectionString)) return;
       connFetchedRef.current.add(connectionString);
       // PostGIS browsing needs the desktop sidecar/Martin; off-Tauri, show the
-      // same localized "requires GeoLibre Desktop" message the Add Data dialog
-      // gives rather than letting startGeoLibreSidecar/fetch fail with a raw
+      // same localized "requires GeoInt Desktop" message the Add Data dialog
+      // gives rather than letting startGeoIntSidecar/fetch fail with a raw
       // network error. Dropped from the fetched set so it can retry on desktop.
       if (!isTauri()) {
         connFetchedRef.current.delete(connectionString);
@@ -137,10 +137,10 @@ export function BrowserPanel({
         [connectionString]: { status: "loading" },
       }));
       // The desktop sidecar is spawned on demand and only authenticated after
-      // startGeoLibreSidecar runs, so ensure it is up before hitting /postgis —
+      // startGeoIntSidecar runs, so ensure it is up before hitting /postgis —
       // best-effort, mirroring PostgresSource.handleConnectEditable (a failed
       // start still lets the status/list calls surface the real error).
-      void startGeoLibreSidecar()
+      void startGeoIntSidecar()
         .catch(() => {})
         .then(() => fetchPostgisStatus())
         .then((status) => {

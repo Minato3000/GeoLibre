@@ -8,12 +8,12 @@
 
 import {
   DEFAULT_LAYER_STYLE,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   hasSimpleStyleProperties,
   initialLayerStyle,
   type LayerStyle,
   useAppStore,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import type { TFunction } from "i18next";
 import { classifyFetchFailure } from "../../../lib/fetch-error";
@@ -89,7 +89,7 @@ export interface BaseLayerVectorOptions {
    * every group the same first free palette entry, since the store does not
    * learn about any of them until they are all added.
    */
-  pendingLayers?: readonly GeoLibreLayer[];
+  pendingLayers?: readonly GeoIntLayer[];
 }
 
 /** The style a new layer starts with, given whatever vector data it carries. */
@@ -105,7 +105,7 @@ function initialStyleFor(vector: BaseLayerVectorOptions): LayerStyle {
 }
 
 /**
- * Builds the common {@link GeoLibreLayer} shell every Add Data source starts
+ * Builds the common {@link GeoIntLayer} shell every Add Data source starts
  * from.
  *
  * @param name - The layer name shown in the layer list.
@@ -118,11 +118,11 @@ function initialStyleFor(vector: BaseLayerVectorOptions): LayerStyle {
  */
 export function createBaseLayer(
   name: string,
-  type: GeoLibreLayer["type"],
+  type: GeoIntLayer["type"],
   source: Record<string, unknown>,
   metadata: Record<string, unknown> = {},
   vector: BaseLayerVectorOptions = {},
-): GeoLibreLayer {
+): GeoIntLayer {
   return {
     id: createLayerId(),
     name,

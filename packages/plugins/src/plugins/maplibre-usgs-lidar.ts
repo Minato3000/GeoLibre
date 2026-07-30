@@ -1,17 +1,17 @@
 /// <reference path="../maplibre-gl-usgs-lidar.d.ts" />
 import {
   DEFAULT_LAYER_STYLE,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type MapProjection,
   useAppStore,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { UsgsLidarControl, UsgsLidarControlOptions } from "maplibre-gl-usgs-lidar";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 
-let usgsLidarPosition: GeoLibreMapControlPosition = "top-left";
+let usgsLidarPosition: GeoIntMapControlPosition = "top-left";
 
 // The deck.gl point-cloud overlay only renders correctly under the Mercator
-// projection: the streaming loader's viewport math breaks under GeoLibre's
+// projection: the streaming loader's viewport math breaks under GeoInt's
 // default Globe projection, so the cloud is invisible at the dataset extent and
 // only appears once zoomed in close. Force Mercator while the plugin is active
 // and restore the user's previous projection on deactivate.
@@ -59,7 +59,7 @@ const DEP_INDEX_TILE_URL =
 function addDepIndexLayer(): void {
   const store = useAppStore.getState();
   if (store.layers.some((layer) => layer.id === DEP_INDEX_LAYER_ID)) return;
-  const layer: GeoLibreLayer = {
+  const layer: GeoIntLayer = {
     id: DEP_INDEX_LAYER_ID,
     name: "3DEP LiDAR Coverage",
     type: "raster",
@@ -112,7 +112,7 @@ const USGS_LIDAR_OPTIONS = {
 let usgsLidarControl: UsgsLidarControl | null = null;
 let pluginActive = false;
 
-const mountUsgsLidarControl = (app: GeoLibreAppAPI): boolean => {
+const mountUsgsLidarControl = (app: GeoIntAppAPI): boolean => {
   if (!usgsLidarControl) return false;
   const added = app.addMapControl(usgsLidarControl, usgsLidarPosition);
   if (!added) {
@@ -128,11 +128,11 @@ const mountUsgsLidarControl = (app: GeoLibreAppAPI): boolean => {
  * Components plugin surfaces via its `usgsLidar` default control, exposing it as
  * a top-level Plugins-menu entry.
  */
-export const maplibreUsgsLidarPlugin: GeoLibrePlugin = {
+export const maplibreUsgsLidarPlugin: GeoIntPlugin = {
   id: "maplibre-gl-usgs-lidar",
   name: "USGS LiDAR",
   version: "0.11.1",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     pluginActive = true;
 
     // Defensive re-activation path for callers that invoke the plugin API
@@ -180,7 +180,7 @@ export const maplibreUsgsLidarPlugin: GeoLibrePlugin = {
         }
       });
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     pluginActive = false;
     restoreProjection();
     removeDepIndexLayer();
@@ -189,7 +189,7 @@ export const maplibreUsgsLidarPlugin: GeoLibrePlugin = {
     usgsLidarControl = null;
   },
   getMapControlPosition: () => usgsLidarPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     usgsLidarPosition = position;
     if (!usgsLidarControl) return;
     app.removeMapControl(usgsLidarControl);

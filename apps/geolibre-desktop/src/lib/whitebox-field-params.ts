@@ -1,9 +1,9 @@
 // Name-based rules for the Processing toolbox's attribute-field parameters.
 //
-// Many Whitebox/GeoLibre tools take a column name as a plain string parameter
+// Many Whitebox/GeoInt tools take a column name as a plain string parameter
 // (`points_to_line`'s `line_field`/`sort_field`, and ~170 others). The dialog
 // renders those as free text, so the user has to recall a column name exactly
-// (GeoLibre#1459). These helpers recognize such a parameter and work out which
+// (GeoInt#1459). These helpers recognize such a parameter and work out which
 // of the tool's vector inputs supplies its column names, purely from parameter
 // names — no per-tool table to keep in sync with the catalog.
 

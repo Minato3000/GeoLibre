@@ -1,5 +1,5 @@
-import { type NetworkToolKind, useAppStore } from "@geolibre/core";
-import { DIRECTIONS_PLUGIN_ID, REVERSE_GEOCODE_PLUGIN_ID } from "@geolibre/plugins";
+import { type NetworkToolKind, useAppStore } from "@geoint/core";
+import { DIRECTIONS_PLUGIN_ID, REVERSE_GEOCODE_PLUGIN_ID } from "@geoint/plugins";
 import { useState } from "react";
 import {
   hasReverseGeocodeConsent,
@@ -41,7 +41,7 @@ export function useConsentGatedActions({
     }
     let acknowledged = false;
     try {
-      acknowledged = localStorage.getItem("geolibre:directions-osrm-notice") === "1";
+      acknowledged = localStorage.getItem("geoint:directions-osrm-notice") === "1";
     } catch {
       // localStorage unavailable (private mode): fall back to showing the notice.
     }
@@ -50,7 +50,7 @@ export function useConsentGatedActions({
   };
   const confirmEnableDirections = () => {
     try {
-      localStorage.setItem("geolibre:directions-osrm-notice", "1");
+      localStorage.setItem("geoint:directions-osrm-notice", "1");
     } catch {
       // Ignore: the notice will simply show again next time.
     }

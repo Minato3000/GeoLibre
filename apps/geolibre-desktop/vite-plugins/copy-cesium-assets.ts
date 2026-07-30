@@ -53,7 +53,7 @@ export function copyCesiumAssets(destDir: string): Plugin {
   };
 
   return {
-    name: "geolibre:copy-cesium-assets",
+    name: "geoint:copy-cesium-assets",
     // buildStart runs for both `vite` (dev) and `vite build`, before any module
     // resolves, so `/cesium/*` is on disk before the first Cesium import.
     buildStart() {

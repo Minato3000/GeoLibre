@@ -47,7 +47,7 @@ test("persists a story map across save and reopen", async ({ page }) => {
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toBeHidden();
 
-  // 2. Save the project and capture the downloaded `.geolibre.json`.
+  // 2. Save the project and capture the downloaded `.geoint.json`.
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: "Project" }).click();
   await page.getByRole("menuitem", { name: "Save", exact: true }).click();
@@ -69,8 +69,8 @@ test("persists a story map across save and reopen", async ({ page }) => {
   expect(saved.storymap?.chapters).toHaveLength(5);
 
   // Re-home the download to a stable path so we can feed it back to the picker.
-  const dir = await mkdtemp(join(tmpdir(), "geolibre-storymap-"));
-  const savedPath = join(dir, "story.geolibre.json");
+  const dir = await mkdtemp(join(tmpdir(), "geoint-storymap-"));
+  const savedPath = join(dir, "story.geoint.json");
   await writeFile(savedPath, Buffer.concat(chunks));
 
   // 3. Reload to a fresh store (no localStorage persistence of project state),

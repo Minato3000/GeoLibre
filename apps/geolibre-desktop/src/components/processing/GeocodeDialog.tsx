@@ -11,8 +11,8 @@ import {
   resolveGeocoderConfig,
   rowCap,
   useAppStore,
-} from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+} from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import {
   Button,
   Dialog,
@@ -23,7 +23,7 @@ import {
   Label,
   ScrollArea,
   Select,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import type { Feature, FeatureCollection, Point } from "geojson";
 import { Loader2, MapPin, Upload, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from "react";

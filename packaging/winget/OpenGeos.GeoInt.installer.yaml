@@ -3,7 +3,7 @@
 # and submits the per-version manifests to microsoft/winget-pkgs on every release,
 # so PackageVersion here may lag the published package. See the "How CI keeps it
 # current" section of README.md in this directory for the version-lag policy.
-PackageIdentifier: OpenGeos.GeoLibre
+PackageIdentifier: OpenGeos.GeoInt
 PackageVersion: 1.5.0
 InstallerType: nullsoft
 Scope: user
@@ -12,7 +12,7 @@ InstallModes:
   - silentWithProgress
 Installers:
   - Architecture: x64
-    InstallerUrl: https://github.com/opengeos/GeoLibre/releases/download/v1.5.0/GeoLibre.Desktop_1.5.0_x64-setup.exe
+    InstallerUrl: https://github.com/opengeos/GeoLibre/releases/download/v1.5.0/GeoInt.Desktop_1.5.0_x64-setup.exe
     InstallerSha256: 94079516D877DEAC4F96B82F4B46D1EF607B7D4D996340556C6B902FFFC2F9C7
 ManifestType: installer
 ManifestVersion: 1.6.0

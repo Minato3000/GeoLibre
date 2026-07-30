@@ -101,7 +101,7 @@ describe("favorites persistence", () => {
     (
       globalThis as unknown as { window: { localStorage: MemoryStorage } }
     ).window.localStorage.setItem(
-      "geolibre.browser.favorites",
+      "geoint.browser.favorites",
       JSON.stringify([
         { id: "service:a", kind: "service", label: "a", serviceId: "a" },
         { id: "x", kind: "recent-project", label: "bad" }, // not favoritable
@@ -127,7 +127,7 @@ describe("favorites persistence", () => {
     }));
     (
       globalThis as unknown as { window: { localStorage: MemoryStorage } }
-    ).window.localStorage.setItem("geolibre.browser.favorites", JSON.stringify(many));
+    ).window.localStorage.setItem("geoint.browser.favorites", JSON.stringify(many));
     assert.equal(readBrowserFavorites().length, MAX_FAVORITES);
   });
 

@@ -5,7 +5,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import type { ProjectPluginTrustState } from "../../hooks/usePlugins";
@@ -16,7 +16,7 @@ interface ProjectPluginTrustDialogProps {
 
 /**
  * Prompts the user before an opened project's plugin manifest URLs are fetched
- * and executed (#1062). A `.geolibre.json` is opened as data and can carry
+ * and executed (#1062). A `.geoint.json` is opened as data and can carry
  * `plugins.manifestUrls` that would otherwise run third-party code in the
  * privileged app context. This dialog lists the untrusted URLs (with their
  * origin highlighted) and requires an explicit decision: trust and load, or

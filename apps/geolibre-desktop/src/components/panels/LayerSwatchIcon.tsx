@@ -1,4 +1,4 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import { Image as RasterIcon } from "lucide-react";
 import { layerSwatch } from "../../lib/layer-swatch";
 
@@ -8,7 +8,7 @@ import { layerSwatch } from "../../lib/layer-swatch";
  * geometry and its first symbology color. Dimmed for hidden layers so the panel
  * reads at a glance, matching the on-map legend's swatches.
  */
-export function LayerSwatchIcon({ layer }: { layer: GeoLibreLayer }): React.ReactElement {
+export function LayerSwatchIcon({ layer }: { layer: GeoIntLayer }): React.ReactElement {
   const { color, shape } = layerSwatch(layer);
   const dim = layer.visible ? "" : "opacity-40";
 

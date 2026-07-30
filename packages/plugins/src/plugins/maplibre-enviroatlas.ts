@@ -6,8 +6,8 @@ import {
   type EnviroAtlasControlOptions,
   type ServiceRef,
 } from "maplibre-gl-enviroatlas";
-import type { GeoLibreLayer } from "@geolibre/core";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition, GeoLibrePlugin } from "../types";
+import type { GeoIntLayer } from "@geoint/core";
+import type { GeoIntAppAPI, GeoIntMapControlPosition, GeoIntPlugin } from "../types";
 import {
   createWebServiceStoreSync,
   layerTypeForTiles,
@@ -22,13 +22,13 @@ const SOURCE_KIND = "enviroatlas";
 // Matches the package's AddedLayer.bounds type, which is not exported.
 type LngLatBoundsArray = [number, number, number, number];
 
-let enviroAtlasPosition: GeoLibreMapControlPosition = "top-left";
+let enviroAtlasPosition: GeoIntMapControlPosition = "top-left";
 
 const ENVIROATLAS_OPTIONS = {
   collapsed: false,
   title: "US EPA EnviroAtlas",
   panelWidth: 360,
-  className: "geolibre-enviroatlas-control",
+  className: "geoint-enviroatlas-control",
   // Tile mode is required for persistence: the default image mode renders a
   // single viewport export that cannot be rebuilt from saved project state.
   renderMode: "tiles",
@@ -60,7 +60,7 @@ function addedLayerId(entry: WebServiceLayerEntry): string {
   return stringMetadata(entry.metadata?.enviroatlasId) ?? entry.id;
 }
 
-function addedLayerFromStoreLayer(layer: GeoLibreLayer): AddedLayer | null {
+function addedLayerFromStoreLayer(layer: GeoIntLayer): AddedLayer | null {
   const service = layer.metadata.enviroatlasService;
   if (!isServiceRef(service)) return null;
   const sublayerId = layer.metadata.enviroatlasSublayerId;
@@ -141,11 +141,11 @@ const enviroAtlasAdapter: WebServiceAdapter<EnviroAtlasControl> = {
 
 const enviroAtlasStoreSync = createWebServiceStoreSync(enviroAtlasAdapter);
 
-export const maplibreEnviroAtlasPlugin: GeoLibrePlugin = {
+export const maplibreEnviroAtlasPlugin: GeoIntPlugin = {
   id: "maplibre-gl-enviroatlas",
   name: "US EPA EnviroAtlas",
   version: "0.1.1",
-  activate: (app: GeoLibreAppAPI) => {
+  activate: (app: GeoIntAppAPI) => {
     if (!enviroAtlasControl) {
       enviroAtlasControl = new EnviroAtlasControl(getEnviroAtlasControlOptions());
     }
@@ -158,14 +158,14 @@ export const maplibreEnviroAtlasPlugin: GeoLibrePlugin = {
     enviroAtlasStoreSync.attach(enviroAtlasControl);
     setTimeout(() => enviroAtlasControl?.expand(), 0);
   },
-  deactivate: (app: GeoLibreAppAPI) => {
+  deactivate: (app: GeoIntAppAPI) => {
     if (!enviroAtlasControl) return;
     enviroAtlasStoreSync.detach();
     app.removeMapControl(enviroAtlasControl);
     enviroAtlasControl = null;
   },
   getMapControlPosition: () => enviroAtlasPosition,
-  setMapControlPosition: (app: GeoLibreAppAPI, position: GeoLibreMapControlPosition) => {
+  setMapControlPosition: (app: GeoIntAppAPI, position: GeoIntMapControlPosition) => {
     enviroAtlasPosition = position;
     if (!enviroAtlasControl) return;
     app.removeMapControl(enviroAtlasControl);

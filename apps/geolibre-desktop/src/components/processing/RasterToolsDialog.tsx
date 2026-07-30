@@ -1,7 +1,7 @@
-import { useAppStore } from "@geolibre/core";
-import type { GeoLibreLayer } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
-import { addCogRasterLayer } from "@geolibre/plugins";
+import { useAppStore } from "@geoint/core";
+import type { GeoIntLayer } from "@geoint/core";
+import type { MapController } from "@geoint/map";
+import { addCogRasterLayer } from "@geoint/plugins";
 import {
   RASTER_TOOLS,
   getRasterTool,
@@ -14,7 +14,7 @@ import {
   type AlgorithmParameter,
   type ConversionJob,
   type RasterTool,
-} from "@geolibre/processing";
+} from "@geoint/processing";
 import {
   Button,
   Dialog,
@@ -27,7 +27,7 @@ import {
   ScrollArea,
   Select,
   cn,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import {
   AlertCircle,
   CheckCircle2,
@@ -56,7 +56,7 @@ import {
   pickSavePathWithFallback,
   saveBinaryFileWithFallback,
 } from "../../lib/tauri-io";
-import { startGeoLibreSidecar } from "../../lib/sidecar";
+import { startGeoIntSidecar } from "../../lib/sidecar";
 import {
   beginProcessingRun,
   MAX_TRACKED_HISTORY_JOBS,
@@ -75,7 +75,7 @@ import { fetchableUrl } from "../../lib/url-utils";
  * opened server-side. `fetchableUrl` unwraps `scheme://` wrappers (e.g.
  * `cog://https://…`) before the `http(s)` check.
  */
-function sidecarRasterUrl(layer: GeoLibreLayer): string | null {
+function sidecarRasterUrl(layer: GeoIntLayer): string | null {
   if (layer.type !== "cog" && layer.type !== "raster") return null;
   const url = fetchableUrl((layer.source as { url?: unknown }).url);
   return url && /^https?:\/\//i.test(url) ? url : null;
@@ -174,7 +174,7 @@ export function RasterToolsDialog({ mapControllerRef }: RasterToolsDialogProps):
       // Raster tools are sidecar-only and the file pickers cannot resolve real
       // paths in a browser, so a pure web build cannot run them.
       setRuntimeAvailable(false);
-      setRuntimeMessage("Raster tools need the GeoLibre desktop app with a running sidecar.");
+      setRuntimeMessage("Raster tools need the GeoInt desktop app with a running sidecar.");
       return;
     }
     setRuntimeAvailable(null);
@@ -325,7 +325,7 @@ export function RasterToolsDialog({ mapControllerRef }: RasterToolsDialogProps):
     setStartingServer(true);
     setError(null);
     try {
-      await startGeoLibreSidecar();
+      await startGeoIntSidecar();
       await checkRuntime();
     } catch (err) {
       setError(err instanceof Error ? err.message : t("toolbar.rasterTool.errorStartSidecar"));

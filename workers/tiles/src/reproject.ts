@@ -1,7 +1,7 @@
 // Equirectangular (plate carrée, EPSG:4326) → Web-Mercator (EPSG:3857) tile
 // reprojection for planetary raster mosaics.
 //
-// GeoLibre's Mars and Moon basemaps come from OpenPlanetaryMap, which publishes
+// GeoInt's Mars and Moon basemaps come from OpenPlanetaryMap, which publishes
 // ready Web-Mercator tiles. The other USGS Astrogeology bodies (Mercury, Venus,
 // the Galilean moons, Titan, Pluto, Charon) are only served as *equirectangular*
 // WMS layers — MapLibre can't render those directly, because it only draws Web

@@ -1,4 +1,4 @@
-import { hasPathTraversal, parseProject, type GeoLibreProject } from "@geolibre/core";
+import { hasPathTraversal, parseProject, type GeoIntProject } from "@geoint/core";
 import { convertFileSrc, invoke } from "@tauri-apps/api/core";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import {
@@ -51,7 +51,7 @@ import {
 export { isTauri };
 
 function browserSafeFileName(path: string): string {
-  return path.split(/[/\\]/).pop() || "project.geolibre.json";
+  return path.split(/[/\\]/).pop() || "project.geoint.json";
 }
 
 export interface FileDialogFilter {
@@ -111,11 +111,11 @@ interface BrowserFilePickerWindow extends Window {
   }) => Promise<BrowserSaveFileHandle>;
 }
 
-const GEOLIBRE_PROJECT_FILE_TYPES: BrowserFilePickerType[] = [
+const GEOINT_PROJECT_FILE_TYPES: BrowserFilePickerType[] = [
   {
-    description: "GeoLibre Project",
+    description: "GeoInt Project",
     accept: {
-      "application/json": [".geolibre", ".json"],
+      "application/json": [".geoint", ".json"],
     },
   },
 ];
@@ -367,13 +367,13 @@ function pathWithoutExtension(path: string): string {
   return path.replace(/\.[^.\\/]+$/, "");
 }
 
-function isGeoLibreProjectFile(path: string): boolean {
+function isGeoIntProjectFile(path: string): boolean {
   const name = browserSafeFileName(path).toLowerCase();
-  return name.endsWith(".geolibre") || name.endsWith(".geolibre.json");
+  return name.endsWith(".geoint") || name.endsWith(".geoint.json");
 }
 
 function isVectorFileName(path: string): boolean {
-  if (isGeoLibreProjectFile(path)) return false;
+  if (isGeoIntProjectFile(path)) return false;
   if (browserSafeFileName(path).toLowerCase().endsWith(".shp.xml")) return false;
   // Rasters are handled by the raster drop path, not the DuckDB vector loader.
   if (isRasterFileName(path)) return false;
@@ -438,7 +438,7 @@ async function parseGeoJsonText(text: string): Promise<FeatureCollection> {
  * when the JS `fs` plugin denies the path.
  *
  * When a project is reopened, its file-referenced layer paths come from the
- * saved `.geolibre.json` rather than from a picker or drag-drop, so they sit
+ * saved `.geoint.json` rather than from a picker or drag-drop, so they sit
  * outside the `fs` plugin's runtime scope and `readFile` rejects them. The
  * command reads the file directly, so a referenced layer reloads after a fresh
  * launch instead of failing with a misleading "Could not convert this vector
@@ -465,7 +465,7 @@ export async function readLocalFileBytes(path: string): Promise<Uint8Array<Array
     // failure (a moved/deleted file, not a scope denial) is still diagnosable
     // even though the command's "Could not read local file" error is what
     // ultimately surfaces.
-    console.debug(`[GeoLibre] fs read of "${path}" failed; retrying via read_local_file.`, error);
+    console.debug(`[GeoInt] fs read of "${path}" failed; retrying via read_local_file.`, error);
     const buffer = await invoke<ArrayBuffer>("read_local_file", { path });
     return new Uint8Array(buffer);
   }
@@ -485,7 +485,7 @@ async function readLocalFileText(path: string): Promise<string> {
     return await readTextFile(path);
   } catch (error) {
     if (!isTauri()) throw error;
-    console.debug(`[GeoLibre] fs read of "${path}" failed; retrying via read_local_file.`, error);
+    console.debug(`[GeoInt] fs read of "${path}" failed; retrying via read_local_file.`, error);
     const buffer = await invoke<ArrayBuffer>("read_local_file", { path });
     // `fatal: true` matches `readTextFile`, which rejects on malformed UTF-8
     // rather than silently substituting U+FFFD: a corrupt KML/GPX/GeoJSON
@@ -665,7 +665,7 @@ function parseShapefileComponents({ file, sidecar }: UnzippedShapefile): Feature
  * through DuckDB (shpjs mis-parses its surfaces as points; DuckDB decodes the
  * TIN as a MultiPolygon, issue #1121) or parses an ordinary shapefile from the
  * already-extracted buffers, retrying through DuckDB if shpjs cannot read it. A
- * corrupt archive or one without a `.shp` throws, since GeoLibre reads only
+ * corrupt archive or one without a `.shp` throws, since GeoInt reads only
  * shapefile `.zip`s.
  */
 async function loadShapefileZip(
@@ -1365,10 +1365,7 @@ async function tryLoadNativeDuckDbVectorPath(
     };
   } catch (error) {
     if (isVectorLoadCancelled(error)) throw error;
-    console.warn(
-      "[GeoLibre] Native DuckDB vector load failed; falling back to DuckDB-WASM.",
-      error,
-    );
+    console.warn("[GeoInt] Native DuckDB vector load failed; falling back to DuckDB-WASM.", error);
     return { data: null, featureCountChecked };
   }
 }
@@ -1634,7 +1631,7 @@ export async function readVectorFileWithSidecars(path: string): Promise<{
       nativeData: await tryLoadPickedNativeVectorPath(path, {
         onLargeDataset: ({ name, featureCount }) => {
           console.warn(
-            `[GeoLibre] Skipping native vector restore for "${name}" because it contains ${featureCount.toLocaleString()} features; re-add the file to confirm loading it as GeoJSON.`,
+            `[GeoInt] Skipping native vector restore for "${name}" because it contains ${featureCount.toLocaleString()} features; re-add the file to confirm loading it as GeoJSON.`,
           );
           return false;
         },
@@ -1804,7 +1801,7 @@ async function readShapefileSiblings(path: string): Promise<DuckDbVectorFile[]> 
 }
 
 async function openProjectFileBrowser(): Promise<{
-  project: GeoLibreProject;
+  project: GeoIntProject;
   path: string;
 } | null> {
   const pickerWindow = window as BrowserFilePickerWindow;
@@ -1812,7 +1809,7 @@ async function openProjectFileBrowser(): Promise<{
     try {
       const [handle] = await pickerWindow.showOpenFilePicker({
         multiple: false,
-        types: GEOLIBRE_PROJECT_FILE_TYPES,
+        types: GEOINT_PROJECT_FILE_TYPES,
         excludeAcceptAllOption: false,
       });
       if (!handle) return null;
@@ -1828,8 +1825,8 @@ async function openProjectFileBrowser(): Promise<{
   }
 
   const result = await openLocalDataFileWithFallback({
-    filters: [{ name: "GeoLibre Project", extensions: ["geolibre", "json"] }],
-    accept: ".geolibre,.json,.geolibre.json",
+    filters: [{ name: "GeoInt Project", extensions: ["geoint", "json"] }],
+    accept: ".geoint,.json,.geoint.json",
     readText: true,
   });
   if (!result?.text) return null;
@@ -1859,14 +1856,14 @@ async function saveProjectFileBrowser(
   content: string,
   defaultName?: string,
 ): Promise<string | null> {
-  const fileName = browserSafeFileName(defaultName ?? "project.geolibre.json");
+  const fileName = browserSafeFileName(defaultName ?? "project.geoint.json");
   const pickerWindow = window as BrowserFilePickerWindow;
 
   if (pickerWindow.showSaveFilePicker) {
     try {
       const handle = await pickerWindow.showSaveFilePicker({
         suggestedName: fileName,
-        types: GEOLIBRE_PROJECT_FILE_TYPES,
+        types: GEOINT_PROJECT_FILE_TYPES,
         excludeAcceptAllOption: false,
       });
       const writable = await handle.createWritable();
@@ -2099,7 +2096,7 @@ export async function openGeoJsonFile(): Promise<{
 }
 
 export async function openProjectFile(): Promise<{
-  project: GeoLibreProject;
+  project: GeoIntProject;
   path: string;
 } | null> {
   if (!isTauri()) {
@@ -2108,7 +2105,7 @@ export async function openProjectFile(): Promise<{
 
   const selected = await open({
     multiple: false,
-    filters: [{ name: "GeoLibre Project", extensions: ["geolibre", "json"] }],
+    filters: [{ name: "GeoInt Project", extensions: ["geoint", "json"] }],
   });
   if (!selected || typeof selected !== "string") return null;
   const text = await readTextFile(selected);
@@ -2146,7 +2143,7 @@ export async function openRecentProjectFile(
   path: string,
   signal?: AbortSignal,
 ): Promise<{
-  project: GeoLibreProject;
+  project: GeoIntProject;
   path: string;
 }> {
   if (isHttpUrl(path)) {
@@ -2180,7 +2177,7 @@ export async function openRecentProjectFile(
   }
 
   if (!isTauri()) {
-    throw new Error("Recent local projects can only be reopened in GeoLibre Desktop.");
+    throw new Error("Recent local projects can only be reopened in GeoInt Desktop.");
   }
 
   let text: string;
@@ -2205,8 +2202,8 @@ export async function saveProjectFile(
   }
 
   const path = await save({
-    filters: [{ name: "GeoLibre Project", extensions: ["geolibre", "json"] }],
-    defaultPath: defaultName ?? "project.geolibre.json",
+    filters: [{ name: "GeoInt Project", extensions: ["geoint", "json"] }],
+    defaultPath: defaultName ?? "project.geoint.json",
   });
   if (!path) return null;
   await writeTextFile(path, content);

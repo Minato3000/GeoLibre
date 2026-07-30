@@ -2,51 +2,81 @@
 @import "tw-animate-css";
 
 @layer base {
+  /* Base palette sourced from the "Document Annotation Tokens" design-tokens
+     set (v0.5.0). Each shadcn slot below is mapped from that JSON's token
+     names (noted in the trailing comment) rather than invented, so every
+     component that already reads e.g. hsl(var(--foreground)) repaints with
+     the new palette with no per-component changes. The four
+     [data-theme="..."] accent schemes further down are a separate,
+     pre-existing feature (a user-selectable accent color in Settings) and are
+     intentionally left as-is; they layer their own --primary/--ring on top of
+     whichever base palette is active. */
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    /* Darkened from 46.9% L so secondary text meets WCAG AA (4.5:1) even on the
-       muted/secondary backgrounds it is paired with (e.g. kbd badges). */
-    --muted-foreground: 215.4 16.3% 40%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --background: 220 15.8% 96.3%; /* color.bg */
+    --foreground: 220 14.8% 12%; /* fg.1 */
+    --card: 0 0% 100%; /* color.surface */
+    --card-foreground: 220 14.8% 12%; /* fg.1 */
+    --popover: 0 0% 100%; /* color.elevated */
+    --popover-foreground: 220 14.8% 12%; /* fg.1 */
+    --primary: 220 14.8% 12%; /* brand.bg */
+    --primary-foreground: 0 0% 100%; /* brand.fg */
+    --secondary: 210 25% 98.4%; /* color.surface-2 */
+    --secondary-foreground: 216 10.9% 26.9%; /* fg.2 */
+    --muted: 225 15.4% 94.9%; /* color.surface-3 */
+    --muted-foreground: 216.7 7.8% 45.5%; /* fg.3 */
+    --accent: 210 25% 98.4%; /* color.surface-2 (shadcn "accent" = hover highlight, not a hue) */
+    --accent-foreground: 220 14.8% 12%; /* fg.1 */
+    --destructive: 4.7 44.7% 55.3%; /* state.danger */
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 12% 90.2%; /* border.1 */
+    --input: 220 12% 90.2%; /* border.1 */
+    --ring: 210 25% 47.1%; /* border.focus */
     --radius: 0.5rem;
+
+    /* Extra named tokens from the same set, not part of shadcn's base
+       contract. Available for features (like the GeoInt panel) that want a
+       categorical accent or a semantic state color beyond primary/destructive. */
+    --accent-rose: 356.1 27.4% 55.7%;
+    --accent-green: 120 18.5% 45.7%;
+    --accent-blue: 205.4 31% 44.9%;
+    --accent-mauve: 273.3 18.5% 52.4%;
+    --accent-amber: 36.1 44.3% 47.8%;
+    --state-success: 120 18.5% 45.7%;
+    --state-danger: 4.7 44.7% 55.3%;
+    --state-warning: 36.1 44.3% 47.8%;
+    --state-info: 205.4 31% 44.9%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --background: 230 12% 9.8%; /* color.bg */
+    --foreground: 45 6.7% 88.2%; /* fg.1 */
+    --card: 232.5 11.4% 13.7%; /* color.surface */
+    --card-foreground: 45 6.7% 88.2%; /* fg.1 */
+    --popover: 229.1 10.9% 19.8%; /* color.elevated */
+    --popover-foreground: 45 6.7% 88.2%; /* fg.1 */
+    --primary: 39.1 61.6% 56.1%; /* brand.bg */
+    --primary-foreground: 39 62.5% 6.3%; /* brand.fg */
+    --secondary: 228 11.9% 16.5%; /* color.surface-2 */
+    --secondary-foreground: 225 5.6% 72.2%; /* fg.2 */
+    --muted: 229.1 11.6% 18.6%; /* color.surface-3 */
+    --muted-foreground: 228 4.4% 55.3%; /* fg.3 */
+    --accent: 228 11.9% 16.5%; /* color.surface-2 */
+    --accent-foreground: 45 6.7% 88.2%; /* fg.1 */
+    --destructive: 4.9 66.2% 71%; /* state.danger */
+    --destructive-foreground: 39 62.5% 6.3%; /* brand.fg (dark, contrasts the light destructive bg) */
+    --border: 226.7 8.7% 20.2%; /* border.1 */
+    --input: 226.7 8.7% 20.2%; /* border.1 */
+    --ring: 39.1 61.6% 56.1%; /* border.focus */
+
+    --accent-rose: 358.4 48.1% 69%;
+    --accent-green: 98.6 35.3% 67.3%;
+    --accent-blue: 217.1 58.9% 70.4%;
+    --accent-mauve: 279.4 51.1% 74.3%;
+    --accent-amber: 39.8 63.6% 69.8%;
+    --state-success: 98.6 35.3% 67.3%;
+    --state-danger: 4.9 66.2% 71%;
+    --state-warning: 39.8 63.6% 69.8%;
+    --state-info: 217.1 58.9% 70.4%;
   }
 
   /* Accent color schemes. Each scheme overrides only the accent-bearing tokens

@@ -35,36 +35,36 @@ function printError(name: string, env: Record<string, string> = {}): string {
 describe("embed-appimage-update-info.sh", () => {
   it("derives gh-releases-zsync update information with the version globbed", () => {
     assert.equal(
-      print("GeoLibre.Desktop_2.3.0_amd64.AppImage"),
-      "gh-releases-zsync|opengeos|GeoLibre|latest|GeoLibre.Desktop_*_amd64.AppImage.zsync",
+      print("GeoInt.Desktop_2.3.0_amd64.AppImage"),
+      "gh-releases-zsync|opengeos|GeoLibre|latest|GeoInt.Desktop_*_amd64.AppImage.zsync",
     );
   });
 
   it("takes the owner and repository from REPO", () => {
     assert.equal(
-      print("GeoLibre.Desktop_2.3.0_amd64.AppImage", { REPO: "giswqs/Fork" }),
-      "gh-releases-zsync|giswqs|Fork|latest|GeoLibre.Desktop_*_amd64.AppImage.zsync",
+      print("GeoInt.Desktop_2.3.0_amd64.AppImage", { REPO: "giswqs/Fork" }),
+      "gh-releases-zsync|giswqs|Fork|latest|GeoInt.Desktop_*_amd64.AppImage.zsync",
     );
   });
 
   it("accepts a full path, using only the file name in the pattern", () => {
     assert.equal(
-      print("target/release/bundle/appimage/GeoLibre.Desktop_2.3.0_amd64.AppImage"),
-      "gh-releases-zsync|opengeos|GeoLibre|latest|GeoLibre.Desktop_*_amd64.AppImage.zsync",
+      print("target/release/bundle/appimage/GeoInt.Desktop_2.3.0_amd64.AppImage"),
+      "gh-releases-zsync|opengeos|GeoLibre|latest|GeoInt.Desktop_*_amd64.AppImage.zsync",
     );
   });
 
   it("fits in the 1 KiB .upd_info section", () => {
-    assert.ok(print("GeoLibre.Desktop_2.3.0_amd64.AppImage").length < 1024);
+    assert.ok(print("GeoInt.Desktop_2.3.0_amd64.AppImage").length < 1024);
   });
 
   it("fails when the AppImage name does not carry the tag's version", () => {
-    assert.match(printError("GeoLibre.Desktop_amd64.AppImage"), /does not contain _2\.3\.0_/);
+    assert.match(printError("GeoInt.Desktop_amd64.AppImage"), /does not contain _2\.3\.0_/);
   });
 
   it("fails when REPO is not an owner/name pair", () => {
     assert.match(
-      printError("GeoLibre.Desktop_2.3.0_amd64.AppImage", { REPO: "GeoLibre" }),
+      printError("GeoInt.Desktop_2.3.0_amd64.AppImage", { REPO: "GeoInt" }),
       /not an owner\/name pair/,
     );
   });
@@ -104,10 +104,10 @@ const hasJq = (() => {
 })();
 
 describe("select-single-appimage.sh", { skip: hasJq ? false : "jq is not installed" }, () => {
-  const appimage = "/build/bundle/appimage/GeoLibre.Desktop_2.3.0_amd64.AppImage";
+  const appimage = "/build/bundle/appimage/GeoInt.Desktop_2.3.0_amd64.AppImage";
   const others = [
-    "/build/bundle/deb/GeoLibre.Desktop_2.3.0_amd64.deb",
-    "/build/bundle/rpm/GeoLibre.Desktop-2.3.0-1.x86_64.rpm",
+    "/build/bundle/deb/GeoInt.Desktop_2.3.0_amd64.deb",
+    "/build/bundle/rpm/GeoInt.Desktop-2.3.0-1.x86_64.rpm",
   ];
 
   it("picks the AppImage out of the other bundles", () => {

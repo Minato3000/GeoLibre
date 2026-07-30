@@ -1,4 +1,4 @@
-import { normalizeHexColor, styleValue, type FillPattern, type LayerStyle } from "@geolibre/core";
+import { normalizeHexColor, styleValue, type FillPattern, type LayerStyle } from "@geoint/core";
 import {
   hashText,
   registerGeneratedImage,
@@ -121,7 +121,7 @@ export function prepareFillPattern(style: LayerStyle): string | null {
   if (pattern === "svg") {
     const markup = styleValue(style, "fillPatternSvg").trim();
     if (!markup) return null;
-    const id = `geolibre-pattern-svg-${hashText(markup)}`;
+    const id = `geoint-pattern-svg-${hashText(markup)}`;
     // Capture the markup in the factory closure so the lazy generator never
     // depends on a separate, evictable cache (which could blank the pattern).
     registerGeneratedImage(id, () => loadSvgImage(markup));
@@ -130,7 +130,7 @@ export function prepareFillPattern(style: LayerStyle): string | null {
 
   if (!BUILTIN_PATTERNS.has(pattern)) return null;
   const color = patternColor(style);
-  const id = `geolibre-pattern-${pattern}-${color.replace("#", "")}`;
+  const id = `geoint-pattern-${pattern}-${color.replace("#", "")}`;
   registerGeneratedImage(id, () => drawBuiltinPattern(pattern, color));
   return id;
 }

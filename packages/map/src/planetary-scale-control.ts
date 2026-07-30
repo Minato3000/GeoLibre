@@ -4,13 +4,13 @@ import {
   getRoundNum,
   scaleSpan,
   type MapScaleUnit,
-} from "@geolibre/core";
+} from "@geoint/core";
 import maplibregl from "maplibre-gl";
 
 // Re-exported so the nice-number rounding and unit conversion — now shared with
-// the Print Layout scale bar in `@geolibre/core` — can still be imported from
+// the Print Layout scale bar in `@geoint/core` — can still be imported from
 // this module (and covered by planetary-scale-control.test.ts).
-export { getRoundNum, scaleSpan } from "@geolibre/core";
+export { getRoundNum, scaleSpan } from "@geoint/core";
 
 /**
  * A metric scale bar that respects the active celestial body's radius.

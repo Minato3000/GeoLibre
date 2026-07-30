@@ -1,4 +1,4 @@
-import { DirectionProvider } from "@geolibre/ui";
+import { DirectionProvider } from "@geoint/ui";
 import { useTranslation } from "react-i18next";
 import { DesktopShell } from "./components/layout/DesktopShell";
 import { OnboardingDialog } from "./components/layout/OnboardingDialog";

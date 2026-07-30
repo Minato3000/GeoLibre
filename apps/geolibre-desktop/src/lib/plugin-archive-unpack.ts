@@ -4,13 +4,13 @@
 // file" flow (in-browser unzip). The heavier external-plugin loader re-exports
 // what it needs from here.
 
-import type { GeoLibreExternalPluginManifest } from "@geolibre/plugins";
+import type { GeoIntExternalPluginManifest } from "@geoint/plugins";
 import { unzip } from "fflate";
 
 export interface ExternalPluginBundle {
   archiveName: string;
   sourceUrl?: string;
-  manifest: GeoLibreExternalPluginManifest;
+  manifest: GeoIntExternalPluginManifest;
   entrySource: string;
   styleSource?: string | null;
 }
@@ -26,9 +26,9 @@ function isRequiredManifestString(value: unknown): value is string {
   return typeof value === "string" && value.length > 0 && value.trim() === value;
 }
 
-export function isExternalPluginManifest(value: unknown): value is GeoLibreExternalPluginManifest {
+export function isExternalPluginManifest(value: unknown): value is GeoIntExternalPluginManifest {
   if (!value || typeof value !== "object") return false;
-  const manifest = value as Partial<GeoLibreExternalPluginManifest>;
+  const manifest = value as Partial<GeoIntExternalPluginManifest>;
   return (
     isRequiredManifestString(manifest.id) &&
     isRequiredManifestString(manifest.name) &&

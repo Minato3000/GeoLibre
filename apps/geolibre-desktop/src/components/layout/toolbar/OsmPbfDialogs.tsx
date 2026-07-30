@@ -7,7 +7,7 @@ import {
   DialogTitle,
   Input,
   Label,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import type { FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import type { useOsmPbfLoader } from "../../../hooks/useOsmPbfLoader";

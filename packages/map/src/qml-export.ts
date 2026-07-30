@@ -3,12 +3,12 @@ import {
   isHexColor,
   parseJsonExpression,
   styleValue,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerStyle,
   type MarkerShape,
   type VectorRule,
   type VectorStyleStop,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import { detectGeometryProfile, type GeometryProfile } from "./geojson-loader";
 import { OGC_SCALE_DENOMINATOR_AT_ZOOM_0 } from "./sld-export";
@@ -17,7 +17,7 @@ import { OGC_SCALE_DENOMINATOR_AT_ZOOM_0 } from "./sld-export";
 const DEFAULT_FONT_FAMILY = "Open Sans";
 
 /**
- * GeoLibre marker shapes that map onto a QGIS SimpleMarker `name`. QGIS has a
+ * GeoInt marker shapes that map onto a QGIS SimpleMarker `name`. QGIS has a
  * richer shape set than SLD, so `diamond` maps directly (SLD had no equivalent).
  */
 const MARKER_QGIS_NAME: Partial<Record<MarkerShape, string>> = {
@@ -43,10 +43,10 @@ export interface QmlExportResult {
 
 /**
  * The layer fields the QML exporter reads. Kept structural (rather than the full
- * {@link GeoLibreLayer}) so it is easy to unit-test with a minimal fixture.
+ * {@link GeoIntLayer}) so it is easy to unit-test with a minimal fixture.
  */
 export type QmlExportableLayer = Pick<
-  GeoLibreLayer,
+  GeoIntLayer,
   "id" | "name" | "type" | "style" | "opacity" | "visible"
 >;
 
@@ -207,7 +207,7 @@ function symbolGeometry(profile: GeometryProfile): SymbolGeometry {
   return "marker";
 }
 
-/** Translate a GeoLibre rule's MapLibre filter (JSON) into a QGIS expression, or
+/** Translate a GeoInt rule's MapLibre filter (JSON) into a QGIS expression, or
  * null when it uses an operator QGIS cannot express. Reverses
  * {@link qgisFilterToMapbox} in the importer. */
 function mapboxFilterToQgis(expression: unknown): string | null {
@@ -313,7 +313,7 @@ function labelingXml(style: LayerStyle, fontFamily: string, warnings: string[]):
         )}" bufferSizeUnits="Pixel" bufferColor="${hexToRgba(labels.haloColor)}"/>`
       : '<text-buffer bufferDraw="0"/>';
 
-  // QGIS `placement` is a small enum. GeoLibre only distinguishes point vs line
+  // QGIS `placement` is a small enum. GeoInt only distinguishes point vs line
   // placement, so this uses a simplified encoding: 2 for line placement, 1
   // otherwise. The importer only checks for "2" to recover line placement.
   const placementCode = labels.placement === "line" ? "2" : "1";
@@ -605,7 +605,7 @@ function ruleRenderer(
 }
 
 /**
- * Serialize a vector layer's GeoLibre symbology into a QGIS QML style document,
+ * Serialize a vector layer's GeoInt symbology into a QGIS QML style document,
  * the native style format QGIS users have on disk. The
  * single/categorized/graduated/rule-based renderers map onto QGIS's
  * singleSymbol/categorizedSymbol/graduatedSymbol/RuleRenderer with fill, line,

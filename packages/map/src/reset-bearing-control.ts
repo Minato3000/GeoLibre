@@ -59,11 +59,11 @@ export class ResetBearingControl implements maplibregl.IControl {
     this.map = map;
 
     const container = document.createElement("div");
-    container.className = "maplibregl-ctrl maplibregl-ctrl-group geolibre-reset-bearing-ctrl";
+    container.className = "maplibregl-ctrl maplibregl-ctrl-group geoint-reset-bearing-ctrl";
 
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "geolibre-reset-bearing-button";
+    button.className = "geoint-reset-bearing-button";
     button.addEventListener("click", () => {
       // resetNorthPitch animates bearing and pitch back to 0 together while
       // leaving center and zoom untouched, matching the menu command.
@@ -73,7 +73,7 @@ export class ResetBearingControl implements maplibregl.IControl {
     const needle = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     needle.setAttribute("viewBox", "0 0 24 24");
     needle.setAttribute("aria-hidden", "true");
-    needle.classList.add("geolibre-reset-bearing-needle");
+    needle.classList.add("geoint-reset-bearing-needle");
     // A classic north arrow: an "N" cap over a single dominant upward needle so
     // the control reads unambiguously as "north" at a glance (issue #537). The
     // solid north needle is what turns red when the view is rotated; the south
@@ -82,12 +82,12 @@ export class ResetBearingControl implements maplibregl.IControl {
     // (just below the "N" baseline at y=8) so the glyph never crowds the tip
     // even on fonts with taller cap metrics.
     needle.innerHTML =
-      '<text class="geolibre-reset-bearing-needle-label" x="12" y="8" text-anchor="middle"></text>' +
-      '<polygon class="geolibre-reset-bearing-needle-north" points="12,9 9,19 12,16 15,19" />' +
-      '<polygon class="geolibre-reset-bearing-needle-south" points="12,22.5 9.6,19 14.4,19" />';
+      '<text class="geoint-reset-bearing-needle-label" x="12" y="8" text-anchor="middle"></text>' +
+      '<polygon class="geoint-reset-bearing-needle-north" points="12,9 9,19 12,16 15,19" />' +
+      '<polygon class="geoint-reset-bearing-needle-south" points="12,22.5 9.6,19 14.4,19" />';
     // Set the cardinal letter via textContent (not interpolated into innerHTML)
     // so a caller-supplied northLabel can't inject markup into the SVG.
-    const labelEl = needle.querySelector(".geolibre-reset-bearing-needle-label");
+    const labelEl = needle.querySelector(".geoint-reset-bearing-needle-label");
     if (labelEl) labelEl.textContent = this.northLabel;
     button.appendChild(needle);
 
@@ -140,6 +140,6 @@ export class ResetBearingControl implements maplibregl.IControl {
     // Nothing to reset when already north-up and flat: grey the button out and
     // drop the alert colour so it reads as inactive.
     this.button.disabled = isNorthUp;
-    this.button.classList.toggle("geolibre-reset-bearing-button--active", !isNorthUp);
+    this.button.classList.toggle("geoint-reset-bearing-button--active", !isNorthUp);
   }
 }

@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import {
   calculateBoundsAlgorithm,
   countFeaturesAlgorithm,
   getAlgorithm,
   getVectorTool,
-} from "@geolibre/processing";
+} from "@geoint/processing";
 import type { FeatureCollection } from "geojson";
 
-const layer: GeoLibreLayer = {
+const layer: GeoIntLayer = {
   id: "layer-a",
   name: "Layer A",
   type: "geojson",
@@ -53,7 +53,7 @@ describe("processing registry", () => {
   });
 
   it("spatially joins zone attributes onto points", () => {
-    const zone: GeoLibreLayer = {
+    const zone: GeoIntLayer = {
       ...layer,
       id: "zone",
       name: "Zone",
@@ -79,7 +79,7 @@ describe("processing registry", () => {
         ],
       },
     };
-    const points: GeoLibreLayer = {
+    const points: GeoIntLayer = {
       ...layer,
       id: "points",
       name: "Points",
@@ -155,7 +155,7 @@ describe("processing registry", () => {
         ],
       },
     });
-    const zones: GeoLibreLayer = {
+    const zones: GeoIntLayer = {
       ...layer,
       id: "zones",
       name: "Zones",
@@ -165,7 +165,7 @@ describe("processing registry", () => {
       },
     };
     // Input point carries an `id`; a one-to-many join must not duplicate it.
-    const pts: GeoLibreLayer = {
+    const pts: GeoIntLayer = {
       ...layer,
       id: "pts",
       name: "Pts",
@@ -199,7 +199,7 @@ describe("processing registry", () => {
     assert.deepEqual(regions, ["north", "south"]);
 
     // Empty join layer: left keeps the input, inner returns nothing.
-    const emptyJoin: GeoLibreLayer = {
+    const emptyJoin: GeoIntLayer = {
       ...layer,
       id: "empty",
       name: "Empty",
@@ -248,7 +248,7 @@ describe("processing registry", () => {
 
     // Counties keyed by GEOID (a string with a leading zero) plus one county
     // whose key is stored as a number, to exercise the string/number coercion.
-    const counties: GeoLibreLayer = {
+    const counties: GeoIntLayer = {
       ...layer,
       id: "counties",
       name: "Counties",
@@ -274,7 +274,7 @@ describe("processing registry", () => {
       },
     };
     // Stats table (geometry ignored). Two rows share key "1003"; the first wins.
-    const stats: GeoLibreLayer = {
+    const stats: GeoIntLayer = {
       ...layer,
       id: "stats",
       name: "Stats",
@@ -383,7 +383,7 @@ describe("processing registry", () => {
   it("selects features by attribute value", () => {
     const tool = getVectorTool("select-by-value");
     assert.ok(tool);
-    const attr: GeoLibreLayer = {
+    const attr: GeoIntLayer = {
       ...layer,
       id: "attr",
       name: "Attr",
@@ -461,7 +461,7 @@ describe("processing registry", () => {
 
     // A hex-looking string compares as text, not coerced to a number — matching
     // Python's float(), which rejects "0x10" (so the engines stay in sync).
-    const hexLayer: GeoLibreLayer = {
+    const hexLayer: GeoIntLayer = {
       ...layer,
       id: "hex",
       name: "Hex",
@@ -496,7 +496,7 @@ describe("processing registry", () => {
     const tool = getVectorTool("random-extract");
     assert.ok(tool);
     // 10 features with distinct, ordered ids so we can check membership + order.
-    const many: GeoLibreLayer = {
+    const many: GeoIntLayer = {
       ...layer,
       id: "many",
       name: "Many",
@@ -548,7 +548,7 @@ describe("processing registry", () => {
   it("selects features by location, including disjoint", () => {
     const tool = getVectorTool("select-by-location");
     assert.ok(tool);
-    const square = (id: string, x: number): GeoLibreLayer => ({
+    const square = (id: string, x: number): GeoIntLayer => ({
       ...layer,
       id,
       name: id,
@@ -578,7 +578,7 @@ describe("processing registry", () => {
     const overlap = square("overlap", 0.5); // intersects a
     const far = square("far", 10); // disjoint from a
     // A large square that fully contains `a`, and a tiny one fully inside it.
-    const bigPoly = (id: string, coords: number[][]): GeoLibreLayer => ({
+    const bigPoly = (id: string, coords: number[][]): GeoIntLayer => ({
       ...layer,
       id,
       name: id,
@@ -608,7 +608,7 @@ describe("processing registry", () => {
       [0.2, 0.2],
     ]);
 
-    const run = (filter: GeoLibreLayer, predicate: string): FeatureCollection => {
+    const run = (filter: GeoIntLayer, predicate: string): FeatureCollection => {
       let out: FeatureCollection = { type: "FeatureCollection", features: [] };
       tool.run({
         layers: [a, filter],
@@ -631,7 +631,7 @@ describe("processing registry", () => {
     assert.equal(run(tiny, "contains").features.length, 1);
     assert.equal(run(big, "contains").features.length, 0);
     // Empty filter layer: disjoint keeps everything, the rest keep nothing.
-    const empty: GeoLibreLayer = {
+    const empty: GeoIntLayer = {
       ...layer,
       id: "emptyfilter",
       name: "emptyfilter",
@@ -644,7 +644,7 @@ describe("processing registry", () => {
   it("explodes multipart geometries into single-part features", () => {
     const tool = getVectorTool("explode");
     assert.ok(tool);
-    const multi: GeoLibreLayer = {
+    const multi: GeoIntLayer = {
       ...layer,
       id: "multi",
       name: "Multi",
@@ -733,7 +733,7 @@ describe("processing registry", () => {
         ],
       },
     });
-    const parcels: GeoLibreLayer = {
+    const parcels: GeoIntLayer = {
       ...layer,
       id: "parcels",
       name: "Parcels",
@@ -780,7 +780,7 @@ describe("processing registry", () => {
 
     // Boolean stat values coerce to 1/0 like pandas to_numeric (sum of two
     // north parcels, one true + one false → 1), not dropped as non-numeric.
-    const boolLayer: GeoLibreLayer = {
+    const boolLayer: GeoIntLayer = {
       ...parcels,
       id: "boolLayer",
       geojson: {
@@ -809,7 +809,7 @@ describe("processing registry", () => {
 
     // A feature whose group value is null is skipped (no "null" bucket), matching
     // pandas groupby(dropna=True) on the sidecar.
-    const withNull: GeoLibreLayer = {
+    const withNull: GeoIntLayer = {
       ...parcels,
       id: "withNull",
       geojson: {
@@ -849,7 +849,7 @@ describe("processing registry", () => {
 
     // The field exists but every value is null: not an error (polygons exist),
     // an empty grouped result matching the sidecar's pandas dropna behaviour.
-    const allNull: GeoLibreLayer = {
+    const allNull: GeoIntLayer = {
       ...parcels,
       id: "allNull",
       geojson: {
@@ -898,7 +898,7 @@ describe("processing registry", () => {
   it("smooths polygon corners with Chaikin's algorithm", () => {
     const tool = getVectorTool("smooth");
     assert.ok(tool);
-    const square: GeoLibreLayer = {
+    const square: GeoIntLayer = {
       ...layer,
       id: "square",
       name: "Square",
@@ -958,7 +958,7 @@ describe("processing registry", () => {
     assert.ok(logs.some((m) => m.includes("between 1 and 10")));
 
     // A malformed polygon with an empty ring must not throw; the ring stays empty.
-    const malformed: GeoLibreLayer = {
+    const malformed: GeoIntLayer = {
       ...square,
       id: "malformed",
       geojson: {
@@ -990,7 +990,7 @@ describe("processing registry", () => {
     );
 
     // Z/elevation is interpolated through smoothing, not dropped.
-    const line3d: GeoLibreLayer = {
+    const line3d: GeoIntLayer = {
       ...square,
       id: "line3d",
       geojson: {
@@ -1025,7 +1025,7 @@ describe("processing registry", () => {
     assert.deepEqual(coords3d[1], [0, 2.5, 125]);
 
     // The feature id is preserved through smoothing.
-    const withId: GeoLibreLayer = {
+    const withId: GeoIntLayer = {
       ...square,
       id: "withId",
       geojson: {
@@ -1124,7 +1124,7 @@ describe("processing registry", () => {
 
     // A zero-area layer extent (single point) errors rather than logging a
     // 0-cell grid.
-    const pointLayer: GeoLibreLayer = {
+    const pointLayer: GeoIntLayer = {
       ...layer,
       id: "onept",
       geojson: {
@@ -1160,7 +1160,7 @@ describe("processing registry", () => {
       properties: {},
       geometry: { type: "Point" as const, coordinates: [x, y] },
     });
-    const points: GeoLibreLayer = {
+    const points: GeoIntLayer = {
       ...layer,
       id: "pts",
       name: "Points",

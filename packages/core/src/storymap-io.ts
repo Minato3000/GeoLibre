@@ -12,9 +12,9 @@ export function serializeStoryMapJson(storymap: StoryMap): string {
 }
 
 /**
- * Parse a story map from JSON authored outside GeoLibre.
+ * Parse a story map from JSON authored outside GeoInt.
  *
- * Accepts either a bare story map object or a full `.geolibre.json` project with
+ * Accepts either a bare story map object or a full `.geoint.json` project with
  * a `storymap` field, then validates it through the same normalizer used when
  * loading projects.
  *
@@ -94,7 +94,7 @@ export function serializeStoryMapCsv(storymap: StoryMap): string {
 }
 
 /**
- * Parse chapters from a CSV authored outside GeoLibre.
+ * Parse chapters from a CSV authored outside GeoInt.
  *
  * Columns are matched by header name (case-insensitive) so column order is
  * flexible; `lng`/`lat` set the chapter center. Story-level settings come from

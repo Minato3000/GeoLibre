@@ -5,15 +5,15 @@
  * connection used by the PostgreSQL source).
  */
 
-import type { GeoLibreLayer } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+import type { GeoIntLayer } from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import { createContext, useContext, type RefObject } from "react";
 import type { MartinConnection } from "./useMartinConnection";
 
 export interface AddDataShellContextValue {
   mapControllerRef: RefObject<MapController | null>;
-  addLayer: (layer: GeoLibreLayer, beforeLayerId?: string | null) => void;
-  existingLayers: GeoLibreLayer[];
+  addLayer: (layer: GeoIntLayer, beforeLayerId?: string | null) => void;
+  existingLayers: GeoIntLayer[];
   isSubmitting: boolean;
   setIsSubmitting: (value: boolean) => void;
   /** Run close cleanups (e.g. transient Martin shutdown) and close the dialog. */

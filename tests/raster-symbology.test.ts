@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import {
   buildContinuousColormapRgba,
   buildSteppedColormapRgba,
@@ -11,7 +11,7 @@ import {
   savedRasterSymbology,
 } from "../packages/plugins/src/plugins/raster-symbology";
 
-function layerWith(rasterSymbology: unknown): GeoLibreLayer {
+function layerWith(rasterSymbology: unknown): GeoIntLayer {
   return {
     id: "raster-1",
     name: "dem.tif",
@@ -19,7 +19,7 @@ function layerWith(rasterSymbology: unknown): GeoLibreLayer {
     source: { type: "raster" },
     visible: true,
     opacity: 1,
-    style: {} as GeoLibreLayer["style"],
+    style: {} as GeoIntLayer["style"],
     metadata: { rasterSymbology },
   };
 }

@@ -1,4 +1,4 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import {
   DEFAULT_EFFECTS_SETTINGS,
   type EffectsSettings,
@@ -16,7 +16,7 @@ import {
   togglePrecipitationPlaying,
   type WeatherAnimationState,
   type WeatherLayerController,
-} from "@geolibre/plugins";
+} from "@geoint/plugins";
 import {
   Button,
   ColorField,
@@ -35,7 +35,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   Slider,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { Clapperboard, ClipboardList, LocateFixed, SlidersHorizontal, Video } from "lucide-react";
 import { type MouseEvent as ReactMouseEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

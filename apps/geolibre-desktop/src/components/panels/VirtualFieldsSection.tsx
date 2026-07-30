@@ -1,11 +1,11 @@
 import {
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerVirtualField,
   stripVirtualFieldColumns,
   useAppStore,
   validateMapExpression,
-} from "@geolibre/core";
-import { Button, Input, Label, Textarea } from "@geolibre/ui";
+} from "@geoint/core";
+import { Button, Input, Label, Textarea } from "@geoint/ui";
 import { AlertTriangle, Pencil, Plus, SquareFunction, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,7 +13,7 @@ import { getAttributePropertyNames } from "../../lib/expression-inputs";
 import { ExpressionBuilderDialog } from "../expressions/ExpressionBuilderDialog";
 
 interface VirtualFieldsSectionProps {
-  layer: GeoLibreLayer;
+  layer: GeoIntLayer;
 }
 
 function newFieldId(): string {

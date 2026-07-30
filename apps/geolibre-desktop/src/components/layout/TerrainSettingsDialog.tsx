@@ -3,7 +3,7 @@ import {
   TERRAIN_SETTINGS_CLOSE_EVENT,
   TERRAIN_SETTINGS_EVENT,
   type MapController,
-} from "@geolibre/map";
+} from "@geoint/map";
 import {
   Button,
   Dialog,
@@ -14,7 +14,7 @@ import {
   Input,
   Label,
   Slider,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {

@@ -1,4 +1,4 @@
-import type { WhiteboxTool, WhiteboxToolParameter } from "@geolibre/processing";
+import type { WhiteboxTool, WhiteboxToolParameter } from "@geoint/processing";
 import { parameterKind } from "./whitebox-param-kind";
 
 /**
@@ -48,9 +48,9 @@ function findParameter(tool: WhiteboxTool, name: string): WhiteboxToolParameter 
 /**
  * Which extent shape `tool` takes, if any. Matching on the parameter set rather
  * than on tool ids keeps every current and future extractor covered: a `bbox`
- * paired with a `bbox_crs` is a subset extractor's extent (GeoLibre#1213), and
+ * paired with a `bbox_crs` is a subset extractor's extent (GeoInt#1213), and
  * four numeric `west`/`south`/`east`/`north` parameters are an area of interest
- * asked for one boundary at a time (GeoLibre#1541).
+ * asked for one boundary at a time (GeoInt#1541).
  *
  * @param tool - The selected tool.
  * @returns The extent style, or `null` when the tool has no extent parameters.

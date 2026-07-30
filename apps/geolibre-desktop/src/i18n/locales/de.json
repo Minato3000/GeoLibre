@@ -28,8 +28,8 @@
   },
   "about": {
     "trigger": "Über",
-    "title": "Über GeoLibre",
-    "description": "GeoLibre ist eine leichtgewichtige, cloud-native GIS-Plattform.",
+    "title": "Über GeoInt",
+    "description": "GeoInt ist eine leichtgewichtige, cloud-native GIS-Plattform.",
     "version": "Version",
     "checkForUpdates": "Nach Updates suchen",
     "tryAgain": "Erneut versuchen",
@@ -48,7 +48,7 @@
     "steps": {
       "download": "Laden Sie das Installationsprogramm für Ihre Plattform von der Downloads-Seite herunter.",
       "install": "Führen Sie das Installationsprogramm aus. Ihre lokalen Projekte, Einstellungen und API-Schlüssel bleiben erhalten.",
-      "reopen": "Öffnen Sie GeoLibre erneut, um die Aktualisierung abzuschließen."
+      "reopen": "Öffnen Sie GeoInt erneut, um die Aktualisierung abzuschließen."
     },
     "severity": {
       "major": "Hauptversion",
@@ -67,7 +67,7 @@
       "noTag": "Der neueste Release enthält kein Versions-Tag.",
       "network": "GitHub konnte nicht erreicht werden. Überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
       "viewDownloads": "Downloads anzeigen",
-      "viewDownloadsHint": "Öffnet die GeoLibre-Downloads-Seite in Ihrem Browser, damit Sie die neueste Version manuell prüfen können."
+      "viewDownloadsHint": "Öffnet die GeoInt-Downloads-Seite in Ihrem Browser, damit Sie die neueste Version manuell prüfen können."
     },
     "startup": {
       "title": "Update verfügbar",
@@ -95,7 +95,7 @@
       "title": "Plugins aus diesem Projekt laden?",
       "description_one": "Dieses Projekt möchte 1 externes Plugin von einer URL laden, die Sie nicht installiert haben. Plugins führen Code mit vollem Zugriff auf die App aus.",
       "description_other": "Dieses Projekt möchte {{count}} externe Plugins von URLs laden, die Sie nicht installiert haben. Plugins führen Code mit vollem Zugriff auf die App aus.",
-      "warning": "Laden Sie Plugins nur aus vertrauenswürdigen Quellen. Geladene Plugins laufen mit denselben Rechten wie GeoLibre selbst.",
+      "warning": "Laden Sie Plugins nur aus vertrauenswürdigen Quellen. Geladene Plugins laufen mit denselben Rechten wie GeoInt selbst.",
       "trustButton": "Vertrauen und laden",
       "dismissButton": "Nicht laden"
     },
@@ -114,7 +114,7 @@
     "openHomepageAria": "Homepage von {{name}} öffnen",
     "byAuthor": "von {{author}}",
     "updateAvailable": "Update verfügbar",
-    "requiresVersion": "benötigt GeoLibre {{version}}+",
+    "requiresVersion": "benötigt GeoInt {{version}}+",
     "install": "Installieren",
     "installAria": "{{name}} installieren",
     "removeConfirm": "Entfernen?",
@@ -125,10 +125,10 @@
     "updateAria": "{{name}} aktualisieren",
     "loading": "Wird geladen…",
     "installed": "Installiert",
-    "settingsIntro": "GeoLibre durchsucht immer sein App-Daten-Plugin-Verzeichnis. Installieren Sie ein paketiertes Plugin (.zip) aus einer Datei oder fügen Sie weitere lokale Verzeichnisse hinzu (nur Desktop). Manifest-URLs (einschließlich Marketplace-Installationen) werden über das Netzwerk geladen; Änderungen hier wirken sofort.",
+    "settingsIntro": "GeoInt durchsucht immer sein App-Daten-Plugin-Verzeichnis. Installieren Sie ein paketiertes Plugin (.zip) aus einer Datei oder fügen Sie weitere lokale Verzeichnisse hinzu (nur Desktop). Manifest-URLs (einschließlich Marketplace-Installationen) werden über das Netzwerk geladen; Änderungen hier wirken sofort.",
     "installFromFile": "Aus Datei installieren",
     "chooseZip": ".zip wählen…",
-    "installFromFileHintDesktop": "Kopiert ein paketiertes Plugin-Archiv in das Plugin-Verzeichnis von GeoLibre.",
+    "installFromFileHintDesktop": "Kopiert ein paketiertes Plugin-Archiv in das Plugin-Verzeichnis von GeoInt.",
     "installFromFileHintWeb": "Lädt ein paketiertes Plugin-Archiv; es wird in Ihrem Browser gespeichert und beim nächsten Besuch erneut geladen.",
     "localDirectories": "Lokale Verzeichnisse",
     "directoryAria": "Plugin-Verzeichnis",
@@ -143,7 +143,7 @@
     "errorDirectoryPicker": "Die Verzeichnisauswahl konnte nicht geöffnet werden.",
     "errorInstall": "Das Plugin konnte nicht installiert werden.",
     "errorUninstall": "Das Plugin konnte nicht deinstalliert werden.",
-    "description": "Externe GeoLibre-Plugins durchsuchen, installieren, aktualisieren und entfernen. Plugins sind in der <registryLink>GeoLibre-Plugin-Registry</registryLink> aufgeführt."
+    "description": "Externe GeoInt-Plugins durchsuchen, installieren, aktualisieren und entfernen. Plugins sind in der <registryLink>GeoInt-Plugin-Registry</registryLink> aufgeführt."
   },
   "viewState": {
     "panelTitle": "Info"
@@ -214,7 +214,7 @@
     "add": "Hinzufügen",
     "ok": "OK",
     "done": "Fertig",
-    "openWebApp": "GeoLibre-Web-App öffnen"
+    "openWebApp": "GeoInt-Web-App öffnen"
   },
   "addData": {
     "title": "Daten hinzufügen",
@@ -257,7 +257,7 @@
       },
       "gdb": {
         "label": "File-Geodatabase-Ebene hinzufügen",
-        "description": "Fügt eine Ebene aus einer Esri File Geodatabase (.gdb-Ordner) hinzu. Die Ebene wird mit dem lokalen GeoLibre-Server gelesen und nach WGS84 reprojiziert."
+        "description": "Fügt eine Ebene aus einer Esri File Geodatabase (.gdb-Ordner) hinzu. Die Ebene wird mit dem lokalen GeoInt-Server gelesen und nach WGS84 reprojiziert."
       },
       "photos": {
         "label": "Geotagged Fotos hinzufügen",
@@ -481,8 +481,8 @@
       "layerPlaceholder": "Wählen Sie zuerst eine Geodatabase",
       "readingLayers": "Ebenen werden gelesen...",
       "layerOption": "{{name}} ({{type}}, {{count}} Objekte)",
-      "help": "Reine Attributtabellen werden nicht aufgeführt. Die ausgewählte Feature-Class wird über den lokalen GeoLibre-Server geladen und nach WGS84 reprojiziert.",
-      "desktopOnly": "File-Geodatabase-Ebenen sind nur in GeoLibre Desktop verfügbar. Diese Funktion liest einen lokalen .gdb-Ordner über den lokalen GeoLibre-Server, auf den die Web-App nicht zugreifen kann.",
+      "help": "Reine Attributtabellen werden nicht aufgeführt. Die ausgewählte Feature-Class wird über den lokalen GeoInt-Server geladen und nach WGS84 reprojiziert.",
+      "desktopOnly": "File-Geodatabase-Ebenen sind nur in GeoInt Desktop verfügbar. Diese Funktion liest einen lokalen .gdb-Ordner über den lokalen GeoInt-Server, auf den die Web-App nicht zugreifen kann.",
       "readError": "Diese File Geodatabase konnte nicht gelesen werden.",
       "convertError": "Diese Feature-Class konnte nicht geladen werden.",
       "errorNotGdb": "Wählen Sie einen Ordner mit der Endung .gdb (eine Esri File Geodatabase).",
@@ -563,7 +563,7 @@
     },
     "postgres": {
       "defaultName": "PostgreSQL-Ebene",
-      "errorDesktopOnly": "PostgreSQL-Ebenen erfordern GeoLibre Desktop.",
+      "errorDesktopOnly": "PostgreSQL-Ebenen erfordern GeoInt Desktop.",
       "errorConnectionString": "Geben Sie eine PostgreSQL-Verbindungszeichenfolge ein.",
       "statusCheckingBinary": "Martin-Binärdatei wird geprüft...",
       "statusDownloaded": "Martin heruntergeladen. Lokaler Server wird gestartet...",
@@ -578,7 +578,7 @@
       "errorConnectFirst": "Stellen Sie zuerst eine Verbindung zu PostgreSQL her.",
       "errorNoVectorLayers": "Die ausgewählte Martin-Quelle hat keine Vektorebenen.",
       "errorSelectSource": "Wählen Sie eine Martin-Quelle zum Hinzufügen aus.",
-      "desktopOnlyNotice": "PostgreSQL-Ebenen sind nur in GeoLibre Desktop verfügbar. Diese Funktion startet einen lokalen Martin-Kachelserver, den die Web-App nicht starten kann.",
+      "desktopOnlyNotice": "PostgreSQL-Ebenen sind nur in GeoInt Desktop verfügbar. Diese Funktion startet einen lokalen Martin-Kachelserver, den die Web-App nicht starten kann.",
       "savedConnection": "Gespeicherte Verbindung",
       "selectSavedConnection": "Gespeicherte Verbindung auswählen",
       "connectionString": "PostgreSQL-Verbindungszeichenfolge",
@@ -599,7 +599,7 @@
       "editableTable": "Tabelle",
       "tableReadOnly": "{{table}} (schreibgeschützt: kein Primärschlüssel)",
       "errorSelectTable": "Wählen Sie eine zu ladende Tabelle aus.",
-      "errorRuntimeMissing": "Der Verarbeitungsserver hat die PostGIS-Laufzeitumgebung (psycopg) nicht installiert. Installieren Sie das Extra „postgis“ von geolibre-server, um bearbeitbare Ebenen zu laden."
+      "errorRuntimeMissing": "Der Verarbeitungsserver hat die PostGIS-Laufzeitumgebung (psycopg) nicht installiert. Installieren Sie das Extra „postgis“ von geoint-server, um bearbeitbare Ebenen zu laden."
     },
     "video": {
       "defaultName": "Videoebene",
@@ -1078,7 +1078,7 @@
     "step1Title": "1. API-Token erstellen",
     "step1Description": "Melden Sie sich bei share.geolibre.app an und erstellen Sie dann ein Token unter Einstellungen → API-Token.",
     "getToken": "API-Token abrufen",
-    "step2Title": "2. Token zu GeoLibre hinzufügen",
+    "step2Title": "2. Token zu GeoInt hinzufügen",
     "step2Description": "Fügen Sie das Token unter Einstellungen → Umgebungsvariablen auf diesem Gerät ein.",
     "configureToken": "Lokales Token konfigurieren",
     "liveAt": "Ihr Projekt ist live unter:",
@@ -1100,7 +1100,7 @@
   },
   "gallery": {
     "title": "Projektgalerie",
-    "description": "Durchsuchen Sie öffentliche Projekte auf share.geolibre.app und öffnen Sie eines in GeoLibre.",
+    "description": "Durchsuchen Sie öffentliche Projekte auf share.geolibre.app und öffnen Sie eines in GeoInt.",
     "searchPlaceholder": "Geladene Projekte nach Titel, Autor oder Tag filtern",
     "loading": "Projekte werden geladen…",
     "loadingMore": "Weitere werden geladen…",
@@ -1186,7 +1186,7 @@
       "groupNavigation": "Nordpfeil und Maßstabsleiste gruppieren",
       "footer": "Fußzeilentext",
       "date": "Datum",
-      "attribution": "GeoLibre-Attribution einschließen",
+      "attribution": "GeoInt-Attribution einschließen",
       "pageBorder": "Seitenrand",
       "infoBlock": "Infoblock (Schriftfeld)",
       "colorbar": "Farbskala",
@@ -1566,7 +1566,7 @@
     "noticeDesc": "Beim Öffnen einer Wissenskarte werden die Koordinaten des angeklickten Ortes (und der Titel jedes geöffneten Artikels in der Nähe) an die öffentliche Wikipedia-API gesendet, um eine Zusammenfassung und ein Foto abzurufen — Ihre Koordinaten verlassen für diese Anfragen Ihr Gerät."
   },
   "onboarding": {
-    "title": "Willkommen bei GeoLibre",
+    "title": "Willkommen bei GeoInt",
     "description": "Wählen Sie Ihre Erfahrungsstufe, um die Oberfläche anzupassen. Sie können dies jederzeit unter Einstellungen → Oberfläche ändern.",
     "level": {
       "beginner": {
@@ -1579,7 +1579,7 @@
       },
       "advanced": {
         "title": "Experte",
-        "description": "Alles anzeigen, was GeoLibre zu bieten hat."
+        "description": "Alles anzeigen, was GeoInt zu bieten hat."
       }
     },
     "showEverything": "Überspringen — alles anzeigen"
@@ -1594,7 +1594,6 @@
       "appearance": "Erscheinungsbild",
       "interface": "Oberfläche",
       "geocoding": "Geokodierung",
-      "ai": "KI-Anbieter",
       "environment": "Umgebung",
       "updates": "Updates"
     },
@@ -1604,7 +1603,6 @@
       "appearanceSettings": "Erscheinungsbild-Einstellungen",
       "interfaceSettings": "Oberflächeneinstellungen",
       "geocoding": "Geokodierung",
-      "ai": "KI-Anbieter",
       "environmentVariables": "Umgebungsvariablen",
       "updates": "Update-Einstellungen",
       "managePlugins": "Plugins verwalten",
@@ -1613,9 +1611,9 @@
     },
     "updates": {
       "title": "Software-Updates",
-      "description": "Steuern Sie, wie GeoLibre beim Start der Desktop-App nach neuen Versionen sucht.",
+      "description": "Steuern Sie, wie GeoInt beim Start der Desktop-App nach neuen Versionen sucht.",
       "checkOnStartup": "Beim Start nach Updates suchen",
-      "checkOnStartupHint": "Wenn aktiviert, prüft GeoLibre bei jedem Start der App auf eine neuere Version. Deaktivieren Sie dies für einen vollständig offline-fähigen Arbeitsablauf.",
+      "checkOnStartupHint": "Wenn aktiviert, prüft GeoInt bei jedem Start der App auf eine neuere Version. Deaktivieren Sie dies für einen vollständig offline-fähigen Arbeitsablauf.",
       "notificationLevel": "Benachrichtigen über",
       "notificationLevelHint": "Wählen Sie, welche Arten von Releases eine Startbenachrichtigung auslösen.",
       "level": {
@@ -1698,7 +1696,7 @@
       "lockedNote": "Dieses Oberflächenprofil wird von Ihrem Administrator verwaltet und kann nicht geändert werden."
     },
     "env": {
-      "tokenTitle": "Share.GeoLibre-API-Token",
+      "tokenTitle": "Share.GeoInt-API-Token",
       "tokenDescription": "Projekt > Teilen verwendet dieses Token, um Ihre Karten auf share.geolibre.app hochzuladen. Öffnen Sie <tokenLink>share.geolibre.app/settings</tokenLink>, erstellen Sie ein Token unter Einstellungen > API-Token und fügen Sie es dann in das Feld unten ein.",
       "tokenStorageNote": "Wird lokal auf diesem Gerät gespeichert und nur an share.geolibre.app gesendet, um Uploads zu authentifizieren. Im Web-Build nutzt es denselben Browser-Speicher wie andere Website-Daten. Widerrufen Sie es daher auf share.geolibre.app, falls Ihr Gerät kompromittiert wurde.",
       "tokenPlaceholder": "glb_…",
@@ -1744,61 +1742,6 @@
       "emailHint": "Wird nur von Nominatim verwendet, das die Angabe empfiehlt, um Ihre Anwendung zu identifizieren — wird nur gesendet, wenn angegeben.",
       "secretsWarning": "Schlüssel werden im Klartext in der Projektdatei gespeichert und können beim Teilen des Projekts offengelegt werden. Sie werden außerdem als Query-Parameter gesendet und erscheinen daher in Geokodierungs-Anfrage-URLs, die in den Browser-DevTools und in Proxy-Protokollen sichtbar sind.",
       "corsNote": "Google erlaubt offiziell keine Browser-Anfragen an seine Geocoding API, sodass Anfragen blockiert werden können, sofern sie nicht über einen Same-Origin-Proxy geleitet werden."
-    },
-    "ai": {
-      "title": "KI-Assistent-Anbieter",
-      "description": "Konfigurieren Sie die Anmeldedaten für den KI-Assistenten. Wählen Sie einen Anbieter, füllen Sie die benötigten Felder aus und speichern Sie dann. Es ist nur ein konfigurierter Anbieter erforderlich, um mit dem Chat zu beginnen.",
-      "providerLabel": "Anbieter",
-      "providerHint": "Wählen Sie einen Anbieter, um die genau benötigten Felder anzuzeigen.",
-      "configuredMark": "(konfiguriert)",
-      "optionalMark": "(optional)",
-      "statusReady": "{{provider}} ist konfiguriert und einsatzbereit.",
-      "statusIncomplete": "Füllen Sie die untenstehenden Pflichtfelder aus, um {{provider}} zu aktivieren.",
-      "secretsNote": "Zugangsdaten werden lokal auf diesem Gerät gespeichert, nicht in der Projektdatei, die Sie weitergeben; sie bleiben daher über Neustarts hinweg erhalten. Jeder mit Zugriff auf dieses Gerät könnte sie lesen.",
-      "getCredentials": "Woher Sie {{provider}}-Anmeldedaten erhalten",
-      "showValue": "{{name}} anzeigen",
-      "hideValue": "{{name}} ausblenden",
-      "osEnvNote": "Die Desktop-App liest passende API-Schlüssel auch aus den Umgebungsvariablen Ihres Systems. Diese werden automatisch verwendet und nie in der Projektdatei gespeichert — lassen Sie ein Feld leer, um weiterhin den Wert aus der Umgebung zu verwenden.",
-      "osEnvField": "Wird aus der Systemumgebungsvariable {{name}} gelesen.",
-      "osEnvPlaceholder": "In Ihrer Systemumgebung gesetzt",
-      "newProfile": "Neues Profil",
-      "cancel": "Abbrechen",
-      "addProfile": "Profil hinzufügen",
-      "profileName": "Profilname",
-      "profileNamePlaceholder": "z. B. Gemini (Arbeit), Ollama (lokal)",
-      "profileCount_one": "{{count}} Profil",
-      "profileCount_other": "{{count}} Profile",
-      "noProfiles": "Noch keine Profile. Fügen Sie unten eines hinzu, um den KI-Assistenten zu konfigurieren.",
-      "setDefault": "Als Standard festlegen",
-      "defaultProfile": "Standard",
-      "edit": "Bearbeiten",
-      "deleteProfile": "Profil löschen",
-      "backToProfiles": "← Zurück zu den Profilen",
-      "saveProfile": "Profil speichern",
-      "profileEditSaveHint": "Speichern oder verwerfen Sie oben Ihre Profiländerungen und klicken Sie dann auf „Einstellungen speichern“, um alle Änderungen zu übernehmen.",
-      "field": {
-        "apiKey": "API-Schlüssel",
-        "baseUrl": "Basis-URL",
-        "model": "Modell",
-        "region": "Region",
-        "accessKeyId": "Zugriffsschlüssel-ID",
-        "secretAccessKey": "Geheimer Zugriffsschlüssel",
-        "sessionToken": "Sitzungstoken"
-      },
-      "placeholder": {
-        "geminiKey": "AIza…",
-        "anthropicKey": "sk-ant-…",
-        "openaiKey": "sk-…",
-        "ollamaBaseUrl": "http://localhost:11434",
-        "ollamaModel": "llama3.2",
-        "awsAccessKey": "AKIA…",
-        "awsSecretKey": "wJalrXUtnFEMI…",
-        "awsRegion": "us-east-1",
-        "awsSessionToken": "FwoGZXIvYXdz… (bei Verwendung temporärer Anmeldedaten)",
-        "customBaseUrl": "https://api.example.com/v1",
-        "customModel": "model-id",
-        "customApiKey": "sk-… (falls erforderlich)"
-      }
     }
   },
   "toolbar": {
@@ -1908,7 +1851,7 @@
       "smartPaste": "Koordinaten einfügen",
       "smartPasteInputLabel": "Koordinatenzeichenfolge",
       "smartPastePlaceholder": "z. B. 51.5074, -0.1278 oder 51°30'26\"N, 0°07'39\"W",
-      "smartPasteInfo": "Geben Sie eine vollständige Koordinatenzeichenfolge im Format DD, DMS oder DDM ein oder fügen Sie sie ein und führen Sie dann „Eingabe verarbeiten“ aus. GeoLibre erkennt das Format und füllt die untenstehenden Felder für Längen- und Breitengrad aus. Passen Sie Zoom, Neigung und Peilung anschließend separat an, bevor Sie losgehen.",
+      "smartPasteInfo": "Geben Sie eine vollständige Koordinatenzeichenfolge im Format DD, DMS oder DDM ein oder fügen Sie sie ein und führen Sie dann „Eingabe verarbeiten“ aus. GeoInt erkennt das Format und füllt die untenstehenden Felder für Längen- und Breitengrad aus. Passen Sie Zoom, Neigung und Peilung anschließend separat an, bevor Sie losgehen.",
       "smartPasteInfoLabel": "Über das Einfügen von Koordinaten",
       "smartPasteInvalid": "Diese Koordinaten konnten nicht gelesen werden. Geben Sie einen vollständigen Längen- und Breitengrad im Format DD, DMS oder DDM ein, zum Beispiel 51.5074, -0.1278. Eine unvollständige Zeichenfolge kann nicht verarbeitet werden.",
       "processInput": "Eingabe verarbeiten",
@@ -2037,8 +1980,8 @@
     },
     "conversion": {
       "vectorToVector": "Vektor zu Vektor",
-      "zipInputBrowserError": "Gezippte Shapefiles können nur in der GeoLibre-Desktop-App konvertiert werden. Wählen Sie im Browser die entpackte .shp zusammen mit ihren .dbf-, .shx- und .prj-Dateien aus.",
-      "browserOutputUnsupported": "Im Browser kann die Ausgabe GeoJSON, CSV, GeoParquet, GeoPackage oder Shapefile (.zip) sein. Die Ausgabe \".{{extension}}\" erfordert die GeoLibre-Desktop-App.",
+      "zipInputBrowserError": "Gezippte Shapefiles können nur in der GeoInt-Desktop-App konvertiert werden. Wählen Sie im Browser die entpackte .shp zusammen mit ihren .dbf-, .shx- und .prj-Dateien aus.",
+      "browserOutputUnsupported": "Im Browser kann die Ausgabe GeoJSON, CSV, GeoParquet, GeoPackage oder Shapefile (.zip) sein. Die Ausgabe \".{{extension}}\" erfordert die GeoInt-Desktop-App.",
       "outputExtensionRequired": "Fügen Sie dem Ausgabenamen eine Dateierweiterung hinzu, um das Format zu wählen.",
       "readingWithDuckDb": "{{name}} wird mit DuckDB-WASM gelesen",
       "readFeatures": "{{features}} Objekte aus {{name}} gelesen",
@@ -2052,7 +1995,7 @@
       "vectorToPmtiles": "Vektor zu PMTiles",
       "rasterToCog": "Raster zu COG",
       "rasterToPmtiles": "Raster zu PMTiles",
-      "needsDesktop": "Diese Konvertierung benötigt die GeoLibre-Desktop-App oder einen laufenden Sidecar.",
+      "needsDesktop": "Diese Konvertierung benötigt die GeoInt-Desktop-App oder einen laufenden Sidecar.",
       "runsInBrowserDuckDb": "Die Konvertierung läuft in Ihrem Browser mit DuckDB-WASM.",
       "runsInBrowserWriters": "Die Konvertierung läuft in Ihrem Browser mit DuckDB-WASM und den mitgelieferten Writern.",
       "runsInBrowserWasm": "Die Konvertierung läuft in Ihrem Browser mit geolibre-wasm. Kein Sidecar erforderlich.",
@@ -2207,7 +2150,7 @@
       "noOutput": "Noch keine Ausgabe.",
       "errorConnect": "Verbindung zum Sidecar nicht möglich.",
       "errorPoll": "Auftrag konnte nicht abgefragt werden.",
-      "errorStartSidecar": "GeoLibre-Sidecar konnte nicht gestartet werden.",
+      "errorStartSidecar": "GeoInt-Sidecar konnte nicht gestartet werden.",
       "errorStartTool": "Rasterwerkzeug konnte nicht gestartet werden."
     },
     "mapControl": {
@@ -2311,7 +2254,7 @@
       "terrain": "Gelände",
       "remoteSensing": "Fernerkundung",
       "projection": "Projektion",
-      "geolibre": "GeoLibre",
+      "geoint": "GeoInt",
       "subGroupGeometry": "Geometrie",
       "subGroupOverlay": "Überlagerung",
       "subGroupJoin": "Verknüpfung",
@@ -2373,7 +2316,7 @@
       "webServices": "Webdienste",
       "commandPalette": "Befehlspalette",
       "openProjectFromUrl": "Projekt von URL öffnen",
-      "openProjectFromUrlDesc": "Lädt ein `.geolibre.json`-Projekt und fügt es den zuletzt verwendeten Projekten hinzu.",
+      "openProjectFromUrlDesc": "Lädt ein `.geoint.json`-Projekt und fügt es den zuletzt verwendeten Projekten hinzu.",
       "projectUrl": "Projekt-URL",
       "opening": "Wird geöffnet...",
       "open": "Öffnen",
@@ -2388,7 +2331,7 @@
       "embedVectorReferenceButton": "Dateiverweise speichern",
       "embedVectorSkipButton": "Ohne Daten speichern",
       "saveProjectFileName": "Dateiname",
-      "saveProjectFileNamePlaceholder": "mein-projekt.geolibre.json",
+      "saveProjectFileNamePlaceholder": "mein-projekt.geoint.json",
       "exportHtmlAsTitle": "Als interaktives HTML exportieren",
       "exportHtmlAsDesc": "Geben Sie einen Dateinamen ein. Die HTML-Seite wird beim Klicken auf Speichern in den Downloads-Ordner Ihres Browsers heruntergeladen.",
       "exportHtmlFileName": "Dateiname",
@@ -2429,21 +2372,21 @@
       "maplibre-gl-annotations": "Anmerkungen",
       "maplibre-gl-streetview": "Straßenansicht",
       "maplibre-gl-time-slider": "Zeitschieberegler",
-      "geolibre-timelapse": "Zeitraffer",
+      "geoint-timelapse": "Zeitraffer",
       "maplibre-gl-esri-wayback": "Historische Bilder",
       "maplibre-gl-openaerialmap": "OpenAerialMap",
-      "geolibre-stac-catalogs": "STAC-Kataloge",
+      "geoint-stac-catalogs": "STAC-Kataloge",
       "maplibre-gl-source-coop": "Source Cooperative",
       "maplibre-gl-natural-earth": "Natural Earth",
       "maplibre-gl-swipe": "Ebenen-Wischer",
-      "geolibre-elevation-profile": "Höhenprofil",
+      "geoint-elevation-profile": "Höhenprofil",
       "maplibre-gl-basemap-control": "Basiskarten",
       "maplibre-layer-control": "Ebenensteuerung",
       "maplibre-gl-huggingface": "Hugging Face",
       "carto-light": "Carto Light Basiskarte",
-      "geolibre-flight-simulator": "Flugsimulator",
-      "geolibre-route-animation": "Routenanimation",
-      "geolibre-sun": "Sonnensimulation",
+      "geoint-flight-simulator": "Flugsimulator",
+      "geoint-route-animation": "Routenanimation",
+      "geoint-sun": "Sonnensimulation",
       "maplibre-atmosphere-effects": "Atmosphärische Effekte",
       "maplibre-deckgl-viz": "Deck.gl-Ebene",
       "maplibre-gl-clouds": "Wolken",
@@ -2607,7 +2550,7 @@
     "summary": "{{selected}} von {{total}} Objekt(en) ausgewählt ({{matched}} Treffer).",
     "evaluationErrors": "{{count}} Objekt(e) konnten nicht ausgewertet werden und wurden nicht berücksichtigt.",
     "unevaluableDisjoint": "{{count}} Objekt(e) wurden ausgeschlossen, da ihre Geometrie nicht ausgewertet werden konnte.",
-    "tooManyPairs": "Dieser Vergleich erfordert {{pairs}} Objektpaar-Tests (Limit {{limit}}). Verwenden Sie stattdessen Verarbeitung → GeoLibre → Vektor → Nach Position auswählen mit der Sidecar-Engine.",
+    "tooManyPairs": "Dieser Vergleich erfordert {{pairs}} Objektpaar-Tests (Limit {{limit}}). Verwenden Sie stattdessen Verarbeitung → GeoInt → Vektor → Nach Position auswählen mit der Sidecar-Engine.",
     "exportedLayerName": "{{name}} (Auswahl)"
   },
   "loadEditorFeatures": {
@@ -2834,7 +2777,7 @@
     "webMapAdded_one": "{{count}} Ebene aus dieser Webkarte hinzugefügt.",
     "webMapAdded_other": "{{count}} Ebenen aus dieser Webkarte hinzugefügt.",
     "webMapAddedPartial": "Ebenen hinzugefügt: {{added}} von {{total}} aus dieser Webkarte; die übrigen konnten nicht erreicht werden.",
-    "webMapEmpty": "diese Webkarte enthält keine Ebenen, die GeoLibre darstellen kann.",
+    "webMapEmpty": "diese Webkarte enthält keine Ebenen, die GeoInt darstellen kann.",
     "add": "Hinzufügen",
     "adding": "Wird hinzugefügt…",
     "remove": "Entfernen",
@@ -2916,7 +2859,7 @@
     "downloadTitle": "Diese Datei herunterladen",
     "copyUrlTitle": "Die URL dieser Datei kopieren",
     "openProductTitle": "Die Seite dieses Produkts auf source.coop öffnen",
-    "unsupportedTitle": "GeoLibre kann dieses Format nicht darstellen — laden Sie es stattdessen herunter",
+    "unsupportedTitle": "GeoInt kann dieses Format nicht darstellen — laden Sie es stattdessen herunter",
     "addError": "Diese Datei konnte nicht hinzugefügt werden: {{message}}",
     "largeFileWarning": "Diese Datei ist {{size}} groß. Sie wird von der Quelle gestreamt, sodass nur die sichtbaren Teile gelesen werden.",
     "streamHint": "Diese Datei ist {{size}} groß. „Hinzufügen“ kopiert sie in den Arbeitsspeicher; „Streamen“ liest nur die sichtbaren Teile.",
@@ -2961,7 +2904,7 @@
     "downloadTitle": "Diese Datei herunterladen",
     "copyUrlTitle": "Die URL dieser Datei kopieren",
     "openDatasetTitle": "Die Seite dieses Datasets auf huggingface.co öffnen",
-    "unsupportedTitle": "GeoLibre kann dieses Format nicht darstellen — laden Sie es stattdessen herunter",
+    "unsupportedTitle": "GeoInt kann dieses Format nicht darstellen — laden Sie es stattdessen herunter",
     "addError": "Diese Datei konnte nicht hinzugefügt werden: {{message}}",
     "notRasterIndex": "Diese JSON-Datei indiziert keine Raster, es gibt also nichts, was auf die Karte gelegt werden könnte. MosaicJSON und STAC-Collections werden unterstützt.",
     "largeFileWarning": "Diese Datei ist {{size}} groß. Sie wird von der Quelle gestreamt, sodass nur die sichtbaren Teile gelesen werden.",
@@ -3005,7 +2948,7 @@
     "selectedFiles_one": "{{count}} Datei ausgewählt ({{size}}).",
     "selectedFiles_other": "{{count}} Dateien ausgewählt ({{size}}).",
     "commitMessageLabel": "Commit-Nachricht (optional)",
-    "commitMessagePlaceholder": "Mit GeoLibre hochgeladen",
+    "commitMessagePlaceholder": "Mit GeoInt hochgeladen",
     "upload": "Hochladen",
     "uploadPreparing": "Upload wird vorbereitet…",
     "uploadHashing": "{{name}} wird gehasht ({{index}}/{{total}})…",
@@ -3070,7 +3013,7 @@
     "runHint": "Ausführen (Strg/Cmd+Enter)",
     "completions": "Vervollständigungen",
     "placeholder": "Python hier eingeben · Strg/Cmd+Enter zum Ausführen · Tab zum Autovervollständigen · ↑/↓ für Verlauf",
-    "intro": "Python-Konsole bereit. Verwenden Sie das Objekt `geolibre`, um die Karte zu skripten, z. B. geolibre.get_center(). Tab vervollständigt automatisch, ↑/↓ ruft vorherige Befehle ab, und `await geolibre.load_package(\"numpy\")` fügt Pakete hinzu.",
+    "intro": "Python-Konsole bereit. Verwenden Sie das Objekt `geoint`, um die Karte zu skripten, z. B. geoint.get_center(). Tab vervollständigt automatisch, ↑/↓ ruft vorherige Befehle ab, und `await geoint.load_package(\"numpy\")` fügt Pakete hinzu.",
     "loadFailed": "Die Python-Laufzeitumgebung konnte nicht geladen werden.",
     "showEditor": "Editor anzeigen",
     "hideEditor": "Editor ausblenden",
@@ -3183,21 +3126,7 @@
     "stop": "Stopp",
     "placeholder": "Stellen Sie eine Frage zu Ihren Daten, z. B. „Länder mit über 50 Millionen Einwohnern anzeigen“ · Strg/Cmd+Enter zum Senden",
     "intro": "Chatten Sie mit Ihren Daten. Ich kann räumliches SQL ausführen, Ebenen hinzufügen oder entfernen, sie neu stilisieren und die Karte bewegen — jede Änderung ist rückgängig zu machen. Probieren Sie „Länder nach Bevölkerung mit einer abgestuften roten Farbskala einfärben“.",
-    "setupTitle": "KI-Assistent einrichten",
-    "setupStatus": "Der Assistent benötigt einen KI-Anbieter für die eigentliche Verarbeitung. Fügen Sie unten Zugangsdaten für einen beliebigen Anbieter hinzu, und das Panel wechselt sofort nach dem Speichern in den Chat-Modus.",
-    "setupProviders": "Zugangsdaten für einen beliebigen Anbieter hinzufügen",
-    "setupOpenSettings": "Einstellungen → KI-Anbieter öffnen",
-    "thinking": "Arbeitet…",
-    "toolError": "fehlgeschlagen",
-    "provider": "LLM-Anbieter",
-    "profile": "KI-Profil",
-    "deploymentProxy": "Deployment-Proxy",
-    "model": "Modell",
-    "codeApprovalTitle": "Assistenten-Code ausführen?",
-    "codeApprovalBody": "Der Assistent möchte {{language}}-Code in der App ausführen. Prüfen Sie ihn zuerst — er kann die Karte verändern und auf App-Daten zugreifen.",
-    "codeApprovalAlways": "Assistenten-Code für den Rest dieser Sitzung zulassen",
-    "codeApprovalRun": "Ausführen",
-    "codeApprovalDecline": "Abbrechen"
+    "thinking": "Arbeitet…"
   },
   "storymap": {
     "title": "Story Map",
@@ -3413,7 +3342,7 @@
       },
       "filterBySource": "Nach Quelle filtern",
       "allSources": "Alle Quellen",
-      "geolibreTools": "GeoLibre-Werkzeuge",
+      "geointTools": "GeoInt-Werkzeuge",
       "whiteboxTools": "Whitebox-Werkzeuge",
       "toolbox": "Whitebox-Werkzeugkasten",
       "checkingRuntime": "Laufzeitumgebung wird geprüft.",
@@ -3443,8 +3372,8 @@
       "errorConnect": "Verbindung zum Sidecar nicht möglich.",
       "errorPoll": "Auftrag konnte nicht abgefragt werden.",
       "errorStartTool": "Whitebox-Werkzeug konnte nicht gestartet werden.",
-      "errorStartSidecar": "GeoLibre-Sidecar konnte nicht gestartet werden.",
-      "errorStopSidecar": "GeoLibre-Sidecar konnte nicht gestoppt werden.",
+      "errorStartSidecar": "GeoInt-Sidecar konnte nicht gestartet werden.",
+      "errorStopSidecar": "GeoInt-Sidecar konnte nicht gestoppt werden.",
       "noToolsFound": "Keine Werkzeuge gefunden.",
       "noParameters": "Dieses Werkzeug hat keine Parameter.",
       "noOutput": "Noch keine Ausgabe.",
@@ -3464,9 +3393,9 @@
       "runLocallyButton": "Lokal ausführen (WASM)",
       "troubleshootingTitle": "Möchten Sie den Server trotzdem verwenden?",
       "stepStartServerDesktop": "Klicken Sie im Werkzeuglisten-Panel auf „Server starten“, um ihn zu starten, und warten Sie dann einige Sekunden, bis er online ist.",
-      "stepStartServerBrowser": "Der Server kann nur über die GeoLibre-Desktop-App gestartet werden. Lassen Sie im Browser stattdessen „Lokal ausführen (WASM)“ aktiviert.",
+      "stepStartServerBrowser": "Der Server kann nur über die GeoInt-Desktop-App gestartet werden. Lassen Sie im Browser stattdessen „Lokal ausführen (WASM)“ aktiviert.",
       "stepCheckPort": "Stellen Sie sicher, dass keine Firewall, kein Virenschutz und keine Netzwerkrichtlinie den lokalen Port {{port}} blockiert.",
-      "stepRestart": "Wenn der Server unerwartet gestoppt wurde, starten Sie die GeoLibre-Desktop-App neu und öffnen Sie diesen Dialog erneut."
+      "stepRestart": "Wenn der Server unerwartet gestoppt wurde, starten Sie die GeoInt-Desktop-App neu und öffnen Sie diesen Dialog erneut."
     },
     "vectorTools": {
       "title": "Vektorwerkzeuge",
@@ -3500,13 +3429,13 @@
     "segment": "Segmentieren",
     "status": {
       "checking": "KI-Segmentierungsdienst wird geprüft…",
-      "unavailableDesktop": "Der KI-Segmentierungsdienst läuft noch nicht. Starten Sie den GeoLibre-Server mit aktiviertem segment-geospatial, um ihn zu nutzen.",
-      "unavailableWeb": "Die KI-Segmentierung ist im Browser nicht verfügbar. Verwenden Sie die GeoLibre-Desktop-App, um sie auszuführen."
+      "unavailableDesktop": "Der KI-Segmentierungsdienst läuft noch nicht. Starten Sie den GeoInt-Server mit aktiviertem segment-geospatial, um ihn zu nutzen.",
+      "unavailableWeb": "Die KI-Segmentierung ist im Browser nicht verfügbar. Verwenden Sie die GeoInt-Desktop-App, um sie auszuführen."
     },
     "error": {
       "chooseImage": "Wählen Sie ein Bild (GeoTIFF) zum Segmentieren aus.",
       "enterPrompt": "Geben Sie eine Textaufforderung ein, z. B. „Bäume“ oder „Gebäude“.",
-      "startServer": "Der GeoLibre-Sidecar konnte nicht gestartet werden.",
+      "startServer": "Der GeoInt-Sidecar konnte nicht gestartet werden.",
       "failed": "Segmentierung fehlgeschlagen."
     },
     "noObjects": "Keine Objekte gefunden.",
@@ -3517,7 +3446,7 @@
       "title": "Der KI-Segmentierungsserver konnte nicht gestartet werden.",
       "intro": "Die KI-Segmentierung läuft in einem lokalen Helferserver ({{sidecarUrl}}), der das SAM3-Modell von segment-geospatial bereitstellt. Er führt Python im Hintergrund aus, getrennt von der App, und ist nicht Teil des Browser-Builds.",
       "troubleshootingTitle": "So bringen Sie den Server zum Laufen",
-      "stepInstall": "Stellen Sie sicher, dass der GeoLibre-Server mit aktiviertem segment-geospatial-Backend installiert ist, damit das Segmentierungsmodell verfügbar ist.",
+      "stepInstall": "Stellen Sie sicher, dass der GeoInt-Server mit aktiviertem segment-geospatial-Backend installiert ist, damit das Segmentierungsmodell verfügbar ist.",
       "stepStartServerDesktop": "Klicken Sie oben auf „Server starten“, um ihn zu starten, und warten Sie dann einige Sekunden, bis das Modell online ist."
     }
   },
@@ -3766,7 +3695,7 @@
     "import": "Importieren…",
     "export": "Exportieren…",
     "importFilterName": "Stilbibliothek / QML / SLD",
-    "exportFilterName": "GeoLibre-Stilbibliothek",
+    "exportFilterName": "GeoInt-Stilbibliothek",
     "applied": "„{{name}}“ auf {{layer}} angewendet.",
     "appliedRampHint": "„{{name}}“ angewendet. Stellen Sie die Ebene auf abgestufte oder kategorisierte Darstellung um, um den Farbverlauf zu sehen.",
     "saved": "„{{name}}“ in der Bibliothek gespeichert.",
@@ -4597,10 +4526,10 @@
   },
   "errorBoundary": {
     "title": "Etwas ist schiefgelaufen",
-    "description": "In GeoLibre ist ein unerwarteter Fehler aufgetreten. Ihre Arbeit ist möglicherweise nicht gespeichert — versuchen Sie eine Wiederherstellung, bevor Sie neu laden.",
+    "description": "In GeoInt ist ein unerwarteter Fehler aufgetreten. Ihre Arbeit ist möglicherweise nicht gespeichert — versuchen Sie eine Wiederherstellung, bevor Sie neu laden.",
     "tryAgain": "Erneut versuchen",
     "reload": "App neu laden",
-    "sectionFailed": "{{label}} konnte nicht gerendert werden. Der Rest von GeoLibre ist weiterhin verfügbar."
+    "sectionFailed": "{{label}} konnte nicht gerendert werden. Der Rest von GeoInt ist weiterhin verfügbar."
   },
   "commandPalette": {
     "title": "Befehlspalette",
@@ -4650,7 +4579,7 @@
     "emptyNetworkError": "Keine Netzwerkfehler-Diagnosedaten erfasst."
   },
   "shell": {
-    "workspaceTitle": "GeoLibre-Kartenarbeitsbereich",
+    "workspaceTitle": "GeoInt-Kartenarbeitsbereich",
     "section": {
       "toolbar": "Symbolleiste",
       "sharedLeftSidebar": "Gemeinsame linke Seitenleiste",
@@ -4794,6 +4723,6 @@
     "added": "{{asset}} zur Karte hinzugefügt.",
     "addUnsupported": "Nur GeoTIFF/COG- und GeoJSON-Assets können zur Karte hinzugefügt werden",
     "addFailed": "Asset konnte nicht hinzugefügt werden",
-    "cogUnsupported": "Dieser GeoLibre-Host kann entfernte GeoTIFF-Assets nicht darstellen"
+    "cogUnsupported": "Dieser GeoInt-Host kann entfernte GeoTIFF-Assets nicht darstellen"
   }
 }

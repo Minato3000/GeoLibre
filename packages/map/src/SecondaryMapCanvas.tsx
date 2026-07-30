@@ -1,9 +1,4 @@
-import {
-  applyGroupEffects,
-  useAppStore,
-  type GeoLibreLayer,
-  type MapViewState,
-} from "@geolibre/core";
+import { applyGroupEffects, useAppStore, type GeoIntLayer, type MapViewState } from "@geoint/core";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { createMapController, type MapController } from "./map-controller";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -58,7 +53,7 @@ export const SecondaryMapCanvas = memo(function SecondaryMapCanvas({
   const layerVisibility = entry?.layerVisibility;
 
   // The shared layers with this pane's per-layer visibility overrides applied.
-  const paneLayers = useMemo<GeoLibreLayer[]>(() => {
+  const paneLayers = useMemo<GeoIntLayer[]>(() => {
     if (!layerVisibility) return layers;
     return layers.map((layer) => {
       const override = layerVisibility[layer.id];

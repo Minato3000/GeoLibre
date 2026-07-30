@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { getGoogleMapsApiKey } from "@geolibre/core";
+import { getGoogleMapsApiKey } from "@geoint/core";
 
 describe("getGoogleMapsApiKey", () => {
   it("returns undefined when env is missing or empty", () => {

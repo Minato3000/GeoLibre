@@ -1,0 +1,50 @@
+services:
+  geoint:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GEOINT_APP_BASE: ${GEOINT_APP_BASE:-/}
+        VITE_GEE_OAUTH_CLIENT_ID: ${VITE_GEE_OAUTH_CLIENT_ID:-}
+        VITE_MAPILLARY_ACCESS_TOKEN: ${VITE_MAPILLARY_ACCESS_TOKEN:-}
+        VITE_WELCOME_DISABLED: ${VITE_WELCOME_DISABLED:-}
+    image: geoint:local
+    container_name: geoint
+    ports:
+      - "${GEOINT_PORT:-8091}:80"
+    environment:
+      # Set to override the auto-generated per-container token.
+      GEOINT_SIDECAR_TOKEN: ${GEOINT_SIDECAR_TOKEN:-}
+      # Optional HTTP Basic Auth in front of the whole app; leave both unset to disable.
+      GEOINT_AUTH_USER: ${GEOINT_AUTH_USER:-}
+      GEOINT_AUTH_PASSWORD: ${GEOINT_AUTH_PASSWORD:-}
+      # Comma-separated origins allowed to drive an embedded app via postMessage.
+      GEOINT_EMBED_ORIGINS: ${GEOINT_EMBED_ORIGINS:-}
+      # Satellite mosaic feature (app/mosaics.py): metadata DB path inside the
+      # container (matches the bind mount below), the local CIFS mount it tries
+      # first, and the NAS SMB fallback credentials. Leaving GEOINT_MOSAIC_DB_PATH
+      # unset disables the feature entirely (the panel reports it unavailable).
+      GEOINT_MOSAIC_DB_PATH: ${GEOINT_MOSAIC_DB_PATH:-/mosaic-data/shaktidb_satellite.duckdb}
+      GEOINT_MOSAIC_MOUNT: ${GEOINT_MOSAIC_MOUNT:-/mnt/satellite_nets}
+      GEOINT_MOSAIC_SMB_USER: ${GEOINT_MOSAIC_SMB_USER:-}
+      GEOINT_MOSAIC_SMB_PASSWORD: ${GEOINT_MOSAIC_SMB_PASSWORD:-}
+      GEOINT_MOSAIC_SMB_DOMAIN: ${GEOINT_MOSAIC_SMB_DOMAIN:-}
+    volumes:
+      # Mounted at the conversion sidecar's confined root (GEOINT_CONVERSION_ROOTS=/data).
+      - ./data:/data
+      # Read-only metadata DB for the mosaic feature; override the host-side path
+      # with GEOINT_MOSAIC_DB_HOST_PATH if it lives somewhere else (or points at
+      # a freshly regenerated file from tools/migrate_to_duckdb.py in that project).
+      - ${GEOINT_MOSAIC_DB_HOST_PATH:-/Backup/Raghuram/ChangeDetection/shaktidb_satellite.duckdb}:/mosaic-data/shaktidb_satellite.duckdb:ro
+      # Optional local CIFS mount of the mosaic NAS share, tried before SMB (see
+      # GEOINT_MOSAIC_MOUNT above and DUCKDB.md §5). If nothing is mounted at
+      # this host path, Docker creates it as an empty directory, which is
+      # harmless: the mosaic feature just falls through to the SMB fallback.
+      - ${GEOINT_MOSAIC_MOUNT_HOST_PATH:-/mnt/satellite_nets}:/mnt/satellite_nets:ro
+      # Cache for PNGs fetched over SMB and the COGs built from them, so a
+      # container restart does not require re-fetching/re-converting every mosaic.
+      - mosaic-cog-cache:/var/cache/geoint-mosaics
+    restart: unless-stopped
+
+volumes:
+  mosaic-cog-cache:

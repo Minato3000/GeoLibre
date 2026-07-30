@@ -84,7 +84,7 @@ describe("pinned folders persistence", () => {
     (
       globalThis as unknown as { window: { localStorage: MemoryStorage } }
     ).window.localStorage.setItem(
-      "geolibre.browser.pinnedFolders",
+      "geoint.browser.pinnedFolders",
       JSON.stringify(["/data/gis/", "/data/gis"]),
     );
     // Both collapse to the normalized form and dedupe to one.

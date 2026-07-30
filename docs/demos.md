@@ -1,6 +1,6 @@
 # Demos
 
-A visual tour of what GeoLibre looks like in use. **Click any screenshot to open
+A visual tour of what GeoInt looks like in use. **Click any screenshot to open
 it at full resolution, or any animation to play the full-quality video.** For the
 complete capability list, see [Features](features.md); for hands-on
 walkthroughs, see the [Tutorials](tutorials/index.md).
@@ -11,7 +11,7 @@ Photogrammetry and mesh datasets stream in as [3D Tiles](user-guide/adding-data.
 and render on deck.gl over the MapLibre map, including authenticated tilesets via
 custom request headers.
 
-[![GeoLibre showing 3D Tiles rendered on a MapLibre map](https://files.opengeos.org/GeoLibre-demo.webp)](https://files.opengeos.org/GeoLibre-demo.webp)
+[![GeoInt showing 3D Tiles rendered on a MapLibre map](https://files.opengeos.org/GeoInt-demo.webp)](https://files.opengeos.org/GeoInt-demo.webp)
 
 [Open the live project](https://share.geolibre.app/giswqs/3d-tiles){ .md-button .md-button--primary }
 
@@ -34,7 +34,7 @@ full-quality video.
 
 ## Planetary basemaps
 
-GeoLibre is not limited to Earth. Planetary basemaps from
+GeoInt is not limited to Earth. Planetary basemaps from
 [OpenPlanetaryMap](https://openplanetary.org/) and
 [USGS Astrogeology](https://astrogeology.usgs.gov/) cover the Moon, Mars,
 Mercury, Venus, the Galilean moons (Io, Europa, Ganymede, Callisto), Titan,
@@ -48,9 +48,9 @@ The deep-space starfield behind each globe comes from the
 
 <table>
   <tr>
-    <td width="33%"><a href="https://files.opengeos.org/earth.webp"><img src="https://files.opengeos.org/earth.webp" alt="GeoLibre globe view of Earth over a starfield backdrop"></a></td>
-    <td width="33%"><a href="https://files.opengeos.org/moon.webp"><img src="https://files.opengeos.org/moon.webp" alt="GeoLibre globe view of the Moon over a starfield backdrop"></a></td>
-    <td width="33%"><a href="https://files.opengeos.org/mars.webp"><img src="https://files.opengeos.org/mars.webp" alt="GeoLibre globe view of Mars over a starfield backdrop"></a></td>
+    <td width="33%"><a href="https://files.opengeos.org/earth.webp"><img src="https://files.opengeos.org/earth.webp" alt="GeoInt globe view of Earth over a starfield backdrop"></a></td>
+    <td width="33%"><a href="https://files.opengeos.org/moon.webp"><img src="https://files.opengeos.org/moon.webp" alt="GeoInt globe view of the Moon over a starfield backdrop"></a></td>
+    <td width="33%"><a href="https://files.opengeos.org/mars.webp"><img src="https://files.opengeos.org/mars.webp" alt="GeoInt globe view of Mars over a starfield backdrop"></a></td>
   </tr>
   <tr>
     <td align="center"><b>Earth</b><br>Street, satellite, and cloudless imagery</td>
@@ -58,9 +58,9 @@ The deep-space starfield behind each globe comes from the
     <td align="center"><b>Mars</b><br>Colour MOLA Elevation (NASA / MOLA)</td>
   </tr>
   <tr>
-    <td width="33%"><a href="https://files.opengeos.org/mercury.webp"><img src="https://files.opengeos.org/mercury.webp" alt="GeoLibre globe view of Mercury over a starfield backdrop"></a></td>
-    <td width="33%"><a href="https://files.opengeos.org/pluto.webp"><img src="https://files.opengeos.org/pluto.webp" alt="GeoLibre globe view of Pluto over a starfield backdrop"></a></td>
-    <td width="33%"><a href="https://files.opengeos.org/venus.webp"><img src="https://files.opengeos.org/venus.webp" alt="GeoLibre globe view of Venus over a starfield backdrop"></a></td>
+    <td width="33%"><a href="https://files.opengeos.org/mercury.webp"><img src="https://files.opengeos.org/mercury.webp" alt="GeoInt globe view of Mercury over a starfield backdrop"></a></td>
+    <td width="33%"><a href="https://files.opengeos.org/pluto.webp"><img src="https://files.opengeos.org/pluto.webp" alt="GeoInt globe view of Pluto over a starfield backdrop"></a></td>
+    <td width="33%"><a href="https://files.opengeos.org/venus.webp"><img src="https://files.opengeos.org/venus.webp" alt="GeoInt globe view of Venus over a starfield backdrop"></a></td>
   </tr>
   <tr>
     <td align="center"><b>Mercury</b><br>MESSENGER Colour Mosaic (NASA / JHU APL / CIW)</td>
@@ -75,7 +75,7 @@ Run DuckDB Spatial SQL against loaded layers, local files, and remote URLs
 without leaving the map, then add the result as a layer or export it. PostGIS
 (PGlite) and Apache Sedona engines are available from the same panel.
 
-[![The SQL Workspace panel docked beside the map, running a spatial query](https://data.geolibre.app/images/geolibre-sql-workspace.webp)](https://data.geolibre.app/images/geolibre-sql-workspace.webp)
+[![The SQL Workspace panel docked beside the map, running a spatial query](https://data.geolibre.app/images/geoint-sql-workspace.webp)](https://data.geolibre.app/images/geoint-sql-workspace.webp)
 
 See [SQL Workspace](user-guide/sql-workspace.md) and the
 [Spatial SQL tutorial](tutorials/spatial-sql.md).
@@ -85,17 +85,17 @@ See [SQL Workspace](user-guide/sql-workspace.md) and the
 Any shared project can be embedded with `maponly` for a pure map with no
 toolbar, panels, or status bar.
 
-[![Chrome-free maponly embed of a 3D Tiles project](https://data.geolibre.app/images/geolibre-embed-maponly.webp)](https://data.geolibre.app/images/geolibre-embed-maponly.webp)
+[![Chrome-free maponly embed of a 3D Tiles project](https://data.geolibre.app/images/geoint-embed-maponly.webp)](https://data.geolibre.app/images/geoint-embed-maponly.webp)
 
 See [Embedding & Sharing](user-guide/embedding.md) for every URL parameter.
 
 ## Video tutorials
 
-- [GeoLibre 1.0: A Free, Open-Source Cloud-Native GIS That Runs Anywhere (Browser, Desktop & Jupyter)](https://youtu.be/87Cm0QagtxI) — a tour of the browser, desktop, and Jupyter builds.
-- [Geoprocessing in the Browser: 700+ Free GIS Tools in GeoLibre, Zero Install](https://youtu.be/W32bIQO_nG8) — the Whitebox toolbox running entirely on WebAssembly.
+- [GeoInt 1.0: A Free, Open-Source Cloud-Native GIS That Runs Anywhere (Browser, Desktop & Jupyter)](https://youtu.be/87Cm0QagtxI) — a tour of the browser, desktop, and Jupyter builds.
+- [Geoprocessing in the Browser: 700+ Free GIS Tools in GeoInt, Zero Install](https://youtu.be/W32bIQO_nG8) — the Whitebox toolbox running entirely on WebAssembly.
 
 ## Try it yourself
 
-[Launch GeoLibre Web](https://web.geolibre.app/){ .md-button .md-button--primary }
+[Launch GeoInt Web](https://web.geolibre.app/){ .md-button .md-button--primary }
 [Download the app](downloads.md){ .md-button }
 [Getting started](getting-started.md){ .md-button }

@@ -23,7 +23,7 @@ import {
   shouldThrottle,
   type GeocoderConfig,
   type NominatimForwardResult,
-} from "@geolibre/core";
+} from "@geoint/core";
 
 const PUBLIC_FORWARD = "https://nominatim.openstreetmap.org/search";
 const PUBLIC_REVERSE = "https://nominatim.openstreetmap.org/reverse";

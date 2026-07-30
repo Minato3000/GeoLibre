@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import {
   BASEMAP_CONTROL_PLUGIN_ID,
   getActiveBasemapControl,
   maplibreBasemapControlPlugin as plugin,
 } from "../packages/plugins/src/plugins/maplibre-basemap-control";
-import type { GeoLibreAppAPI } from "../packages/plugins/src/types";
+import type { GeoIntAppAPI } from "../packages/plugins/src/types";
 
 /** A raster basemap layer as the control leaves it in the store when stacked. */
-function stackedRasterBasemap(basemapId: string): GeoLibreLayer {
+function stackedRasterBasemap(basemapId: string): GeoIntLayer {
   return {
     id: `basemap-${basemapId}`,
     name: basemapId,
@@ -27,7 +27,7 @@ function stackedRasterBasemap(basemapId: string): GeoLibreLayer {
  * the real one (which removes the store layer), so a test can assert whether
  * deactivate wiped the stacked basemaps or left them alone.
  */
-function fakeApp(unregistered: string[]): GeoLibreAppAPI {
+function fakeApp(unregistered: string[]): GeoIntAppAPI {
   return {
     getMap: () => ({}),
     addMapControl: () => true,
@@ -37,7 +37,7 @@ function fakeApp(unregistered: string[]): GeoLibreAppAPI {
       unregistered.push(id);
       useAppStore.getState().removeLayer(id);
     },
-  } as unknown as GeoLibreAppAPI;
+  } as unknown as GeoIntAppAPI;
 }
 
 describe("maplibreBasemapControlPlugin lifecycle", () => {

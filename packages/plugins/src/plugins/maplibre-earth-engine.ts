@@ -1,10 +1,10 @@
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import {
   PluginControl,
   type PluginControlOptions,
   type VisualizeOptions,
 } from "maplibre-gl-earth-engine";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition } from "../types";
 import {
   authenticateEarthEngine,
   clearEarthEngineFunctionInfo,
@@ -17,9 +17,9 @@ import {
   type TauriEarthEngineOAuthToken,
 } from "./earth-engine-auth";
 
-const STORAGE_PREFIX = "geolibre.earthEngine";
-const EARTH_ENGINE_CONTROL_POSITION: GeoLibreMapControlPosition = "top-left";
-const EARTH_ENGINE_PANEL_CLASS = "geolibre-earth-engine-panel";
+const STORAGE_PREFIX = "geoint.earthEngine";
+const EARTH_ENGINE_CONTROL_POSITION: GeoIntMapControlPosition = "top-left";
+const EARTH_ENGINE_PANEL_CLASS = "geoint-earth-engine-panel";
 
 // These types mirror undocumented private members of PluginControl from
 // maplibre-gl-earth-engine (verified against v0.4.0). All access is optional
@@ -56,7 +56,7 @@ type EarthEngineControlMethods = EarthEngineControlInternals & {
 
 function earthEngineOptions(): Omit<PluginControlOptions, "position"> {
   return {
-    className: "geolibre-earth-engine-control",
+    className: "geoint-earth-engine-control",
     collapsed: false,
     oauthClientId: oauthClientIdValue(importMetaEnv().VITE_GEE_OAUTH_CLIENT_ID),
     panelWidth: 420,
@@ -77,11 +77,11 @@ let syncingEarthEngineStoreToControl = false;
 const earthEnginePanelListeners = new Set<() => void>();
 const syncedEarthEngineControls = new WeakSet<PluginControl>();
 
-export function openEarthEnginePanel(app: GeoLibreAppAPI): void {
+export function openEarthEnginePanel(app: GeoIntAppAPI): void {
   void openStandaloneEarthEngineControl(app);
 }
 
-export function toggleEarthEnginePanel(app: GeoLibreAppAPI): void {
+export function toggleEarthEnginePanel(app: GeoIntAppAPI): void {
   if (earthEngineControlVisible) {
     hideEarthEngineControl(earthEngineControl);
     return;
@@ -89,7 +89,7 @@ export function toggleEarthEnginePanel(app: GeoLibreAppAPI): void {
   openEarthEnginePanel(app);
 }
 
-export function closeEarthEnginePanel(app: GeoLibreAppAPI): void {
+export function closeEarthEnginePanel(app: GeoIntAppAPI): void {
   earthEngineStoreUnsubscribe?.();
   earthEngineStoreUnsubscribe = null;
   if (earthEngineControl && earthEngineControlMounted) {
@@ -109,8 +109,8 @@ export function subscribeEarthEnginePanel(listener: () => void): () => void {
   return () => earthEnginePanelListeners.delete(listener);
 }
 
-async function openStandaloneEarthEngineControl(app: GeoLibreAppAPI): Promise<boolean> {
-  earthEngineControl ??= new GeoLibreEarthEngineControl(earthEngineOptions());
+async function openStandaloneEarthEngineControl(app: GeoIntAppAPI): Promise<boolean> {
+  earthEngineControl ??= new GeoIntEarthEngineControl(earthEngineOptions());
   wireEarthEngineLayerSync(earthEngineControl);
 
   if (!earthEngineControlMounted) {
@@ -134,7 +134,7 @@ async function openStandaloneEarthEngineControl(app: GeoLibreAppAPI): Promise<bo
   return true;
 }
 
-class GeoLibreEarthEngineControl extends PluginControl {
+class GeoIntEarthEngineControl extends PluginControl {
   async authenticate(projectId?: string, oauthClientId?: string): Promise<void> {
     const isTauriAuth = shouldUseTauriEarthEngineOAuth();
     if (isTauriAuth) {
@@ -357,7 +357,7 @@ function syncEarthEngineControlLayersToStore(control: PluginControl): void {
   }
 }
 
-function createEarthEngineStoreLayer(controlLayer: EarthEngineLoadedLayer): GeoLibreLayer {
+function createEarthEngineStoreLayer(controlLayer: EarthEngineLoadedLayer): GeoIntLayer {
   return {
     id: controlLayer.id,
     name: controlLayer.name,
@@ -387,7 +387,7 @@ function createEarthEngineStoreLayer(controlLayer: EarthEngineLoadedLayer): GeoL
   };
 }
 
-function isEarthEngineStoreLayer(layer: GeoLibreLayer): boolean {
+function isEarthEngineStoreLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "raster" &&
     layer.metadata.sourceKind === "earth-engine-raster" &&
@@ -423,10 +423,10 @@ function wireEarthEngineCloseButton(control: PluginControl | null): void {
   const panel = earthEnginePanelElement(control);
   applyEarthEnginePanelClass(panel);
   const closeButton = panel?.querySelector<HTMLElement>(".plugin-control-close");
-  if (!closeButton || closeButton.dataset.geolibreCloseWired === "true") {
+  if (!closeButton || closeButton.dataset.geointCloseWired === "true") {
     return;
   }
-  closeButton.dataset.geolibreCloseWired = "true";
+  closeButton.dataset.geointCloseWired = "true";
   closeButton.addEventListener("click", () => hideEarthEngineControl(control));
 }
 

@@ -7,14 +7,16 @@ export function getInitialThemeMode(): ThemeMode {
     return "light";
   }
 
-  // An explicit `?theme=dark` / `?theme=light` overrides the OS preference on
-  // load (handy for embeds); the in-app toggle still works afterwards.
+  // An explicit `?theme=dark` / `?theme=light` overrides the default on load
+  // (handy for embeds); the in-app toggle still works afterwards.
   const themeParam = new URLSearchParams(window.location.search).get("theme")?.trim().toLowerCase();
   if (themeParam === "dark" || themeParam === "light") {
     return themeParam;
   }
 
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  // Light is the default regardless of the OS/browser's preferred color
+  // scheme; the user picks dark explicitly via the toggle if they want it.
+  return "light";
 }
 
 export function useThemeMode() {

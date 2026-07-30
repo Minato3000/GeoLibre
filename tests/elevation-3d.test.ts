@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import type { FeatureCollection } from "geojson";
 import {
   DEFAULT_LAYER_STYLE,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   geojsonHasZCoordinates,
   transformGeojsonElevation,
 } from "../packages/core/src/index";
@@ -12,7 +12,7 @@ import {
   buildElevation3dLayers,
   isElevation3dLayer,
 } from "../packages/plugins/src/plugins/deckgl-viz/elevation";
-import type { GeoLibreDeckGL } from "../packages/plugins/src/types";
+import type { GeoIntDeckGL } from "../packages/plugins/src/types";
 
 function track(coordinates: number[][]): FeatureCollection {
   return {
@@ -27,7 +27,7 @@ function track(coordinates: number[][]): FeatureCollection {
   };
 }
 
-function geojsonLayer(overrides: Partial<GeoLibreLayer>): GeoLibreLayer {
+function geojsonLayer(overrides: Partial<GeoIntLayer>): GeoIntLayer {
   return {
     id: "layer-1",
     name: "Track",
@@ -42,7 +42,7 @@ function geojsonLayer(overrides: Partial<GeoLibreLayer>): GeoLibreLayer {
       [6.87, 45.84, 1420],
     ]),
     ...overrides,
-  } as GeoLibreLayer;
+  } as GeoIntLayer;
 }
 
 // Stateful fake MapLibre map (mirrors point-renderer-sync.test.ts): tracks
@@ -281,7 +281,7 @@ describe("buildElevation3dLayers", () => {
 
   const fakeDeckGL = {
     layers: { GeoJsonLayer: FakeGeoJsonLayer, IconLayer: FakeIconLayer },
-  } as unknown as GeoLibreDeckGL;
+  } as unknown as GeoIntDeckGL;
 
   it("maps the layer style onto billboarded deck.gl props", () => {
     const layer = geojsonLayer({

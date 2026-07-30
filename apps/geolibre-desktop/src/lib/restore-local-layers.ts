@@ -1,4 +1,4 @@
-import { hasPathTraversal, useAppStore, type GeoLibreLayer } from "@geolibre/core";
+import { hasPathTraversal, useAppStore, type GeoIntLayer } from "@geoint/core";
 import {
   isAbsoluteLocalPath,
   isLoadedVectorLayer,
@@ -17,7 +17,7 @@ import {
  * @param layer - A store layer.
  * @returns True when the layer needs its features re-read from `sourcePath`.
  */
-function needsLocalFileReload(layer: GeoLibreLayer): boolean {
+function needsLocalFileReload(layer: GeoIntLayer): boolean {
   return (
     layer.type === "geojson" &&
     !layer.geojson &&
@@ -46,7 +46,7 @@ export async function restoreLocalFileLayers(): Promise<void> {
   if (pending.length === 0) return;
 
   // Group by path so a multi-layer file (or repeated path) is read only once.
-  const byPath = new Map<string, GeoLibreLayer[]>();
+  const byPath = new Map<string, GeoIntLayer[]>();
   for (const layer of pending) {
     const path = layer.sourcePath as string;
     const group = byPath.get(path);
@@ -78,24 +78,24 @@ export async function restoreLocalFileLayers(): Promise<void> {
               match = named;
             } else {
               console.warn(
-                `[GeoLibre] Could not match layer "${layer.name}" to a layer in "${path}" by name; using the first. (Renaming a multi-layer file's layers can break this match.)`,
+                `[GeoInt] Could not match layer "${layer.name}" to a layer in "${path}" by name; using the first. (Renaming a multi-layer file's layers can break this match.)`,
               );
             }
           }
           useAppStore.getState().updateLayer(layer.id, { geojson: match.data });
         }
       } catch (error) {
-        console.warn(`[GeoLibre] Could not reload local layer(s) from "${path}".`, error);
+        console.warn(`[GeoInt] Could not reload local layer(s) from "${path}".`, error);
         dropLayers(layers, path);
       }
     }),
   );
 }
 
-function dropLayers(layers: GeoLibreLayer[], path: string): void {
+function dropLayers(layers: GeoIntLayer[], path: string): void {
   for (const layer of layers) {
     console.info(
-      `[GeoLibre] Layer "${layer.name}" could not be re-read from "${path}"; removing it.`,
+      `[GeoInt] Layer "${layer.name}" could not be re-read from "${path}"; removing it.`,
     );
     useAppStore.getState().removeLayer(layer.id);
   }

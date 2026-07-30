@@ -1,4 +1,4 @@
-import type { CollaborationMode, CollaborationParticipant } from "@geolibre/core";
+import type { CollaborationMode, CollaborationParticipant } from "@geoint/core";
 import { Eye, Pencil } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { participantCanEdit } from "../../lib/collab-protocol";

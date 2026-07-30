@@ -9,25 +9,25 @@ hide:
     <p class="eyebrow">Cloud-native GIS platform</p>
     <h1>A free and open-source, lightweight, cloud-native GIS platform for visualizing, exploring, and analyzing geospatial data.</h1>
     <p class="hero__lead">
-      GeoLibre runs everywhere you do, in the web browser, on the desktop, on
+      GeoInt runs everywhere you do, in the web browser, on the desktop, on
       mobile, and inside Jupyter notebooks, all while keeping your data local
       and private. It is built with Tauri, React, TypeScript, MapLibre GL JS,
       DuckDB-WASM Spatial, and deck.gl, with fast local and cloud-native data
       work, project files, styling, plugins, and modern geospatial workflows.
     </p>
     <div class="hero__actions">
-      <a class="md-button md-button--primary" href="https://web.geolibre.app/">Launch GeoLibre Web</a>
+      <a class="md-button md-button--primary" href="https://web.geolibre.app/">Launch GeoInt Web</a>
       <a class="md-button" href="getting-started/">Get started</a>
       <a class="md-button" href="user-guide/interface/">User guide</a>
       <a class="md-button" href="downloads/">Download app</a>
     </div>
   </div>
   <figure class="hero__media">
-    <img src="https://files.opengeos.org/GeoLibre-demo.webp" alt="GeoLibre map interface showing the GIS workspace">
+    <img src="https://files.opengeos.org/GeoInt-demo.webp" alt="GeoInt map interface showing the GIS workspace">
   </figure>
 </section>
 
-## What GeoLibre does today
+## What GeoInt does today
 
 <div class="feature-grid" markdown>
 
@@ -40,7 +40,7 @@ Pan, zoom, rotate, and tilt a MapLibre map with OpenFreeMap basemaps or a blank 
 <div class="feature-card" markdown>
 ### Local and remote data
 
-Load local and remote vector and raster data, then inspect and edit attributes in a table with a field calculator, charts, statistics, and export to GeoJSON, GeoParquet, Shapefile, GeoPackage, or CSV. Style layers with categorized, graduated, expression, heatmap, and clustering renderers, group and reorder the layer stack with undo/redo, and save or share `.geolibre.json` projects.
+Load local and remote vector and raster data, then inspect and edit attributes in a table with a field calculator, charts, statistics, and export to GeoJSON, GeoParquet, Shapefile, GeoPackage, or CSV. Style layers with categorized, graduated, expression, heatmap, and clustering renderers, group and reorder the layer stack with undo/redo, and save or share `.geoint.json` projects.
 </div>
 
 <div class="feature-card" markdown>
@@ -82,19 +82,19 @@ Raster tools under Processing → Raster — hillshade, slope, aspect, reproject
 <div class="feature-card" markdown>
 ### Python and Jupyter
 
-Embed the full GeoLibre app in a Jupyter notebook with the [`geolibre`](python.md) Python package, driving the map through an expanded leafmap-style API that syncs both ways so UI edits read back from Python. An in-app Python Console scripts the app, and a docked [Notebook panel](notebook.md) runs Jupyter beside the map — JupyterLite on the web, a JupyterLab server on desktop.
+Embed the full GeoInt app in a Jupyter notebook with the [`geoint`](python.md) Python package, driving the map through an expanded leafmap-style API that syncs both ways so UI edits read back from Python. An in-app Python Console scripts the app, and a docked [Notebook panel](notebook.md) runs Jupyter beside the map — JupyterLite on the web, a JupyterLab server on desktop.
 </div>
 
 <div class="feature-card" markdown>
 ### AI Assistant
 
-Chat with your data: a natural-language [assistant](user-guide/ai-assistant.md) that turns plain-English requests into GeoLibre operations — Spatial SQL, symbology, add or remove data, and map control — applied through the app so they stay auditable and undoable. Provider-pluggable (Google Gemini, Anthropic, OpenAI) with your own API key, disabled until configured.
+A right-docked [chat panel](user-guide/ai-assistant.md) with conversation history, a loading state, and a documented tool catalog ready for a future model integration — not yet connected to a model backend.
 </div>
 
 <div class="feature-card" markdown>
 ### Collaboration and story maps
 
-Edit the same project with others in real time ([collaboration](collaboration.md) MVP; requires `VITE_GEOLIBRE_COLLAB_URL`), and build scroll-driven [story maps](user-guide/storymaps.md) with a presenter view and a standalone HTML export you can publish anywhere.
+Edit the same project with others in real time ([collaboration](collaboration.md) MVP; requires `VITE_GEOINT_COLLAB_URL`), and build scroll-driven [story maps](user-guide/storymaps.md) with a presenter view and a standalone HTML export you can publish anywhere.
 </div>
 
 <div class="feature-card" markdown>
@@ -105,43 +105,43 @@ Compute isochrones, service areas, and origin–destination cost matrices for ne
 
 </div>
 
-## Learn GeoLibre
+## Learn GeoInt
 
-New to GeoLibre? Start with the [User Guide](user-guide/interface.md) for a feature-by-feature tour of the workspace, menus, panels, and tools, then follow the [Tutorials](tutorials/index.md) for hands-on, end-to-end workflows.
+New to GeoInt? Start with the [User Guide](user-guide/interface.md) for a feature-by-feature tour of the workspace, menus, panels, and tools, then follow the [Tutorials](tutorials/index.md) for hands-on, end-to-end workflows.
 
 - [Interface Overview](user-guide/interface.md): the toolbar, panels, map, and status bar.
 - [Adding Data](user-guide/adding-data.md): every file, web service, cloud, 3D, and database source.
 - [Processing Tools](user-guide/processing.md) and [SQL Workspace](user-guide/sql-workspace.md): analysis with vector, raster, conversion, Whitebox, and DuckDB Spatial SQL.
-- [AI Assistant](user-guide/ai-assistant.md): chat with your data — natural language to SQL, symbology, and map control.
+- [AI Assistant](user-guide/ai-assistant.md): a chat panel and tool catalog, not yet connected to a model backend.
 - [Plugins & Marketplace](user-guide/plugins.md): activate built-ins and install from the registry.
 - [Your First Map](tutorials/first-map.md): add a layer, style it, inspect it, and share it.
 
 [Read the User Guide](user-guide/interface.md){ .md-button .md-button--primary }
 [Browse the Tutorials](tutorials/index.md){ .md-button }
 
-## GeoLibre on the web
+## GeoInt on the web
 
-GeoLibre Web is the full browser version of the GeoLibre app, ready to use with nothing to install. It is great for exploring the map, loading browser-selected vector data supported by DuckDB-WASM Spatial, adding URL-based layers, styling layers, and testing plugins. Desktop-only file dialogs, local MBTiles, local raster reads, and filesystem save/open operations still require the installed Tauri app.
+GeoInt Web is the full browser version of the GeoInt app, ready to use with nothing to install. It is great for exploring the map, loading browser-selected vector data supported by DuckDB-WASM Spatial, adding URL-based layers, styling layers, and testing plugins. Desktop-only file dialogs, local MBTiles, local raster reads, and filesystem save/open operations still require the installed Tauri app.
 
 !!! note "Hosted on GitHub Pages, private by design"
-    GeoLibre Web is a static site deployed on GitHub Pages and runs entirely in your browser. It has no analytics and no server account, and the data you load is processed client-side in your browser session. Data leaves your browser only when you choose to add a remote URL or explicitly share a project.
+    GeoInt Web is a static site deployed on GitHub Pages and runs entirely in your browser. It has no analytics and no server account, and the data you load is processed client-side in your browser session. Data leaves your browser only when you choose to add a remote URL or explicitly share a project.
 
-Open a project by passing a public `.geolibre.json` URL with the `url` query parameter:
+Open a project by passing a public `.geoint.json` URL with the `url` query parameter:
 
 ```text
-https://web.geolibre.app/?url=https://share.geolibre.app/giswqs/3d-tiles.geolibre.json
+https://web.geolibre.app/?url=https://share.geolibre.app/giswqs/3d-tiles.geoint.json
 ```
 
 For narrow embeds, add `?layout=compact` to the demo URL to use icon-only toolbar buttons and hide project metadata:
 
 ```text
-https://web.geolibre.app/?url=https://share.geolibre.app/giswqs/3d-tiles.geolibre.json&layout=compact
+https://web.geolibre.app/?url=https://share.geolibre.app/giswqs/3d-tiles.geoint.json&layout=compact
 ```
 
 For map-focused embeds, add `&panels=none` to hide the Layers, Style, and Attribute table panels:
 
 ```text
-https://web.geolibre.app/?url=https://share.geolibre.app/giswqs/3d-tiles.geolibre.json&layout=compact&panels=none
+https://web.geolibre.app/?url=https://share.geolibre.app/giswqs/3d-tiles.geoint.json&layout=compact&panels=none
 ```
 
 Use `toolbar=icons` when you only want icon-only toolbar buttons. `panels=hidden`, `panels=hide`, `panels=off`, and `hidePanels=true` are accepted aliases for hiding panels.
@@ -149,14 +149,14 @@ Use `toolbar=icons` when you only want icon-only toolbar buttons. `panels=hidden
 For a fully chrome-free, map-only embed, add `&maponly` to hide the toolbar menu, all panels, and the status bar:
 
 ```text
-https://web.geolibre.app/?url=https://share.geolibre.app/giswqs/3d-tiles.geolibre.json&maponly
+https://web.geolibre.app/?url=https://share.geolibre.app/giswqs/3d-tiles.geoint.json&maponly
 ```
 
 Other parameters control the toolbar, panels, and theme. See [Embedding & Sharing](user-guide/embedding.md) for the full parameter reference and `<iframe>` examples.
 
-[Launch GeoLibre Web](https://web.geolibre.app/){ .md-button .md-button--primary }
+[Launch GeoInt Web](https://web.geolibre.app/){ .md-button .md-button--primary }
 [Embedding & Sharing](user-guide/embedding.md){ .md-button }
 
 ## Project status
 
-GeoLibre 2.4 is a stable release. It includes the map workspace, the `.geolibre.json` project format with Save, Open, and Share, the plugin API, and the plugin marketplace for installing, updating, and removing external plugins. Data support spans browser vector import, DuckDB-WASM Spatial loading, the full Add Data surface (files, web services, cloud formats, 3D layers, and databases), and cloud integrations through the Planetary Computer and Earth Engine panels, the Overture Maps plugin, and the federal Web Services plugins. Processing covers the vector tools (Turf.js with an optional GeoPandas sidecar), the raster tools (rasterio sidecar with a client-side fallback), a Spectral Index toolbox, a Raster Georeferencer, a Spatial Statistics toolbox, network analysis (isochrones, service areas, OD cost matrices), the Conversion menu (GeoParquet, FlatGeobuf, PMTiles, COG), the Whitebox toolbox, AI Segmentation via SamGeo/SAM 3, and the SQL Workspace for DuckDB Spatial SQL (with PGlite PostGIS and Apache Sedona engines). The release also ships a docked Notebook panel that runs Jupyter beside the map (JupyterLite on the web, a desktop JupyterLab server), a Field Collection tool for capturing point, line, and polygon observations, real-time multi-user collaboration, a scroll-driven story map builder, a natural-language AI assistant and in-app Python Console, multi-provider geocoding, the Time Slider plugin, a Controls menu (Measure, Bookmark, Minimap, View State), a Print menu, Layout settings, runtime environment variables, diagnostics, embed-friendly URL parameters including the `maponly` mode, cross-platform installers (including a macOS Homebrew Cask and a Windows Microsoft Store listing), and Docker support for the browser app. GeoLibre also ships as a native **Android** app built from the same codebase via Tauri v2 mobile, available on [Google Play](https://play.google.com/store/apps/details?id=org.geolibre.app) (see [Android](android.md)), with a responsive touch layout for phones, and offline improvements (a Download Offline Area tool plus service-worker caching of the CDN-loaded Pyodide and PGlite/PostGIS engines). Version 2.0 adds a CesiumJS 3D globe view for any map pane, planetary mapping (Mars and the Moon from OpenPlanetaryMap, plus Mercury, Venus, the Galilean moons, Titan, Pluto, and Charon from USGS Astrogeology reprojected to Web Mercator, with a per-project ellipsoid and a planet switcher in the Layers panel), symbology interchange that imports and exports vector styling as OGC SLD, QGIS QML, and Mapbox GL style JSON, editable source layers that write vector edits back to GeoPackage, GeoJSON, and PostGIS, a Weather menu with live cloud and precipitation radar overlays and a sun position simulation, and new Mapillary, Historical Imagery, and Elevation Profile plugins. Version 2.1 adds a QGIS-style Browser panel (Data Source Manager) for browsing services, PostGIS databases, local files, and favorites from one place; route animation that sends a marker along a line layer with 3D track-follow camera controls and MP4 export; in-browser ONNX/YOLO object detection; map recording of the canvas or a drawn bounding box to video; a native-resolution geotagged photo viewer; Wikipedia knowledge cards; USGS basemaps for nine more celestial bodies; and a new OpenAerialMap imagery search plugin. Version 2.2 adds a styling overhaul (a rule-based renderer with per-rule symbol properties, scale-dependent visibility, and nested rules, a Style Manager preset library, diagram symbology, and a symbology pack of inverted-polygon masks, arrow and marker lines, and geometry generators); a shared Expression Builder wired into filters, labels, styling, and selection, driving a data-defined labeling engine and Select by Expression; virtual fields, persistent attribute joins, an attribute form designer, and a Raster Attribute Table; Atlas / map series generation in the Print Layout; browser-native COG, FlatGeobuf, Shapefile, GeoPackage, and Vector to PMTiles conversions; live GPS tracking; data quality tools (check validity, fix geometries, check topology); a Processing History panel; and new Natural Earth and Source Cooperative data browsers. Version 2.3 adds an auto-generated on-map Legend panel derived from the visible layers' symbology (shared with the Print Layout), symbology swatches in the Layers panel, a GeoLens catalog browser plugin, scaffolded iOS support, a Google Play-ready Android build, Emerging Hot Spot Analysis over a space-time cube, Time Slider animation of MosaicJSON and STAC mosaic sources, copy and paste of layer styles between layers, multiple named AI profiles, `?tool=` deep links into any Whitebox tool, a source CRS field for delimited text and a layer picker for multi-layer GeoPackages, and real georeferencing metadata read from the GeoTIFF header. Version 2.4 adds STAC and NASA Earthdata catalog browsers and a Hugging Face Hub panel that both reads and uploads, a flight-simulator free-flight camera, a Time Slider that animates tiled data (vector tiles, PMTiles, MBTiles) and a layer's own internal time dimension such as a Zarr data cube, a proper Add Zarr Layer path, OGC API - Features as vector layers, a versioned `postMessage` API for host pages that frame GeoLibre, external Jupyter clients driving the map, an H3 hexagonal grid plugin, object detection on geotagged photos, indicator (KPI) tiles in the Dashboard panel, in-place editing of GeoLens datasets, and self-updating Linux AppImages. See the [roadmap](roadmap.md) for the full release history and what comes next.
+GeoInt 2.4 is a stable release. It includes the map workspace, the `.geoint.json` project format with Save, Open, and Share, the plugin API, and the plugin marketplace for installing, updating, and removing external plugins. Data support spans browser vector import, DuckDB-WASM Spatial loading, the full Add Data surface (files, web services, cloud formats, 3D layers, and databases), and cloud integrations through the Planetary Computer and Earth Engine panels, the Overture Maps plugin, and the federal Web Services plugins. Processing covers the vector tools (Turf.js with an optional GeoPandas sidecar), the raster tools (rasterio sidecar with a client-side fallback), a Spectral Index toolbox, a Raster Georeferencer, a Spatial Statistics toolbox, network analysis (isochrones, service areas, OD cost matrices), the Conversion menu (GeoParquet, FlatGeobuf, PMTiles, COG), the Whitebox toolbox, AI Segmentation via SamGeo/SAM 3, and the SQL Workspace for DuckDB Spatial SQL (with PGlite PostGIS and Apache Sedona engines). The release also ships a docked Notebook panel that runs Jupyter beside the map (JupyterLite on the web, a desktop JupyterLab server), a Field Collection tool for capturing point, line, and polygon observations, real-time multi-user collaboration, a scroll-driven story map builder, a natural-language AI assistant and in-app Python Console, multi-provider geocoding, the Time Slider plugin, a Controls menu (Measure, Bookmark, Minimap, View State), a Print menu, Layout settings, runtime environment variables, diagnostics, embed-friendly URL parameters including the `maponly` mode, cross-platform installers (including a macOS Homebrew Cask and a Windows Microsoft Store listing), and Docker support for the browser app. GeoInt also ships as a native **Android** app built from the same codebase via Tauri v2 mobile, available on [Google Play](https://play.google.com/store/apps/details?id=org.geolibre.app) (see [Android](android.md)), with a responsive touch layout for phones, and offline improvements (a Download Offline Area tool plus service-worker caching of the CDN-loaded Pyodide and PGlite/PostGIS engines). Version 2.0 adds a CesiumJS 3D globe view for any map pane, planetary mapping (Mars and the Moon from OpenPlanetaryMap, plus Mercury, Venus, the Galilean moons, Titan, Pluto, and Charon from USGS Astrogeology reprojected to Web Mercator, with a per-project ellipsoid and a planet switcher in the Layers panel), symbology interchange that imports and exports vector styling as OGC SLD, QGIS QML, and Mapbox GL style JSON, editable source layers that write vector edits back to GeoPackage, GeoJSON, and PostGIS, a Weather menu with live cloud and precipitation radar overlays and a sun position simulation, and new Mapillary, Historical Imagery, and Elevation Profile plugins. Version 2.1 adds a QGIS-style Browser panel (Data Source Manager) for browsing services, PostGIS databases, local files, and favorites from one place; route animation that sends a marker along a line layer with 3D track-follow camera controls and MP4 export; in-browser ONNX/YOLO object detection; map recording of the canvas or a drawn bounding box to video; a native-resolution geotagged photo viewer; Wikipedia knowledge cards; USGS basemaps for nine more celestial bodies; and a new OpenAerialMap imagery search plugin. Version 2.2 adds a styling overhaul (a rule-based renderer with per-rule symbol properties, scale-dependent visibility, and nested rules, a Style Manager preset library, diagram symbology, and a symbology pack of inverted-polygon masks, arrow and marker lines, and geometry generators); a shared Expression Builder wired into filters, labels, styling, and selection, driving a data-defined labeling engine and Select by Expression; virtual fields, persistent attribute joins, an attribute form designer, and a Raster Attribute Table; Atlas / map series generation in the Print Layout; browser-native COG, FlatGeobuf, Shapefile, GeoPackage, and Vector to PMTiles conversions; live GPS tracking; data quality tools (check validity, fix geometries, check topology); a Processing History panel; and new Natural Earth and Source Cooperative data browsers. Version 2.3 adds an auto-generated on-map Legend panel derived from the visible layers' symbology (shared with the Print Layout), symbology swatches in the Layers panel, a GeoLens catalog browser plugin, scaffolded iOS support, a Google Play-ready Android build, Emerging Hot Spot Analysis over a space-time cube, Time Slider animation of MosaicJSON and STAC mosaic sources, copy and paste of layer styles between layers, multiple named AI profiles, `?tool=` deep links into any Whitebox tool, a source CRS field for delimited text and a layer picker for multi-layer GeoPackages, and real georeferencing metadata read from the GeoTIFF header. Version 2.4 adds STAC and NASA Earthdata catalog browsers and a Hugging Face Hub panel that both reads and uploads, a flight-simulator free-flight camera, a Time Slider that animates tiled data (vector tiles, PMTiles, MBTiles) and a layer's own internal time dimension such as a Zarr data cube, a proper Add Zarr Layer path, OGC API - Features as vector layers, a versioned `postMessage` API for host pages that frame GeoInt, external Jupyter clients driving the map, an H3 hexagonal grid plugin, object detection on geotagged photos, indicator (KPI) tiles in the Dashboard panel, in-place editing of GeoLens datasets, and self-updating Linux AppImages. See the [roadmap](roadmap.md) for the full release history and what comes next.

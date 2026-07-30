@@ -11,7 +11,7 @@ standalone HTML export loads MapLibre and scrollama from a CDN.
 ## Open the builder
 
 Choose **Project → Story Map** to open the builder. The builder edits a story
-that is saved inside the `.geolibre.json` project file, so it travels with your
+that is saved inside the `.geoint.json` project file, so it travels with your
 project.
 
 !!! tip "Try it instantly"
@@ -45,11 +45,11 @@ Reorder chapters with the arrows and remove them with the trash icon.
 
 ## Import and export chapters
 
-To author content outside GeoLibre, use **Import** / **Export** next to **Add
+To author content outside GeoInt, use **Import** / **Export** next to **Add
 chapter**:
 
 - **Export JSON** writes the whole story (settings and chapters); **Import JSON**
-  reads it back (a full `.geolibre.json` project file also works).
+  reads it back (a full `.geoint.json` project file also works).
 - **Export CSV** writes one row per chapter (spreadsheet-friendly). **Import CSV**
   replaces the chapters while keeping your current story settings.
 
@@ -84,7 +84,7 @@ you can move a card aside and explore the map beneath it.
 ## Export to HTML
 
 Click **Export HTML** to save a self-contained `.html` page that reproduces the
-story without GeoLibre. In-memory GeoJSON layers referenced by chapter effects
+story without GeoInt. In-memory GeoJSON layers referenced by chapter effects
 are inlined so the exported story behaves like the in-app preview. The page is a
 single static file you can host anywhere (GitHub Pages, Netlify, S3, or any web
 server).

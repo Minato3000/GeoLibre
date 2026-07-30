@@ -1,6 +1,6 @@
 # Bundled plugins (drop-in folder)
 
-Drop a plugin here to **bake it into the GeoLibre build**. It loads
+Drop a plugin here to **bake it into the GeoInt build**. It loads
 automatically on startup with no Settings entry and no manifest URL — on both
 the **web** build and the **desktop** build (the desktop app ships the same
 frontend, so one folder serves both).

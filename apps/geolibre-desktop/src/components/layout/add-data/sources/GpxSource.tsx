@@ -1,6 +1,6 @@
-import type { GeoLibreLayer } from "@geolibre/core";
-import { getLayerBounds } from "@geolibre/map";
-import { Button, Input, Label, Select } from "@geolibre/ui";
+import type { GeoIntLayer } from "@geoint/core";
+import { getLayerBounds } from "@geoint/map";
+import { Button, Input, Label, Select } from "@geoint/ui";
 import type { FeatureCollection } from "geojson";
 import { FileUp } from "lucide-react";
 import { useState } from "react";
@@ -155,7 +155,7 @@ export function GpxSource() {
     // Built one at a time, each seeing the ones before it, so a GPX that yields
     // tracks *and* waypoints gives the two different palette colors instead of
     // handing both the first entry the store has not claimed yet.
-    const layers: GeoLibreLayer[] = [];
+    const layers: GeoIntLayer[] = [];
     for (const group of gpxLayerGroups) {
       if (!selectedGpxLayerKinds[group.kind] || group.featureCollection.features.length === 0) {
         continue;

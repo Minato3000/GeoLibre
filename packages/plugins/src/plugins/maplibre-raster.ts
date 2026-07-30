@@ -1,4 +1,4 @@
-import { styleValue, useAppStore } from "@geolibre/core";
+import { styleValue, useAppStore } from "@geoint/core";
 import type { Layer } from "@deck.gl/core";
 import type {
   RasterControl,
@@ -7,7 +7,7 @@ import type {
   RasterSampleDataset,
   RenderEngine,
 } from "maplibre-gl-raster";
-import type { GeoLibreAppAPI, GeoLibreMapControlPosition } from "../types";
+import type { GeoIntAppAPI, GeoIntMapControlPosition } from "../types";
 import { ensureMercatorProjection } from "./map-projection-utils";
 import {
   ensureSharedDeckOverlay,
@@ -32,8 +32,8 @@ import {
 } from "./raster-symbology-texture";
 import { disposeAllPaletteLegends, disposePaletteLegend } from "./raster-palette";
 
-const rasterControlPosition: GeoLibreMapControlPosition = "top-left";
-const RASTER_PANEL_CLASS = "geolibre-raster-panel";
+const rasterControlPosition: GeoIntMapControlPosition = "top-left";
+const RASTER_PANEL_CLASS = "geoint-raster-panel";
 
 // The rendering backend rasters are decoded with unless the user picks another
 // one in the panel. `cog-tiler-wasm` feeds a native MapLibre raster source/layer,
@@ -43,7 +43,7 @@ const RASTER_PANEL_CLASS = "geolibre-raster-panel";
 // that would only mask an asset-protocol/read-path regression.
 //
 // Trade-off: the WASM tiler renders from its own built-in colormaps, so the
-// GPU-only symbology GeoLibre injects into the deck.gl pipeline -- "Classify
+// GPU-only symbology GeoInt injects into the deck.gl pipeline -- "Classify
 // into discrete classes" and custom color ramps (see raster-symbology-texture)
 // -- does not apply while this engine is active. Users who need it can switch
 // the panel's Rendering engine back to maplibre-gl-raster (GPU).
@@ -130,9 +130,9 @@ type RasterLayerManagerInternals = {
     createOverlay?: (map: MapControlHost, options: OverlayFactoryOptions) => OverlayLike;
     removeOverlay?: (map: MapControlHost, overlay: OverlayLike) => void;
     loadGeoTIFF?: (url: string) => Promise<unknown>;
-    geolibreTransparentOverlayPatched?: boolean;
-    geolibreTauriNodataPatched?: boolean;
-    geolibreSharedOverlayPatched?: boolean;
+    geointTransparentOverlayPatched?: boolean;
+    geointTauriNodataPatched?: boolean;
+    geointSharedOverlayPatched?: boolean;
   };
 };
 type RasterTileArray = {
@@ -145,7 +145,7 @@ type RasterTile = {
 };
 type TiledRasterSource = {
   fetchTile?: (...args: unknown[]) => Promise<RasterTile>;
-  geolibreNodataPatched?: boolean;
+  geointNodataPatched?: boolean;
 };
 type GeoTiffWithOverviews = TiledRasterSource & {
   overviews?: TiledRasterSource[];
@@ -157,7 +157,7 @@ let rasterControl: RasterControl | null = null;
 let rasterControlMounted = false;
 // The host API the mounted control belongs to, so panel chrome wired outside a
 // call that carries it (the browse-button interception) can still add layers.
-let rasterHostApp: GeoLibreAppAPI | null = null;
+let rasterHostApp: GeoIntAppAPI | null = null;
 let restorePanelExpandTimeout: number | null = null;
 let rasterControlInterleaved = true;
 // Unsubscribes the web raster overlay proxy from the shared Deck's device
@@ -233,7 +233,7 @@ export interface PickedLocalRaster {
 
 /**
  * Opens a native "choose a raster file" dialog. Registered by the desktop host
- * so the panel's own browse button yields files whose paths GeoLibre can record
+ * so the panel's own browse button yields files whose paths GeoInt can record
  * (a webview `<input type="file">` gives a `File` with no path, which is why a
  * panel-opened raster used to be lost on project reload). Resolves to an empty
  * array when the user cancels.
@@ -279,9 +279,9 @@ function isNonTiledRasterError(error: Error | null | undefined): boolean {
  * GeoTIFFs from URLs or local files and edits bands, rescale, colormaps,
  * nodata, stretch, gamma, and opacity per layer.
  *
- * @param app - The GeoLibre app API.
+ * @param app - The GeoInt app API.
  */
-export function openRasterLayerPanel(app: GeoLibreAppAPI): void {
+export function openRasterLayerPanel(app: GeoIntAppAPI): void {
   void (async () => {
     const control = await ensureRasterControl(app);
     if (!control) return;
@@ -301,11 +301,11 @@ export function openRasterLayerPanel(app: GeoLibreAppAPI): void {
         wireRasterBrowseButton(control);
         applyRasterPanelClass(control);
       } catch (error) {
-        console.error("[GeoLibre] Failed to open the raster layer panel", error);
+        console.error("[GeoInt] Failed to open the raster layer panel", error);
       }
     }, 0);
   })().catch((error) => {
-    console.error("[GeoLibre] Failed to open the raster layer panel", error);
+    console.error("[GeoInt] Failed to open the raster layer panel", error);
   });
 }
 
@@ -316,14 +316,14 @@ export function openRasterLayerPanel(app: GeoLibreAppAPI): void {
  * into the store, so it appears in the layer list and renders like any raster
  * layer.
  *
- * @param app - The GeoLibre app API.
+ * @param app - The GeoInt app API.
  * @param source - A remote COG URL or a local GeoTIFF File.
  * @param options - Optional display name for the layer, and, when the host read
  *   the File off disk, the absolute path it came from so a saved project can
  *   reload it.
  */
 export async function addRasterToMap(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   source: string | File,
   options: {
     name?: string;
@@ -386,9 +386,9 @@ export async function addRasterToMap(
  * Safe to call repeatedly: {@link ensureRasterControl} reuses the mounted
  * control and the module-level import promises.
  *
- * @param app - The GeoLibre app API for the current map.
+ * @param app - The GeoInt app API for the current map.
  */
-export async function prepareRasterControl(app: GeoLibreAppAPI): Promise<void> {
+export async function prepareRasterControl(app: GeoIntAppAPI): Promise<void> {
   await ensureRasterControl(app);
 }
 
@@ -450,7 +450,7 @@ function applyRgbBandDefaults(
  * Pushes a layer's interleave position into the raster control: draw the raster
  * (a deck.gl COG) beneath `beforeId`, or on top when `beforeId` is undefined.
  *
- * `@geolibre/map`'s layer-sync computes the beforeId from the store order but
+ * `@geoint/map`'s layer-sync computes the beforeId from the store order but
  * cannot move the deck layer itself (it has no real MapLibre style layer), so
  * the desktop shell wires this as its deck-layer order handler. A no-op for any
  * id the raster control does not own.
@@ -462,7 +462,7 @@ export function applyRasterLayerOrder(layerId: string, beforeId: string | undefi
   rasterControl?.setRasterBeforeId(layerId, beforeId ?? null);
 }
 
-export function closeRasterLayerPanel(app: GeoLibreAppAPI): void {
+export function closeRasterLayerPanel(app: GeoIntAppAPI): void {
   if (restorePanelExpandTimeout !== null) {
     window.clearTimeout(restorePanelExpandTimeout);
     restorePanelExpandTimeout = null;
@@ -525,9 +525,9 @@ export function setRasterPixelInspect(layerId: string, enabled: boolean): void {
  * moved file, a project carried to another machine -- its panel entry is
  * removed with a notice, as before.
  *
- * @param app - The GeoLibre app API.
+ * @param app - The GeoInt app API.
  */
-export function restoreRasterLayers(app: GeoLibreAppAPI): void {
+export function restoreRasterLayers(app: GeoIntAppAPI): void {
   const hasRasterLayers = useAppStore.getState().layers.some(isRasterControlStoreLayer);
   if (!hasRasterLayers && !rasterControl) return;
 
@@ -564,7 +564,7 @@ export function restoreRasterLayers(app: GeoLibreAppAPI): void {
       try {
         applyRestoredRasterPanelState(control, panelCollapsed);
       } catch (error) {
-        console.error("[GeoLibre] Failed to restore raster panel state", error);
+        console.error("[GeoInt] Failed to restore raster panel state", error);
       }
 
       for (const info of control.getRasters()) {
@@ -585,7 +585,7 @@ export function restoreRasterLayers(app: GeoLibreAppAPI): void {
           // no toast/notification API today. Surface this through an in-app
           // notification once one is exposed to plugins.
           console.info(
-            `[GeoLibre] Raster layer "${layer.name}" came from a local file and cannot be restored from the saved project.`,
+            `[GeoInt] Raster layer "${layer.name}" came from a local file and cannot be restored from the saved project.`,
           );
           // removeLayer fires the store subscriber synchronously; the
           // suspension guard keeps it from echoing back at the control.
@@ -611,7 +611,7 @@ export function restoreRasterLayers(app: GeoLibreAppAPI): void {
               zoomTo: false,
             })
             .catch((error) => {
-              console.error(`[GeoLibre] Failed to restore raster layer "${layer.name}"`, error);
+              console.error(`[GeoInt] Failed to restore raster layer "${layer.name}"`, error);
             }),
         );
       }
@@ -637,7 +637,7 @@ export function restoreRasterLayers(app: GeoLibreAppAPI): void {
       }, 0);
     });
   })().catch((error) => {
-    console.error("[GeoLibre] Failed to restore raster layers", error);
+    console.error("[GeoInt] Failed to restore raster layers", error);
   });
 }
 
@@ -673,7 +673,7 @@ async function readLocalRasterFiles(control: RasterControl): Promise<Map<string,
       rememberLocalRasterPath(layer.id, path);
     } catch (error) {
       console.warn(
-        `[GeoLibre] Could not re-read raster layer "${layer.name}" from "${path}".`,
+        `[GeoInt] Could not re-read raster layer "${layer.name}" from "${path}".`,
         error,
       );
     }
@@ -681,7 +681,7 @@ async function readLocalRasterFiles(control: RasterControl): Promise<Map<string,
   return files;
 }
 
-async function ensureRasterControl(app: GeoLibreAppAPI): Promise<RasterControl | null> {
+async function ensureRasterControl(app: GeoIntAppAPI): Promise<RasterControl | null> {
   const RasterControlClass = await getRasterControlClass();
 
   rasterControl ??= createRasterControl(RasterControlClass);
@@ -744,7 +744,7 @@ function getMapboxOverlayClass(): Promise<MapboxOverlayConstructor> {
 function createRasterControl(RasterControlClass: RasterControlConstructor): RasterControl {
   rasterControlInterleaved = !isTauriRuntime();
   const control = new RasterControlClass({
-    className: "geolibre-raster-control",
+    className: "geoint-raster-control",
     collapsed: true,
     // No prefilled URL: the input stays empty (the upstream control supplies
     // a generic COG-URL placeholder), and the sample COGs below are the
@@ -855,7 +855,7 @@ function createRasterControl(RasterControlClass: RasterControlConstructor): Rast
           },
         }),
       )
-      .catch((error: unknown) => console.error("[GeoLibre] Non-tiled raster handler failed", error))
+      .catch((error: unknown) => console.error("[GeoInt] Non-tiled raster handler failed", error))
       .finally(() => nonTiledInFlight.delete(layerId));
   });
   // syncRasterLayersToStore re-reads getState().collapsed when these fire.
@@ -889,7 +889,7 @@ async function patchTauriRasterOverlayFactory(control: RasterControl): Promise<v
   const deps = manager?._deps;
   if (!deps) return;
 
-  if (deps.createOverlay && !deps.geolibreTransparentOverlayPatched) {
+  if (deps.createOverlay && !deps.geointTransparentOverlayPatched) {
     const MapboxOverlayClass = await getMapboxOverlayClass();
     deps.createOverlay = (map, options) => {
       const overlay = new MapboxOverlayClass({
@@ -910,13 +910,13 @@ async function patchTauriRasterOverlayFactory(control: RasterControl): Promise<v
       map.addControl(overlay);
       return overlay;
     };
-    deps.geolibreTransparentOverlayPatched = true;
+    deps.geointTransparentOverlayPatched = true;
   }
 
-  if (deps.loadGeoTIFF && !deps.geolibreTauriNodataPatched) {
+  if (deps.loadGeoTIFF && !deps.geointTauriNodataPatched) {
     const loadGeoTIFF = deps.loadGeoTIFF;
     deps.loadGeoTIFF = async (url) => patchGeoTiffNumericNodata(await loadGeoTIFF(url));
-    deps.geolibreTauriNodataPatched = true;
+    deps.geointTauriNodataPatched = true;
   }
 }
 
@@ -965,12 +965,12 @@ async function warmTauriWasmEngine(control: RasterControl): Promise<void> {
  * @param app - The host application API (drives the shared overlay).
  * @param control - The mounted maplibre-gl-raster control.
  */
-function patchWebRasterOverlayFactory(app: GeoLibreAppAPI, control: RasterControl): void {
+function patchWebRasterOverlayFactory(app: GeoIntAppAPI, control: RasterControl): void {
   if (isTauriRuntime()) return;
 
   const manager = (control as unknown as RasterControlInternals)._layerManager;
   const deps = manager?._deps;
-  if (!deps || deps.geolibreSharedOverlayPatched) return;
+  if (!deps || deps.geointSharedOverlayPatched) return;
 
   deps.createOverlay = (_map, options) => {
     void ensureSharedDeckOverlay(app);
@@ -1000,7 +1000,7 @@ function patchWebRasterOverlayFactory(app: GeoLibreAppAPI, control: RasterContro
     setSharedDeckLayers("raster", []);
   };
 
-  deps.geolibreSharedOverlayPatched = true;
+  deps.geointSharedOverlayPatched = true;
 }
 
 function patchGeoTiffNumericNodata(tiff: unknown): unknown {
@@ -1013,7 +1013,7 @@ function patchGeoTiffNumericNodata(tiff: unknown): unknown {
 
 function patchTiledRasterSource(source: unknown): void {
   const tiledSource = source as TiledRasterSource;
-  if (!tiledSource.fetchTile || tiledSource.geolibreNodataPatched) return;
+  if (!tiledSource.fetchTile || tiledSource.geointNodataPatched) return;
 
   const fetchTile = tiledSource.fetchTile.bind(source);
   tiledSource.fetchTile = async (...args) => {
@@ -1021,7 +1021,7 @@ function patchTiledRasterSource(source: unknown): void {
     normalizeTileNumericNodata(tile);
     return tile;
   };
-  tiledSource.geolibreNodataPatched = true;
+  tiledSource.geointNodataPatched = true;
 }
 
 function normalizeTileNumericNodata(tile: RasterTile): void {
@@ -1129,7 +1129,7 @@ function applyRestoredRasterPanelState(control: RasterControl, panelCollapsed: b
       wireRasterBrowseButton(control);
       applyRasterPanelClass(control);
     } catch (error) {
-      console.error("[GeoLibre] Failed to restore raster panel state", error);
+      console.error("[GeoInt] Failed to restore raster panel state", error);
     }
   }, 0);
 }
@@ -1147,7 +1147,7 @@ function rasterPanelCollapsedFromLayers(
 }
 
 // The upstream stylesheet themes the panel from prefers-color-scheme (the
-// OS setting), while GeoLibre themes from the .dark class on <html>. The
+// OS setting), while GeoInt themes from the .dark class on <html>. The
 // app maps the panel's --mlr-* custom properties onto its own theme tokens
 // under this class (see index.css), so the panel follows the app theme.
 function applyRasterPanelClass(control: RasterControl): void {
@@ -1162,10 +1162,10 @@ function applyRasterPanelClass(control: RasterControl): void {
 function wireRasterCloseButton(control: RasterControl): void {
   const panel = (control as unknown as RasterControlInternals)._panel;
   const closeButton = panel?.querySelector<HTMLElement>(".mlr-control-close");
-  if (!closeButton || closeButton.dataset.geolibreCloseWired === "true") {
+  if (!closeButton || closeButton.dataset.geointCloseWired === "true") {
     return;
   }
-  closeButton.dataset.geolibreCloseWired = "true";
+  closeButton.dataset.geointCloseWired = "true";
   closeButton.addEventListener("click", () => hideRasterControl(control));
 }
 
@@ -1184,8 +1184,8 @@ function wireRasterCloseButton(control: RasterControl): void {
 // listener simply never matches and the built-in input takes over again.
 function wireRasterBrowseButton(control: RasterControl): void {
   const panel = (control as unknown as RasterControlInternals)._panel;
-  if (!panel || panel.dataset.geolibreBrowseWired === "true") return;
-  panel.dataset.geolibreBrowseWired = "true";
+  if (!panel || panel.dataset.geointBrowseWired === "true") return;
+  panel.dataset.geointBrowseWired = "true";
 
   const intercept = (event: Event): boolean => {
     if (!localRasterPicker) return false;
@@ -1238,10 +1238,10 @@ async function openLocalRasterPicker(): Promise<void> {
           picked.file instanceof File
             ? picked.file.name
             : picked.path.split(/[\\/]/).pop() || picked.path;
-        console.error(`[GeoLibre] Failed to add the raster "${name}"`, error);
+        console.error(`[GeoInt] Failed to add the raster "${name}"`, error);
       }
     }
   } catch (error) {
-    console.error("[GeoLibre] Failed to add a raster from the file picker", error);
+    console.error("[GeoInt] Failed to add a raster from the file picker", error);
   }
 }

@@ -1,10 +1,10 @@
-# winget packaging (`OpenGeos.GeoLibre`)
+# winget packaging (`OpenGeos.GeoInt`)
 
-GeoLibre is published to the [Windows Package Manager](https://learn.microsoft.com/windows/package-manager/)
-(winget) as **`OpenGeos.GeoLibre`**, so Windows users can install it with:
+GeoInt is published to the [Windows Package Manager](https://learn.microsoft.com/windows/package-manager/)
+(winget) as **`OpenGeos.GeoInt`**, so Windows users can install it with:
 
 ```powershell
-winget install OpenGeos.GeoLibre
+winget install OpenGeos.GeoInt
 ```
 
 The package wraps the official Tauri-built **NSIS** installer (winget type
@@ -16,12 +16,12 @@ the installer from the release URL.
 ## Files
 
 The three manifests here are **reference copies** of what is submitted to
-`winget-pkgs` (under `manifests/o/OpenGeos/GeoLibre/<version>/`), validated
+`winget-pkgs` (under `manifests/o/OpenGeos/GeoInt/<version>/`), validated
 against the v1.6.0 JSON schemas:
 
-- `OpenGeos.GeoLibre.yaml` (version manifest)
-- `OpenGeos.GeoLibre.installer.yaml` (installer: URL, sha256, `nullsoft`, x64)
-- `OpenGeos.GeoLibre.locale.en-US.yaml` (name, publisher, description, license)
+- `OpenGeos.GeoInt.yaml` (version manifest)
+- `OpenGeos.GeoInt.installer.yaml` (installer: URL, sha256, `nullsoft`, x64)
+- `OpenGeos.GeoInt.locale.en-US.yaml` (name, publisher, description, license)
 
 ## One-time setup (maintainer)
 

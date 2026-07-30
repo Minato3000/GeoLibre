@@ -14,11 +14,11 @@
 #
 # Usage:
 #   REPO=opengeos/GeoLibre TAG=v1.5.0 \
-#     scripts/embed-appimage-update-info.sh path/to/GeoLibre.Desktop_1.5.0_amd64.AppImage
+#     scripts/embed-appimage-update-info.sh path/to/GeoInt.Desktop_1.5.0_amd64.AppImage
 #
 #   # Print the update information string for a file name and exit (no writes):
 #   REPO=opengeos/GeoLibre TAG=v1.5.0 \
-#     scripts/embed-appimage-update-info.sh --print GeoLibre.Desktop_1.5.0_amd64.AppImage
+#     scripts/embed-appimage-update-info.sh --print GeoInt.Desktop_1.5.0_amd64.AppImage
 #
 # REPO (owner/name) and TAG (the release tag, e.g. v1.5.0) are both required.
 # The AppImage is patched in place, so run this before uploading it.

@@ -1,5 +1,5 @@
-import type { GeoLibreLayer } from "@geolibre/core";
-import { fetchSqlStatus, runSedonaSql } from "@geolibre/processing";
+import type { GeoIntLayer } from "@geoint/core";
+import { fetchSqlStatus, runSedonaSql } from "@geoint/processing";
 import type { FeatureCollection } from "geojson";
 import { tableFromIPC } from "apache-arrow";
 import { loadCereusDb, type CereusInstance } from "./cereus-loader";
@@ -16,7 +16,7 @@ import {
 
 // Reserved alias wrapping the user's statement when geometry is detected; kept
 // deliberately obscure so it does not collide with a user's own CTE/subquery.
-const SQL_SUBQUERY_ALIAS = "__geolibre_sql_subquery";
+const SQL_SUBQUERY_ALIAS = "__geoint_sql_subquery";
 
 // Cap the per-layer feature count registered into the in-browser engine so a
 // very large layer cannot exhaust browser memory. Mirrors the sidecar's
@@ -78,7 +78,7 @@ function runExclusive<T>(task: () => Promise<T>): Promise<T> {
 // name and exposed through a view that parses the geometry with ST_GeomFromText
 // so ST_* functions work; `properties` is carried through as JSON and flattened
 // in JS (this CereusDB build implements no struct/JSON field access in SQL).
-const VIEW_SOURCE_SUFFIX = "__geolibre_src";
+const VIEW_SOURCE_SUFFIX = "__geoint_src";
 
 // Column names CereusDB's registerGeoJSON produces.
 const RAW_GEOMETRY_COLUMN = "geometry";
@@ -96,7 +96,7 @@ let registeredViews: string[] = [];
  */
 async function registerLayerTables(
   db: CereusInstance,
-  layers: GeoLibreLayer[],
+  layers: GeoIntLayer[],
 ): Promise<SqlWorkspaceTable[]> {
   for (const view of registeredViews) {
     try {
@@ -251,7 +251,7 @@ async function describeQuery(
  * (EPSG:4326). The returned shape matches {@link SqlQueryResult} so the dialog
  * renders this engine identically to DuckDB and PostGIS.
  */
-async function runCereusQuery(statement: string, layers: GeoLibreLayer[]): Promise<SqlQueryResult> {
+async function runCereusQuery(statement: string, layers: GeoIntLayer[]): Promise<SqlQueryResult> {
   return runExclusive(async () => {
     const db = await getDb();
     await registerLayerTables(db, layers);
@@ -313,10 +313,7 @@ async function runCereusQuery(statement: string, layers: GeoLibreLayer[]): Promi
 // ---------------------------------------------------------------------------
 
 /** Run a statement via the SedonaDB sidecar and map it to {@link SqlQueryResult}. */
-async function runSidecarQuery(
-  statement: string,
-  layers: GeoLibreLayer[],
-): Promise<SqlQueryResult> {
+async function runSidecarQuery(statement: string, layers: GeoIntLayer[]): Promise<SqlQueryResult> {
   // Send the same sanitised table names the workspace shows the user, so SQL
   // written against the "Queryable layers" names resolves on the sidecar too.
   const payloadLayers = assignTableNames(layers).map(({ layer, tableName }) => ({
@@ -377,10 +374,7 @@ async function sidecarSqlAvailable(): Promise<boolean> {
  * @returns Columns, rows, row count, geometry column name, and GeoJSON result.
  * @throws Whatever the active engine throws for invalid SQL (surfaced to the caller).
  */
-export async function runSedonaQuery(
-  sql: string,
-  layers: GeoLibreLayer[],
-): Promise<SqlQueryResult> {
+export async function runSedonaQuery(sql: string, layers: GeoIntLayer[]): Promise<SqlQueryResult> {
   const cleaned = cleanStatement(sql);
   if (containsMultipleStatements(cleaned)) {
     throw new Error(

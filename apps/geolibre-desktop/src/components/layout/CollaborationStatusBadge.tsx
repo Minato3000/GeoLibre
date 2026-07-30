@@ -1,6 +1,6 @@
-import { useAppStore } from "@geolibre/core";
-import { Button, Input } from "@geolibre/ui";
-import type { MapController } from "@geolibre/map";
+import { useAppStore } from "@geoint/core";
+import { Button, Input } from "@geoint/ui";
+import type { MapController } from "@geoint/map";
 import { ChevronUp, MapPin, Send, Settings2, Users, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

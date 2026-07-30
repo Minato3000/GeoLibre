@@ -1,7 +1,7 @@
 // Standalone "Export as interactive HTML" builder; the in-app counterpart of the
 // Python widget's `Map.to_html()`. See `docs/python.md` and `embedHost.ts`.
 
-import type { GeoLibreProject } from "@geolibre/core";
+import type { GeoIntProject } from "@geoint/core";
 
 // Hosted viewer used as the default embed target (matches Python's default).
 export const DEFAULT_VIEWER_BASE_URL = "https://web.geolibre.app/";
@@ -14,7 +14,7 @@ const CSS_DIMENSION_RE = /^[\w%.+\-/\s()]+$/;
 // Resolve the viewer URL from the env, accepting only HTTPS (or loopback HTTP)
 // and matching the hostname exactly; mirrors resolveShareBaseUrl.
 export function resolveViewerBaseUrl(
-  configured: unknown = import.meta.env?.VITE_GEOLIBRE_VIEWER_URL,
+  configured: unknown = import.meta.env?.VITE_GEOINT_VIEWER_URL,
 ): string {
   if (typeof configured === "string" && configured.trim()) {
     const trimmed = configured.trim();
@@ -68,10 +68,10 @@ function withViewerFlags(baseUrl: string): string {
 
 export interface BuildProjectHtmlOptions {
   /** The serializable project to inline and replay into the embedded app. */
-  project: GeoLibreProject;
+  project: GeoIntProject;
   /** The exported page's `<title>`. */
   title: string;
-  /** Base URL of the GeoLibre app to embed; validated and defaulted to the
+  /** Base URL of the GeoInt app to embed; validated and defaulted to the
    * env/hosted viewer via resolveViewerBaseUrl. */
   appUrl?: string;
   /** CSS width of the embedded map (default `"100%"`). */
@@ -81,7 +81,7 @@ export interface BuildProjectHtmlOptions {
 }
 
 // Build a self-contained HTML page that frames the viewer (with ?embed=1) and
-// posts the inlined project to it on "geolibre:ready"; throws on an unsafe
+// posts the inlined project to it on "geoint:ready"; throws on an unsafe
 // width/height. Mirrors the Python widget's to_html().
 export function buildProjectHtml(options: BuildProjectHtmlOptions): string {
   const { project, title } = options;
@@ -110,17 +110,17 @@ export function buildProjectHtml(options: BuildProjectHtmlOptions): string {
 <title>${escapeHtml(title)}</title>
 <style>
   html, body { margin: 0; padding: 0; height: 100%; }
-  #geolibre-frame { border: 0; display: block; width: ${width}; height: ${height}; }
+  #geoint-frame { border: 0; display: block; width: ${width}; height: ${height}; }
 </style>
 </head>
 <body>
-<iframe id="geolibre-frame" src="${escapeHtml(iframeSrc)}" allow="fullscreen" allowfullscreen></iframe>
-<script type="application/json" id="geolibre-project">${projectJson}</script>
+<iframe id="geoint-frame" src="${escapeHtml(iframeSrc)}" allow="fullscreen" allowfullscreen></iframe>
+<script type="application/json" id="geoint-project">${projectJson}</script>
 <script>
 (function () {
-  var frame = document.getElementById("geolibre-frame");
+  var frame = document.getElementById("geoint-frame");
   var project = JSON.parse(
-    document.getElementById("geolibre-project").textContent
+    document.getElementById("geoint-project").textContent
   );
   // The src attribute is fixed, so this pins to the viewer origin: both the
   // inbound "ready" check and the outbound post are scoped to it.
@@ -130,7 +130,7 @@ export function buildProjectHtml(options: BuildProjectHtmlOptions): string {
     if (loaded || !frame.contentWindow) return;
     loaded = true;
     frame.contentWindow.postMessage(
-      { type: "geolibre:load-project", project: project, seq: 1 },
+      { type: "geoint:load-project", project: project, seq: 1 },
       viewerOrigin
     );
   }
@@ -138,7 +138,7 @@ export function buildProjectHtml(options: BuildProjectHtmlOptions): string {
     if (event.origin !== viewerOrigin) return;
     if (event.source !== frame.contentWindow) return;
     var data = event.data;
-    if (data && data.type === "geolibre:ready") load();
+    if (data && data.type === "geoint:ready") load();
   });
 })();
 </script>

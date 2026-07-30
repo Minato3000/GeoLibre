@@ -1,13 +1,13 @@
 # How to Cite
 
-If you use GeoLibre in your research, teaching, software, or other work, please
+If you use GeoInt in your research, teaching, software, or other work, please
 cite it. Citations help others find the project, recognize the contributors,
 and support the continued development of free and open-source geospatial
 software.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20785400.svg)](https://doi.org/10.5281/zenodo.20785400)
 
-GeoLibre is archived on [Zenodo](https://zenodo.org/), which mints a Digital
+GeoInt is archived on [Zenodo](https://zenodo.org/), which mints a Digital
 Object Identifier (DOI) for every release. The DOI above is the **concept DOI**:
 it always resolves to the latest version. To cite a specific version instead,
 open the [Zenodo record](https://doi.org/10.5281/zenodo.20785400) and copy the
@@ -22,9 +22,9 @@ DOI shown for that release.
 ## BibTeX
 
 ```bibtex
-@software{wu_geolibre,
+@software{wu_geoint,
   author    = {Wu, Qiusheng},
-  title     = {{GeoLibre: A lightweight, cloud-native GIS platform for visualizing, exploring, and analyzing geospatial data}},
+  title     = {{GeoInt: A lightweight, cloud-native GIS platform for visualizing, exploring, and analyzing geospatial data}},
   year      = {2026},
   publisher = {Zenodo},
   doi       = {10.5281/zenodo.20785400},
@@ -49,7 +49,7 @@ the same file.
 
 ## Citing dependencies
 
-GeoLibre builds on many open-source projects. If your work relies heavily on a
+GeoInt builds on many open-source projects. If your work relies heavily on a
 particular component, please consider citing it as well. See the
 [Acknowledgements](acknowledgements.md) page for the full list of projects that
-make GeoLibre possible.
+make GeoInt possible.

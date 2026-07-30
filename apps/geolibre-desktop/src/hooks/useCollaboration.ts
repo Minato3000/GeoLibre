@@ -5,11 +5,11 @@ import {
   useAppStore,
   type CollaborationMode,
   type CollaborationPresence,
-  type GeoLibreProject,
-} from "@geolibre/core";
+  type GeoIntProject,
+} from "@geoint/core";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import type { RefObject } from "react";
-import type { MapController } from "@geolibre/map";
+import type { MapController } from "@geoint/map";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import i18n from "../i18n";
 import { buildProjectSnapshot } from "../lib/build-project-snapshot";
@@ -28,7 +28,7 @@ const SNAPSHOT_DEBOUNCE_MS = 250;
 const CURSOR_THROTTLE_MS = 40;
 
 export interface CollaborationApi {
-  /** True when `VITE_GEOLIBRE_COLLAB_URL` is configured; gates all UI. */
+  /** True when `VITE_GEOINT_COLLAB_URL` is configured; gates all UI. */
   enabled: boolean;
   /** Host a new session and connect. Resolves with the shareable code. */
   start: (displayName: string, color: string, mode: CollaborationMode) => Promise<string>;
@@ -149,12 +149,12 @@ export function useCollaboration(
     }, RESTORE_DEBOUNCE_MS);
   };
 
-  const applyRemoteSnapshot = (project: GeoLibreProject, initial: boolean): void => {
+  const applyRemoteSnapshot = (project: GeoIntProject, initial: boolean): void => {
     // Keep each participant's own camera: replace the incoming view with the
     // local one before applying, so a peer's edit never yanks our viewport.
     // Where others are looking is conveyed by presence viewport rectangles.
     const localView = mapControllerRef.current?.readView() ?? useAppStore.getState().mapView;
-    const merged: GeoLibreProject = { ...project, mapView: localView };
+    const merged: GeoIntProject = { ...project, mapView: localView };
     if (initial) {
       // First bootstrap (the welcome snapshot): a one-time full loadProject is
       // fine and runs the plugin/native-layer restoration so the joiner sees

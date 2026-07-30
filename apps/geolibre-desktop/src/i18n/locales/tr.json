@@ -28,8 +28,8 @@
   },
   "about": {
     "trigger": "Hakkında",
-    "title": "GeoLibre Hakkında",
-    "description": "GeoLibre, hafif, bulut yerel bir CBS platformudur.",
+    "title": "GeoInt Hakkında",
+    "description": "GeoInt, hafif, bulut yerel bir CBS platformudur.",
     "version": "Sürüm",
     "checkForUpdates": "Güncellemeleri kontrol et",
     "tryAgain": "Yeniden dene",
@@ -48,7 +48,7 @@
     "steps": {
       "download": "Platformunuz için kurulum dosyasını indirmeler sayfasından indirin.",
       "install": "Kurulumu çalıştırın. Yerel projeleriniz, ayarlarınız ve API anahtarlarınız korunur.",
-      "reopen": "Güncellemeyi tamamlamak için GeoLibre'yi yeniden açın."
+      "reopen": "Güncellemeyi tamamlamak için GeoInt'yi yeniden açın."
     },
     "severity": {
       "major": "Büyük sürüm",
@@ -67,7 +67,7 @@
       "noTag": "En son sürüm bir sürüm etiketi içermiyor.",
       "network": "GitHub'a ulaşılamadı. Bağlantınızı kontrol edip tekrar deneyin.",
       "viewDownloads": "İndirmeleri görüntüle",
-      "viewDownloadsHint": "En son sürümü elle kontrol edebilmeniz için GeoLibre indirmeler sayfasını tarayıcınızda açar."
+      "viewDownloadsHint": "En son sürümü elle kontrol edebilmeniz için GeoInt indirmeler sayfasını tarayıcınızda açar."
     },
     "startup": {
       "title": "Güncelleme mevcut",
@@ -95,7 +95,7 @@
       "title": "Bu projedeki eklentiler yüklensin mi?",
       "description_one": "Bu proje, yüklü olmadığınız bir URL'den 1 harici eklenti yüklemek istiyor. Eklentiler, uygulamaya tam erişimle kod çalıştırır.",
       "description_other": "Bu proje, yüklü olmadığınız URL'lerden {{count}} harici eklenti yüklemek istiyor. Eklentiler, uygulamaya tam erişimle kod çalıştırır.",
-      "warning": "Yalnızca güvendiğiniz kaynaklardan eklenti yükleyin. Yüklenen eklentiler, GeoLibre'nin kendisiyle aynı ayrıcalıklarla çalışır.",
+      "warning": "Yalnızca güvendiğiniz kaynaklardan eklenti yükleyin. Yüklenen eklentiler, GeoInt'nin kendisiyle aynı ayrıcalıklarla çalışır.",
       "trustButton": "Güven ve yükle",
       "dismissButton": "Yükleme"
     },
@@ -114,7 +114,7 @@
     "openHomepageAria": "{{name}} ana sayfasını aç",
     "byAuthor": "{{author}} tarafından",
     "updateAvailable": "güncelleme mevcut",
-    "requiresVersion": "GeoLibre {{version}}+ gerektirir",
+    "requiresVersion": "GeoInt {{version}}+ gerektirir",
     "install": "Kur",
     "installAria": "{{name}} eklentisini kur",
     "removeConfirm": "Kaldırılsın mı?",
@@ -125,10 +125,10 @@
     "updateAria": "{{name}} eklentisini güncelle",
     "loading": "Yükleniyor…",
     "installed": "Kurulu",
-    "settingsIntro": "GeoLibre her zaman uygulama verilerindeki eklenti dizinini tarar. Paketlenmiş bir eklentiyi (.zip) dosyadan kurun ya da ek yerel dizinler ekleyin (yalnızca masaüstü). Manifest URL'leri (mağaza kurulumları dahil) ağ üzerinden yüklenir; buradaki değişiklikler anında geçerli olur.",
+    "settingsIntro": "GeoInt her zaman uygulama verilerindeki eklenti dizinini tarar. Paketlenmiş bir eklentiyi (.zip) dosyadan kurun ya da ek yerel dizinler ekleyin (yalnızca masaüstü). Manifest URL'leri (mağaza kurulumları dahil) ağ üzerinden yüklenir; buradaki değişiklikler anında geçerli olur.",
     "installFromFile": "Dosyadan kur",
     "chooseZip": ".zip seç…",
-    "installFromFileHintDesktop": "Paketlenmiş bir eklenti arşivini GeoLibre'nin eklenti dizinine kopyalar.",
+    "installFromFileHintDesktop": "Paketlenmiş bir eklenti arşivini GeoInt'nin eklenti dizinine kopyalar.",
     "installFromFileHintWeb": "Paketlenmiş bir eklenti arşivini yükler; tarayıcınızda saklanır ve bir sonraki ziyaretinizde yeniden yüklenir.",
     "localDirectories": "Yerel dizinler",
     "directoryAria": "Eklenti dizini",
@@ -143,7 +143,7 @@
     "errorDirectoryPicker": "Dizin seçici açılamadı.",
     "errorInstall": "Eklenti kurulamadı.",
     "errorUninstall": "Eklenti kaldırılamadı.",
-    "description": "Harici GeoLibre eklentilerine göz atın, kurun, güncelleyin ve kaldırın. Eklentiler <registryLink>GeoLibre eklenti kayıt defterinde</registryLink> listelenir."
+    "description": "Harici GeoInt eklentilerine göz atın, kurun, güncelleyin ve kaldırın. Eklentiler <registryLink>GeoInt eklenti kayıt defterinde</registryLink> listelenir."
   },
   "viewState": {
     "panelTitle": "Bilgi"
@@ -214,7 +214,7 @@
     "add": "Ekle",
     "ok": "Tamam",
     "done": "Bitti",
-    "openWebApp": "GeoLibre web uygulamasını aç"
+    "openWebApp": "GeoInt web uygulamasını aç"
   },
   "addData": {
     "title": "Veri Ekle",
@@ -257,7 +257,7 @@
       },
       "gdb": {
         "label": "File Geodatabase Katmanı Ekle",
-        "description": "Bir Esri File Geodatabase (.gdb klasörü) içinden bir katman ekleyin. Katman, yerel GeoLibre sunucusuyla okunur ve WGS84'e yeniden projeksiyonlanır."
+        "description": "Bir Esri File Geodatabase (.gdb klasörü) içinden bir katman ekleyin. Katman, yerel GeoInt sunucusuyla okunur ve WGS84'e yeniden projeksiyonlanır."
       },
       "photos": {
         "label": "Coğrafi Etiketli Fotoğraflar Ekle",
@@ -481,8 +481,8 @@
       "layerPlaceholder": "Önce bir coğrafi veritabanı seçin",
       "readingLayers": "Katmanlar okunuyor...",
       "layerOption": "{{name}} ({{type}}, {{count}} öğe)",
-      "help": "Yalnızca öznitelik içeren tablolar listelenmez. Seçilen öğe sınıfı yerel GeoLibre sunucusu üzerinden yüklenir ve WGS84'e yeniden projeksiyonlanır.",
-      "desktopOnly": "File Geodatabase katmanları yalnızca GeoLibre Masaüstü'nde kullanılabilir. Bu özellik, web uygulamasının erişemediği yerel GeoLibre sunucusu üzerinden yerel bir .gdb klasörünü okur.",
+      "help": "Yalnızca öznitelik içeren tablolar listelenmez. Seçilen öğe sınıfı yerel GeoInt sunucusu üzerinden yüklenir ve WGS84'e yeniden projeksiyonlanır.",
+      "desktopOnly": "File Geodatabase katmanları yalnızca GeoInt Masaüstü'nde kullanılabilir. Bu özellik, web uygulamasının erişemediği yerel GeoInt sunucusu üzerinden yerel bir .gdb klasörünü okur.",
       "readError": "Bu File Geodatabase okunamadı.",
       "convertError": "Bu öğe sınıfı yüklenemedi.",
       "errorNotGdb": ".gdb ile biten bir klasör (Esri File Geodatabase) seçin.",
@@ -563,7 +563,7 @@
     },
     "postgres": {
       "defaultName": "PostgreSQL Katmanı",
-      "errorDesktopOnly": "PostgreSQL katmanları GeoLibre Masaüstü gerektirir.",
+      "errorDesktopOnly": "PostgreSQL katmanları GeoInt Masaüstü gerektirir.",
       "errorConnectionString": "Bir PostgreSQL bağlantı dizesi girin.",
       "statusCheckingBinary": "Martin ikili dosyası kontrol ediliyor...",
       "statusDownloaded": "Martin indirildi. Yerel sunucu başlatılıyor...",
@@ -578,7 +578,7 @@
       "errorConnectFirst": "Önce PostgreSQL'e bağlanın.",
       "errorNoVectorLayers": "Seçilen Martin kaynağının vektör katmanı yok.",
       "errorSelectSource": "Eklenecek bir Martin kaynağı seçin.",
-      "desktopOnlyNotice": "PostgreSQL katmanları yalnızca GeoLibre Masaüstü'nde kullanılabilir. Bu özellik, web uygulamasının başlatamadığı yerel bir Martin döşeme sunucusu çalıştırır.",
+      "desktopOnlyNotice": "PostgreSQL katmanları yalnızca GeoInt Masaüstü'nde kullanılabilir. Bu özellik, web uygulamasının başlatamadığı yerel bir Martin döşeme sunucusu çalıştırır.",
       "savedConnection": "Kayıtlı bağlantı",
       "selectSavedConnection": "Kayıtlı bağlantı seç",
       "connectionString": "PostgreSQL bağlantı dizesi",
@@ -599,7 +599,7 @@
       "editableTable": "Tablo",
       "tableReadOnly": "{{table}} (salt okunur: birincil anahtar yok)",
       "errorSelectTable": "Yüklenecek bir tablo seçin.",
-      "errorRuntimeMissing": "İşleme sunucusunda PostGIS çalışma zamanı (psycopg) yüklü değil. Düzenlenebilir katmanları yüklemek için geolibre-server 'postgis' ek paketini yükleyin."
+      "errorRuntimeMissing": "İşleme sunucusunda PostGIS çalışma zamanı (psycopg) yüklü değil. Düzenlenebilir katmanları yüklemek için geoint-server 'postgis' ek paketini yükleyin."
     },
     "video": {
       "defaultName": "Video Katmanı",
@@ -1078,7 +1078,7 @@
     "step1Title": "1. Bir API belirteci alın",
     "step1Description": "share.geolibre.app adresinde oturum açın, ardından Ayarlar → API belirteçleri altında bir belirteç oluşturun.",
     "getToken": "API belirteci al",
-    "step2Title": "2. Belirteci GeoLibre'ye ekleyin",
+    "step2Title": "2. Belirteci GeoInt'ye ekleyin",
     "step2Description": "Belirteci bu cihazda Ayarlar → Ortam Değişkenleri kısmına yapıştırın.",
     "configureToken": "Yerel belirteci yapılandır",
     "liveAt": "Projeniz şu adreste yayında:",
@@ -1100,7 +1100,7 @@
   },
   "gallery": {
     "title": "Proje galerisi",
-    "description": "share.geolibre.app üzerinde paylaşılan genel projelere göz atın ve birini GeoLibre'de açın.",
+    "description": "share.geolibre.app üzerinde paylaşılan genel projelere göz atın ve birini GeoInt'de açın.",
     "searchPlaceholder": "Yüklenen projeleri başlığa, yazara veya etikete göre filtrele",
     "loading": "Projeler yükleniyor…",
     "loadingMore": "Daha fazla yükleniyor…",
@@ -1186,7 +1186,7 @@
       "groupNavigation": "Kuzey okunu ve ölçek çubuğunu grupla",
       "footer": "Alt bilgi metni",
       "date": "Tarih",
-      "attribution": "GeoLibre atfını dahil et",
+      "attribution": "GeoInt atfını dahil et",
       "pageBorder": "Sayfa kenarlığı",
       "infoBlock": "Bilgi bloğu (başlık bloğu)",
       "colorbar": "Renk çubuğu",
@@ -1566,7 +1566,7 @@
     "noticeDesc": "Bir bilgi kartı açmak, tıkladığınız yerin koordinatlarını (ve açtığınız yakındaki herhangi bir makalenin başlığını) özet ve fotoğraf almak için Wikipedia'nın herkese açık API'sine gönderir — bu istekler için koordinatlarınız cihazınızdan ayrılır."
   },
   "onboarding": {
-    "title": "GeoLibre'ye Hoş Geldiniz",
+    "title": "GeoInt'ye Hoş Geldiniz",
     "description": "Arayüzü kişiselleştirmek için deneyim düzeyinizi seçin. Bunu istediğiniz zaman Ayarlar → Arayüz bölümünden değiştirebilirsiniz.",
     "level": {
       "beginner": {
@@ -1579,7 +1579,7 @@
       },
       "advanced": {
         "title": "İleri düzey",
-        "description": "GeoLibre'nin sunduğu her şeyi göster."
+        "description": "GeoInt'nin sunduğu her şeyi göster."
       }
     },
     "showEverything": "Atla — her şeyi göster"
@@ -1594,7 +1594,6 @@
       "appearance": "Görünüm",
       "interface": "Arayüz",
       "geocoding": "Coğrafi kodlama",
-      "ai": "AI Sağlayıcıları",
       "environment": "Ortam",
       "updates": "Güncellemeler"
     },
@@ -1604,7 +1603,6 @@
       "appearanceSettings": "Görünüm Ayarları",
       "interfaceSettings": "Arayüz Ayarları",
       "geocoding": "Coğrafi kodlama",
-      "ai": "AI Sağlayıcıları",
       "environmentVariables": "Ortam Değişkenleri",
       "updates": "Güncelleme Ayarları",
       "managePlugins": "Eklentileri Yönet",
@@ -1613,9 +1611,9 @@
     },
     "updates": {
       "title": "Yazılım Güncellemeleri",
-      "description": "Masaüstü uygulaması başladığında GeoLibre'nin yeni sürümleri nasıl kontrol edeceğini yönetin.",
+      "description": "Masaüstü uygulaması başladığında GeoInt'nin yeni sürümleri nasıl kontrol edeceğini yönetin.",
       "checkOnStartup": "Başlangıçta güncellemeleri kontrol et",
-      "checkOnStartupHint": "Etkinleştirildiğinde, GeoLibre uygulama her başladığında daha yeni bir sürüm olup olmadığını kontrol eder. Tamamen çevrimdışı bir iş akışı için bunu kapatın.",
+      "checkOnStartupHint": "Etkinleştirildiğinde, GeoInt uygulama her başladığında daha yeni bir sürüm olup olmadığını kontrol eder. Tamamen çevrimdışı bir iş akışı için bunu kapatın.",
       "notificationLevel": "Şunlar hakkında beni bilgilendir",
       "notificationLevelHint": "Hangi tür sürümlerin başlangıç bildirimini tetikleyeceğini seçin.",
       "level": {
@@ -1698,7 +1696,7 @@
       "lockedNote": "Bu arayüz profili yöneticiniz tarafından yönetilmektedir ve değiştirilemez."
     },
     "env": {
-      "tokenTitle": "Share.GeoLibre API belirteci",
+      "tokenTitle": "Share.GeoInt API belirteci",
       "tokenDescription": "Proje > Paylaş, haritalarınızı share.geolibre.app adresine yüklemek için bu belirteci kullanır. <tokenLink>share.geolibre.app/settings</tokenLink> adresini açın, Ayarlar > API belirteçleri altında bir belirteç oluşturun, ardından aşağıdaki alana yapıştırın.",
       "tokenStorageNote": "Bu cihazda yerel olarak saklanır ve yalnızca yüklemeleri doğrulamak için share.geolibre.app adresine gönderilir. Web derlemesinde diğer site verileriyle aynı tarayıcı deposunu paylaşır; dolayısıyla makinenizin güvenliği ihlal edilirse share.geolibre.app üzerinden iptal edin.",
       "tokenPlaceholder": "glb_…",
@@ -1744,61 +1742,6 @@
       "emailHint": "Yalnızca Nominatim tarafından kullanılır; uygulamanızı tanımlamaya yardımcı olmak için sağlanmasını önerir — yalnızca sağlandığında gönderilir.",
       "secretsWarning": "Anahtarlar, proje dosyasında düz metin olarak saklanır ve proje paylaşıldığında açığa çıkabilir. Ayrıca sorgu parametresi olarak gönderilir; bu nedenle tarayıcı geliştirici araçlarında ve herhangi bir proxy günlüğünde görünen coğrafi kodlama istek URL'lerinde görünürler.",
       "corsNote": "Google, Coğrafi Kodlama API'sine tarayıcı isteklerine resmi olarak izin vermez; bu nedenle istekler aynı kaynaklı bir proxy üzerinden sunulmadıkça engellenebilir."
-    },
-    "ai": {
-      "title": "AI Asistanı sağlayıcıları",
-      "description": "AI Asistanı için kimlik bilgilerini yapılandırın. Bir sağlayıcı seçin, gerekli alanları doldurun, ardından Kaydet'e tıklayın. Sohbete başlamak için yalnızca bir yapılandırılmış sağlayıcı gereklidir.",
-      "providerLabel": "Sağlayıcı",
-      "providerHint": "Gerektirdiği tam alanları görmek için bir sağlayıcı seçin.",
-      "configuredMark": "(yapılandırıldı)",
-      "optionalMark": "(isteğe bağlı)",
-      "statusReady": "{{provider}} yapılandırıldı ve kullanıma hazır.",
-      "statusIncomplete": "{{provider}} sağlayıcısını etkinleştirmek için aşağıdaki gerekli alanları doldurun.",
-      "secretsNote": "Kimlik bilgileri, paylaştığınız proje dosyasında değil, bu cihazda yerel olarak kaydedilir, böylece yeniden başlatmalar arasında korunur. Bu cihaza erişimi olan herkes bunları okuyabilir.",
-      "getCredentials": "{{provider}} kimlik bilgileri nereden alınır",
-      "showValue": "{{name}} göster",
-      "hideValue": "{{name}} gizle",
-      "osEnvNote": "Masaüstü uygulaması ayrıca sistem ortam değişkenlerinizden eşleşen API anahtarlarını okur. Bunlar otomatik olarak kullanılır ve asla proje dosyasına kaydedilmez — ortam değerini kullanmaya devam etmek için bir alanı boş bırakın.",
-      "osEnvField": "Sistem ortam değişkeninizden okunur: {{name}}.",
-      "osEnvPlaceholder": "Sistem ortamınızda ayarlanmış",
-      "newProfile": "Yeni profil",
-      "cancel": "İptal",
-      "addProfile": "Profil ekle",
-      "profileName": "Profil adı",
-      "profileNamePlaceholder": "örn. İş Gemini, Yerel Ollama",
-      "profileCount_one": "{{count}} profil",
-      "profileCount_other": "{{count}} profil",
-      "noProfiles": "Henüz profil yok. AI Asistanı'nı yapılandırmak için aşağıdan bir profil ekleyin.",
-      "setDefault": "Varsayılan yap",
-      "defaultProfile": "Varsayılan",
-      "edit": "Düzenle",
-      "deleteProfile": "Profili sil",
-      "backToProfiles": "← Profillere dön",
-      "saveProfile": "Profili kaydet",
-      "profileEditSaveHint": "Yukarıdaki profil değişikliklerinizi kaydedin veya iptal edin, ardından tüm değişiklikleri işlemek için Ayarları Kaydet'e tıklayın.",
-      "field": {
-        "apiKey": "API anahtarı",
-        "baseUrl": "Temel URL",
-        "model": "Model",
-        "region": "Bölge",
-        "accessKeyId": "Erişim Anahtarı Kimliği",
-        "secretAccessKey": "Gizli Erişim Anahtarı",
-        "sessionToken": "Oturum belirteci"
-      },
-      "placeholder": {
-        "geminiKey": "AIza…",
-        "anthropicKey": "sk-ant-…",
-        "openaiKey": "sk-…",
-        "ollamaBaseUrl": "http://localhost:11434",
-        "ollamaModel": "llama3.2",
-        "awsAccessKey": "AKIA…",
-        "awsSecretKey": "wJalrXUtnFEMI…",
-        "awsRegion": "us-east-1",
-        "awsSessionToken": "FwoGZXIvYXdz… (geçici kimlik bilgileri kullanılıyorsa)",
-        "customBaseUrl": "https://api.example.com/v1",
-        "customModel": "model-id",
-        "customApiKey": "sk-… (gerekiyorsa)"
-      }
     }
   },
   "toolbar": {
@@ -1908,7 +1851,7 @@
       "smartPaste": "Koordinatları yapıştır",
       "smartPasteInputLabel": "Koordinat dizesi",
       "smartPastePlaceholder": "örn. 51.5074, -0.1278 veya 51°30'26\"K, 0°07'39\"B",
-      "smartPasteInfo": "DD, DMS veya DDM biçiminde tam bir koordinat dizesini yazın veya yapıştırın, ardından Girdiyi İşle'yi çalıştırın. GeoLibre biçimi algılar ve aşağıdaki boylam ve enlem alanlarını doldurur. Yakınlaştırma, eğim ve yönü ayrı ayrı ayarlayın.",
+      "smartPasteInfo": "DD, DMS veya DDM biçiminde tam bir koordinat dizesini yazın veya yapıştırın, ardından Girdiyi İşle'yi çalıştırın. GeoInt biçimi algılar ve aşağıdaki boylam ve enlem alanlarını doldurur. Yakınlaştırma, eğim ve yönü ayrı ayrı ayarlayın.",
       "smartPasteInfoLabel": "Koordinat yapıştırma hakkında",
       "smartPasteInvalid": "Bu koordinatlar okunamadı. DD, DMS veya DDM biçiminde tam bir boylam ve enlem girin, örneğin 51.5074, -0.1278. Kısmi veya eksik bir dize çözümlenemez.",
       "processInput": "Girdiyi işle",
@@ -2037,8 +1980,8 @@
     },
     "conversion": {
       "vectorToVector": "Vektörden Vektöre",
-      "zipInputBrowserError": "Zip'lenmiş Shapefile'lar yalnızca GeoLibre masaüstü uygulamasında dönüştürülebilir. Tarayıcıda, açılmamış .shp dosyasını .dbf, .shx ve .prj dosyalarıyla birlikte seçin.",
-      "browserOutputUnsupported": "Tarayıcıda çıktı GeoJSON, CSV, GeoParquet, GeoPackage veya Shapefile (.zip) olabilir. \".{{extension}}\" çıktısı GeoLibre masaüstü uygulamasını gerektirir.",
+      "zipInputBrowserError": "Zip'lenmiş Shapefile'lar yalnızca GeoInt masaüstü uygulamasında dönüştürülebilir. Tarayıcıda, açılmamış .shp dosyasını .dbf, .shx ve .prj dosyalarıyla birlikte seçin.",
+      "browserOutputUnsupported": "Tarayıcıda çıktı GeoJSON, CSV, GeoParquet, GeoPackage veya Shapefile (.zip) olabilir. \".{{extension}}\" çıktısı GeoInt masaüstü uygulamasını gerektirir.",
       "outputExtensionRequired": "Biçimi seçmek için çıktı adına bir dosya uzantısı ekleyin.",
       "readingWithDuckDb": "{{name}} DuckDB-WASM ile okunuyor",
       "readFeatures": "{{name}} kaynağından {{features}} öğe okundu",
@@ -2052,7 +1995,7 @@
       "vectorToPmtiles": "Vektörden PMTiles'a",
       "rasterToCog": "Rasterdan COG'a",
       "rasterToPmtiles": "Rasterdan PMTiles'a",
-      "needsDesktop": "Bu dönüştürme GeoLibre masaüstü uygulamasını veya çalışan bir sidecar gerektirir.",
+      "needsDesktop": "Bu dönüştürme GeoInt masaüstü uygulamasını veya çalışan bir sidecar gerektirir.",
       "runsInBrowserDuckDb": "Dönüştürme tarayıcınızda DuckDB-WASM ile çalışır.",
       "runsInBrowserWriters": "Dönüştürme tarayıcınızda DuckDB-WASM ve paketlenmiş yazıcılarla çalışır.",
       "runsInBrowserWasm": "Dönüştürme tarayıcınızda geolibre-wasm ile çalışır. Sidecar gerekmez.",
@@ -2207,7 +2150,7 @@
       "noOutput": "Henüz çıktı yok.",
       "errorConnect": "Sidecar'a bağlanılamadı.",
       "errorPoll": "İş durumu sorgulanamadı.",
-      "errorStartSidecar": "GeoLibre sidecar'ı başlatılamadı.",
+      "errorStartSidecar": "GeoInt sidecar'ı başlatılamadı.",
       "errorStartTool": "Raster aracı başlatılamadı."
     },
     "mapControl": {
@@ -2311,7 +2254,7 @@
       "terrain": "Arazi",
       "remoteSensing": "Uzaktan Algılama",
       "projection": "İzdüşüm",
-      "geolibre": "GeoLibre",
+      "geoint": "GeoInt",
       "subGroupGeometry": "Geometri",
       "subGroupOverlay": "Kaplama",
       "subGroupJoin": "Birleştirme",
@@ -2373,7 +2316,7 @@
       "webServices": "Web Servisleri",
       "commandPalette": "Komut Paleti",
       "openProjectFromUrl": "URL'den proje aç",
-      "openProjectFromUrlDesc": "Bir `.geolibre.json` projesini yükleyin ve son projelere ekleyin.",
+      "openProjectFromUrlDesc": "Bir `.geoint.json` projesini yükleyin ve son projelere ekleyin.",
       "projectUrl": "Proje URL'si",
       "opening": "Açılıyor...",
       "open": "Aç",
@@ -2388,7 +2331,7 @@
       "embedVectorReferenceButton": "Dosya referanslarını kaydet",
       "embedVectorSkipButton": "Verisiz kaydet",
       "saveProjectFileName": "Dosya adı",
-      "saveProjectFileNamePlaceholder": "projem.geolibre.json",
+      "saveProjectFileNamePlaceholder": "projem.geoint.json",
       "exportHtmlAsTitle": "Etkileşimli HTML olarak dışa aktar",
       "exportHtmlAsDesc": "Bir dosya adı girin. Kaydet'e tıkladığınızda HTML sayfası tarayıcınızın indirilenler klasörüne indirilir.",
       "exportHtmlFileName": "Dosya adı",
@@ -2429,21 +2372,21 @@
       "maplibre-gl-annotations": "Ek açıklamalar",
       "maplibre-gl-streetview": "Sokak Görünümü",
       "maplibre-gl-time-slider": "Zaman Kaydırıcısı",
-      "geolibre-timelapse": "Timelapse",
+      "geoint-timelapse": "Timelapse",
       "maplibre-gl-esri-wayback": "Tarihsel Görüntüler",
       "maplibre-gl-openaerialmap": "OpenAerialMap",
-      "geolibre-stac-catalogs": "STAC Katalogları",
+      "geoint-stac-catalogs": "STAC Katalogları",
       "maplibre-gl-source-coop": "Source Cooperative",
       "maplibre-gl-natural-earth": "Natural Earth",
       "maplibre-gl-swipe": "Katman Kaydırma",
-      "geolibre-elevation-profile": "Yükseklik Profili",
+      "geoint-elevation-profile": "Yükseklik Profili",
       "maplibre-gl-basemap-control": "Temel Haritalar",
       "maplibre-layer-control": "Katman Denetimi",
       "maplibre-gl-huggingface": "Hugging Face",
       "carto-light": "Carto Light Temel Harita",
-      "geolibre-flight-simulator": "Uçuş Simülatörü",
-      "geolibre-route-animation": "Rota Animasyonu",
-      "geolibre-sun": "Güneş Simülasyonu",
+      "geoint-flight-simulator": "Uçuş Simülatörü",
+      "geoint-route-animation": "Rota Animasyonu",
+      "geoint-sun": "Güneş Simülasyonu",
       "maplibre-atmosphere-effects": "Atmosfer Efektleri",
       "maplibre-deckgl-viz": "Deck.gl Katmanı",
       "maplibre-gl-clouds": "Bulutlar",
@@ -2607,7 +2550,7 @@
     "summary": "{{total}} öğeden {{selected}} tanesi seçildi ({{matched}} eşleşti).",
     "evaluationErrors": "{{count}} öğe değerlendirilemedi ve eşleştirilmedi.",
     "unevaluableDisjoint": "{{count}} öğe, geometrileri değerlendirilemediği için hariç tutuldu.",
-    "tooManyPairs": "Bu karşılaştırma {{pairs}} öğe-çifti testi gerektiriyor (sınır {{limit}}). Bunun yerine İşleme → GeoLibre → Vektör → Konuma göre seç aracını Sidecar motoruyla kullanın.",
+    "tooManyPairs": "Bu karşılaştırma {{pairs}} öğe-çifti testi gerektiriyor (sınır {{limit}}). Bunun yerine İşleme → GeoInt → Vektör → Konuma göre seç aracını Sidecar motoruyla kullanın.",
     "exportedLayerName": "{{name}} (seçim)"
   },
   "loadEditorFeatures": {
@@ -2834,7 +2777,7 @@
     "webMapAdded_one": "Bu web haritasından {{count}} katman eklendi.",
     "webMapAdded_other": "Bu web haritasından {{count}} katman eklendi.",
     "webMapAddedPartial": "Bu web haritasından {{total}} katmandan {{added}} tanesi eklendi; geri kalanına ulaşılamadı.",
-    "webMapEmpty": "bu web haritasında GeoLibre'nin görüntüleyebileceği katman yok.",
+    "webMapEmpty": "bu web haritasında GeoInt'nin görüntüleyebileceği katman yok.",
     "add": "Ekle",
     "adding": "Ekleniyor…",
     "remove": "Kaldır",
@@ -2916,7 +2859,7 @@
     "downloadTitle": "Bu dosyayı indir",
     "copyUrlTitle": "Bu dosyanın URL'sini kopyala",
     "openProductTitle": "Bu ürünün sayfasını source.coop'ta aç",
-    "unsupportedTitle": "GeoLibre bu biçimi görüntüleyemez — bunun yerine indirin",
+    "unsupportedTitle": "GeoInt bu biçimi görüntüleyemez — bunun yerine indirin",
     "addError": "Bu dosya eklenemedi: {{message}}",
     "largeFileWarning": "Bu dosya {{size}}. Kaynaktan akışla getirilir, bu nedenle yalnızca görünümdeki kısımlar okunur.",
     "streamHint": "Bu dosya {{size}}. «Ekle» onu belleğe kopyalar; «Akışla oku» yalnızca görünümdeki kısımları okur.",
@@ -2961,7 +2904,7 @@
     "downloadTitle": "Bu dosyayı indir",
     "copyUrlTitle": "Bu dosyanın URL'sini kopyala",
     "openDatasetTitle": "Bu veri kümesinin sayfasını huggingface.co'da aç",
-    "unsupportedTitle": "GeoLibre bu biçimi görüntüleyemez — bunun yerine indirin",
+    "unsupportedTitle": "GeoInt bu biçimi görüntüleyemez — bunun yerine indirin",
     "addError": "Bu dosya eklenemedi: {{message}}",
     "notRasterIndex": "Bu JSON dosyası hiçbir raster'ı dizinlemiyor, dolayısıyla haritaya konulacak bir şey yok. MosaicJSON ve STAC koleksiyonları desteklenir.",
     "largeFileWarning": "Bu dosya {{size}}. Kaynaktan akışla getirilir, bu nedenle yalnızca görünümdeki kısımlar okunur.",
@@ -3005,7 +2948,7 @@
     "selectedFiles_one": "{{count}} dosya seçildi ({{size}}).",
     "selectedFiles_other": "{{count}} dosya seçildi ({{size}}).",
     "commitMessageLabel": "Commit mesajı (isteğe bağlı)",
-    "commitMessagePlaceholder": "GeoLibre ile yüklendi",
+    "commitMessagePlaceholder": "GeoInt ile yüklendi",
     "upload": "Yükle",
     "uploadPreparing": "Yükleme hazırlanıyor…",
     "uploadHashing": "{{name}} özetleniyor ({{index}}/{{total}})…",
@@ -3070,7 +3013,7 @@
     "runHint": "Çalıştır (Ctrl/Cmd+Enter)",
     "completions": "Tamamlamalar",
     "placeholder": "Python burada · Çalıştırmak için Ctrl/Cmd+Enter · Otomatik tamamlamak için Tab · Geçmiş için ↑/↓",
-    "intro": "Python konsolu hazır. Haritayı betiklemek için `geolibre` nesnesini kullanın, örn. geolibre.get_center(). Tab otomatik tamamlar, ↑/↓ önceki komutları geri çağırır ve `await geolibre.load_package(\"numpy\")` paket ekler.",
+    "intro": "Python konsolu hazır. Haritayı betiklemek için `geoint` nesnesini kullanın, örn. geoint.get_center(). Tab otomatik tamamlar, ↑/↓ önceki komutları geri çağırır ve `await geoint.load_package(\"numpy\")` paket ekler.",
     "loadFailed": "Python çalışma zamanı yüklenemedi.",
     "showEditor": "Düzenleyiciyi göster",
     "hideEditor": "Düzenleyiciyi gizle",
@@ -3183,21 +3126,7 @@
     "stop": "Durdur",
     "placeholder": "Verileriniz hakkında sorun, örn. \"nüfusu 50 milyondan fazla olan ülkeleri göster\" · Göndermek için Ctrl/Cmd+Enter",
     "intro": "Verilerinizle sohbet edin. Konumsal SQL çalıştırabilir, katman ekleyip kaldırabilir, yeniden stillendirip haritayı hareket ettirebilirim — her değişiklik geri alınabilir. \"Ülkeleri kırmızı bir derece renk skalasıyla nüfusa göre renklendir\" deneyin.",
-    "setupTitle": "AI Asistanını kur",
-    "setupStatus": "Asistanın düşünebilmesi için bir AI sağlayıcısına ihtiyacı var. Aşağıdaki herhangi bir sağlayıcı için kimlik bilgilerini ekleyin; kaydettiğiniz anda panel sohbet moduna geçer.",
-    "setupProviders": "Herhangi bir sağlayıcı için kimlik bilgilerini ekleyin",
-    "setupOpenSettings": "Ayarlar → AI Sağlayıcıları'nı aç",
-    "thinking": "Çalışıyor…",
-    "toolError": "başarısız oldu",
-    "provider": "LLM sağlayıcısı",
-    "profile": "AI profili",
-    "deploymentProxy": "Dağıtım proxy'si",
-    "model": "Model",
-    "codeApprovalTitle": "Yardımcı kodu çalıştırılsın mı?",
-    "codeApprovalBody": "Yardımcı, uygulamada {{language}} kodu çalıştırmak istiyor. Önce inceleyin — haritayı değiştirebilir ve uygulama verilerine erişebilir.",
-    "codeApprovalAlways": "Bu oturumun geri kalanında yardımcı koduna izin ver",
-    "codeApprovalRun": "Çalıştır",
-    "codeApprovalDecline": "İptal"
+    "thinking": "Çalışıyor…"
   },
   "storymap": {
     "title": "Hikaye Haritası",
@@ -3413,7 +3342,7 @@
       },
       "filterBySource": "Kaynağa göre filtrele",
       "allSources": "Tüm kaynaklar",
-      "geolibreTools": "GeoLibre araçları",
+      "geointTools": "GeoInt araçları",
       "whiteboxTools": "Whitebox araçları",
       "toolbox": "Whitebox araç kutusu",
       "checkingRuntime": "Çalışma zamanı denetleniyor.",
@@ -3443,8 +3372,8 @@
       "errorConnect": "Sidecar'a bağlanılamadı.",
       "errorPoll": "İş durumu sorgulanamadı.",
       "errorStartTool": "Whitebox aracı başlatılamadı.",
-      "errorStartSidecar": "GeoLibre sidecar'ı başlatılamadı.",
-      "errorStopSidecar": "GeoLibre sidecar'ı durdurulamadı.",
+      "errorStartSidecar": "GeoInt sidecar'ı başlatılamadı.",
+      "errorStopSidecar": "GeoInt sidecar'ı durdurulamadı.",
       "noToolsFound": "Araç bulunamadı.",
       "noParameters": "Bu aracın parametresi yok.",
       "noOutput": "Henüz çıktı yok.",
@@ -3464,9 +3393,9 @@
       "runLocallyButton": "Yerel olarak çalıştır (WASM)",
       "troubleshootingTitle": "Yine de sunucuyu mu kullanmak istiyorsunuz?",
       "stepStartServerDesktop": "Başlatmak için araç listesi panelinde \"Sunucuyu başlat\"a tıklayın, ardından çevrimiçi olması için birkaç saniye bekleyin.",
-      "stepStartServerBrowser": "Sunucu yalnızca GeoLibre masaüstü uygulamasından başlatılabilir. Tarayıcıda, bunun yerine \"Yerel olarak çalıştır (WASM)\" seçeneğini etkin tutun.",
+      "stepStartServerBrowser": "Sunucu yalnızca GeoInt masaüstü uygulamasından başlatılabilir. Tarayıcıda, bunun yerine \"Yerel olarak çalıştır (WASM)\" seçeneğini etkin tutun.",
       "stepCheckPort": "Bir güvenlik duvarının, antivirüsün veya ağ politikasının yerel {{port}} bağlantı noktasını engellemediğinden emin olun.",
-      "stepRestart": "Sunucu beklenmedik şekilde durduysa, GeoLibre masaüstü uygulamasını yeniden başlatın ve bu iletişim kutusunu tekrar açın."
+      "stepRestart": "Sunucu beklenmedik şekilde durduysa, GeoInt masaüstü uygulamasını yeniden başlatın ve bu iletişim kutusunu tekrar açın."
     },
     "vectorTools": {
       "title": "Vektör araçları",
@@ -3500,13 +3429,13 @@
     "segment": "Segmentle",
     "status": {
       "checking": "AI segmentasyon servisi kontrol ediliyor…",
-      "unavailableDesktop": "AI segmentasyon servisi henüz çalışmıyor. Kullanmak için segment-geospatial etkinleştirilmiş GeoLibre sunucusunu başlatın.",
-      "unavailableWeb": "AI segmentasyon tarayıcıda kullanılamıyor. Çalıştırmak için GeoLibre masaüstü uygulamasını kullanın."
+      "unavailableDesktop": "AI segmentasyon servisi henüz çalışmıyor. Kullanmak için segment-geospatial etkinleştirilmiş GeoInt sunucusunu başlatın.",
+      "unavailableWeb": "AI segmentasyon tarayıcıda kullanılamıyor. Çalıştırmak için GeoInt masaüstü uygulamasını kullanın."
     },
     "error": {
       "chooseImage": "Segmentlenecek bir görüntü (GeoTIFF) seçin.",
       "enterPrompt": "Bir metin istemi girin, örn. “ağaçlar” veya “binalar”.",
-      "startServer": "GeoLibre sidecar'ı başlatılamadı.",
+      "startServer": "GeoInt sidecar'ı başlatılamadı.",
       "failed": "Segmentasyon başarısız oldu."
     },
     "noObjects": "Nesne bulunamadı.",
@@ -3517,7 +3446,7 @@
       "title": "AI segmentasyon sunucusu başlatılamadı.",
       "intro": "AI segmentasyon, segment-geospatial'dan SAM3 modelini barındıran yerel bir yardımcı sunucuda ({{sidecarUrl}}) çalışır. Arka planda, uygulamadan ayrı olarak Python çalıştırır ve tarayıcı derlemesinin bir parçası değildir.",
       "troubleshootingTitle": "Sunucu nasıl çalıştırılır",
-      "stepInstall": "Segmentasyon modelinin kullanılabilir olması için GeoLibre sunucusunun segment-geospatial arka ucu etkinleştirilmiş olarak kurulduğundan emin olun.",
+      "stepInstall": "Segmentasyon modelinin kullanılabilir olması için GeoInt sunucusunun segment-geospatial arka ucu etkinleştirilmiş olarak kurulduğundan emin olun.",
       "stepStartServerDesktop": "Başlatmak için yukarıdaki \"Sunucuyu başlat\"a tıklayın, ardından modelin çevrimiçi olması için birkaç saniye bekleyin."
     }
   },
@@ -3766,7 +3695,7 @@
     "import": "İçe aktar…",
     "export": "Dışa aktar…",
     "importFilterName": "Stil kitaplığı / QML / SLD",
-    "exportFilterName": "GeoLibre stil kitaplığı",
+    "exportFilterName": "GeoInt stil kitaplığı",
     "applied": "\"{{name}}\" {{layer}} katmanına uygulandı.",
     "appliedRampHint": "\"{{name}}\" uygulandı. Renk geçişini görmek için katmanı derecelendirilmiş veya kategorize edilmiş stile geçirin.",
     "saved": "\"{{name}}\" kitaplığa kaydedildi.",
@@ -4597,10 +4526,10 @@
   },
   "errorBoundary": {
     "title": "Bir şeyler ters gitti",
-    "description": "GeoLibre beklenmeyen bir hatayla karşılaştı ve devam edemedi. Çalışmanız kaydedilmemiş olabilir — yeniden yüklemeden önce kurtarmayı deneyin.",
+    "description": "GeoInt beklenmeyen bir hatayla karşılaştı ve devam edemedi. Çalışmanız kaydedilmemiş olabilir — yeniden yüklemeden önce kurtarmayı deneyin.",
     "tryAgain": "Yeniden dene",
     "reload": "Uygulamayı yeniden yükle",
-    "sectionFailed": "{{label}} görüntülenemedi. GeoLibre'nin geri kalanı hâlâ kullanılabilir."
+    "sectionFailed": "{{label}} görüntülenemedi. GeoInt'nin geri kalanı hâlâ kullanılabilir."
   },
   "commandPalette": {
     "title": "Komut paleti",
@@ -4650,7 +4579,7 @@
     "emptyNetworkError": "Hiç ağ hatası tanılama verisi yakalanmadı."
   },
   "shell": {
-    "workspaceTitle": "GeoLibre harita çalışma alanı",
+    "workspaceTitle": "GeoInt harita çalışma alanı",
     "section": {
       "toolbar": "Araç çubuğu",
       "sharedLeftSidebar": "Paylaşılan sol kenar çubuğu",
@@ -4794,6 +4723,6 @@
     "added": "{{asset}} haritaya eklendi.",
     "addUnsupported": "Haritaya yalnızca GeoTIFF/COG ve GeoJSON varlıkları eklenebilir",
     "addFailed": "Varlık eklenemedi",
-    "cogUnsupported": "Bu GeoLibre ana bilgisayarı uzak GeoTIFF varlıklarını görselleştiremiyor"
+    "cogUnsupported": "Bu GeoInt ana bilgisayarı uzak GeoTIFF varlıklarını görselleştiremiyor"
   }
 }

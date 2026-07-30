@@ -16,7 +16,7 @@ export type ComplexityTier = "basic" | "intermediate" | "advanced";
  * Controls menu, deck.gl viz via Add Data), so they are excluded from the
  * Plugins menu and from the UI-profile plugin lists. Keep in sync with
  * `PluginsMenu`'s skip list. Literal ids (mirroring `EFFECTS_PLUGIN_ID` etc.
- * from `@geolibre/plugins`) so this module stays free of the heavy plugin
+ * from `@geoint/plugins`) so this module stays free of the heavy plugin
  * barrel and can be unit-tested in Node.
  */
 export const MENU_MANAGED_PLUGIN_IDS = new Set<string>([
@@ -393,8 +393,8 @@ export const MENU_ITEM_CATALOG: readonly MenuItemCatalogEntry[] = [
   // Processing — ordered to mirror the Processing menu. The Whitebox toggle
   // also governs the per-category Whitebox submenus, so those categories have no
   // separate entries here. The conversion/vector/network/statistics/raster,
-  // geocode, model-builder, and segmentation toggles drive GeoLibre's own
-  // client-side tools (grouped under the "GeoLibre" submenu).
+  // geocode, model-builder, and segmentation toggles drive GeoInt's own
+  // client-side tools (grouped under the "GeoInt" submenu).
   {
     id: "processing.assistant",
     menuId: "processing",

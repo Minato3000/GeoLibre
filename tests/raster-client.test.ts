@@ -15,7 +15,7 @@ import {
   writeRasterBands,
   TERRAIN_NODATA,
   type RasterData,
-} from "@geolibre/processing";
+} from "@geoint/processing";
 
 /** Build a small in-memory raster for tests (top-left origin, 1-unit pixels). */
 function makeRaster(

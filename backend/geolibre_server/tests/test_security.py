@@ -10,7 +10,7 @@ from starlette.testclient import TestClient
 
 
 def _reload_app(monkeypatch: pytest.MonkeyPatch, token: str | None):
-    """Reload the FastAPI app module with GEOLIBRE_SIDECAR_TOKEN set or unset.
+    """Reload the FastAPI app module with GEOINT_SIDECAR_TOKEN set or unset.
 
     Args:
         monkeypatch: Pytest monkeypatch fixture.
@@ -20,16 +20,16 @@ def _reload_app(monkeypatch: pytest.MonkeyPatch, token: str | None):
         The freshly reloaded ``geolibre_server.app.main`` module.
     """
     if token is None:
-        monkeypatch.delenv("GEOLIBRE_SIDECAR_TOKEN", raising=False)
+        monkeypatch.delenv("GEOINT_SIDECAR_TOKEN", raising=False)
     else:
-        monkeypatch.setenv("GEOLIBRE_SIDECAR_TOKEN", token)
+        monkeypatch.setenv("GEOINT_SIDECAR_TOKEN", token)
     import geolibre_server.app.main as main
 
     return importlib.reload(main)
 
 
 def test_no_token_env_leaves_endpoints_open(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Without GEOLIBRE_SIDECAR_TOKEN, requests are not challenged (dev/tests)."""
+    """Without GEOINT_SIDECAR_TOKEN, requests are not challenged (dev/tests)."""
     main = _reload_app(monkeypatch, None)
     client = TestClient(main.app)
     assert client.get("/health").status_code == 200
@@ -45,17 +45,16 @@ def test_token_required_when_configured(monkeypatch: pytest.MonkeyPatch) -> None
         assert client.get("/health").status_code == 200
         # Missing / wrong token is rejected.
         assert client.get("/algorithms").status_code == 401
-        assert client.get("/algorithms", headers={"X-GeoLibre-Token": "nope"}).status_code == 401
+        assert client.get("/algorithms", headers={"X-GeoInt-Token": "nope"}).status_code == 401
         # Correct token via either accepted header passes.
-        assert client.get("/algorithms", headers={"X-GeoLibre-Token": "s3cr3t"}).status_code == 200
+        assert client.get("/algorithms", headers={"X-GeoInt-Token": "s3cr3t"}).status_code == 200
         assert (
             client.get("/algorithms", headers={"Authorization": "Bearer s3cr3t"}).status_code == 200
         )
         # A non-ASCII token header (raw latin-1 bytes on the wire) must fail auth
         # (401), not crash the byte comparison with a TypeError (500).
         assert (
-            client.get("/algorithms", headers={"X-GeoLibre-Token": b"t\xe9k\xe9n"}).status_code
-            == 401
+            client.get("/algorithms", headers={"X-GeoInt-Token": b"t\xe9k\xe9n"}).status_code == 401
         )
     finally:
         _reload_app(monkeypatch, None)
@@ -69,14 +68,14 @@ def test_untrusted_host_is_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
         assert (
             client.get(
                 "/algorithms",
-                headers={"Host": "evil.example.com", "X-GeoLibre-Token": "s3cr3t"},
+                headers={"Host": "evil.example.com", "X-GeoInt-Token": "s3cr3t"},
             ).status_code
             == 400
         )
         assert (
             client.get(
                 "/algorithms",
-                headers={"Host": "127.0.0.1:8765", "X-GeoLibre-Token": "s3cr3t"},
+                headers={"Host": "127.0.0.1:8765", "X-GeoInt-Token": "s3cr3t"},
             ).status_code
             == 200
         )
@@ -92,7 +91,7 @@ def test_whitebox_path_confined_to_roots(monkeypatch: pytest.MonkeyPatch, tmp_pa
         _prepare_arguments,
     )
 
-    # Configure a single allowlisted root (mirrors the Docker GEOLIBRE_CONVERSION_ROOTS).
+    # Configure a single allowlisted root (mirrors the Docker GEOINT_CONVERSION_ROOTS).
     root = tmp_path / "data"
     root.mkdir()
     monkeypatch.setattr(conversion, "_CONVERSION_ROOTS", [str(root.resolve())])

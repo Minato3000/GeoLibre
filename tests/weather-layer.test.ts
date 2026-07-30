@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
 import { useAppStore } from "../packages/core/src/store";
-import type { GeoLibreAppAPI } from "../packages/plugins/src/types";
+import type { GeoIntAppAPI } from "../packages/plugins/src/types";
 import {
   createWeatherLayer,
   type WeatherFrame,
@@ -18,7 +18,7 @@ const frame: WeatherFrame = {
 
 // A map-less app: getMap() → null makes the engine skip all MapLibre work
 // (setTiles, the error listener), leaving the store-driven logic under test.
-const app = { getMap: () => null } as unknown as GeoLibreAppAPI;
+const app = { getMap: () => null } as unknown as GeoIntAppAPI;
 
 function makeConfig(over: Partial<WeatherLayerConfig> = {}): WeatherLayerConfig {
   return {
@@ -154,7 +154,7 @@ describe("createWeatherLayer", () => {
     };
     const appWithMap = {
       getMap: () => fakeMap,
-    } as unknown as GeoLibreAppAPI;
+    } as unknown as GeoIntAppAPI;
 
     const secondFrame: WeatherFrame = {
       ...frame,
@@ -186,7 +186,7 @@ describe("createWeatherLayer", () => {
       off: () => {},
       getSource: () => undefined,
     };
-    const appWithMap = { getMap: () => fakeMap } as unknown as GeoLibreAppAPI;
+    const appWithMap = { getMap: () => fakeMap } as unknown as GeoIntAppAPI;
     const secondFrame: WeatherFrame = {
       ...frame,
       tileUrl: "https://example.test/2/{z}/{x}/{y}.png",

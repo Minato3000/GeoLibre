@@ -3,13 +3,13 @@
 // module holds the UI-free data layer so both the desktop app and tests consume
 // the same extract/apply logic.
 
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, type LayerStyle } from "./types";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, type LayerStyle } from "./types";
 import { isStyleLibraryTargetLayer } from "./style-library";
 
 /**
  * `metadata.sourceKind` marking a deck.gl COG raster managed by the
  * maplibre-gl-raster control. Mirrors `RASTER_SOURCE_KIND` in
- * `@geolibre/plugins` (which `@geolibre/core` must not depend on). The clipboard
+ * `@geoint/plugins` (which `@geoint/core` must not depend on). The clipboard
  * test imports the real constant directly from the module that defines it
  * (`packages/plugins/src/plugins/raster-layer-sync.ts`, not the package barrel,
  * whose browser-only plugins crash under the Node test runner) and asserts a
@@ -44,7 +44,7 @@ export const RASTER_APPEARANCE_STATE_KEYS = [
 
 /**
  * Fields every clipboard entry carries, regardless of style family. Layer
- * `opacity` is deliberately excluded: like QGIS "Paste Style" and GeoLibre's
+ * `opacity` is deliberately excluded: like QGIS "Paste Style" and GeoInt's
  * own Style Manager, copy/paste transfers symbology only and leaves the
  * target's opacity alone (opacity is a per-layer render setting, not style).
  */
@@ -95,7 +95,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
  * @param layer - The layer to classify.
  * @returns The style family, or `null`.
  */
-export function copyableLayerStyleKind(layer: GeoLibreLayer): LayerStyleClipboardKind | null {
+export function copyableLayerStyleKind(layer: GeoIntLayer): LayerStyleClipboardKind | null {
   if (layer.metadata.sourceKind === RASTER_SOURCE_KIND) return "raster";
   if (isStyleLibraryTargetLayer(layer.type)) return "vector";
   return null;
@@ -109,7 +109,7 @@ export function copyableLayerStyleKind(layer: GeoLibreLayer): LayerStyleClipboar
  * @returns The clipboard entry, or `null` when the layer has no copyable
  *   symbology.
  */
-export function extractCopiedLayerStyle(layer: GeoLibreLayer): CopiedLayerStyle | null {
+export function extractCopiedLayerStyle(layer: GeoIntLayer): CopiedLayerStyle | null {
   const kind = copyableLayerStyleKind(layer);
   if (!kind) return null;
   if (kind === "vector") {
@@ -138,7 +138,7 @@ export function extractCopiedLayerStyle(layer: GeoLibreLayer): CopiedLayerStyle 
 }
 
 /**
- * Build the {@link GeoLibreLayer} patch that pastes a copied style onto a
+ * Build the {@link GeoIntLayer} patch that pastes a copied style onto a
  * target layer, or `null` when the target's style family does not match the
  * clipboard entry's (so the caller can disable the paste action).
  *
@@ -147,9 +147,9 @@ export function extractCopiedLayerStyle(layer: GeoLibreLayer): CopiedLayerStyle 
  * @returns A partial layer patch to merge, or `null` when incompatible.
  */
 export function applyCopiedLayerStyle(
-  target: GeoLibreLayer,
+  target: GeoIntLayer,
   copied: CopiedLayerStyle,
-): Partial<GeoLibreLayer> | null {
+): Partial<GeoIntLayer> | null {
   if (copyableLayerStyleKind(target) !== copied.kind) return null;
   if (copied.kind === "vector") {
     // The whole style is applied verbatim, including attribute-bound fields

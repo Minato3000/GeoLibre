@@ -1,9 +1,9 @@
 # Real-time collaboration (live-synced sessions)
 
 > Status: **experimental MVP** (issue [#307](https://github.com/opengeos/GeoLibre/issues/307)).
-> Disabled unless `VITE_GEOLIBRE_COLLAB_URL` is configured.
+> Disabled unless `VITE_GEOINT_COLLAB_URL` is configured.
 
-GeoLibre's project sharing is otherwise snapshot-based (upload to
+GeoInt's project sharing is otherwise snapshot-based (upload to
 share.geolibre.app). This feature adds a **live** mode: several people open the
 same session and see each other's layer/style/view edits in real time, with
 presence cursors and viewport indicators. It targets classrooms, workshops, and
@@ -196,7 +196,7 @@ ephemeral and never written to a project file.
 
 ## Feature flag
 
-Set `VITE_GEOLIBRE_COLLAB_URL` to the relay base (e.g.
+Set `VITE_GEOINT_COLLAB_URL` to the relay base (e.g.
 `wss://collab.geolibre.app`, or `ws://127.0.0.1:8787` for `wrangler dev`). When
 unset, the hook is inert and all collaboration UI is hidden, so production builds
 ship the feature dark. The Tauri CSP `connect-src` must list the wss host (the
@@ -206,7 +206,7 @@ existing `https:` directive does **not** authorize `wss:`).
 > `ws://localhost`/`127.0.0.1` for dev). Pointing the desktop build at a
 > different relay means updating `connect-src` in
 > `apps/geolibre-desktop/src-tauri/tauri.conf.json` and rebuilding — the CSP and
-> the `VITE_GEOLIBRE_COLLAB_URL` flag are independent knobs. The web build
+> the `VITE_GEOINT_COLLAB_URL` flag are independent knobs. The web build
 > inherits the page's CSP instead, so it only needs the env var.
 
 ## Deploying the relay (`collab.geolibre.app`)
@@ -227,7 +227,7 @@ the DO class automatically — no manual Cloudflare dashboard steps. SQLite-back
 Durable Objects are available on the free Workers plan.
 
 Once the relay is live, point the app at it by setting
-`VITE_GEOLIBRE_COLLAB_URL=wss://collab.geolibre.app` in the web/Pages build
+`VITE_GEOINT_COLLAB_URL=wss://collab.geolibre.app` in the web/Pages build
 environment. Until that env var is set, the feature stays dark.
 
 ## Limitations / v2
@@ -254,7 +254,7 @@ Automated:
 
 ### Testing the full feature locally
 
-Collaboration is dark until `VITE_GEOLIBRE_COLLAB_URL` points at a running
+Collaboration is dark until `VITE_GEOINT_COLLAB_URL` points at a running
 relay, so local testing has two parts: run the relay, then run the app against
 it.
 
@@ -268,11 +268,11 @@ it.
 2. **Start the app pointing at that relay** in another terminal:
 
    ```bash
-   VITE_GEOLIBRE_COLLAB_URL=ws://127.0.0.1:8787 npm run dev
+   VITE_GEOINT_COLLAB_URL=ws://127.0.0.1:8787 npm run dev
    # → http://localhost:5173
    ```
 
-   Or put `VITE_GEOLIBRE_COLLAB_URL=ws://127.0.0.1:8787` in
+   Or put `VITE_GEOINT_COLLAB_URL=ws://127.0.0.1:8787` in
    `apps/geolibre-desktop/.env.local` so you don't repeat it. With the variable
    unset the Collaborate menu item stays hidden — that is the feature flag
    working. (For the desktop shell use `npm run tauri:dev` with the same

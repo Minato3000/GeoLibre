@@ -1,4 +1,4 @@
-import type { LabelDedupe } from "@geolibre/core";
+import type { LabelDedupe } from "@geoint/core";
 
 /**
  * Pull a representative `[x, y]` from a point geometry, or null for any other
@@ -22,7 +22,7 @@ function pointCoordinates(geometry: GeoJSON.Geometry | null): [number, number] |
 }
 
 /**
- * Build a point FeatureCollection carrying one aggregated `__geolibre_label` per location
+ * Build a point FeatureCollection carrying one aggregated `__geoint_label` per location
  * for the unique/concatenate label modes (see {@link LabelDedupe}).
  *
  * Point features are grouped by their coordinate (rounded to 7 decimals, ~1 cm).
@@ -69,7 +69,7 @@ export function buildDedupedLabelFeatures(
       type: "Feature",
       geometry: { type: "Point", coordinates: group.coordinates },
       // A namespaced key avoids clobbering a real source field named "label".
-      properties: { __geolibre_label: label },
+      properties: { __geoint_label: label },
     });
   }
   if (features.length === 0) return null;

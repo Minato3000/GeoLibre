@@ -1,4 +1,4 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
@@ -8,7 +8,7 @@ import {
   subsetUrlToolKind,
 } from "../apps/geolibre-desktop/src/lib/subset-tool-url";
 
-function layer(partial: Partial<GeoLibreLayer>): GeoLibreLayer {
+function layer(partial: Partial<GeoIntLayer>): GeoIntLayer {
   return {
     id: "l1",
     name: "layer",
@@ -16,7 +16,7 @@ function layer(partial: Partial<GeoLibreLayer>): GeoLibreLayer {
     source: {},
     visible: true,
     opacity: 1,
-    style: {} as GeoLibreLayer["style"],
+    style: {} as GeoIntLayer["style"],
     metadata: {},
     ...partial,
   };

@@ -195,7 +195,7 @@ export const i18nReady: Promise<unknown> = (async () => {
       // rather than in a locale whose strings are absent, which would render
       // English fallback text while still applying the locale's `lang`/`dir`
       // (wrong RTL direction for e.g. Arabic). The user can switch once online.
-      console.error("[GeoLibre] Failed to load initial locale catalog; using English", error);
+      console.error("[GeoInt] Failed to load initial locale catalog; using English", error);
       effectiveLanguage = DEFAULT_LANGUAGE;
     }
   }

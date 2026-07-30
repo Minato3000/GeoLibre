@@ -28,8 +28,8 @@
   },
   "about": {
     "trigger": "정보",
-    "title": "GeoLibre 정보",
-    "description": "GeoLibre는 경량 클라우드 네이티브 GIS 플랫폼입니다.",
+    "title": "GeoInt 정보",
+    "description": "GeoInt는 경량 클라우드 네이티브 GIS 플랫폼입니다.",
     "version": "버전",
     "checkForUpdates": "업데이트 확인",
     "tryAgain": "다시 시도",
@@ -48,7 +48,7 @@
     "steps": {
       "download": "다운로드 페이지에서 사용 중인 플랫폼에 맞는 설치 프로그램을 다운로드하세요.",
       "install": "설치 프로그램을 실행하세요. 로컬 프로젝트, 설정, API 키는 유지됩니다.",
-      "reopen": "GeoLibre를 다시 열어 업데이트를 완료하세요."
+      "reopen": "GeoInt를 다시 열어 업데이트를 완료하세요."
     },
     "severity": {
       "major": "주요 릴리스",
@@ -67,7 +67,7 @@
       "noTag": "최신 릴리스에 버전 태그가 없습니다.",
       "network": "GitHub에 연결할 수 없습니다. 연결 상태를 확인한 후 다시 시도하세요.",
       "viewDownloads": "다운로드 보기",
-      "viewDownloadsHint": "브라우저에서 GeoLibre 다운로드 페이지를 열어 최신 버전을 직접 확인할 수 있습니다."
+      "viewDownloadsHint": "브라우저에서 GeoInt 다운로드 페이지를 열어 최신 버전을 직접 확인할 수 있습니다."
     },
     "startup": {
       "title": "업데이트 사용 가능",
@@ -94,7 +94,7 @@
     "trust": {
       "title": "이 프로젝트의 플러그인을 로드하시겠습니까?",
       "description_other": "이 프로젝트가 설치되지 않은 URL에서 외부 플러그인 {{count}}개를 로드하려고 합니다. 플러그인은 앱에 대한 전체 액세스 권한으로 코드를 실행합니다.",
-      "warning": "신뢰할 수 있는 출처의 플러그인만 로드하세요. 로드된 플러그인은 GeoLibre 자체와 동일한 권한으로 실행됩니다.",
+      "warning": "신뢰할 수 있는 출처의 플러그인만 로드하세요. 로드된 플러그인은 GeoInt 자체와 동일한 권한으로 실행됩니다.",
       "trustButton": "신뢰하고 로드",
       "dismissButton": "로드하지 않음"
     },
@@ -113,7 +113,7 @@
     "openHomepageAria": "{{name}} 홈페이지 열기",
     "byAuthor": "작성자: {{author}}",
     "updateAvailable": "업데이트 있음",
-    "requiresVersion": "GeoLibre {{version}}+ 필요",
+    "requiresVersion": "GeoInt {{version}}+ 필요",
     "install": "설치",
     "installAria": "{{name}} 설치",
     "removeConfirm": "제거할까요?",
@@ -124,10 +124,10 @@
     "updateAria": "{{name}} 업데이트",
     "loading": "불러오는 중…",
     "installed": "설치됨",
-    "settingsIntro": "GeoLibre는 항상 앱 데이터의 플러그인 디렉터리를 검색합니다. 패키지된 플러그인(.zip)을 파일에서 설치하거나 로컬 디렉터리를 추가할 수 있습니다(데스크톱 전용). 매니페스트 URL(마켓플레이스 설치 포함)은 네트워크로 불러오며, 여기서 변경한 내용은 즉시 적용됩니다.",
+    "settingsIntro": "GeoInt는 항상 앱 데이터의 플러그인 디렉터리를 검색합니다. 패키지된 플러그인(.zip)을 파일에서 설치하거나 로컬 디렉터리를 추가할 수 있습니다(데스크톱 전용). 매니페스트 URL(마켓플레이스 설치 포함)은 네트워크로 불러오며, 여기서 변경한 내용은 즉시 적용됩니다.",
     "installFromFile": "파일에서 설치",
     "chooseZip": ".zip 선택…",
-    "installFromFileHintDesktop": "패키지된 플러그인 아카이브를 GeoLibre의 플러그인 디렉터리로 복사합니다.",
+    "installFromFileHintDesktop": "패키지된 플러그인 아카이브를 GeoInt의 플러그인 디렉터리로 복사합니다.",
     "installFromFileHintWeb": "패키지된 플러그인 아카이브를 불러옵니다. 브라우저에 저장되며 다음 방문 시 다시 로드됩니다.",
     "localDirectories": "로컬 디렉터리",
     "directoryAria": "플러그인 디렉터리",
@@ -142,7 +142,7 @@
     "errorDirectoryPicker": "디렉터리 선택 창을 열지 못했습니다.",
     "errorInstall": "플러그인을 설치하지 못했습니다.",
     "errorUninstall": "플러그인을 제거하지 못했습니다.",
-    "description": "외부 GeoLibre 플러그인을 찾아보고 설치, 업데이트, 제거합니다. 플러그인은 <registryLink>GeoLibre 플러그인 레지스트리</registryLink>에 등록되어 있습니다."
+    "description": "외부 GeoInt 플러그인을 찾아보고 설치, 업데이트, 제거합니다. 플러그인은 <registryLink>GeoInt 플러그인 레지스트리</registryLink>에 등록되어 있습니다."
   },
   "viewState": {
     "panelTitle": "정보"
@@ -213,7 +213,7 @@
     "add": "추가",
     "ok": "확인",
     "done": "완료",
-    "openWebApp": "GeoLibre 웹 앱 열기"
+    "openWebApp": "GeoInt 웹 앱 열기"
   },
   "addData": {
     "title": "데이터 추가",
@@ -256,7 +256,7 @@
       },
       "gdb": {
         "label": "파일 지오데이터베이스 레이어 추가",
-        "description": "Esri 파일 지오데이터베이스(.gdb 폴더)에서 레이어를 추가합니다. 레이어는 로컬 GeoLibre 서버로 읽어 WGS84로 재투영됩니다."
+        "description": "Esri 파일 지오데이터베이스(.gdb 폴더)에서 레이어를 추가합니다. 레이어는 로컬 GeoInt 서버로 읽어 WGS84로 재투영됩니다."
       },
       "photos": {
         "label": "위치 태그 사진 추가",
@@ -476,8 +476,8 @@
       "layerPlaceholder": "먼저 지오데이터베이스를 선택하세요",
       "readingLayers": "레이어를 읽는 중...",
       "layerOption": "{{name}} ({{type}}, 피처 {{count}}개)",
-      "help": "속성 전용 테이블은 표시되지 않습니다. 선택한 피처 클래스는 로컬 GeoLibre 서버를 통해 로드되어 WGS84로 재투영됩니다.",
-      "desktopOnly": "파일 지오데이터베이스 레이어는 GeoLibre Desktop에서만 사용할 수 있습니다. 이 기능은 로컬 .gdb 폴더를 로컬 GeoLibre 서버를 통해 읽으며, 웹 앱은 이에 접근할 수 없습니다.",
+      "help": "속성 전용 테이블은 표시되지 않습니다. 선택한 피처 클래스는 로컬 GeoInt 서버를 통해 로드되어 WGS84로 재투영됩니다.",
+      "desktopOnly": "파일 지오데이터베이스 레이어는 GeoInt Desktop에서만 사용할 수 있습니다. 이 기능은 로컬 .gdb 폴더를 로컬 GeoInt 서버를 통해 읽으며, 웹 앱은 이에 접근할 수 없습니다.",
       "readError": "이 파일 지오데이터베이스를 읽을 수 없습니다.",
       "convertError": "이 피처 클래스를 로드할 수 없습니다.",
       "errorNotGdb": ".gdb로 끝나는 폴더(Esri 파일 지오데이터베이스)를 선택하세요.",
@@ -551,7 +551,7 @@
     },
     "postgres": {
       "defaultName": "PostgreSQL 레이어",
-      "errorDesktopOnly": "PostgreSQL 레이어를 사용하려면 GeoLibre Desktop이 필요합니다.",
+      "errorDesktopOnly": "PostgreSQL 레이어를 사용하려면 GeoInt Desktop이 필요합니다.",
       "errorConnectionString": "PostgreSQL 연결 문자열을 입력하세요.",
       "statusCheckingBinary": "Martin 실행 파일을 확인하는 중...",
       "statusDownloaded": "Martin을 다운로드했습니다. 로컬 서버를 시작하는 중...",
@@ -565,7 +565,7 @@
       "errorConnectFirst": "먼저 PostgreSQL에 연결하세요.",
       "errorNoVectorLayers": "선택한 Martin 소스에 벡터 레이어가 없습니다.",
       "errorSelectSource": "추가할 Martin 소스를 선택하세요.",
-      "desktopOnlyNotice": "PostgreSQL 레이어는 GeoLibre Desktop에서만 사용할 수 있습니다. 이 기능은 로컬 Martin 타일 서버를 실행하는데, 웹 앱에서는 이를 실행할 수 없습니다.",
+      "desktopOnlyNotice": "PostgreSQL 레이어는 GeoInt Desktop에서만 사용할 수 있습니다. 이 기능은 로컬 Martin 타일 서버를 실행하는데, 웹 앱에서는 이를 실행할 수 없습니다.",
       "savedConnection": "저장된 연결",
       "selectSavedConnection": "저장된 연결 선택",
       "connectionString": "PostgreSQL 연결 문자열",
@@ -585,7 +585,7 @@
       "editableTable": "테이블",
       "tableReadOnly": "{{table}}(읽기 전용: 기본 키 없음)",
       "errorSelectTable": "불러올 테이블을 선택하세요.",
-      "errorRuntimeMissing": "처리 서버에 PostGIS 런타임(psycopg)이 설치되어 있지 않습니다. 편집 가능한 레이어를 불러오려면 geolibre-server의 'postgis' 추가 패키지를 설치하세요."
+      "errorRuntimeMissing": "처리 서버에 PostGIS 런타임(psycopg)이 설치되어 있지 않습니다. 편집 가능한 레이어를 불러오려면 geoint-server의 'postgis' 추가 패키지를 설치하세요."
     },
     "video": {
       "defaultName": "비디오 레이어",
@@ -1044,7 +1044,7 @@
     "step1Title": "1. API 토큰 받기",
     "step1Description": "share.geolibre.app에 로그인한 다음 설정 → API 토큰에서 토큰을 생성하세요.",
     "getToken": "API 토큰 받기",
-    "step2Title": "2. GeoLibre에 토큰 추가",
+    "step2Title": "2. GeoInt에 토큰 추가",
     "step2Description": "이 기기의 설정 → 환경 변수에 토큰을 붙여넣으세요.",
     "configureToken": "로컬 토큰 구성",
     "liveAt": "프로젝트가 게시된 위치:",
@@ -1066,7 +1066,7 @@
   },
   "gallery": {
     "title": "프로젝트 갤러리",
-    "description": "share.geolibre.app에 공유된 공개 프로젝트를 둘러보고 GeoLibre에서 여세요.",
+    "description": "share.geolibre.app에 공유된 공개 프로젝트를 둘러보고 GeoInt에서 여세요.",
     "searchPlaceholder": "불러온 프로젝트를 제목, 작성자 또는 태그로 필터링",
     "loading": "프로젝트 불러오는 중…",
     "loadingMore": "더 불러오는 중…",
@@ -1151,7 +1151,7 @@
       "groupNavigation": "방위표와 축척 막대 그룹화",
       "footer": "바닥글 텍스트",
       "date": "날짜",
-      "attribution": "GeoLibre 저작권 표시 포함",
+      "attribution": "GeoInt 저작권 표시 포함",
       "pageBorder": "페이지 테두리",
       "infoBlock": "정보 블록(제목 블록)",
       "colorbar": "컬러바",
@@ -1527,7 +1527,7 @@
     "noticeDesc": "지식 카드를 열면 클릭한 장소의 좌표(및 여는 주변 문서의 제목)가 요약과 사진을 가져오기 위해 Wikipedia의 공개 API로 전송됩니다. 이러한 요청에서는 좌표가 기기를 벗어납니다."
   },
   "onboarding": {
-    "title": "GeoLibre에 오신 것을 환영합니다",
+    "title": "GeoInt에 오신 것을 환영합니다",
     "description": "인터페이스를 맞춤 설정할 경험 수준을 선택하세요. 설정 → 인터페이스에서 언제든지 변경할 수 있습니다.",
     "level": {
       "beginner": {
@@ -1540,7 +1540,7 @@
       },
       "advanced": {
         "title": "고급",
-        "description": "GeoLibre가 제공하는 모든 기능을 표시합니다."
+        "description": "GeoInt가 제공하는 모든 기능을 표시합니다."
       }
     },
     "showEverything": "건너뛰기 — 모두 표시"
@@ -1555,7 +1555,6 @@
       "appearance": "모양",
       "interface": "인터페이스",
       "geocoding": "지오코딩",
-      "ai": "AI 제공자",
       "environment": "환경",
       "updates": "업데이트"
     },
@@ -1565,7 +1564,6 @@
       "appearanceSettings": "모양 설정",
       "interfaceSettings": "인터페이스 설정",
       "geocoding": "지오코딩",
-      "ai": "AI 제공자",
       "environmentVariables": "환경 변수",
       "updates": "업데이트 설정",
       "managePlugins": "플러그인 관리",
@@ -1574,9 +1572,9 @@
     },
     "updates": {
       "title": "소프트웨어 업데이트",
-      "description": "데스크톱 앱이 시작될 때 GeoLibre가 새 버전을 확인하는 방식을 설정합니다.",
+      "description": "데스크톱 앱이 시작될 때 GeoInt가 새 버전을 확인하는 방식을 설정합니다.",
       "checkOnStartup": "시작 시 업데이트 확인",
-      "checkOnStartupHint": "활성화하면 앱이 시작될 때마다 GeoLibre가 최신 버전을 확인합니다. 완전한 오프라인 작업 환경을 원하면 이 옵션을 끄세요.",
+      "checkOnStartupHint": "활성화하면 앱이 시작될 때마다 GeoInt가 최신 버전을 확인합니다. 완전한 오프라인 작업 환경을 원하면 이 옵션을 끄세요.",
       "notificationLevel": "알림 받을 항목",
       "notificationLevelHint": "시작 시 알림을 표시할 릴리스 종류를 선택하세요.",
       "level": {
@@ -1659,7 +1657,7 @@
       "lockedNote": "이 인터페이스 프로필은 관리자가 관리하며 변경할 수 없습니다."
     },
     "env": {
-      "tokenTitle": "Share.GeoLibre API 토큰",
+      "tokenTitle": "Share.GeoInt API 토큰",
       "tokenDescription": "프로젝트 > 공유는 이 토큰을 사용하여 지도를 share.geolibre.app에 업로드합니다. <tokenLink>share.geolibre.app/settings</tokenLink>를 열고 설정 > API 토큰에서 토큰을 생성한 다음 아래 필드에 붙여넣으세요.",
       "tokenStorageNote": "이 기기에 로컬로 저장되며 업로드 인증을 위해 share.geolibre.app에만 전송됩니다. 웹 빌드에서는 다른 사이트 데이터와 동일한 브라우저 저장소를 공유하므로, 기기가 침해된 경우 share.geolibre.app에서 토큰을 폐기하세요.",
       "tokenPlaceholder": "glb_…",
@@ -1704,60 +1702,6 @@
       "emailHint": "Nominatim에서만 사용되며, 애플리케이션을 식별하는 데 도움이 되도록 제공할 것을 권장합니다 — 입력한 경우에만 전송됩니다.",
       "secretsWarning": "키는 프로젝트 파일에 평문으로 저장되며 프로젝트를 공유할 때 노출될 수 있습니다. 또한 쿼리 매개변수로 전송되므로 브라우저 개발자 도구와 프록시 로그에서 볼 수 있는 지오코딩 요청 URL에 표시됩니다.",
       "corsNote": "Google은 공식적으로 브라우저에서 Geocoding API로의 요청을 허용하지 않으므로, 동일 출처 프록시를 통하지 않으면 요청이 차단될 수 있습니다."
-    },
-    "ai": {
-      "title": "AI 어시스턴트 제공자",
-      "description": "AI 어시스턴트의 자격 증명을 구성합니다. 제공자를 선택하고 필요한 필드를 입력한 다음 저장하세요. 채팅을 시작하려면 하나의 제공자만 구성하면 됩니다.",
-      "providerLabel": "제공자",
-      "providerHint": "제공자를 선택하면 필요한 필드가 표시됩니다.",
-      "configuredMark": "(구성됨)",
-      "optionalMark": "(선택 사항)",
-      "statusReady": "{{provider}}이(가) 구성되어 사용할 준비가 되었습니다.",
-      "statusIncomplete": "{{provider}}을(를) 활성화하려면 아래 필수 필드를 입력하세요.",
-      "secretsNote": "자격 증명은 공유하는 프로젝트 파일이 아니라 이 기기에 로컬로 저장되므로 재시작 후에도 유지됩니다. 이 기기에 접근할 수 있는 사람은 누구나 읽을 수 있습니다.",
-      "getCredentials": "{{provider}} 자격 증명을 받는 방법",
-      "showValue": "{{name}} 표시",
-      "hideValue": "{{name}} 숨기기",
-      "osEnvNote": "데스크톱 앱은 시스템 환경 변수에서 일치하는 API 키도 읽습니다. 이러한 키는 자동으로 사용되며 프로젝트 파일에 저장되지 않습니다. 환경 값을 계속 사용하려면 필드를 비워 두세요.",
-      "osEnvField": "시스템 환경 변수 {{name}}에서 읽습니다.",
-      "osEnvPlaceholder": "시스템 환경에서 설정됨",
-      "newProfile": "새 프로필",
-      "cancel": "취소",
-      "addProfile": "프로필 추가",
-      "profileName": "프로필 이름",
-      "profileNamePlaceholder": "예: 업무용 Gemini, 로컬 Ollama",
-      "profileCount_other": "프로필 {{count}}개",
-      "noProfiles": "아직 프로필이 없습니다. 아래에서 추가하여 AI 어시스턴트를 구성하세요.",
-      "setDefault": "기본값으로 설정",
-      "defaultProfile": "기본",
-      "edit": "편집",
-      "deleteProfile": "프로필 삭제",
-      "backToProfiles": "← 프로필 목록으로",
-      "saveProfile": "프로필 저장",
-      "profileEditSaveHint": "위의 프로필 변경 사항을 저장하거나 취소한 후 \"설정 저장\"을 클릭하여 모든 변경 사항을 적용하세요.",
-      "field": {
-        "apiKey": "API 키",
-        "baseUrl": "기본 URL",
-        "model": "모델",
-        "region": "리전",
-        "accessKeyId": "액세스 키 ID",
-        "secretAccessKey": "보안 액세스 키",
-        "sessionToken": "세션 토큰"
-      },
-      "placeholder": {
-        "geminiKey": "AIza…",
-        "anthropicKey": "sk-ant-…",
-        "openaiKey": "sk-…",
-        "ollamaBaseUrl": "http://localhost:11434",
-        "ollamaModel": "llama3.2",
-        "awsAccessKey": "AKIA…",
-        "awsSecretKey": "wJalrXUtnFEMI…",
-        "awsRegion": "us-east-1",
-        "awsSessionToken": "FwoGZXIvYXdz…(임시 자격 증명을 사용하는 경우)",
-        "customBaseUrl": "https://api.example.com/v1",
-        "customModel": "model-id",
-        "customApiKey": "sk-…(필요한 경우)"
-      }
     }
   },
   "toolbar": {
@@ -1867,7 +1811,7 @@
       "smartPaste": "좌표 붙여넣기",
       "smartPasteInputLabel": "좌표 문자열",
       "smartPastePlaceholder": "예: 51.5074, -0.1278 또는 51°30'26\"N, 0°07'39\"W",
-      "smartPasteInfo": "전체 좌표 문자열을 DD, DMS, DDM 형식으로 입력하거나 붙여넣은 다음 입력 처리를 실행하세요. GeoLibre가 형식을 자동으로 감지하여 아래의 경도와 위도 필드를 채웁니다. 확대/축소, 기울기, 방위각은 이동하기 전에 별도로 조정하세요.",
+      "smartPasteInfo": "전체 좌표 문자열을 DD, DMS, DDM 형식으로 입력하거나 붙여넣은 다음 입력 처리를 실행하세요. GeoInt가 형식을 자동으로 감지하여 아래의 경도와 위도 필드를 채웁니다. 확대/축소, 기울기, 방위각은 이동하기 전에 별도로 조정하세요.",
       "smartPasteInfoLabel": "좌표 붙여넣기 안내",
       "smartPasteInvalid": "해당 좌표를 읽을 수 없습니다. DD, DMS, DDM 형식으로 경도와 위도를 모두 입력하세요. 예: 51.5074, -0.1278. 일부만 입력되었거나 불완전한 문자열은 해석할 수 없습니다.",
       "processInput": "입력 처리",
@@ -1996,8 +1940,8 @@
     },
     "conversion": {
       "vectorToVector": "벡터에서 벡터로",
-      "zipInputBrowserError": "압축된 Shapefile은 GeoLibre 데스크톱 앱에서만 변환할 수 있습니다. 브라우저에서는 압축을 푼 .shp 파일과 .dbf, .shx, .prj 파일을 함께 선택하세요.",
-      "browserOutputUnsupported": "브라우저에서는 GeoJSON, CSV, GeoParquet, GeoPackage, Shapefile(.zip)로만 출력할 수 있습니다. \".{{extension}}\" 출력에는 GeoLibre 데스크톱 앱이 필요합니다.",
+      "zipInputBrowserError": "압축된 Shapefile은 GeoInt 데스크톱 앱에서만 변환할 수 있습니다. 브라우저에서는 압축을 푼 .shp 파일과 .dbf, .shx, .prj 파일을 함께 선택하세요.",
+      "browserOutputUnsupported": "브라우저에서는 GeoJSON, CSV, GeoParquet, GeoPackage, Shapefile(.zip)로만 출력할 수 있습니다. \".{{extension}}\" 출력에는 GeoInt 데스크톱 앱이 필요합니다.",
       "outputExtensionRequired": "형식을 선택하려면 출력 이름에 파일 확장자를 추가하세요.",
       "readingWithDuckDb": "DuckDB-WASM으로 {{name}} 읽는 중",
       "readFeatures": "{{name}}에서 피처 {{features}}개를 읽었습니다.",
@@ -2011,7 +1955,7 @@
       "vectorToPmtiles": "벡터에서 PMTiles로",
       "rasterToCog": "래스터에서 COG로",
       "rasterToPmtiles": "래스터를 PMTiles로",
-      "needsDesktop": "이 변환에는 GeoLibre 데스크톱 앱 또는 실행 중인 사이드카가 필요합니다.",
+      "needsDesktop": "이 변환에는 GeoInt 데스크톱 앱 또는 실행 중인 사이드카가 필요합니다.",
       "runsInBrowserDuckDb": "변환은 DuckDB-WASM으로 브라우저에서 실행됩니다.",
       "runsInBrowserWriters": "변환은 DuckDB-WASM과 내장 라이터로 브라우저에서 실행됩니다.",
       "runsInBrowserWasm": "변환은 geolibre-wasm으로 브라우저에서 실행됩니다. 사이드카가 필요하지 않습니다.",
@@ -2166,7 +2110,7 @@
       "noOutput": "아직 출력이 없습니다.",
       "errorConnect": "사이드카에 연결하지 못했습니다.",
       "errorPoll": "작업 상태를 조회하지 못했습니다.",
-      "errorStartSidecar": "GeoLibre 사이드카를 시작하지 못했습니다.",
+      "errorStartSidecar": "GeoInt 사이드카를 시작하지 못했습니다.",
       "errorStartTool": "래스터 도구를 시작하지 못했습니다."
     },
     "mapControl": {
@@ -2270,7 +2214,7 @@
       "terrain": "지형",
       "remoteSensing": "원격 탐사",
       "projection": "투영법",
-      "geolibre": "GeoLibre",
+      "geoint": "GeoInt",
       "subGroupGeometry": "지오메트리",
       "subGroupOverlay": "오버레이",
       "subGroupJoin": "조인",
@@ -2332,7 +2276,7 @@
       "webServices": "웹 서비스",
       "commandPalette": "명령 팔레트",
       "openProjectFromUrl": "URL에서 프로젝트 열기",
-      "openProjectFromUrlDesc": "`.geolibre.json` 프로젝트를 불러와 최근 프로젝트에 추가합니다.",
+      "openProjectFromUrlDesc": "`.geoint.json` 프로젝트를 불러와 최근 프로젝트에 추가합니다.",
       "projectUrl": "프로젝트 URL",
       "opening": "여는 중...",
       "open": "열기",
@@ -2347,7 +2291,7 @@
       "embedVectorReferenceButton": "파일 참조 저장",
       "embedVectorSkipButton": "데이터 없이 저장",
       "saveProjectFileName": "파일 이름",
-      "saveProjectFileNamePlaceholder": "my-project.geolibre.json",
+      "saveProjectFileNamePlaceholder": "my-project.geoint.json",
       "exportHtmlAsTitle": "대화형 HTML로 내보내기",
       "exportHtmlAsDesc": "파일 이름을 입력하세요. 저장을 클릭하면 HTML 페이지가 브라우저의 다운로드 폴더로 다운로드됩니다.",
       "exportHtmlFileName": "파일 이름",
@@ -2388,21 +2332,21 @@
       "maplibre-gl-annotations": "주석",
       "maplibre-gl-streetview": "거리 뷰",
       "maplibre-gl-time-slider": "시간 슬라이더",
-      "geolibre-timelapse": "타임랩스",
+      "geoint-timelapse": "타임랩스",
       "maplibre-gl-esri-wayback": "과거 영상",
       "maplibre-gl-openaerialmap": "OpenAerialMap",
-      "geolibre-stac-catalogs": "STAC 카탈로그",
+      "geoint-stac-catalogs": "STAC 카탈로그",
       "maplibre-gl-source-coop": "Source Cooperative",
       "maplibre-gl-natural-earth": "Natural Earth",
       "maplibre-gl-swipe": "레이어 스와이프",
-      "geolibre-elevation-profile": "고도 프로파일",
+      "geoint-elevation-profile": "고도 프로파일",
       "maplibre-gl-basemap-control": "베이스맵",
       "maplibre-layer-control": "레이어 컨트롤",
       "maplibre-gl-huggingface": "Hugging Face",
       "carto-light": "Carto Light 베이스맵",
-      "geolibre-flight-simulator": "비행 시뮬레이터",
-      "geolibre-route-animation": "경로 애니메이션",
-      "geolibre-sun": "태양 시뮬레이션",
+      "geoint-flight-simulator": "비행 시뮬레이터",
+      "geoint-route-animation": "경로 애니메이션",
+      "geoint-sun": "태양 시뮬레이션",
       "maplibre-atmosphere-effects": "대기 효과",
       "maplibre-deckgl-viz": "Deck.gl 레이어",
       "maplibre-gl-clouds": "구름",
@@ -2558,7 +2502,7 @@
     "summary": "전체 {{total}}개 중 피처 {{selected}}개 선택됨 ({{matched}}개 일치).",
     "evaluationErrors": "피처 {{count}}개를 평가할 수 없어 일치되지 않았습니다.",
     "unevaluableDisjoint": "피처 {{count}}개는 지오메트리를 평가할 수 없어 제외되었습니다.",
-    "tooManyPairs": "이 비교에는 {{pairs}}개의 피처 쌍 테스트가 필요합니다(한도 {{limit}}). 대신 처리 → GeoLibre → 벡터 → 위치로 선택을 사이드카 엔진으로 사용하세요.",
+    "tooManyPairs": "이 비교에는 {{pairs}}개의 피처 쌍 테스트가 필요합니다(한도 {{limit}}). 대신 처리 → GeoInt → 벡터 → 위치로 선택을 사이드카 엔진으로 사용하세요.",
     "exportedLayerName": "{{name}} (선택)"
   },
   "loadEditorFeatures": {
@@ -2784,7 +2728,7 @@
     "filterWebMap": "웹 맵",
     "webMapAdded_other": "이 웹 맵에서 레이어 {{count}}개를 추가했습니다.",
     "webMapAddedPartial": "이 웹 맵의 레이어 {{total}}개 중 {{added}}개를 추가했습니다. 나머지는 연결할 수 없었습니다.",
-    "webMapEmpty": "이 웹 맵에는 GeoLibre가 렌더링할 수 있는 레이어가 없습니다.",
+    "webMapEmpty": "이 웹 맵에는 GeoInt가 렌더링할 수 있는 레이어가 없습니다.",
     "add": "추가",
     "adding": "추가 중…",
     "remove": "제거",
@@ -2866,7 +2810,7 @@
     "downloadTitle": "이 파일 다운로드",
     "copyUrlTitle": "이 파일의 URL 복사",
     "openProductTitle": "source.coop에서 이 제품 페이지 열기",
-    "unsupportedTitle": "GeoLibre가 이 형식을 렌더링할 수 없습니다 — 대신 다운로드하세요",
+    "unsupportedTitle": "GeoInt가 이 형식을 렌더링할 수 없습니다 — 대신 다운로드하세요",
     "addError": "이 파일을 추가할 수 없습니다: {{message}}",
     "largeFileWarning": "이 파일은 {{size}}입니다. 원본에서 스트리밍되므로 화면에 보이는 부분만 읽습니다.",
     "streamHint": "이 파일은 {{size}}입니다. 추가는 메모리로 복사하고, 스트림은 화면에 보이는 부분만 읽습니다.",
@@ -2910,7 +2854,7 @@
     "downloadTitle": "이 파일 다운로드",
     "copyUrlTitle": "이 파일의 URL 복사",
     "openDatasetTitle": "이 데이터셋 페이지를 huggingface.co에서 열기",
-    "unsupportedTitle": "GeoLibre가 이 형식을 렌더링할 수 없습니다 — 대신 다운로드하세요",
+    "unsupportedTitle": "GeoInt가 이 형식을 렌더링할 수 없습니다 — 대신 다운로드하세요",
     "addError": "이 파일을 추가할 수 없습니다: {{message}}",
     "notRasterIndex": "이 JSON 파일은 래스터를 색인하지 않으므로 지도에 올릴 것이 없습니다. MosaicJSON과 STAC 컬렉션을 지원합니다.",
     "largeFileWarning": "이 파일은 {{size}}입니다. 원본에서 스트리밍되므로 화면에 보이는 부분만 읽습니다.",
@@ -2952,7 +2896,7 @@
     "clearSelection": "지우기",
     "selectedFiles_other": "파일 {{count}}개 선택됨 ({{size}}).",
     "commitMessageLabel": "커밋 메시지 (선택 사항)",
-    "commitMessagePlaceholder": "GeoLibre에서 업로드",
+    "commitMessagePlaceholder": "GeoInt에서 업로드",
     "upload": "업로드",
     "uploadPreparing": "업로드 준비 중…",
     "uploadHashing": "{{name}} 해시 계산 중 ({{index}}/{{total}})…",
@@ -3015,7 +2959,7 @@
     "runHint": "실행 (Ctrl/Cmd+Enter)",
     "completions": "자동 완성",
     "placeholder": "여기에 Python 코드 입력 · Ctrl/Cmd+Enter로 실행 · Tab으로 자동 완성 · ↑/↓로 기록 탐색",
-    "intro": "Python 콘솔이 준비되었습니다. `geolibre` 객체를 사용해 지도를 스크립팅하세요. 예: geolibre.get_center(). Tab으로 자동 완성, ↑/↓로 이전 명령 불러오기, `await geolibre.load_package(\"numpy\")`로 패키지를 추가할 수 있습니다.",
+    "intro": "Python 콘솔이 준비되었습니다. `geoint` 객체를 사용해 지도를 스크립팅하세요. 예: geoint.get_center(). Tab으로 자동 완성, ↑/↓로 이전 명령 불러오기, `await geoint.load_package(\"numpy\")`로 패키지를 추가할 수 있습니다.",
     "loadFailed": "Python 런타임을 불러오지 못했습니다.",
     "showEditor": "편집기 표시",
     "hideEditor": "편집기 숨기기",
@@ -3125,21 +3069,7 @@
     "stop": "중지",
     "placeholder": "데이터에 대해 질문하세요. 예: \"인구가 5천만 명이 넘는 국가 표시\" · Ctrl/Cmd+Enter로 전송",
     "intro": "데이터와 대화하세요. Spatial SQL을 실행하고, 레이어를 추가하거나 제거하고, 스타일을 다시 지정하고, 지도를 이동할 수 있습니다. 모든 변경 사항은 실행 취소가 가능합니다. \"국가를 인구에 따라 붉은색 계열 그라데이션으로 표시해줘\"를 시도해보세요.",
-    "setupTitle": "AI 어시스턴트 설정",
-    "setupStatus": "어시스턴트가 작업을 수행하려면 AI 제공자가 필요합니다. 아래에서 제공자 하나를 선택해 자격 증명을 추가하면 저장 즉시 패널이 채팅 모드로 전환됩니다.",
-    "setupProviders": "제공자 하나를 선택해 자격 증명 추가",
-    "setupOpenSettings": "설정 → AI 제공자 열기",
-    "thinking": "작업 중…",
-    "toolError": "실패",
-    "provider": "LLM 제공자",
-    "profile": "AI 프로필",
-    "deploymentProxy": "배포 프록시",
-    "model": "모델",
-    "codeApprovalTitle": "어시스턴트 코드를 실행하시겠습니까?",
-    "codeApprovalBody": "어시스턴트가 앱에서 {{language}} 코드를 실행하려고 합니다. 먼저 검토하세요 — 지도를 변경하고 앱 데이터에 접근할 수 있습니다.",
-    "codeApprovalAlways": "이 세션 동안 어시스턴트 코드 허용",
-    "codeApprovalRun": "실행",
-    "codeApprovalDecline": "취소"
+    "thinking": "작업 중…"
   },
   "storymap": {
     "title": "스토리 맵",
@@ -3354,7 +3284,7 @@
       },
       "filterBySource": "출처별 필터링",
       "allSources": "모든 출처",
-      "geolibreTools": "GeoLibre 도구",
+      "geointTools": "GeoInt 도구",
       "whiteboxTools": "Whitebox 도구",
       "toolbox": "Whitebox 도구 상자",
       "checkingRuntime": "런타임 확인 중.",
@@ -3383,8 +3313,8 @@
       "errorConnect": "사이드카에 연결하지 못했습니다.",
       "errorPoll": "작업 상태를 조회하지 못했습니다.",
       "errorStartTool": "Whitebox 도구를 시작하지 못했습니다.",
-      "errorStartSidecar": "GeoLibre 사이드카를 시작하지 못했습니다.",
-      "errorStopSidecar": "GeoLibre 사이드카를 중지하지 못했습니다.",
+      "errorStartSidecar": "GeoInt 사이드카를 시작하지 못했습니다.",
+      "errorStopSidecar": "GeoInt 사이드카를 중지하지 못했습니다.",
       "noToolsFound": "도구를 찾을 수 없습니다.",
       "noParameters": "이 도구에는 매개변수가 없습니다.",
       "noOutput": "아직 출력이 없습니다.",
@@ -3404,9 +3334,9 @@
       "runLocallyButton": "로컬에서 실행(WASM)",
       "troubleshootingTitle": "그래도 서버를 사용하시겠습니까?",
       "stepStartServerDesktop": "도구 목록 패널에서 \"서버 시작\"을 클릭하여 실행한 후, 몇 초간 기다려 서버가 온라인 상태가 되도록 하세요.",
-      "stepStartServerBrowser": "서버는 GeoLibre 데스크톱 앱에서만 시작할 수 있습니다. 브라우저에서는 대신 \"로컬에서 실행(WASM)\"을 계속 활성화하세요.",
+      "stepStartServerBrowser": "서버는 GeoInt 데스크톱 앱에서만 시작할 수 있습니다. 브라우저에서는 대신 \"로컬에서 실행(WASM)\"을 계속 활성화하세요.",
       "stepCheckPort": "방화벽, 백신, 또는 네트워크 정책이 로컬 포트 {{port}}를 차단하고 있지 않은지 확인하세요.",
-      "stepRestart": "서버가 예기치 않게 중지된 경우, GeoLibre 데스크톱 앱을 재시작하고 이 대화상자를 다시 여세요."
+      "stepRestart": "서버가 예기치 않게 중지된 경우, GeoInt 데스크톱 앱을 재시작하고 이 대화상자를 다시 여세요."
     },
     "vectorTools": {
       "title": "벡터 도구",
@@ -3440,13 +3370,13 @@
     "segment": "분할",
     "status": {
       "checking": "AI 분할 서비스 확인 중…",
-      "unavailableDesktop": "AI 분할 서비스가 아직 실행되고 있지 않습니다. segment-geospatial이 활성화된 GeoLibre 서버를 시작하여 사용하세요.",
-      "unavailableWeb": "브라우저에서는 AI 분할을 사용할 수 없습니다. GeoLibre 데스크톱 앱을 사용하여 실행하세요."
+      "unavailableDesktop": "AI 분할 서비스가 아직 실행되고 있지 않습니다. segment-geospatial이 활성화된 GeoInt 서버를 시작하여 사용하세요.",
+      "unavailableWeb": "브라우저에서는 AI 분할을 사용할 수 없습니다. GeoInt 데스크톱 앱을 사용하여 실행하세요."
     },
     "error": {
       "chooseImage": "분할할 이미지(GeoTIFF)를 선택하세요.",
       "enterPrompt": "텍스트 프롬프트를 입력하세요. 예: \"나무\" 또는 \"건물\".",
-      "startServer": "GeoLibre 사이드카를 시작할 수 없습니다.",
+      "startServer": "GeoInt 사이드카를 시작할 수 없습니다.",
       "failed": "분할에 실패했습니다."
     },
     "noObjects": "찾은 객체가 없습니다.",
@@ -3457,7 +3387,7 @@
       "title": "AI 분할 서버를 시작할 수 없습니다.",
       "intro": "AI 분할은 segment-geospatial의 SAM3 모델을 호스팅하는 로컬 도우미 서버({{sidecarUrl}})에서 실행됩니다. 앱과 별도로 백그라운드에서 Python을 실행하며, 브라우저 빌드에는 포함되지 않습니다.",
       "troubleshootingTitle": "서버를 실행하는 방법",
-      "stepInstall": "분할 모델을 사용할 수 있도록 segment-geospatial 백엔드가 활성화된 상태로 GeoLibre 서버가 설치되어 있는지 확인하세요.",
+      "stepInstall": "분할 모델을 사용할 수 있도록 segment-geospatial 백엔드가 활성화된 상태로 GeoInt 서버가 설치되어 있는지 확인하세요.",
       "stepStartServerDesktop": "위의 \"서버 시작\"을 클릭하여 실행한 후, 모델이 온라인 상태가 될 때까지 몇 초간 기다리세요."
     }
   },
@@ -3703,7 +3633,7 @@
     "import": "가져오기…",
     "export": "내보내기…",
     "importFilterName": "스타일 라이브러리 / QML / SLD",
-    "exportFilterName": "GeoLibre 스타일 라이브러리",
+    "exportFilterName": "GeoInt 스타일 라이브러리",
     "applied": "\"{{name}}\"을(를) {{layer}}에 적용했습니다.",
     "appliedRampHint": "\"{{name}}\"을(를) 적용했습니다. 램프를 보려면 레이어를 등급별 또는 범주별 스타일로 전환하세요.",
     "saved": "\"{{name}}\"을(를) 라이브러리에 저장했습니다.",
@@ -4530,10 +4460,10 @@
   },
   "errorBoundary": {
     "title": "문제가 발생했습니다",
-    "description": "GeoLibre에서 예기치 않은 오류가 발생하여 계속할 수 없습니다. 작업이 저장되지 않았을 수 있습니다 — 다시 로드하기 전에 복구를 시도해 보세요.",
+    "description": "GeoInt에서 예기치 않은 오류가 발생하여 계속할 수 없습니다. 작업이 저장되지 않았을 수 있습니다 — 다시 로드하기 전에 복구를 시도해 보세요.",
     "tryAgain": "다시 시도",
     "reload": "앱 다시 로드",
-    "sectionFailed": "{{label}}을(를) 렌더링하지 못했습니다. GeoLibre의 나머지 기능은 계속 사용할 수 있습니다."
+    "sectionFailed": "{{label}}을(를) 렌더링하지 못했습니다. GeoInt의 나머지 기능은 계속 사용할 수 있습니다."
   },
   "commandPalette": {
     "title": "명령 팔레트",
@@ -4578,7 +4508,7 @@
     "emptyNetworkError": "수집된 네트워크 오류 진단 정보가 없습니다."
   },
   "shell": {
-    "workspaceTitle": "GeoLibre 지도 작업 공간",
+    "workspaceTitle": "GeoInt 지도 작업 공간",
     "section": {
       "toolbar": "도구 모음",
       "sharedLeftSidebar": "공유 왼쪽 사이드바",
@@ -4722,6 +4652,6 @@
     "added": "{{asset}}을(를) 지도에 추가했습니다.",
     "addUnsupported": "GeoTIFF/COG 및 GeoJSON 자산만 지도에 추가할 수 있습니다",
     "addFailed": "자산을 추가하지 못했습니다",
-    "cogUnsupported": "이 GeoLibre 호스트는 원격 GeoTIFF 자산을 표시할 수 없습니다"
+    "cogUnsupported": "이 GeoInt 호스트는 원격 GeoTIFF 자산을 표시할 수 없습니다"
   }
 }

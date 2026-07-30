@@ -7,7 +7,7 @@
 //
 // The source host must allow cross-origin `Range` reads (e.g. source.coop's
 // `Access-Control-Allow-Origin: *`); the Protomaps build server itself only
-// allowlists a few origins, which is why GeoLibre points at a mirror.
+// allowlists a few origins, which is why GeoInt points at a mirror.
 import { PmtilesExtractor } from "geolibre-wasm";
 
 import { initCogWasm } from "./cog-convert";

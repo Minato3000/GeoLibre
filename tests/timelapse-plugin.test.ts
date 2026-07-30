@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import {
   getActiveTimelapseControl,
@@ -14,10 +14,7 @@ import {
   NASA_GIBS_WELD_PROVIDER_ID,
   registerTimelapseProvider,
 } from "../packages/plugins/src/plugins/timelapse-providers";
-import type {
-  GeoLibreAppAPI,
-  GeoLibreFloatingPanelRegistration,
-} from "../packages/plugins/src/types";
+import type { GeoIntAppAPI, GeoIntFloatingPanelRegistration } from "../packages/plugins/src/types";
 
 /** A recording fake of the MapLibre surface the plugin touches. */
 function fakeMap() {
@@ -60,13 +57,13 @@ function fakeMap() {
 
 type FakeMap = ReturnType<typeof fakeMap>;
 
-function fakeApp(map: FakeMap): GeoLibreAppAPI & {
-  registered: GeoLibreFloatingPanelRegistration[];
+function fakeApp(map: FakeMap): GeoIntAppAPI & {
+  registered: GeoIntFloatingPanelRegistration[];
   opened: string[];
   unregistered: number;
   basemapCallbacks: Array<() => void>;
 } {
-  const registered: GeoLibreFloatingPanelRegistration[] = [];
+  const registered: GeoIntFloatingPanelRegistration[] = [];
   const opened: string[] = [];
   const basemapCallbacks: Array<() => void> = [];
   const self = {
@@ -75,7 +72,7 @@ function fakeApp(map: FakeMap): GeoLibreAppAPI & {
     unregistered: 0,
     basemapCallbacks,
     getMap: () => map as unknown as MapLibreMap,
-    registerFloatingPanel: (panel: GeoLibreFloatingPanelRegistration) => {
+    registerFloatingPanel: (panel: GeoIntFloatingPanelRegistration) => {
       registered.push(panel);
       return () => {
         self.unregistered += 1;
@@ -92,7 +89,7 @@ function fakeApp(map: FakeMap): GeoLibreAppAPI & {
       return () => {};
     },
   };
-  return self as unknown as GeoLibreAppAPI & typeof self;
+  return self as unknown as GeoIntAppAPI & typeof self;
 }
 
 const STORE_LAYER_ID = timelapseStoreLayerId("eox-s2cloudless");

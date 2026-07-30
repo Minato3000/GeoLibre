@@ -1,12 +1,12 @@
 name: Feature request
-description: Suggest a new feature, enhancement, or UX improvement for GeoLibre.
+description: Suggest a new feature, enhancement, or UX improvement for GeoInt.
 title: "[Feature]: "
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping make GeoLibre better. Please describe what you would like and why it matters.
+        Thanks for helping make GeoInt better. Please describe what you would like and why it matters.
 
         This form labels the issue **enhancement**. The scope you pick below is informational: a maintainer will read your selection and add the matching **enhancement (small)**, **enhancement (medium)**, or **wishlist** label during triage.
   - type: checkboxes

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import maplibregl from "maplibre-gl";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, type LayerStyle } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, type LayerStyle } from "@geoint/core";
 import { createMapController, MapController } from "../packages/map/src/map-controller";
 
 // Internal shape of MapController we reach into to inject a fake map. The
@@ -12,7 +12,7 @@ interface MapControllerInternals {
   map: unknown;
   styleReady: boolean;
   layerIds: string[];
-  syncedLayers: GeoLibreLayer[];
+  syncedLayers: GeoIntLayer[];
 }
 
 interface FakeMap {
@@ -200,9 +200,9 @@ function internals(controller: MapController): MapControllerInternals {
 
 function pointLayer(
   id: string,
-  patch: Partial<GeoLibreLayer> = {},
+  patch: Partial<GeoIntLayer> = {},
   style: Partial<LayerStyle> = {},
-): GeoLibreLayer {
+): GeoIntLayer {
   return {
     id,
     name: id,
@@ -226,7 +226,7 @@ function pointLayer(
   };
 }
 
-function rasterLayer(id: string, patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function rasterLayer(id: string, patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id,
     name: id,
@@ -242,7 +242,7 @@ function rasterLayer(id: string, patch: Partial<GeoLibreLayer> = {}): GeoLibreLa
 
 // An Add Vector Layer entry: the maplibre-gl-vector control owns the paint and
 // creates the native style layers itself, so the store layer only names them.
-function controlVectorLayer(id: string, patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function controlVectorLayer(id: string, patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id,
     name: id,
@@ -444,7 +444,7 @@ describe("MapController.syncLayers reconciliation", () => {
   });
 });
 
-function vectorTileLayer(id: string, patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function vectorTileLayer(id: string, patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id,
     name: id,
@@ -1119,7 +1119,7 @@ describe("MapController geolocate permission-denied recovery", () => {
 });
 
 interface LayerLabelWindow {
-  __GEOLIBRE_LAYER_LABELS__?: Record<string, string>;
+  __GEOINT_LAYER_LABELS__?: Record<string, string>;
   dispatchEvent: (event: unknown) => boolean;
 }
 
@@ -1153,13 +1153,13 @@ describe("MapController base-layer label", () => {
       // An explicit English push publishes under the "__basemap__" key the
       // swipe panel reads, and fires the change event the panel listens for.
       controller.setBackgroundLabel("Background");
-      assert.equal(win.__GEOLIBRE_LAYER_LABELS__?.__basemap__, "Background");
-      assert.deepEqual(dispatched, ["geolibre-layer-labels-change"]);
+      assert.equal(win.__GEOINT_LAYER_LABELS__?.__basemap__, "Background");
+      assert.deepEqual(dispatched, ["geoint-layer-labels-change"]);
 
       // A language change re-publishes the translated label under the same key
       // and fires the event again so the panel re-syncs.
       controller.setBackgroundLabel("Hintergrund");
-      assert.equal(win.__GEOLIBRE_LAYER_LABELS__?.__basemap__, "Hintergrund");
+      assert.equal(win.__GEOINT_LAYER_LABELS__?.__basemap__, "Hintergrund");
       assert.equal(dispatched.length, 2);
     });
   });
@@ -1168,12 +1168,12 @@ describe("MapController base-layer label", () => {
     withStubbedLabelWindow((win) => {
       const controller = createMapController();
       controller.setBackgroundLabel("Background");
-      assert.equal(win.__GEOLIBRE_LAYER_LABELS__?.__basemap__, "Background");
+      assert.equal(win.__GEOINT_LAYER_LABELS__?.__basemap__, "Background");
 
       // Teardown clears the bridge entirely (including the basemap entry),
       // rather than leaving the last label behind.
       controller.destroy();
-      assert.deepEqual(win.__GEOLIBRE_LAYER_LABELS__, {});
+      assert.deepEqual(win.__GEOINT_LAYER_LABELS__, {});
     });
   });
 });
@@ -1236,7 +1236,7 @@ describe("MapController story-map layer helpers", () => {
   it("keeps only http(s) tile templates and drops non-embeddable urls", () => {
     const { controller } = externalRasterSetup({
       type: "raster",
-      tiles: ["https://tiles.example.com/{z}/{x}/{y}.png", "geolibre://local/{z}/{x}/{y}.png"],
+      tiles: ["https://tiles.example.com/{z}/{x}/{y}.png", "geoint://local/{z}/{x}/{y}.png"],
       tileSize: 256,
     });
     const spec = controller.getLayerRasterSource("pc-1");
@@ -1333,7 +1333,7 @@ describe("MapController terrain auto-enable", () => {
     internal.styleReady = true;
 
     assert.equal(controller.setTerrainEnabled(true), true);
-    assert.equal(terrain?.source, "geolibre-terrain-dem");
+    assert.equal(terrain?.source, "geoint-terrain-dem");
     assert.equal(centerClamped, false);
 
     assert.equal(controller.setTerrainEnabled(false), true);
@@ -1374,7 +1374,7 @@ describe("MapController terrain auto-enable", () => {
 
       assert.equal(ok, true);
       // Terrain is active immediately — the user never had to click the button.
-      assert.equal(terrain?.source, "geolibre-terrain-dem");
+      assert.equal(terrain?.source, "geoint-terrain-dem");
     } finally {
       if (prevDoc === undefined) delete (globalThis as { document?: unknown }).document;
       else (globalThis as { document?: unknown }).document = prevDoc;
@@ -1427,7 +1427,7 @@ describe("MapController terrain auto-enable", () => {
       internal.addTerrainSource();
       if (internal.terrainEnablePending) internal.autoEnableTerrain();
 
-      assert.equal(terrain?.source, "geolibre-terrain-dem");
+      assert.equal(terrain?.source, "geoint-terrain-dem");
       assert.equal(internal.terrainEnablePending, false);
     } finally {
       if (prevDoc === undefined) delete (globalThis as { document?: unknown }).document;

@@ -12,16 +12,16 @@
  * is written back to the store (once, idempotently). It self-heals on `idle`,
  * so a layer whose tiles load after a pan/zoom is picked up too.
  */
-import { useAppStore, type GeoLibreLayer } from "@geolibre/core";
-import { sourceId } from "@geolibre/map";
+import { useAppStore, type GeoIntLayer } from "@geoint/core";
+import { sourceId } from "@geoint/map";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import { useEffect } from "react";
 import type { createAppAPI } from "./usePlugins";
 
 /** Layer types drawn from vector tiles (no local features to inspect). */
-const VECTOR_TILE_TYPES = new Set<GeoLibreLayer["type"]>(["vector-tiles", "pmtiles", "mbtiles"]);
+const VECTOR_TILE_TYPES = new Set<GeoIntLayer["type"]>(["vector-tiles", "pmtiles", "mbtiles"]);
 
-function sourceLayerOf(layer: GeoLibreLayer): string | undefined {
+function sourceLayerOf(layer: GeoIntLayer): string | undefined {
   const fromSource = layer.source.sourceLayer;
   if (typeof fromSource === "string" && fromSource) return fromSource;
   const fromMeta = layer.metadata.sourceLayers;
@@ -29,7 +29,7 @@ function sourceLayerOf(layer: GeoLibreLayer): string | undefined {
   return undefined;
 }
 
-function liveSourceId(layer: GeoLibreLayer): string {
+function liveSourceId(layer: GeoIntLayer): string {
   const externalSourceId = layer.source.sourceId;
   return typeof externalSourceId === "string" && externalSourceId
     ? externalSourceId
@@ -39,7 +39,7 @@ function liveSourceId(layer: GeoLibreLayer): string {
 /** A bounded sample of features currently loaded for a vector-tile layer. */
 export function loadedVectorTileFeatures(
   map: MapLibreMap,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
 ): ReturnType<MapLibreMap["querySourceFeatures"]> {
   const sourceLayer = sourceLayerOf(layer);
   try {

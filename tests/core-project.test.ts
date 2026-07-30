@@ -14,10 +14,10 @@ import {
   serializeStoryMapCsv,
   serializeStoryMapJson,
   useAppStore,
-  type GeoLibreLayer,
-} from "@geolibre/core";
+  type GeoIntLayer,
+} from "@geoint/core";
 
-function geojsonLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function geojsonLayer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id: "layer-a",
     name: "Layer A",
@@ -380,10 +380,10 @@ describe("project parsing", () => {
         geojsonLayer({
           id: "xyz-a",
           type: "xyz",
-          source: { url: "geolibre-xyz://resolved", tiles: ["geolibre-xyz://resolved"] },
+          source: { url: "geoint-xyz://resolved", tiles: ["geoint-xyz://resolved"] },
           metadata: {
             originalUrl: "https://tiles.example.com/{z}/{x}/{y}.png",
-            resolvedUrl: "geolibre-xyz://resolved",
+            resolvedUrl: "geoint-xyz://resolved",
           },
           geojson: undefined,
         }),
@@ -777,14 +777,14 @@ describe("app store", () => {
 
   it("deduplicates recent projects and normalizes empty names", () => {
     useAppStore.getState().setRecentProjects([
-      { path: "/tmp/a.geolibre.json", name: "", openedAt: "2026-01-01T00:00:00Z" },
-      { path: "/tmp/a.geolibre.json", name: "Duplicate", openedAt: "2026-01-02T00:00:00Z" },
+      { path: "/tmp/a.geoint.json", name: "", openedAt: "2026-01-01T00:00:00Z" },
+      { path: "/tmp/a.geoint.json", name: "Duplicate", openedAt: "2026-01-02T00:00:00Z" },
     ]);
 
     assert.deepEqual(useAppStore.getState().recentProjects, [
       {
-        path: "/tmp/a.geolibre.json",
-        name: "a.geolibre.json",
+        path: "/tmp/a.geoint.json",
+        name: "a.geoint.json",
         openedAt: "2026-01-01T00:00:00Z",
       },
     ]);

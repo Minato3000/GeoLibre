@@ -1,6 +1,6 @@
 import bbox from "@turf/bbox";
 import type { FeatureCollection } from "geojson";
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 
 export type GeometryKind = "point" | "line" | "polygon";
 
@@ -37,7 +37,7 @@ export function detectGeometryProfile(fc: FeatureCollection): GeometryProfile {
   return profile;
 }
 
-export function getLayerBounds(layer: GeoLibreLayer): [number, number, number, number] | null {
+export function getLayerBounds(layer: GeoIntLayer): [number, number, number, number] | null {
   if (!layer.geojson?.features?.length) return null;
   const box = bbox(layer.geojson);
   // A collection whose features all carry a null geometry (e.g. a delimited
@@ -142,17 +142,17 @@ export function generatorCircleLayerId(layerId: string): string {
 }
 
 export function highlightSourceId(): string {
-  return "geolibre-highlight-source";
+  return "geoint-highlight-source";
 }
 
 export function highlightFillLayerId(): string {
-  return "geolibre-highlight-fill";
+  return "geoint-highlight-fill";
 }
 
 export function highlightLineLayerId(): string {
-  return "geolibre-highlight-line";
+  return "geoint-highlight-line";
 }
 
 export function highlightCircleLayerId(): string {
-  return "geolibre-highlight-circle";
+  return "geoint-highlight-circle";
 }

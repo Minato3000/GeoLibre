@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import { setExternalDeckLayerOrderHandler, syncLayer } from "../packages/map/src/layer-sync";
 
 // A deck.gl raster (maplibre-gl-raster COG) registers as an external custom
@@ -22,7 +22,7 @@ function makeMapStub() {
   return map;
 }
 
-function rasterDeckLayer(): GeoLibreLayer {
+function rasterDeckLayer(): GeoIntLayer {
   return {
     id: "raster-1",
     name: "cog.tif",

@@ -16,7 +16,7 @@
  * rather than a stale chunk.
  */
 
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import { appendDiagnostic, getDiagnosticsSnapshot } from "./diagnostics";
 import { isTauri } from "./is-tauri";
 
@@ -24,7 +24,7 @@ const DEFERRED_RELOAD_MESSAGE =
   "A component could not be loaded because the app was updated. Save your project, then reload the page to finish loading it.";
 const STALE_CHUNK_DIAGNOSTIC_SOURCE = "stale-chunk-reload";
 
-const RELOAD_TIMESTAMP_KEY = "geolibre:stale-chunk-reload-at";
+const RELOAD_TIMESTAMP_KEY = "geoint:stale-chunk-reload-at";
 
 /**
  * If a reload just happened and a chunk still fails to load, the build is
@@ -138,7 +138,7 @@ export function installStaleChunkReload(options?: { enabled?: boolean }): () => 
       // reload and let Vite surface the original error rather than risk a
       // refresh loop.
       console.warn(
-        "[GeoLibre] Stale-chunk reload guard unavailable (storage blocked); leaving the preload error to surface.",
+        "[GeoInt] Stale-chunk reload guard unavailable (storage blocked); leaving the preload error to surface.",
         payload,
       );
       return;
@@ -146,7 +146,7 @@ export function installStaleChunkReload(options?: { enabled?: boolean }): () => 
     if (outcome === "reloaded") {
       // Only suppress Vite's rethrow when we are recovering by reloading; a
       // cooldown-suppressed (broken-build) error should still surface.
-      console.warn("[GeoLibre] Reloading to recover from a stale chunk.", payload);
+      console.warn("[GeoInt] Reloading to recover from a stale chunk.", payload);
       event.preventDefault();
     } else if (outcome === "deferred-unsaved") {
       // Reloading would discard unsaved work (and raise the "Leave site?"

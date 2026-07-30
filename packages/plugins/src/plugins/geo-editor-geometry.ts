@@ -1,4 +1,4 @@
-import { isDuckDBQueryLayer, SQL_QUERY_SOURCE_KIND, type GeoLibreLayer } from "@geolibre/core";
+import { isDuckDBQueryLayer, SQL_QUERY_SOURCE_KIND, type GeoIntLayer } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 
 /**
@@ -21,7 +21,7 @@ export const SKETCHES_SOURCE_KIND = "geoeditor-sketches";
  * exact name would have it overwritten for the session and stripped on save, so
  * this name must stay unusual enough that real data never uses it.
  */
-export const GEOMETRY_EDIT_FID_PROPERTY = "__geolibre_fid";
+export const GEOMETRY_EDIT_FID_PROPERTY = "__geoint_fid";
 
 /**
  * Whether a layer's geometry can be edited in place. Only geojson-mode vector
@@ -34,7 +34,7 @@ export const GEOMETRY_EDIT_FID_PROPERTY = "__geolibre_fid";
  * @param layer The candidate layer, or undefined.
  * @returns True when the layer's geometry can be edited in place.
  */
-export function canEditLayerGeometry(layer: GeoLibreLayer | undefined): boolean {
+export function canEditLayerGeometry(layer: GeoIntLayer | undefined): boolean {
   if (!layer) return false;
   // Only geojson-mode vector layers; "vector-tiles" (DuckDB tiles) are excluded.
   if (layer.type !== "geojson") return false;

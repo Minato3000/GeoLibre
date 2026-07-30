@@ -1,4 +1,4 @@
-import { cn } from "@geolibre/ui";
+import { cn } from "@geoint/ui";
 import {
   ChevronDown,
   ChevronRight,

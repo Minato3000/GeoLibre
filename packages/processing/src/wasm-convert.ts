@@ -1,6 +1,6 @@
 // In-browser format conversion backed by the `geolibre-wasm/tools` WASI runner
 // (the same ~18 MB binary wasm-client.ts and raster-subset.ts use, loaded
-// lazily and shared once downloaded). These wrap three GeoLibre-authored tools:
+// lazily and shared once downloaded). These wrap three GeoInt-authored tools:
 //
 //   - `vector_convert`    — any vector format -> any vector format (driver picked
 //                           from the output extension). Used for the formats the

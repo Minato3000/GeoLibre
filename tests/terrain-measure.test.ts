@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { setActiveEllipsoidId } from "@geolibre/core";
+import { setActiveEllipsoidId } from "@geoint/core";
 
 import {
   buildAreaGrid,

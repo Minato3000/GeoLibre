@@ -30,7 +30,7 @@ env:
   # NDK r27 LTS — Tauri v2's supported line. Bump deliberately.
   ANDROID_NDK_VERSION: "27.3.13750724"
   # 16 KB page-size alignment for the Rust .so files (a Google Play requirement
-  # since 2025-11-01 for apps targeting Android 15+; GeoLibre targets 36).
+  # since 2025-11-01 for apps targeting Android 15+; GeoInt targets 36).
   # NDK r28+ emits aligned segments by default, r27 does not, so ask explicitly.
   #
   # This MUST be the RUSTFLAGS env var rather than `target.<triple>.rustflags`
@@ -45,7 +45,7 @@ env:
   RUSTFLAGS: "-C link-arg=-Wl,-z,max-page-size=16384 -C link-arg=-Wl,-z,common-page-size=16384"
   # The Android package id, asserted twice below. It comes from `identifier` in
   # src-tauri/tauri.android.conf.json, which overrides the desktop
-  # `org.geolibre.desktop` for Android only. Google Play burns this permanently
+  # `org.geoint.desktop` for Android only. Google Play burns this permanently
   # on first upload — it cannot be changed or reused afterwards — so it is
   # verified rather than trusted.
   EXPECTED_PACKAGE: "org.geolibre.app"
@@ -133,7 +133,7 @@ jobs:
           # The dots in the package id are regex metacharacters, so escape them
           # before interpolating: the point of this step is that the id is
           # *exactly* right (it is irreversible once uploaded to Play), and an
-          # unescaped pattern would also accept e.g. `orgXgeolibreYapp`.
+          # unescaped pattern would also accept e.g. `orgXgeointYapp`.
           escaped_package="${EXPECTED_PACKAGE//./\\.}"
           if ! grep -qE "applicationId[[:space:]]*=[[:space:]]*\"$escaped_package\"" "$gradle_file"; then
             echo "::error::applicationId is not $EXPECTED_PACKAGE in $gradle_file"
@@ -142,9 +142,9 @@ jobs:
           fi
           echo "applicationId = $EXPECTED_PACKAGE (generated Gradle project)"
 
-      - name: Apply GeoLibre launcher icons
+      - name: Apply GeoInt launcher icons
         # `tauri android init` writes default Tauri icons; overwrite the generated
-        # mipmaps with the GeoLibre launcher icons checked in under src-tauri/icons.
+        # mipmaps with the GeoInt launcher icons checked in under src-tauri/icons.
         working-directory: apps/geolibre-desktop
         run: cp -r src-tauri/icons/android/. src-tauri/gen/android/app/src/main/res/
 
@@ -457,10 +457,10 @@ jobs:
           found=0
           while IFS= read -r unsigned; do
             found=1
-            # e.g. app-arm64-v8a-release-unsigned.apk -> geolibre-arm64-v8a.apk
+            # e.g. app-arm64-v8a-release-unsigned.apk -> geoint-arm64-v8a.apk
             abi="$(basename "$unsigned" | sed -E 's/^app-(.*)-release-unsigned\.apk$/\1/')"
             aligned="$RUNNER_TEMP/aligned-$abi.apk"
-            signed="$out/geolibre-android-$abi.apk"
+            signed="$out/geoint-android-$abi.apk"
             # -P 16, not -p: the 16 KB requirement has two independent axes.
             # The RUSTFLAGS above fix the ELF segment alignment *inside* the
             # .so; this fixes the .so's byte offset *within the APK zip*, which
@@ -520,7 +520,7 @@ jobs:
             fi
             aab="${aab_candidates[0]}"
             echo "Using AAB: $aab"
-            signed_aab="$aab_out/geolibre-android.aab"
+            signed_aab="$aab_out/geoint-android.aab"
             cp "$aab" "$signed_aab"
             "$JAVA_HOME/bin/jarsigner" -keystore "$keystore" \
               -storepass:file "$store_pass_file" -keypass:file "$key_pass_file" \
@@ -539,7 +539,7 @@ jobs:
       - name: Upload signed APKs
         uses: actions/upload-artifact@v7
         with:
-          name: geolibre-android-release-apks
+          name: geoint-android-release-apks
           path: ${{ runner.temp }}/apks/*.apk
           if-no-files-found: error
           retention-days: 14
@@ -552,7 +552,7 @@ jobs:
         if: steps.sign.outputs.signed == 'release'
         uses: actions/upload-artifact@v7
         with:
-          name: geolibre-android-play-aab
+          name: geoint-android-play-aab
           path: ${{ runner.temp }}/aab/*.aab
           if-no-files-found: error
           retention-days: 14

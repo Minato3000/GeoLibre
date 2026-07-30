@@ -4,7 +4,7 @@
 const UPSTREAM_HEADER_TIMEOUT_MS = 300_000;
 
 function jsonError(message: string, status: number, headers?: HeadersInit): Response {
-  return Response.json({ error: { message, type: "geolibre_proxy_error" } }, { status, headers });
+  return Response.json({ error: { message, type: "geoint_proxy_error" } }, { status, headers });
 }
 
 function parseList(value: string): Set<string> {
@@ -42,8 +42,8 @@ function responseHeaders(origin: string | null): Headers {
 }
 
 async function hasValidInstanceToken(request: Request, env: Env): Promise<boolean> {
-  const supplied = request.headers.get("X-GeoLibre-Instance-Token") ?? "";
-  const expected = env.GEOLIBRE_AI_PROXY_TOKEN ?? "";
+  const supplied = request.headers.get("X-GeoInt-Instance-Token") ?? "";
+  const expected = env.GEOINT_AI_PROXY_TOKEN ?? "";
   if (!supplied || !expected) return false;
 
   // Digest first: timingSafeEqual throws on a length mismatch, so comparing the
@@ -110,7 +110,7 @@ function clampOutputTokens(body: Record<string, unknown>, limit: number): void {
 async function proxyChat(request: Request, env: Env, origin: string | null): Promise<Response> {
   // Check the limit before buffering: otherwise a throttled client can still
   // make the worker hold MAX_BODY_BYTES in memory on every rejected request.
-  const instanceClient = request.headers.get("X-GeoLibre-Client-IP")?.trim();
+  const instanceClient = request.headers.get("X-GeoInt-Client-IP")?.trim();
   const actor = instanceClient || request.headers.get("CF-Connecting-IP") || "unidentified";
   const { success } = await env.AI_RATE_LIMITER.limit({ key: actor });
   if (!success) {

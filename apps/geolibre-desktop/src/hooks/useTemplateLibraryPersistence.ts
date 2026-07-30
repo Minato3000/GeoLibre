@@ -1,4 +1,4 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import { useEffect } from "react";
 import {
   loadTemplateLibraryEntries,

@@ -1,6 +1,6 @@
-import { geocodeReverse } from "@geolibre/core";
+import { geocodeReverse } from "@geoint/core";
 import type { Map as MapLibreMap, MapMouseEvent, Popup } from "maplibre-gl";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../types";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 
 /**
  * Reverse geocoding: click the map to resolve a place/address, shown in a
@@ -126,7 +126,7 @@ async function showReverseGeocodePopup(
   }
 }
 
-function attach(app: GeoLibreAppAPI): void {
+function attach(app: GeoIntAppAPI): void {
   const map = app.getMap?.();
   if (!map) return;
   if (boundMap === map && clickHandler) return; // already bound to this map
@@ -152,7 +152,7 @@ function attach(app: GeoLibreAppAPI): void {
   boundMap = map;
 }
 
-function teardown(app: GeoLibreAppAPI): void {
+function teardown(app: GeoIntAppAPI): void {
   ++lookupToken;
   // Cancel an in-flight reverse request so it does not complete after the tool
   // is disabled.
@@ -174,7 +174,7 @@ function teardown(app: GeoLibreAppAPI): void {
  * re-init. Mirrors `restoreDirections`: the desktop shell calls this after
  * restoring plugin state. Idempotent.
  */
-export function restoreReverseGeocode(app: GeoLibreAppAPI, active: boolean): void {
+export function restoreReverseGeocode(app: GeoIntAppAPI, active: boolean): void {
   if (!active) {
     teardown(app);
     return;
@@ -185,10 +185,10 @@ export function restoreReverseGeocode(app: GeoLibreAppAPI, active: boolean): voi
   attach(app);
 }
 
-export const maplibreReverseGeocodePlugin: GeoLibrePlugin = {
+export const maplibreReverseGeocodePlugin: GeoIntPlugin = {
   id: REVERSE_GEOCODE_PLUGIN_ID,
   name: "Reverse Geocode",
   version: "1.0.0",
-  activate: (app: GeoLibreAppAPI) => attach(app),
-  deactivate: (app: GeoLibreAppAPI) => teardown(app),
+  activate: (app: GeoIntAppAPI) => attach(app),
+  deactivate: (app: GeoIntAppAPI) => teardown(app),
 };

@@ -7,7 +7,7 @@ import {
   invertSelection,
   matchFeaturesByExpression,
   useAppStore,
-} from "@geolibre/core";
+} from "@geoint/core";
 import { matchFeaturesByLocation } from "../packages/processing/src/vector-tools";
 import { applyMatchedSelection } from "../apps/geolibre-desktop/src/lib/selection-actions";
 

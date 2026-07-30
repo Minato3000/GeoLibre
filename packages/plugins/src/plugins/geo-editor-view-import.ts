@@ -30,7 +30,7 @@ import union from "@turf/union";
  * save. It is `__`-prefixed and namespaced to avoid colliding with real data,
  * and is stripped from every exported feature.
  */
-export const VIEW_IMPORT_ID_PROPERTY = "__geolibre_view_fid";
+export const VIEW_IMPORT_ID_PROPERTY = "__geoint_view_fid";
 
 /**
  * Property written onto each feature in a "changed only" export, marking whether
@@ -44,8 +44,8 @@ export const VIEW_IMPORT_CHANGE_PROPERTY = "__change";
  * that already carries an `editor` or `modified` attribute is not silently
  * overwritten in the exported GeoJSON.
  */
-export const VIEW_IMPORT_EDITOR_PROPERTY = "__geolibre_editor";
-export const VIEW_IMPORT_MODIFIED_PROPERTY = "__geolibre_modified";
+export const VIEW_IMPORT_EDITOR_PROPERTY = "__geoint_editor";
+export const VIEW_IMPORT_MODIFIED_PROPERTY = "__geoint_modified";
 
 /** The kind of change a feature represents in a "changed only" export. */
 export type ViewImportChangeKind = "added" | "modified" | "deleted";
@@ -137,9 +137,9 @@ export function isInternalEditorLayerId(id: string): boolean {
     lower.startsWith("gm-") ||
     lower.startsWith("geo-editor") ||
     lower.startsWith("geoman") ||
-    // GeoLibre's own overlay layers (selection highlight, measure, etc.) that
+    // GeoInt's own overlay layers (selection highlight, measure, etc.) that
     // are not user data. User layers use the `layer-<id>-*` id convention.
-    lower.startsWith("geolibre-")
+    lower.startsWith("geoint-")
   );
 }
 
@@ -188,7 +188,7 @@ export function listViewVectorLayers(
   return result;
 }
 
-/** The subset of a GeoLibre store layer this module needs to resolve a source. */
+/** The subset of a GeoInt store layer this module needs to resolve a source. */
 export interface StoreLayerLike {
   id: string;
   metadata?: {
@@ -200,7 +200,7 @@ export interface StoreLayerLike {
   };
 }
 
-/** The conventional map-layer ids GeoLibre gives a store layer's geometry. */
+/** The conventional map-layer ids GeoInt gives a store layer's geometry. */
 function conventionalMapLayerIds(layerId: string): string[] {
   return [
     `layer-${layerId}-fill`,
@@ -219,7 +219,7 @@ function stringArray(value: unknown): string[] {
 }
 
 /**
- * Resolve a GeoLibre store (Layers-panel) vector layer to the map source and
+ * Resolve a GeoInt store (Layers-panel) vector layer to the map source and
  * source-layer needed to query its features in the current view. Returns null
  * when the layer has no editable vector/geojson map layer in the style (e.g. a
  * raster or tile-image layer, or a layer not currently on the map), so callers

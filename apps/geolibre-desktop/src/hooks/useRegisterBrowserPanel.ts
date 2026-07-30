@@ -1,4 +1,4 @@
-import { collapseRightPanel, openRightPanel, registerRightPanel } from "@geolibre/plugins";
+import { collapseRightPanel, openRightPanel, registerRightPanel } from "@geoint/plugins";
 import { useEffect } from "react";
 import i18n from "../i18n";
 

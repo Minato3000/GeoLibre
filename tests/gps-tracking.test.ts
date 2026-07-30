@@ -287,8 +287,8 @@ describe("gps-tracking GPX export", () => {
     assert.ok(gpx.includes(`<ele>120</ele>`));
     assert.ok(gpx.includes(`<time>2023-11-14T22:13:20.000Z</time>`));
     assert.ok(gpx.includes(`<sat>14</sat>`));
-    assert.ok(gpx.includes(`<geolibre:accuracy_m>0.012</geolibre:accuracy_m>`));
-    assert.ok(gpx.includes(`xmlns:geolibre="https://geolibre.org/xmlschemas/GpxExtensions/v1"`));
+    assert.ok(gpx.includes(`<geoint:accuracy_m>0.012</geoint:accuracy_m>`));
+    assert.ok(gpx.includes(`xmlns:geoint="https://geoint.org/xmlschemas/GpxExtensions/v1"`));
     // The second fix has no altitude, so exactly one <ele> is written.
     assert.equal(gpx.split("<ele>").length, 2);
     assert.equal(gpx.split("<trkseg>").length, 2);
@@ -299,7 +299,7 @@ describe("gps-tracking GPX export", () => {
       [[fix({ accuracy: 4.900000000000006 }), fix({ lat: 44.051 })]],
       "Clean accuracy",
     );
-    assert.ok(gpx.includes(`<geolibre:accuracy_m>4.9</geolibre:accuracy_m>`));
+    assert.ok(gpx.includes(`<geoint:accuracy_m>4.9</geoint:accuracy_m>`));
     assert.equal(gpx.includes(`4.900000000000006`), false);
   });
 

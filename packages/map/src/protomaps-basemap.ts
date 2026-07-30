@@ -17,7 +17,7 @@ export type ProtomapsFlavor = (typeof PROTOMAPS_FLAVORS)[number];
 
 /** Basemap style URLs of this form carry an inline offline-basemap style kept
  * in the registry below; resolveMapStyle expands them. */
-export const OFFLINE_BASEMAP_SENTINEL_PREFIX = "geolibre://offline-basemap/";
+export const OFFLINE_BASEMAP_SENTINEL_PREFIX = "geoint://offline-basemap/";
 
 /** Default location of the bundled Protomaps glyphs/sprites (served from the
  * app's public dir). Overridable for hosts served under a sub-path. */
@@ -69,7 +69,7 @@ export function buildProtomapsBasemapStyle(
 // reloads (HMR). Session-scoped: a saved project stores the sentinel, but the
 // backing style (and its in-memory PMTiles source) is gone on reload, so
 // resolveMapStyle falls back to the default basemap then.
-const REGISTRY_KEY = "__geolibreOfflineBasemapStyles";
+const REGISTRY_KEY = "__geointOfflineBasemapStyles";
 
 function registry(): Map<string, maplibregl.StyleSpecification> {
   const scope = globalThis as typeof globalThis & {
@@ -105,7 +105,7 @@ export function registerOfflineBasemapStyle(
 
 // A monotonic counter on globalThis so sentinels stay unique across module
 // reloads (HMR), giving each apply a URL the map treats as a real change.
-const SEQ_KEY = "__geolibreOfflineBasemapSeq";
+const SEQ_KEY = "__geointOfflineBasemapSeq";
 
 function nextOfflineBasemapSeq(): number {
   const scope = globalThis as typeof globalThis & { [SEQ_KEY]?: number };

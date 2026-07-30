@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { validateStyleMin } from "@maplibre/maplibre-gl-style-spec";
-import { getMapboxAccessToken } from "@geolibre/core";
+import { getMapboxAccessToken } from "@geoint/core";
 import type maplibregl from "maplibre-gl";
 import {
   isMapboxStyleUrl,
@@ -46,13 +46,13 @@ describe("isMapboxStyleUrl", () => {
     assert.equal(isMapboxStyleUrl("https://api.mapbox.com/styles/v1/someone/custom"), true);
   });
 
-  it("rejects other basemap URLs and GeoLibre sentinels", () => {
+  it("rejects other basemap URLs and GeoInt sentinels", () => {
     assert.equal(isMapboxStyleUrl(undefined), false);
     assert.equal(isMapboxStyleUrl(""), false);
     assert.equal(isMapboxStyleUrl("https://tiles.openfreemap.org/styles/liberty"), false);
     // Not a style descriptor, so it needs no rewrite (and must not be fetched).
     assert.equal(isMapboxStyleUrl("https://api.mapbox.com/v4/mapbox.satellite.json"), false);
-    assert.equal(isMapboxStyleUrl("geolibre://planetary/moon"), false);
+    assert.equal(isMapboxStyleUrl("geoint://planetary/moon"), false);
     // A look-alike host must not be treated as Mapbox.
     assert.equal(isMapboxStyleUrl("https://api.mapbox.com.evil.test/styles/v1/x"), false);
     assert.equal(isMapboxStyleUrl("not a url"), false);

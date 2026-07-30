@@ -13,7 +13,7 @@ import {
   vectorOutlineColorValue,
   vectorStrokeWidthValue,
   type LayerStyle,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { ExpressionSpecification, PropertyValueSpecification } from "maplibre-gl";
 
 function styleValue<K extends keyof LayerStyle>(style: LayerStyle, key: K): LayerStyle[K] {

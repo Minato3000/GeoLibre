@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const script = path.join(repoRoot, "scripts", "render-linux-metainfo.sh");
 
-const files = ["packaging/linux/org.geolibre.desktop.metainfo.xml"];
+const files = ["packaging/linux/org.geoint.desktop.metainfo.xml"];
 
 describe("render-linux-metainfo.sh committed copies", () => {
   for (const file of files) {

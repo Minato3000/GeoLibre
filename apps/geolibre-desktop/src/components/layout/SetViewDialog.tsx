@@ -12,8 +12,8 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@geolibre/ui";
-import type { MapController } from "@geolibre/map";
+} from "@geoint/ui";
+import type { MapController } from "@geoint/map";
 import type { ParseKeys } from "i18next";
 import { ChevronDown, ClipboardPaste, Info } from "lucide-react";
 import { useEffect, useState } from "react";

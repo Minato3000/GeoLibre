@@ -51,7 +51,7 @@ export function useLanguage(): UseLanguageResult {
         .catch((error: unknown) => {
           // Only the latest request's genuine fetch failure rejects here; keep
           // the current language (its catalog is still loaded) and surface it.
-          console.error("[GeoLibre] Failed to change language", error);
+          console.error("[GeoInt] Failed to change language", error);
         });
     },
     [setDesktopSettings],

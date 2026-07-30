@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import {
   fetchWfsGeoJson,
   isRefreshableLayer,
@@ -8,7 +8,7 @@ import {
   WFS_XML_RESPONSE_ERROR,
 } from "../apps/geolibre-desktop/src/lib/layer-refresh";
 
-function makeLayer(patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function makeLayer(patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id: "layer-1",
     name: "Test Layer",

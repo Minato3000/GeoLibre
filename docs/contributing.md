@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in improving GeoLibre. This guide covers how to set up
+Thanks for your interest in improving GeoInt. This guide covers how to set up
 a development environment, the project layout, the local quality gate, and the
 pull request workflow. Contributions of all sizes are welcome, from fixing a
 typo to adding a new processing tool or plugin.
@@ -37,12 +37,12 @@ Fork the repository, then clone your fork. Replace `YOUR_GITHUB_USERNAME` with
 your GitHub username:
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/GeoLibre.git
-cd GeoLibre
+git clone https://github.com/YOUR_GITHUB_USERNAME/GeoInt.git
+cd GeoInt
 npm install
 ```
 
-GeoLibre is an npm workspaces monorepo, so a single `npm install` at the root
+GeoInt is an npm workspaces monorepo, so a single `npm install` at the root
 wires up every package. Use npm; the repository tracks `package-lock.json`.
 
 ## Run it locally
@@ -71,7 +71,7 @@ packages/map            # MapLibre integration and layer sync
 packages/ui             # Tailwind + shadcn/ui primitives
 packages/plugins        # Plugin API and built-in plugins
 packages/processing     # Client-side algorithm registry
-workers/viewer          # Cloudflare viewer worker (geolibre-viewer-worker)
+workers/viewer          # Cloudflare viewer worker (geoint-viewer-worker)
 backend/geolibre_server # Optional FastAPI conversion sidecar (Python)
 docs/                   # This documentation site (MkDocs)
 ```
@@ -199,11 +199,11 @@ outside `docs/` with a full GitHub URL.
 
 ## Plugins and extensions
 
-GeoLibre supports external plugins loaded from a zip, a local directory, or a
+GeoInt supports external plugins loaded from a zip, a local directory, or a
 hosted manifest URL. To build one, start from the
-[GeoLibre plugin template](https://github.com/opengeos/geolibre-plugin-template)
+[GeoInt plugin template](https://github.com/opengeos/geolibre-plugin-template)
 and follow the [Plugin API](plugin-api.md) contract. You do not need to fork
-GeoLibre itself to ship a plugin.
+GeoInt itself to ship a plugin.
 
 ## Backend sidecar
 
@@ -216,7 +216,7 @@ the test runner, so install both when working on it:
 cd backend/geolibre_server
 python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -e ".[conversion,dev]"
-geolibre-server
+geoint-server
 ```
 
 For a base, conversion-free run (`pip install -e .` plus a plain `uvicorn`
@@ -227,6 +227,6 @@ Run its tests with `npm run test:backend` from the repository root, or
 
 ## License
 
-GeoLibre is released under the [MIT License](https://github.com/opengeos/GeoLibre/blob/main/LICENSE).
+GeoInt is released under the [MIT License](https://github.com/opengeos/GeoLibre/blob/main/LICENSE).
 By contributing, you agree that your contributions are licensed under the same
 terms.

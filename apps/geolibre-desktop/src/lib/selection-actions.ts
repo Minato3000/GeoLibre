@@ -3,10 +3,10 @@ import {
   featureSelectionId,
   invertSelection,
   useAppStore,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type SelectionMode,
-} from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+} from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import type { Feature, FeatureCollection } from "geojson";
 
 /**
@@ -16,14 +16,14 @@ import type { Feature, FeatureCollection } from "geojson";
  */
 
 /** The layer currently holding the selection, when its features are loaded. */
-export function selectionHolderLayer(): GeoLibreLayer | null {
+export function selectionHolderLayer(): GeoIntLayer | null {
   const store = useAppStore.getState();
   const layer = store.layers.find((l) => l.id === store.selectedLayerId);
   return layer?.geojson?.features ? layer : null;
 }
 
 /** The selected features of the active layer, in layer order. */
-function selectedFeatures(): { layer: GeoLibreLayer; features: Feature[] } | null {
+function selectedFeatures(): { layer: GeoIntLayer; features: Feature[] } | null {
   const layer = selectionHolderLayer();
   if (!layer) return null;
   const selected = new Set(useAppStore.getState().selectedFeatureIds);

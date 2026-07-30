@@ -7,7 +7,7 @@ const STEP_KEYS = [
 ] as const;
 
 /**
- * Step-by-step guidance for installing a GeoLibre update without losing local
+ * Step-by-step guidance for installing a GeoInt update without losing local
  * projects, settings, or API keys. Shared by the About dialog and the startup
  * update prompt so both surfaces stay in sync.
  */

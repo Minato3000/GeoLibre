@@ -1,6 +1,6 @@
 import {
   DEFAULT_LAYER_STYLE,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type ExternalNativePaintBridge,
   geojsonHasZCoordinates,
   getExternalNativePaintBridge,
@@ -11,7 +11,7 @@ import {
   shouldUseTiledRendering,
   styleValue,
   validateMapExpression,
-} from "@geolibre/core";
+} from "@geoint/core";
 import { addProtocol, config } from "maplibre-gl";
 import type maplibregl from "maplibre-gl";
 import type { PropertyValueSpecification } from "maplibre-gl";
@@ -86,10 +86,10 @@ export function setExternalDeckLayerOrderHandler(
   externalDeckLayerOrderHandler = handler;
 }
 
-const WMS_PROXY_PATH = "/__geolibre_wms_proxy";
+const WMS_PROXY_PATH = "/__geoint_wms_proxy";
 const PMTILES_PROTOCOL = "pmtiles";
-const PMTILES_PROTOCOL_GLOBAL_KEY = "__geolibrePMTilesProtocol";
-const PMTILES_ARCHIVE_KEYS_GLOBAL_KEY = "__geolibrePMTilesArchiveKeys";
+const PMTILES_PROTOCOL_GLOBAL_KEY = "__geointPMTilesProtocol";
+const PMTILES_ARCHIVE_KEYS_GLOBAL_KEY = "__geointPMTilesArchiveKeys";
 const MIN_LAYER_ZOOM = DEFAULT_LAYER_STYLE.minZoom;
 const MAX_LAYER_ZOOM = DEFAULT_LAYER_STYLE.maxZoom;
 const TEXT_MARKER_SHAPE = "text_marker";
@@ -138,7 +138,7 @@ function unclusteredPointFilter(hasTextMarkers: boolean): maplibregl.FilterSpeci
 
 /**
  * Combine a sub-layer's geometry filter with the layer's per-feature filters:
- * the transient {@link GeoLibreLayer.timeFilter} (a Time-Slider-bound layer
+ * the transient {@link GeoIntLayer.timeFilter} (a Time-Slider-bound layer
  * only renders features inside the current timeline window) and the rule-based
  * visibility filter (a rule-based layer whose else rule is switched off hides
  * features matching no rule — see {@link ruleBasedVisibilityFilter}). Returns
@@ -162,7 +162,7 @@ function unclusteredPointFilter(hasTextMarkers: boolean): maplibregl.FilterSpeci
  * @returns The combined filter, or the original when no extra filter applies.
  */
 function withFeatureFilters(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   geometryFilter: maplibregl.FilterSpecification,
 ): maplibregl.FilterSpecification {
   const filters: unknown[] = [];
@@ -178,7 +178,7 @@ function withFeatureFilters(
 
 // Tracked filter state for external-native vector layers whose per-feature
 // filters (a Time Slider window and/or the rule-based hide-unmatched filter)
-// GeoLibre applies. `base` is the control's own filter, captured the first time
+// GeoInt applies. `base` is the control's own filter, captured the first time
 // a filter is applied so it can be combined without nesting and fully restored
 // when the last filter is removed; `appliedKey` is the JSON of the combined
 // filter we last pushed, compared against the next combined filter (both built
@@ -217,12 +217,12 @@ function nativeLayerSupportsFilter(type: string): boolean {
 }
 
 /**
- * The active per-feature filters GeoLibre applies on top of an external
+ * The active per-feature filters GeoInt applies on top of an external
  * layer's own filters: the transient Time-Slider window and the rule-based
  * hide-unmatched filter (see {@link ruleBasedVisibilityFilter}). Empty when
  * neither applies.
  */
-function externalFeatureFilterExtras(layer: GeoLibreLayer): unknown[] {
+function externalFeatureFilterExtras(layer: GeoIntLayer): unknown[] {
   const extras: unknown[] = [];
   const timeFilter = layer.timeFilter;
   if (Array.isArray(timeFilter) && timeFilter.length > 0) {
@@ -251,7 +251,7 @@ function combineExternalFilters(
 }
 
 /**
- * Apply (or clear) GeoLibre's per-feature filters — a Time-Slider window and
+ * Apply (or clear) GeoInt's per-feature filters — a Time-Slider window and
  * the rule-based hide-unmatched filter (see {@link ruleBasedVisibilityFilter})
  * — on an external-native vector layer that a control owns and paints itself
  * (e.g. the Add Vector Layer control). The control segregates geometry across
@@ -268,7 +268,7 @@ function combineExternalFilters(
 function applyExternalNativeFeatureFilters(
   map: maplibregl.Map,
   nativeLayerId: string,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
 ): void {
   if (!map.getLayer(nativeLayerId)) return;
   const states = nativeFilterStatesFor(map);
@@ -303,7 +303,7 @@ function applyExternalNativeFeatureFilters(
   }
 }
 
-// Native layer ids whose zoom range GeoLibre has taken over. A pristine external
+// Native layer ids whose zoom range GeoInt has taken over. A pristine external
 // layer keeps its source-declared range, but once the user sets a non-default
 // range we keep applying the style range on every sync, including a later reset
 // back to the full [0, 24] window.
@@ -344,7 +344,7 @@ function intersectZoomRange(
   };
 }
 
-export function syncLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: string): void {
+export function syncLayer(map: maplibregl.Map, layer: GeoIntLayer, beforeId?: string): void {
   if (isExternalNativeLayer(layer)) {
     syncExternalNativeLayer(map, layer, beforeId);
     return;
@@ -407,15 +407,11 @@ export function syncLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: 
   }
 }
 
-function isExternalNativeLayer(layer: GeoLibreLayer): boolean {
+function isExternalNativeLayer(layer: GeoIntLayer): boolean {
   return getExternalNativeLayerIds(layer).length > 0;
 }
 
-function syncExternalNativeLayer(
-  map: maplibregl.Map,
-  layer: GeoLibreLayer,
-  beforeId?: string,
-): void {
+function syncExternalNativeLayer(map: maplibregl.Map, layer: GeoIntLayer, beforeId?: string): void {
   const nativeLayerIds = getExternalNativeLayerIds(layer);
   if (isPMTilesExternalLayer(layer)) {
     ensurePMTilesExternalLayer(map, layer, nativeLayerIds, beforeId);
@@ -434,7 +430,7 @@ function syncExternalNativeLayer(
   // handled here.
   if (isExternalCustomLayer(layer)) {
     // Controls whose native fills are ordinary vector polygons (e.g. Overture
-    // Maps buildings) opt into GeoLibre-owned 3D extrusion. The Style panel
+    // Maps buildings) opt into GeoInt-owned 3D extrusion. The Style panel
     // offers the 3D mode to these layers, so without this the toggle would
     // silently no-op on the ordering-only path below.
     if (
@@ -525,7 +521,7 @@ function syncExternalNativeLayer(
     }
     // External layers carry their own zoom range from the control or tile
     // service that registered them, so we leave a pristine layer's native range
-    // alone. Once the user moves off the defaults GeoLibre owns the range and
+    // alone. Once the user moves off the defaults GeoInt owns the range and
     // keeps applying it, so a later reset to the full [0, 24] window still takes
     // effect rather than stranding the layer at the narrowed range.
     const zoomRange = styleLayerZoomRange(layer.style);
@@ -544,7 +540,7 @@ function syncExternalNativeLayer(
 
 function ensureExternalGeoJsonNativeLayer(
   map: maplibregl.Map,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   nativeLayerIds: string[],
   beforeId?: string,
 ): void {
@@ -666,7 +662,7 @@ function sourceIdFromNativeLayerId(layerId: string | undefined): string | null {
   return layerId ? `${layerId}-source` : null;
 }
 
-function isPMTilesExternalLayer(layer: GeoLibreLayer): boolean {
+function isPMTilesExternalLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "pmtiles" &&
     layer.metadata.sourceKind === "pmtiles-url" &&
@@ -674,27 +670,27 @@ function isPMTilesExternalLayer(layer: GeoLibreLayer): boolean {
   );
 }
 
-function isExternalCustomLayer(layer: GeoLibreLayer): boolean {
+function isExternalCustomLayer(layer: GeoIntLayer): boolean {
   return typeof layer.metadata.customLayerType === "string";
 }
 
 // Opt-in for control-managed layers (`customLayerType`, the ordering-only path)
-// whose native fill layers are plain vector polygons GeoLibre can re-render as
+// whose native fill layers are plain vector polygons GeoInt can re-render as
 // fill-extrusions. Controls that implement extrusion themselves — Add Vector
 // Layer and DuckDB push `extrusionEnabled` into their own control style — must
 // leave this unset, or both would extrude the same features.
-function supportsNativeFillExtrusion(layer: GeoLibreLayer): boolean {
+function supportsNativeFillExtrusion(layer: GeoIntLayer): boolean {
   return layer.metadata.nativeFillExtrusion === true;
 }
 
 // External controls that paint their native layers with data-driven MapLibre
 // expressions (selection-based color, radius, opacity, ...) cannot express that
-// paint through GeoLibre's flat per-layer style. They opt in with this flag so
+// paint through GeoInt's flat per-layer style. They opt in with this flag so
 // the sync below keeps managing visibility, zoom range, and ordering while
 // leaving the control's own paint untouched. Unlike `customLayerType`, which
 // drops the layer onto an ordering-only path, these layers still respond to the
 // panel's show/hide and reorder controls.
-function controlOwnsPaint(layer: GeoLibreLayer): boolean {
+function controlOwnsPaint(layer: GeoIntLayer): boolean {
   return layer.metadata.controlOwnsPaint === true || pluginOwnsPaint(layer);
 }
 
@@ -712,7 +708,7 @@ const appliedBridgeState = new Map<
 // Forward the panel's generic controls to a plugin-painted layer's own API. The
 // setters are optional, so a plugin can bridge opacity only (the common case:
 // visibility already works, MapLibre honors it on a custom layer).
-function applyExternalNativePaintBridge(layer: GeoLibreLayer): void {
+function applyExternalNativePaintBridge(layer: GeoIntLayer): void {
   const bridge = getExternalNativePaintBridge(layer.id);
   if (!bridge) {
     appliedBridgeState.delete(layer.id);
@@ -732,7 +728,7 @@ function applyExternalNativePaintBridge(layer: GeoLibreLayer): void {
 
 function ensurePMTilesExternalLayer(
   map: maplibregl.Map,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   nativeLayerIds: string[],
   beforeId?: string,
 ): void {
@@ -891,7 +887,7 @@ export function pmtilesNativeLayerIds(
   );
 }
 
-/** Facts about a PMTiles archive needed to build a GeoLibre layer for it. */
+/** Facts about a PMTiles archive needed to build a GeoInt layer for it. */
 export interface PMTilesArchiveInfo {
   tileType: "vector" | "raster";
   /** Vector-tile layer ids from the archive metadata (empty for raster). */
@@ -1043,18 +1039,18 @@ function stripPMTilesProtocol(url: string): string {
     : url;
 }
 
-function getPMTilesSourceId(layer: GeoLibreLayer): string | undefined {
+function getPMTilesSourceId(layer: GeoIntLayer): string | undefined {
   return stringMetadata(layer.metadata.sourceId) ?? stringSource(layer.source.sourceId) ?? layer.id;
 }
 
-function getPMTilesTileType(layer: GeoLibreLayer): "raster" | "vector" {
+function getPMTilesTileType(layer: GeoIntLayer): "raster" | "vector" {
   return layer.metadata.tileType === "raster" || layer.source.type === "raster"
     ? "raster"
     : "vector";
 }
 
 function getPMTilesRenderableSourceLayers(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   sourceId: string,
   nativeLayerIds: string[],
 ): string[] {
@@ -1080,7 +1076,7 @@ function pmtilesVectorLayerId(sourceId: string, sourceLayer: string, kind: strin
   return `${sourceId}-${encodeVectorTileLayerPart(sourceLayer)}-${kind}`;
 }
 
-function getPMTilesSourceLayers(layer: GeoLibreLayer): string[] {
+function getPMTilesSourceLayers(layer: GeoIntLayer): string[] {
   const sourceLayers = layer.source.sourceLayers ?? layer.metadata.sourceLayers;
   return Array.isArray(sourceLayers)
     ? sourceLayers.filter(
@@ -1094,7 +1090,7 @@ function getPMTilesNativeLayerId(nativeLayerIds: string[], fallbackId: string): 
   return nativeLayerIds.find((nativeLayerId) => nativeLayerId === fallbackId) ?? fallbackId;
 }
 
-function isWaybackExternalRasterLayer(layer: GeoLibreLayer): boolean {
+function isWaybackExternalRasterLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "raster" &&
     (layer.metadata.sourceKind === "esri-wayback-current" ||
@@ -1105,7 +1101,7 @@ function isWaybackExternalRasterLayer(layer: GeoLibreLayer): boolean {
 
 function syncWaybackExternalRasterLayer(
   map: maplibregl.Map,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   nativeLayerIds: string[],
   beforeId?: string,
 ): void {
@@ -1138,7 +1134,7 @@ function syncWaybackExternalRasterLayer(
   );
 }
 
-function isBasemapControlRasterLayer(layer: GeoLibreLayer): boolean {
+function isBasemapControlRasterLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "raster" &&
     layer.metadata.sourceKind === "maplibre-basemap-control" &&
@@ -1149,9 +1145,9 @@ function isBasemapControlRasterLayer(layer: GeoLibreLayer): boolean {
 // A raster layer registered by a third-party plugin through
 // registerExternalNativeLayer that supplies its own XYZ tile template(s) in
 // `source.tiles`. Unlike the basemap/web-service/PMTiles raster paths above it
-// carries no GeoLibre-internal sourceKind, so it is matched structurally: any
+// carries no GeoInt-internal sourceKind, so it is matched structurally: any
 // external raster layer with concrete tiles and no dedicated handler.
-function isExternalRasterTileLayer(layer: GeoLibreLayer): boolean {
+function isExternalRasterTileLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "raster" &&
     layer.metadata.externalNativeLayer === true &&
@@ -1162,10 +1158,10 @@ function isExternalRasterTileLayer(layer: GeoLibreLayer): boolean {
 // Build the MapLibre source and raster layer for a generic external raster tile
 // registration. Mirrors syncBasemapControlRasterLayer/syncWebServiceTileRasterLayer
 // but reads everything from the registration's own `source`, so any plugin that
-// hands GeoLibre an XYZ raster source renders without needing a bespoke handler.
+// hands GeoInt an XYZ raster source renders without needing a bespoke handler.
 function syncExternalRasterTileLayer(
   map: maplibregl.Map,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   nativeLayerIds: string[],
   beforeId?: string,
 ): void {
@@ -1220,7 +1216,7 @@ function syncExternalRasterTileLayer(
 // is idempotent during a live session.
 function syncBasemapControlRasterLayer(
   map: maplibregl.Map,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   nativeLayerIds: string[],
   beforeId?: string,
 ): void {
@@ -1264,7 +1260,7 @@ function syncBasemapControlRasterLayer(
 
 // Store-layer metadata.sourceKind values written by the Web Services
 // plugins. Each entry pairs with a plugin id in WEB_SERVICE_PLUGIN_IDS in
-// @geolibre/plugins' web-service-sync; keep the two lists in step when
+// @geoint/plugins' web-service-sync; keep the two lists in step when
 // adding a web service plugin.
 const WEB_SERVICE_SOURCE_KINDS = new Set([
   "fema-wms",
@@ -1273,7 +1269,7 @@ const WEB_SERVICE_SOURCE_KINDS = new Set([
   "national-map",
 ]);
 
-function isWebServiceTileRasterLayer(layer: GeoLibreLayer): boolean {
+function isWebServiceTileRasterLayer(layer: GeoIntLayer): boolean {
   return (
     (layer.type === "raster" || layer.type === "wms") &&
     typeof layer.metadata.sourceKind === "string" &&
@@ -1290,7 +1286,7 @@ function isWebServiceTileRasterLayer(layer: GeoLibreLayer): boolean {
 // live session.
 function syncWebServiceTileRasterLayer(
   map: maplibregl.Map,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   nativeLayerIds: string[],
   beforeId?: string,
 ): void {
@@ -1337,7 +1333,7 @@ function syncWebServiceTileRasterLayer(
 // federal endpoints without permissive CORS headers, so the dev server
 // routes them through the WMS proxy. The external-native path bypasses
 // getRenderableRasterTiles, hence the dedicated proxying here.
-function getWebServiceTiles(layer: GeoLibreLayer): string[] {
+function getWebServiceTiles(layer: GeoIntLayer): string[] {
   const tiles = getBasemapControlTiles(layer);
   if (layer.type !== "wms" || !isViteDevServer()) return tiles;
   return tiles.map((tile) =>
@@ -1361,13 +1357,13 @@ function boundsSource(value: unknown): [number, number, number, number] | undefi
 // is the documented external-raster contract and the only source the generic
 // external-raster path reads — it deliberately does not look at
 // metadata.tileUrl (see getBasemapControlTiles for that basemap-internal key).
-function getSourceTiles(layer: GeoLibreLayer): string[] {
+function getSourceTiles(layer: GeoIntLayer): string[] {
   const tiles = layer.source.tiles;
   if (!Array.isArray(tiles)) return [];
   return tiles.filter((tile): tile is string => typeof tile === "string" && tile.length > 0);
 }
 
-function getBasemapControlTiles(layer: GeoLibreLayer): string[] {
+function getBasemapControlTiles(layer: GeoIntLayer): string[] {
   const tiles = getSourceTiles(layer);
   if (tiles.length > 0) return tiles;
   // The basemap control stores its single tile template under this internal
@@ -1381,7 +1377,7 @@ function numberSource(value: unknown): number | undefined {
   return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
 
-function getWaybackTileUrl(layer: GeoLibreLayer): string | null {
+function getWaybackTileUrl(layer: GeoIntLayer): string | null {
   const rawUrl =
     stringMetadata(layer.metadata.waybackItemUrl) ??
     stringSource(layer.source.url) ??
@@ -1427,7 +1423,7 @@ function isFillStyleLayerSpec(
 }
 
 export function externalExtrusionLayerId(nativeLayerId: string): string {
-  return `${nativeLayerId}-geolibre-extrusion`;
+  return `${nativeLayerId}-geoint-extrusion`;
 }
 
 // Native layers hidden to make room for a synthetic fill-extrusion layer.
@@ -1449,7 +1445,7 @@ function extrusionHiddenNativeLayerIdsFor(map: maplibregl.Map): Set<string> {
 }
 
 /**
- * Render an external control's native `fill` layers as GeoLibre-owned
+ * Render an external control's native `fill` layers as GeoInt-owned
  * `fill-extrusion` layers built from the same source and source layer.
  *
  * The natives are hidden rather than restyled, so the control keeps owning
@@ -1464,7 +1460,7 @@ function extrusionHiddenNativeLayerIdsFor(map: maplibregl.Map): Set<string> {
  */
 function syncExternalNativeExtrusion(
   map: maplibregl.Map,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   nativeLayerIds: string[],
   beforeId?: string,
 ): boolean {
@@ -1523,7 +1519,7 @@ function syncExternalNativeExtrusion(
  */
 function clearExternalNativeExtrusion(
   map: maplibregl.Map,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   nativeLayerIds: string[],
 ): void {
   const hiddenNativeLayerIds = extrusionHiddenNativeLayerIdsFor(map);
@@ -1540,23 +1536,23 @@ function clearExternalNativeExtrusion(
  * Add Vector Layer control (maplibre-gl-vector). The control's VectorLayerStyle
  * carries no marker or data-driven-radius concept, so those Style-panel
  * options would otherwise silently no-op on control-managed layers. Following
- * the synthetic-extrusion pattern in {@link syncExternalNativeLayer}, GeoLibre
+ * the synthetic-extrusion pattern in {@link syncExternalNativeLayer}, GeoInt
  * renders them itself on top of the control's own source:
  *
- * - Marker enabled: the control's circle layer is hidden and a GeoLibre-owned
+ * - Marker enabled: the control's circle layer is hidden and a GeoInt-owned
  *   symbol layer ({@link markerLayerId}) draws the baked sprite per point,
  *   honoring proportional sizing through its `icon-size` interpolate.
  * - Proportional size without a marker: the control circle's `circle-radius`
  *   is overridden with the shared interpolate; when proportional sizing turns
  *   off the flat radius is restored and the control owns the paint again.
  *
- * Scoped to the control's single-point render (GeoLibre's "single" renderer /
+ * Scoped to the control's single-point render (GeoInt's "single" renderer /
  * the control's "circle" pointMode); the cluster and heatmap renderers keep
  * the control's own layers untouched.
  */
 function syncVectorControlPointSymbology(
   map: maplibregl.Map,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   beforeId?: string,
 ): void {
   if (layer.metadata.sourceKind !== "maplibre-gl-vector") return;
@@ -1642,7 +1638,7 @@ function syncVectorControlPointSymbology(
   }
 }
 
-// Control-owned circle layers whose circle-radius GeoLibre has overridden with
+// Control-owned circle layers whose circle-radius GeoInt has overridden with
 // the proportional interpolate. Tracked (like externalNativeBaseFilters, keyed
 // per map so two maps sharing a native layer id never see each other's state)
 // so the restore only ever touches a layer this module actually overrode —
@@ -1663,7 +1659,7 @@ function overriddenRadiusIdsFor(map: maplibregl.Map): Set<string> {
 function restoreOverriddenCircleRadius(
   map: maplibregl.Map,
   circleNativeId: string,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
 ): void {
   if (!overriddenRadiusIdsFor(map).delete(circleNativeId)) return;
   map.setPaintProperty(circleNativeId, "circle-radius", styleValue(layer.style, "circleRadius"));
@@ -1673,7 +1669,7 @@ function setExternalNativeLayerPaint(
   map: maplibregl.Map,
   nativeLayerId: string,
   nativeLayerType: string,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
 ): void {
   const paint =
     nativeLayerType === "fill"
@@ -1703,7 +1699,7 @@ function setExternalNativeLayerPaint(
 // setting is ignored on layers that also carry lines/polygons. Shared by the
 // inline and tiled geojson paths so renderer detection lives in one place.
 function resolveVectorRenderMode(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   profile: ReturnType<typeof detectGeometryProfile>,
 ): {
   renderer: string;
@@ -1721,7 +1717,7 @@ function resolveVectorRenderMode(
   };
 }
 
-function syncGeoJsonLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: string): void {
+function syncGeoJsonLayer(map: maplibregl.Map, layer: GeoIntLayer, beforeId?: string): void {
   const src = sourceId(layer.id);
   const profile = detectGeometryProfile(layer.geojson!);
   const { renderer, wantCluster, clusterRadius, clusterMaxZoom } = resolveVectorRenderMode(
@@ -1790,7 +1786,7 @@ function syncGeoJsonLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: 
  * {@link syncGeoJsonLayer}; only the source becomes `type:"vector"` (its tiles
  * served by the geojson-vt protocol) and render layers carry a `source-layer`.
  */
-function syncGeoJsonVtLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: string): void {
+function syncGeoJsonVtLayer(map: maplibregl.Map, layer: GeoIntLayer, beforeId?: string): void {
   const src = sourceId(layer.id);
   const profile = detectGeometryProfile(layer.geojson!);
   const { renderer, wantCluster, clusterRadius, clusterMaxZoom } = resolveVectorRenderMode(
@@ -1839,7 +1835,7 @@ function syncGeoJsonVtLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?
  */
 function applyVectorDataRenderLayers(
   map: maplibregl.Map,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   src: string,
   profile: ReturnType<typeof detectGeometryProfile>,
   renderer: string,
@@ -1932,7 +1928,7 @@ function applyVectorDataRenderLayers(
             type: "fill",
             source: maskSrc,
             ...styleLayerZoomRange(layer.style),
-            metadata: { "geolibre:internal": true },
+            metadata: { "geoint:internal": true },
             paint: {
               ...fillPaintSpec,
               // The mask's outer ring is the world rectangle; its hairline
@@ -2025,7 +2021,7 @@ function applyVectorDataRenderLayers(
         type: "symbol",
         ...sourceSpec,
         ...styleLayerZoomRange(layer.style),
-        metadata: { "geolibre:internal": true },
+        metadata: { "geoint:internal": true },
         filter: withFeatureFilters(layer, [
           "match",
           ["geometry-type"],
@@ -2275,8 +2271,8 @@ function applyVectorDataRenderLayers(
       : "") as unknown as maplibregl.ExpressionSpecification | string;
     let textField: maplibregl.ExpressionSpecification | string;
     if (dedupedLabelFc) {
-      // The aggregated source carries the resolved label in `__geolibre_label`.
-      textField = ["get", "__geolibre_label"] as unknown as maplibregl.ExpressionSpecification;
+      // The aggregated source carries the resolved label in `__geoint_label`.
+      textField = ["get", "__geoint_label"] as unknown as maplibregl.ExpressionSpecification;
     } else {
       try {
         if (labels.expression.trim()) {
@@ -2429,7 +2425,7 @@ function applyVectorDataRenderLayers(
  */
 function applyGeometryGeneratorLayers(
   map: maplibregl.Map,
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   visibility: "visible" | "none",
   opacity: number,
   hasFeatureFilter: boolean,
@@ -2482,7 +2478,7 @@ function applyGeometryGeneratorLayers(
         type: "fill",
         source: genSrc,
         ...styleLayerZoomRange(layer.style),
-        metadata: { "geolibre:internal": true },
+        metadata: { "geoint:internal": true },
         filter: ["match", ["geometry-type"], ["Polygon", "MultiPolygon"], true, false],
         paint: { "fill-color": fillColor, "fill-opacity": genOpacity },
         layout: { visibility },
@@ -2497,7 +2493,7 @@ function applyGeometryGeneratorLayers(
         type: "line",
         source: genSrc,
         ...styleLayerZoomRange(layer.style),
-        metadata: { "geolibre:internal": true },
+        metadata: { "geoint:internal": true },
         filter: ["match", ["geometry-type"], ["Polygon", "MultiPolygon"], true, false],
         paint: {
           "line-color": strokeColor,
@@ -2522,7 +2518,7 @@ function applyGeometryGeneratorLayers(
         type: "circle",
         source: genSrc,
         ...styleLayerZoomRange(layer.style),
-        metadata: { "geolibre:internal": true },
+        metadata: { "geoint:internal": true },
         filter: ["match", ["geometry-type"], ["Point", "MultiPoint"], true, false],
         paint: {
           "circle-color": fillColor,
@@ -2699,7 +2695,7 @@ function resolveTextFontFromStyle(map: maplibregl.Map): string[] {
   return ["Noto Sans Regular"];
 }
 
-function syncRasterTileLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: string): void {
+function syncRasterTileLayer(map: maplibregl.Map, layer: GeoIntLayer, beforeId?: string): void {
   const src = sourceId(layer.id);
   const lid = `layer-${layer.id}-raster`;
   const tiles = getRenderableRasterTiles(layer);
@@ -2764,7 +2760,7 @@ function isCornerCoordinates(value: unknown): value is CornerCoordinates {
  * bottom-right, bottom-left. The video host must send CORS headers so MapLibre
  * can read its frames into the map texture.
  */
-function syncVideoLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: string): void {
+function syncVideoLayer(map: maplibregl.Map, layer: GeoIntLayer, beforeId?: string): void {
   const src = sourceId(layer.id);
   const lid = `layer-${layer.id}-video`;
   // Validate the persisted source payload — a malformed project must not make
@@ -2804,7 +2800,7 @@ function syncVideoLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: st
  * single image `url` (an http(s) or data URL) and the four corner `coordinates`
  * in [lng, lat] order: top-left, top-right, bottom-right, bottom-left.
  */
-function syncImageLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: string): void {
+function syncImageLayer(map: maplibregl.Map, layer: GeoIntLayer, beforeId?: string): void {
   const src = sourceId(layer.id);
   const lid = `layer-${layer.id}-image`;
   const url =
@@ -2839,7 +2835,7 @@ function syncImageLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: st
   );
 }
 
-function getRenderableRasterTiles(layer: GeoLibreLayer): string[] {
+function getRenderableRasterTiles(layer: GeoIntLayer): string[] {
   const tiles = (layer.source.tiles as string[]) ?? [];
   if (layer.type !== "wms" || !isViteDevServer()) return tiles;
   return tiles.map(proxyWmsTileUrl);
@@ -2894,7 +2890,7 @@ function updateVectorSourceEndpoint(
   source.setTiles(tiles);
 }
 
-function syncVectorTileLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: string): void {
+function syncVectorTileLayer(map: maplibregl.Map, layer: GeoIntLayer, beforeId?: string): void {
   const src = sourceId(layer.id);
   const url = layer.source.url as string | undefined;
   // OGC API tilesets (and any raw tile template) are added from `tiles` when no
@@ -3033,7 +3029,7 @@ function syncVectorTileLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId
   removeStaleVectorTileLayers(map, layer.id, currentLayerIds);
 }
 
-function syncMbtilesLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: string): void {
+function syncMbtilesLayer(map: maplibregl.Map, layer: GeoIntLayer, beforeId?: string): void {
   if (layer.metadata.tileType === "raster" || layer.source.type === "raster") {
     syncRasterTileLayer(map, layer, beforeId);
     return;
@@ -3042,11 +3038,7 @@ function syncMbtilesLayer(map: maplibregl.Map, layer: GeoLibreLayer, beforeId?: 
   syncMbtilesVectorLayer(map, layer, beforeId);
 }
 
-function syncMbtilesVectorLayer(
-  map: maplibregl.Map,
-  layer: GeoLibreLayer,
-  beforeId?: string,
-): void {
+function syncMbtilesVectorLayer(map: maplibregl.Map, layer: GeoIntLayer, beforeId?: string): void {
   const src = sourceId(layer.id);
   const tiles = (layer.source.tiles as string[] | undefined) ?? [];
   if (tiles.length === 0) return;
@@ -3168,7 +3160,7 @@ function syncMbtilesVectorLayer(
   removeStaleMbtilesLayers(map, layer.id, currentLayerIds);
 }
 
-function getMbtilesSourceLayers(layer: GeoLibreLayer): string[] {
+function getMbtilesSourceLayers(layer: GeoIntLayer): string[] {
   const sourceLayers = layer.source.sourceLayers ?? layer.metadata.sourceLayers;
   return Array.isArray(sourceLayers)
     ? sourceLayers.filter(
@@ -3215,7 +3207,7 @@ export function mbtilesCircleLayerId(layerId: string, sourceLayer: string): stri
   return `layer-${layerId}-mbtiles-${encodeMbtilesLayerPart(sourceLayer)}-circle`;
 }
 
-export function mbtilesStyleLayerIds(layer: GeoLibreLayer): string[] {
+export function mbtilesStyleLayerIds(layer: GeoIntLayer): string[] {
   if (layer.type !== "mbtiles") return [];
   if (layer.metadata.tileType === "raster" || layer.source.type === "raster") {
     return [`layer-${layer.id}-raster`];
@@ -3230,7 +3222,7 @@ export function mbtilesStyleLayerIds(layer: GeoLibreLayer): string[] {
   ]);
 }
 
-export function mbtilesAllStyleLayerIds(layer: GeoLibreLayer): string[] {
+export function mbtilesAllStyleLayerIds(layer: GeoIntLayer): string[] {
   if (layer.type !== "mbtiles") return [];
   if (layer.metadata.tileType === "raster" || layer.source.type === "raster") {
     return [`layer-${layer.id}-raster`];
@@ -3269,7 +3261,7 @@ export function vectorTileCircleLayerId(layerId: string, sourceLayer?: string): 
   return `layer-${layerId}-vector-circle`;
 }
 
-export function vectorTileStyleLayerIds(layer: GeoLibreLayer): string[] {
+export function vectorTileStyleLayerIds(layer: GeoIntLayer): string[] {
   if (layer.type !== "vector-tiles") return [];
   return getVectorTileSourceLayers(layer).flatMap((sourceLayer) => {
     const layerPart = vectorTileScopedSourceLayer(layer, sourceLayer);
@@ -3284,7 +3276,7 @@ export function vectorTileStyleLayerIds(layer: GeoLibreLayer): string[] {
   });
 }
 
-function vectorTileAllStyleLayerIds(layer: GeoLibreLayer): string[] {
+function vectorTileAllStyleLayerIds(layer: GeoIntLayer): string[] {
   if (layer.type !== "vector-tiles") return [];
   return getVectorTileSourceLayers(layer).flatMap((sourceLayer) => {
     const layerPart = vectorTileScopedSourceLayer(layer, sourceLayer);
@@ -3297,7 +3289,7 @@ function vectorTileAllStyleLayerIds(layer: GeoLibreLayer): string[] {
   });
 }
 
-function getVectorTileSourceLayers(layer: GeoLibreLayer): string[] {
+function getVectorTileSourceLayers(layer: GeoIntLayer): string[] {
   const sourceLayers = layer.source.sourceLayers ?? layer.metadata.sourceLayers;
   if (Array.isArray(sourceLayers)) {
     return sourceLayers.filter(
@@ -3310,10 +3302,7 @@ function getVectorTileSourceLayers(layer: GeoLibreLayer): string[] {
   return typeof sourceLayer === "string" && sourceLayer.length > 0 ? [sourceLayer] : [];
 }
 
-function vectorTileScopedSourceLayer(
-  layer: GeoLibreLayer,
-  sourceLayer: string,
-): string | undefined {
+function vectorTileScopedSourceLayer(layer: GeoIntLayer, sourceLayer: string): string | undefined {
   return getVectorTileSourceLayers(layer).length > 1 ? sourceLayer : undefined;
 }
 
@@ -3424,10 +3413,10 @@ function setLayerZoomRange(
   } catch (error) {
     // Custom layers from external controls do not support zoom range updates,
     // so that failure is expected and ignored. Surface anything else (e.g. an
-    // error on a GeoLibre-owned layer) so a real invariant violation is not
+    // error on a GeoInt-owned layer) so a real invariant violation is not
     // silently swallowed.
     if (map.getLayer(id)?.type !== "custom") {
-      console.warn("[GeoLibre] setLayerZoomRange failed for layer", id, error);
+      console.warn("[GeoInt] setLayerZoomRange failed for layer", id, error);
     }
   }
 }
@@ -3500,7 +3489,7 @@ function moveLayer(map: maplibregl.Map, id: string, beforeId?: string): void {
 export function removeLayerFromMap(
   map: maplibregl.Map,
   layerId: string,
-  layer?: GeoLibreLayer,
+  layer?: GeoIntLayer,
 ): void {
   for (const id of [
     ...getExternalNativeLayerIds(layer),
@@ -3559,14 +3548,14 @@ export function removeLayerFromMap(
   }
 }
 
-function getExternalNativeLayerIds(layer?: GeoLibreLayer): string[] {
+function getExternalNativeLayerIds(layer?: GeoIntLayer): string[] {
   const nativeLayerIds = layer?.metadata.nativeLayerIds;
   return Array.isArray(nativeLayerIds)
     ? nativeLayerIds.filter((id): id is string => typeof id === "string")
     : [];
 }
 
-function getExternalSourceIds(layer?: GeoLibreLayer): string[] {
+function getExternalSourceIds(layer?: GeoIntLayer): string[] {
   const sourceIds = layer?.metadata.sourceIds;
   if (Array.isArray(sourceIds)) {
     return sourceIds.filter((id): id is string => typeof id === "string");

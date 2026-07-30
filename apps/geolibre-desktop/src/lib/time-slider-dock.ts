@@ -38,7 +38,7 @@ export function isTimeSliderOpenedByBinding(): boolean {
  *
  * @param active - Whether the Time Slider plugin is currently active.
  * @param isIdle - Reads whether the slider has anything left to drive, normally
- *   `isTimeSliderIdle` from `@geolibre/plugins`.
+ *   `isTimeSliderIdle` from `@geoint/plugins`.
  * @returns True when the dock should be deactivated.
  */
 export function shouldCloseTimeSliderDock(active: boolean, isIdle: () => boolean): boolean {

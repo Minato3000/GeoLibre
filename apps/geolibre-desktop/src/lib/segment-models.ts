@@ -20,7 +20,7 @@ export const SLIMSAM_ENCODER_URL = `${HF_BASE}/onnx/vision_encoder.onnx`;
 export const SLIMSAM_DECODER_URL = `${HF_BASE}/onnx/prompt_encoder_mask_decoder.onnx`;
 
 /** Cache bucket holding the downloaded model files so they are fetched once. */
-const MODEL_CACHE = "geolibre-segment-models";
+const MODEL_CACHE = "geoint-segment-models";
 
 /**
  * Download a model file's bytes, caching the response so subsequent runs (and

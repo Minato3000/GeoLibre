@@ -1,4 +1,4 @@
-import { useAppStore } from "@geolibre/core";
+import { useAppStore } from "@geoint/core";
 import {
   Button,
   Dialog,
@@ -8,7 +8,7 @@ import {
   DialogTitle,
   Input,
   Label,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import type { ProjectFileActions } from "../../../hooks/useProjectFileActions";
@@ -48,7 +48,7 @@ export function ProjectFileDialogs({ projectFiles }: ProjectFileDialogsProps) {
               <Label htmlFor="project-url">{t("toolbar.item.projectUrl")}</Label>
               <Input
                 id="project-url"
-                placeholder="https://example.com/project.geolibre.json"
+                placeholder="https://example.com/project.geoint.json"
                 value={projectFiles.projectUrl}
                 onChange={(event) => {
                   projectFiles.setProjectUrl(event.target.value);

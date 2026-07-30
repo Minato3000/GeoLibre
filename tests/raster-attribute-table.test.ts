@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { GeoLibreLayer } from "../packages/core/src/types";
+import type { GeoIntLayer } from "../packages/core/src/types";
 import {
   MAX_RAT_SYMBOLOGY_CLASSES,
   categoricalBreaks,
@@ -19,7 +19,7 @@ import {
   savedRasterSymbology,
 } from "../packages/plugins/src/plugins/raster-symbology";
 
-function layerWith(metadata: Record<string, unknown>): GeoLibreLayer {
+function layerWith(metadata: Record<string, unknown>): GeoIntLayer {
   return {
     id: "raster-1",
     name: "Landcover",
@@ -29,7 +29,7 @@ function layerWith(metadata: Record<string, unknown>): GeoLibreLayer {
     opacity: 1,
     style: {},
     metadata,
-  } as GeoLibreLayer;
+  } as GeoIntLayer;
 }
 
 function row(
@@ -74,7 +74,7 @@ describe("computeValueCounts", () => {
 });
 
 describe("MAX_RAT_SYMBOLOGY_CLASSES", () => {
-  it("mirrors RASTER_MAX_STORED_CLASSES (kept a copy so the pure lib avoids a value import of @geolibre/plugins)", () => {
+  it("mirrors RASTER_MAX_STORED_CLASSES (kept a copy so the pure lib avoids a value import of @geoint/plugins)", () => {
     assert.equal(MAX_RAT_SYMBOLOGY_CLASSES, RASTER_MAX_STORED_CLASSES);
   });
 });

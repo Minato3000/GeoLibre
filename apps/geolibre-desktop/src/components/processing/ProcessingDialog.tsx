@@ -1,5 +1,5 @@
-import { useAppStore, type GeoLibreLayer } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+import { useAppStore, type GeoIntLayer } from "@geoint/core";
+import type { MapController } from "@geoint/map";
 import {
   clearRemoteWhiteboxCatalogSnapshotCache,
   fetchWhiteboxJob,
@@ -19,8 +19,8 @@ import {
   type WhiteboxLayerInput,
   type WhiteboxTool,
   type WhiteboxToolParameter,
-} from "@geolibre/processing";
-import { Button, Input, Label, ScrollArea, Select, cn } from "@geolibre/ui";
+} from "@geoint/processing";
+import { Button, Input, Label, ScrollArea, Select, cn } from "@geoint/ui";
 import type { FeatureCollection } from "geojson";
 import {
   AlertCircle,
@@ -70,7 +70,7 @@ import {
   type ExtentBounds,
 } from "../../lib/whitebox-extent";
 import { clearPrintExtent, drawPrintExtent } from "../../lib/print-extent";
-import { startGeoLibreSidecar, stopGeoLibreSidecar } from "../../lib/sidecar";
+import { startGeoIntSidecar, stopGeoIntSidecar } from "../../lib/sidecar";
 import {
   beginProcessingRun,
   MAX_TRACKED_HISTORY_JOBS,
@@ -121,7 +121,7 @@ function isOutputParameter(param: WhiteboxToolParameter): boolean {
 
 /**
  * Best-effort extension for a binary tool output, sniffed from its magic bytes.
- * Covers the formats GeoLibre `file_out` and (CRS-preserving) `vector_out` tools
+ * Covers the formats GeoInt `file_out` and (CRS-preserving) `vector_out` tools
  * emit today (GeoParquet, FlatGeobuf, zipped Shapefile, PNG, PMTiles); a
  * genuinely opaque output falls back to `.bin`. Extend the sniff here if a
  * future tool writes a recognizable format.
@@ -158,7 +158,7 @@ function isDataInputParameter(param: WhiteboxToolParameter): boolean {
 }
 
 // The `url` string param of a COG/WMS/XYZ subset extractor, whose value can be
-// filled from a compatible layer already loaded in the map (GeoLibre#1271). The
+// filled from a compatible layer already loaded in the map (GeoInt#1271). The
 // tool-kind lookup keeps this to the subset extractors without hard-coding each
 // id here; layer eligibility and the derived field values live in
 // `subset-tool-url.ts`.
@@ -171,7 +171,7 @@ function isSubsetUrlParameter(tool: WhiteboxTool, param: WhiteboxToolParameter):
 // A `*_field` / `*_attribute` string param names a column of one of the tool's
 // vector inputs (points_to_line's `line_field`/`sort_field`, and ~170 other
 // tools), so the dialog can offer the selected layer's attribute names instead
-// of asking the user to recall a column name (GeoLibre#1459). The kind check is
+// of asking the user to recall a column name (GeoInt#1459). The kind check is
 // what keeps a same-named *dataset* param out (join_tables' `primary_key_field`
 // is a vector input): only a scalar string names a column.
 function isFieldParameter(param: WhiteboxToolParameter): boolean {
@@ -180,7 +180,7 @@ function isFieldParameter(param: WhiteboxToolParameter): boolean {
 
 // A numeric `epsg` parameter names a coordinate reference system, so the field
 // can offer a searchable CRS list instead of asking for a code from memory
-// (GeoLibre#1538). Matching the name suffix covers `epsg`
+// (GeoInt#1538). Matching the name suffix covers `epsg`
 // (assign_projection_vector), `dst_epsg` (reproject_vector/raster/lidar),
 // `epsg_code`, `output_epsg` and the rest without hard-coding tool ids. The kind
 // check keeps a *string* CRS override out (`sidewalks_epsg` takes an authority
@@ -276,7 +276,7 @@ function isFeatureCollection(value: unknown): value is FeatureCollection {
   );
 }
 
-function layerPath(layer: GeoLibreLayer): string {
+function layerPath(layer: GeoIntLayer): string {
   if (layer.sourcePath) return layer.sourcePath;
   const url = layer.source.url;
   if (typeof url === "string") return url;
@@ -288,7 +288,7 @@ function layerPath(layer: GeoLibreLayer): string {
 // Fetch a raster/LiDAR layer's underlying bytes for the in-browser WASM runner.
 // Returns null when the data is not directly fetchable (e.g. a desktop file
 // path or a tile template), in which case the caller falls back to the sidecar.
-async function fetchLayerBytes(layer: GeoLibreLayer): Promise<Uint8Array | null> {
+async function fetchLayerBytes(layer: GeoIntLayer): Promise<Uint8Array | null> {
   const src = layer.source as Record<string, unknown>;
   const tiles = Array.isArray(src.tiles) ? src.tiles : [];
   // localBytesUrl is a blob URL retaining a File-loaded raster's bytes (the
@@ -311,7 +311,7 @@ async function fetchLayerBytes(layer: GeoLibreLayer): Promise<Uint8Array | null>
   return null;
 }
 
-function canUseLayerForParameter(layer: GeoLibreLayer, param: WhiteboxToolParameter): boolean {
+function canUseLayerForParameter(layer: GeoIntLayer, param: WhiteboxToolParameter): boolean {
   const kind = parameterKind(param);
   if (kind === "vector_in") {
     return Boolean(layer.geojson || layerPath(layer));
@@ -397,8 +397,8 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
   const [values, setValues] = useState<ParameterValues>({});
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
-  // Tool provenance filter: "All" | "geolibre" | "whitebox". Only meaningful in
-  // WASM mode, where GeoLibre-authored tools are mixed into the catalog.
+  // Tool provenance filter: "All" | "geoint" | "whitebox". Only meaningful in
+  // WASM mode, where GeoInt-authored tools are mixed into the catalog.
   const [source, setSource] = useState("All");
   const [loadingTools, setLoadingTools] = useState(false);
   const [runtimeMessage, setRuntimeMessage] = useState("");
@@ -656,9 +656,9 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
     };
   }, [selectedToolId, tools]);
 
-  // Whether any GeoLibre-authored tools are present (WASM mode), gating the
+  // Whether any GeoInt-authored tools are present (WASM mode), gating the
   // source filter — pointless when every tool is from Whitebox.
-  const hasGeolibreTools = useMemo(() => tools.some((tool) => tool.source === "geolibre"), [tools]);
+  const hasGeointTools = useMemo(() => tools.some((tool) => tool.source === "geoint"), [tools]);
 
   // The selected tool's vector inputs, which decide both the coordinate-units
   // note and where a field parameter's column names come from.
@@ -670,7 +670,7 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
   // A tool that asks for its extent as four separate boundary numbers renders
   // them as one grouped control, in place of the first of the four, so the
   // "Use map extent" / "Draw on map" shortcuts sit with the whole box instead of
-  // beside a lone longitude (GeoLibre#1541).
+  // beside a lone longitude (GeoInt#1541).
   const cornerExtentParams = useMemo(
     () => (selectedTool ? cornerExtentParameters(selectedTool) : []),
     [selectedTool],
@@ -701,7 +701,7 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
     return map;
   }, [layers, open]);
 
-  // Column names to offer for a `*_field` parameter (GeoLibre#1459): those of
+  // Column names to offer for a `*_field` parameter (GeoInt#1459): those of
   // the layer picked for the vector input the parameter names. With a single
   // vector input that is unambiguous; with several, an unmatched name falls back
   // to the union of every selected input's columns, so the right column is still
@@ -778,20 +778,20 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
     [],
   );
 
-  // Ignore the source filter when no GeoLibre tools are present (e.g. sidecar
-  // mode), so a stale "geolibre" selection can't empty the whole list.
+  // Ignore the source filter when no GeoInt tools are present (e.g. sidecar
+  // mode), so a stale "geoint" selection can't empty the whole list.
   const matchesSource = useCallback(
     (tool: WhiteboxTool) => {
-      if (source === "All" || !hasGeolibreTools) return true;
-      return (tool.source === "geolibre" ? "geolibre" : "whitebox") === source;
+      if (source === "All" || !hasGeointTools) return true;
+      return (tool.source === "geoint" ? "geoint" : "whitebox") === source;
     },
-    [source, hasGeolibreTools],
+    [source, hasGeointTools],
   );
 
   // Total tool count per source, for the source-filter labels.
   const sourceCounts = useMemo(() => {
-    const geolibre = tools.filter((tool) => tool.source === "geolibre").length;
-    return { all: tools.length, geolibre, whitebox: tools.length - geolibre };
+    const geoint = tools.filter((tool) => tool.source === "geoint").length;
+    return { all: tools.length, geoint, whitebox: tools.length - geoint };
   }, [tools]);
 
   // Category options labelled with the number of tools in each (within the
@@ -833,7 +833,7 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
   const loadWhitebox = useCallback(async () => {
     setLoadingTools(true);
     setError(null);
-    // Reset the source filter so a stale "geolibre" selection from a previous
+    // Reset the source filter so a stale "geoint" selection from a previous
     // mode doesn't silently hide tools after a reload / mode switch.
     setSource("All");
     // Drop the in-memory snapshot so a fresh load reflects upstream catalog
@@ -870,7 +870,7 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
     // list + display metadata, then let the WASM binary's own manifests be
     // authoritative for parameters: the local tools can expose a different
     // parameter set than the sidecar (e.g. reproject_vector validates `epsg`,
-    // not the catalog's `dst_epsg`, #1047), and they add the GeoLibre-authored
+    // not the catalog's `dst_epsg`, #1047), and they add the GeoInt-authored
     // tools (write_geoparquet, delineate_depressions, …) absent from the catalog.
     if (runLocal) {
       setRuntimeAvailable(false);
@@ -897,10 +897,10 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
       const wasmTools = wasmResult.status === "fulfilled" ? wasmResult.value : [];
       const wasmError = wasmResult.status === "rejected" ? wasmResult.reason : null;
       if (wasmError) {
-        console.warn("[GeoLibre] Could not enumerate WASM tool manifests:", wasmError);
+        console.warn("[GeoInt] Could not enumerate WASM tool manifests:", wasmError);
       }
       if (catalogError) {
-        console.warn("[GeoLibre] Could not load Whitebox catalog snapshot:", catalogError);
+        console.warn("[GeoInt] Could not load Whitebox catalog snapshot:", catalogError);
       }
       const nextTools = mergeWasmToolManifests(catalogTools, wasmTools);
       setTools(nextTools);
@@ -911,7 +911,7 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
       // failure is the most important to report: without it every tool keeps the
       // catalog's parameter names and would fail on run (exactly #1047). Failing
       // that, surface a catalog-fetch failure even when the WASM manifests still
-      // yielded a few GeoLibre-authored tools, so the user is not silently left
+      // yielded a few GeoInt-authored tools, so the user is not silently left
       // without the ~700 Whitebox catalog tools.
       if (wasmError) {
         setError(t("processing.whitebox.localRunnerError"));
@@ -988,7 +988,7 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
   // When the dialog is opened from a Processing-menu category submenu, the store
   // carries the chosen tool id. Stash it in a ref and clear the filters that
   // could hide it; the apply effect below selects it once the catalog is loaded.
-  // We can't select eagerly here: the catalog loads async, and a GeoLibre WASM
+  // We can't select eagerly here: the catalog loads async, and a GeoInt WASM
   // tool is appended only after the Whitebox snapshot, whose loader resets the
   // selection to its first tool whenever the pending id is not (yet) present.
   useEffect(() => {
@@ -1001,7 +1001,7 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
   }, [open, processingInitialTool, setProcessingInitialTool]);
 
   // Apply the pending preselection once a catalog load completes (loadingTools
-  // goes true -> false), when `tools` is final and includes the async GeoLibre
+  // goes true -> false), when `tools` is final and includes the async GeoInt
   // WASM tools. Keying on the transition avoids firing on the first render, when
   // loadingTools is still false only because the load has not started yet.
   useEffect(() => {
@@ -1120,11 +1120,11 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
 
   // Fill a subset extractor's `url` (and the companion fields it needs to run:
   // WMS layers/styles, XYZ tile_size/subdomains) from a loaded raster layer
-  // (GeoLibre#1271), so a COG/WMS/XYZ added to the map can be subset without
+  // (GeoInt#1271), so a COG/WMS/XYZ added to the map can be subset without
   // retyping its url. A COG's local `input` is cleared in the same gesture since
   // the extractor takes exactly one source, and a url makes it a byte-range read
   // instead of a full download.
-  const handlePopulateSubsetUrl = (layer: GeoLibreLayer) => {
+  const handlePopulateSubsetUrl = (layer: GeoIntLayer) => {
     if (!selectedTool) return;
     const fields = subsetUrlFieldValues(selectedTool.id, layer);
     if (!fields) return;
@@ -1157,7 +1157,7 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
   };
 
   // Fill the selected tool's extent fields from the current map view
-  // (GeoLibre#1213) or from a box drawn on it (GeoLibre#1541). The map reads in
+  // (GeoInt#1213) or from a box drawn on it (GeoInt#1541). The map reads in
   // EPSG:4326, so the box is written as WGS84 `west,south,east,north` (into a
   // single `bbox` string or into the four boundary numbers, whichever the tool
   // takes) and its companion CRS is set to 4326 in the same gesture, which
@@ -1512,7 +1512,7 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
     setStartingServer(true);
     setError(null);
     try {
-      await startGeoLibreSidecar();
+      await startGeoIntSidecar();
       await loadWhitebox();
     } catch (err) {
       setError(err instanceof Error ? err.message : t("processing.whitebox.errorStartSidecar"));
@@ -1525,9 +1525,9 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
     setStoppingServer(true);
     setError(null);
     try {
-      await stopGeoLibreSidecar();
+      await stopGeoIntSidecar();
       setRuntimeAvailable(false);
-      setRuntimeMessage("GeoLibre sidecar is stopped. Showing GitHub catalog only.");
+      setRuntimeMessage("GeoInt sidecar is stopped. Showing GitHub catalog only.");
       setJob(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("processing.whitebox.errorStopSidecar"));
@@ -1691,7 +1691,7 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
             ))}
           </Select>
 
-          {hasGeolibreTools && (
+          {hasGeointTools && (
             <Select
               value={source}
               // Reset the category too: a category with no tools in the newly
@@ -1705,8 +1705,8 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
               <option value="All">
                 {t("processing.whitebox.allSources")} ({sourceCounts.all})
               </option>
-              <option value="geolibre">
-                {t("processing.whitebox.geolibreTools")} ({sourceCounts.geolibre})
+              <option value="geoint">
+                {t("processing.whitebox.geointTools")} ({sourceCounts.geoint})
               </option>
               <option value="whitebox">
                 {t("processing.whitebox.whiteboxTools")} ({sourceCounts.whitebox})
@@ -1825,7 +1825,7 @@ export function ProcessingDialog({ mapControllerRef, onAddRaster }: ProcessingDi
                   spacing or tolerance parameter is measured in degrees, not
                   metres. Nothing in the tool descriptions says so, which is how
                   a 0.1 "spacing" (≈ 11 km) yielded a handful of points on a
-                  city-scale line (GeoLibre#1458). */}
+                  city-scale line (GeoInt#1458). */}
               {runLocal && vectorInputParams.length > 0 ? (
                 <p className="text-xs text-muted-foreground">
                   {t("processing.whitebox.vectorUnitsNote")}
@@ -1998,7 +1998,7 @@ interface ExtentParameterGroupProps {
  * Area-of-interest control for a tool that takes its extent as four separate
  * boundary numbers (`download_osm_vector`). The four fields sit in one block
  * under a shared label, with the map shortcuts above them, so the box can be
- * picked from the map instead of typed a coordinate at a time (GeoLibre#1541).
+ * picked from the map instead of typed a coordinate at a time (GeoInt#1541).
  * Laid out like the Extract subset panel's bounding box, so the app's two extent
  * controls read the same.
  *
@@ -2092,7 +2092,7 @@ function ExtentParameterGroup({
 
 interface ParameterFieldProps {
   param: WhiteboxToolParameter;
-  layers: GeoLibreLayer[];
+  layers: GeoIntLayer[];
   /** Attribute names to offer for a `*_field` parameter; empty keeps it free text. */
   fieldOptions?: string[];
   onChange: (value: unknown) => void;
@@ -2107,7 +2107,7 @@ interface ParameterFieldProps {
   drawingMapExtent?: boolean;
   /** When set, renders a "From layer" picker on this (`url`) field that fills it
    * (and any companion fields) from a compatible loaded raster layer. */
-  onPopulateFromLayer?: (layer: GeoLibreLayer) => void;
+  onPopulateFromLayer?: (layer: GeoIntLayer) => void;
   toolId: string;
   runLocal: boolean;
   value: unknown;
@@ -2175,7 +2175,7 @@ function ParameterField({
         // Checked before the path and number branches (like the map-extent one
         // below): an EPSG code is a number, but a bare stepper walks to
         // unrelated systems, so this field gets the searchable CRS list instead
-        // (GeoLibre#1538). Placed ahead of isPathParameter so an epsg
+        // (GeoInt#1538). Placed ahead of isPathParameter so an epsg
         // description that happens to mention a file can't shadow the picker.
         <CrsPickerInput id={`whitebox-${param.name}`} value={valueText} onChange={onChange} />
       ) : onUseMapExtent ? (
@@ -2280,7 +2280,7 @@ function ParameterField({
       ) : fieldOptions?.length ? (
         // A `*_field` parameter with a layer chosen for its vector input: offer
         // that layer's attribute names so the column need not be typed from
-        // memory (GeoLibre#1459). The text box stays editable alongside the
+        // memory (GeoInt#1459). The text box stays editable alongside the
         // picker, so a column the property sample missed can still be typed.
         <div className="grid grid-cols-[minmax(150px,200px)_minmax(0,1fr)] gap-2">
           <Select
@@ -2384,7 +2384,7 @@ function NumberStepperInput({ id, integer, onChange, value }: NumberStepperInput
 
 interface LayerOrPathInputProps {
   id: string;
-  layers: GeoLibreLayer[];
+  layers: GeoIntLayer[];
   onChange: (value: unknown) => void;
   onPickFile?: (fileName: string, bytes: Uint8Array) => void;
   param: WhiteboxToolParameter;

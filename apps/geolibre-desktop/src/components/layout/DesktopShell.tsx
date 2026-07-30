@@ -1,7 +1,7 @@
-import { useAppStore, type GeoLibreLayer } from "@geolibre/core";
+import { useAppStore, type GeoIntLayer } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
-import type { MapController, MapDiagnosticEvent } from "@geolibre/map";
-import { MapCanvas, setExternalDeckLayerOrderHandler } from "@geolibre/map";
+import type { MapController, MapDiagnosticEvent } from "@geoint/map";
+import { MapCanvas, setExternalDeckLayerOrderHandler } from "@geoint/map";
 import { useTranslation } from "react-i18next";
 import {
   addRasterToMap,
@@ -36,8 +36,8 @@ import {
   startLayerGeometryEdit,
   subscribeGeometryEdit,
   TIME_SLIDER_PLUGIN_ID,
-} from "@geolibre/plugins";
-import { convertGeoTiffToCog, isTiff, readGeoTiffInfo } from "@geolibre/processing";
+} from "@geoint/plugins";
+import { convertGeoTiffToCog, isTiff, readGeoTiffInfo } from "@geoint/processing";
 import {
   type CSSProperties,
   type DragEvent,
@@ -608,7 +608,7 @@ export function DesktopShell({
   }, []);
   // The COG/WMS/XYZ layer whose bounding-box subset is being extracted in the
   // floating Extract Subset panel, or null when that panel is closed.
-  const [rasterSubsetLayer, setRasterSubsetLayer] = useState<GeoLibreLayer | null>(null);
+  const [rasterSubsetLayer, setRasterSubsetLayer] = useState<GeoIntLayer | null>(null);
   // Whether that layer still exists in the store; subscribe to the derived
   // boolean (not the whole layers array) so this large component only re-renders
   // when it flips. Close the panel if its layer is removed, matching how
@@ -755,7 +755,7 @@ export function DesktopShell({
       setCollaborateDialogOpen(true);
     }
   }, [collaboration.enabled, setCollaborateDialogOpen]);
-  // Sync the project with an embedding host (the GeoLibre Jupyter widget) over
+  // Sync the project with an embedding host (the GeoInt Jupyter widget) over
   // postMessage. Inert when the app is not embedded.
   useEmbedBridge(mapControllerRef);
   // Request/reply + event channel backing the Python scripting API (live
@@ -763,7 +763,7 @@ export function DesktopShell({
   useCommandBridge(mapControllerRef);
   // Runtime postMessage API for a third-party host page that frames the app
   // (fly to a record, highlight it, open a tool; selection/view/tool events back
-  // out). Off unless the deployment configured GEOLIBRE_EMBED_ORIGINS.
+  // out). Off unless the deployment configured GEOINT_EMBED_ORIGINS.
   useEmbedApi(mapControllerRef);
   // Same scripting surface, reached over the desktop Jupyter server's relay, so
   // a kernel driven from an EXTERNAL client (VS Code's Jupyter extension) can
@@ -893,7 +893,7 @@ export function DesktopShell({
   }, []);
 
   const handleMaterializeDuckDBLayer = useCallback(
-    async (layer: GeoLibreLayer) => {
+    async (layer: GeoIntLayer) => {
       // Guard against concurrent triggers (double-click, or two layers in quick
       // succession) so we do not add duplicate materialized layers.
       if (materializingRef.current) return;
@@ -987,7 +987,7 @@ export function DesktopShell({
         try {
           bytes = await readBytes();
         } catch (error) {
-          console.error("[GeoLibre] Failed to read raster for conversion", error);
+          console.error("[GeoInt] Failed to read raster for conversion", error);
           window.alert(
             bytesAreRemote
               ? t("raster.rasterDownloadFailed", { name })
@@ -1030,7 +1030,7 @@ export function DesktopShell({
         // layer (and its message) in place.
         dismiss();
       } catch (error) {
-        console.error("[GeoLibre] Failed to convert GeoTIFF to COG", error);
+        console.error("[GeoInt] Failed to convert GeoTIFF to COG", error);
         window.alert(t("raster.cogConvertFailed", { name }));
       }
     });
@@ -1380,7 +1380,7 @@ export function DesktopShell({
             // Fire-and-forget here so drag feedback never waits on imports.
             if (event.payload.type === "enter") {
               void prepareRasterControl(createAppAPI(mapControllerRef)).catch((error) => {
-                console.warn("[GeoLibre] Could not prepare the raster drop handler", error);
+                console.warn("[GeoInt] Could not prepare the raster drop handler", error);
               });
             }
             return;
@@ -1862,25 +1862,25 @@ export function DesktopShell({
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      {layoutOptions.toolbarVisible ? (
-        <SectionErrorBoundary label="Toolbar" displayName={t("shell.section.toolbar")}>
-          <TopToolbar
-            compact={layoutOptions.compact}
-            diagnosticsErrorCount={diagnostics.errorCount}
-            mapControllerRef={mapControllerRef}
-            mapReadyGeneration={mapReadyGeneration}
-            showLabels={layoutOptions.toolbarLabels}
-            showProjectInfo={layoutOptions.showProjectInfo}
-            themeMode={themeMode}
-            collaboration={collaboration}
-            projectFiles={projectFiles}
-            onOpenDiagnostics={() => setDiagnosticsOpen(true)}
-            onToggleThemeMode={onToggleThemeMode}
-            onOpenBasemapExtract={() => setBasemapExtractOpen(true)}
-          />
-        </SectionErrorBoundary>
-      ) : null}
       <div data-workspace-row="" className="relative flex min-h-0 flex-1 flex-col md:flex-row">
+        {layoutOptions.toolbarVisible ? (
+          <SectionErrorBoundary label="Toolbar" displayName={t("shell.section.toolbar")}>
+            <TopToolbar
+              compact={layoutOptions.compact}
+              diagnosticsErrorCount={diagnostics.errorCount}
+              mapControllerRef={mapControllerRef}
+              mapReadyGeneration={mapReadyGeneration}
+              showLabels={layoutOptions.toolbarLabels}
+              showProjectInfo={layoutOptions.showProjectInfo}
+              themeMode={themeMode}
+              collaboration={collaboration}
+              projectFiles={projectFiles}
+              onOpenDiagnostics={() => setDiagnosticsOpen(true)}
+              onToggleThemeMode={onToggleThemeMode}
+              onOpenBasemapExtract={() => setBasemapExtractOpen(true)}
+            />
+          </SectionErrorBoundary>
+        ) : null}
         {/* The Browser panel body is portaled into its dedicated content host
             (which the dock slots relocate between positions), so it shares the
             app's React context and the shell owns its dock chrome. */}
@@ -2185,6 +2185,15 @@ export function DesktopShell({
                 />
               </SectionErrorBoundary>
             ) : null}
+            {/* The AI Chatbot now docks here (right side) by default instead of
+                Style, which defaults to hidden (see DEFAULT_DESKTOP_LAYOUT_SETTINGS). */}
+            {assistantOpen ? (
+              <SectionErrorBoundary label="Assistant" displayName={t("shell.section.assistant")}>
+                <Suspense fallback={null}>
+                  <AssistantPanel mapControllerRef={mapControllerRef} />
+                </Suspense>
+              </SectionErrorBoundary>
+            ) : null}
             <SectionErrorBoundary
               label="Plugin panel (right of Style)"
               displayName={t("shell.section.pluginPanelRightOfStyle")}
@@ -2252,13 +2261,6 @@ export function DesktopShell({
         >
           <Suspense fallback={null}>
             <SqlWorkspacePanel />
-          </Suspense>
-        </SectionErrorBoundary>
-      ) : null}
-      {assistantOpen ? (
-        <SectionErrorBoundary label="Assistant" displayName={t("shell.section.assistant")}>
-          <Suspense fallback={null}>
-            <AssistantPanel mapControllerRef={mapControllerRef} />
           </Suspense>
         </SectionErrorBoundary>
       ) : null}

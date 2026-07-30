@@ -23,14 +23,14 @@ afterEach(() => {
 });
 
 describe("getInitialThemeMode", () => {
-  it("falls back to the OS preference without a theme param", () => {
+  it("defaults to light regardless of the OS preference, without a theme param", () => {
     withWindow("", true);
-    assert.equal(getInitialThemeMode(), "dark");
+    assert.equal(getInitialThemeMode(), "light");
     withWindow("", false);
     assert.equal(getInitialThemeMode(), "light");
   });
 
-  it("honors ?theme=dark and ?theme=light over the OS preference", () => {
+  it("honors ?theme=dark and ?theme=light over the light default", () => {
     withWindow("?theme=dark", false);
     assert.equal(getInitialThemeMode(), "dark");
     withWindow("?theme=light", true);
@@ -44,14 +44,14 @@ describe("getInitialThemeMode", () => {
     assert.equal(getInitialThemeMode(), "light");
   });
 
-  it("ignores an unrecognized or empty theme value and uses the OS preference", () => {
+  it("ignores an unrecognized or empty theme value and defaults to light", () => {
     withWindow("?theme=neon", true);
-    assert.equal(getInitialThemeMode(), "dark");
+    assert.equal(getInitialThemeMode(), "light");
     withWindow("?theme=neon", false);
     assert.equal(getInitialThemeMode(), "light");
-    // A bare `?theme=` yields "" and should also fall back to the OS preference.
+    // A bare `?theme=` yields "" and should also default to light.
     withWindow("?theme=", true);
-    assert.equal(getInitialThemeMode(), "dark");
+    assert.equal(getInitialThemeMode(), "light");
     withWindow("?theme=", false);
     assert.equal(getInitialThemeMode(), "light");
   });

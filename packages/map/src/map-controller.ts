@@ -3,11 +3,12 @@ import {
   DEFAULT_BASEMAP,
   DEFAULT_PROJECT_PREFERENCES,
   getPlanetaryBasemapByStyleUrl,
+  GOOGLE_SATELLITE_BASEMAP_SENTINEL,
   PLANETARY_BASEMAP_SENTINEL_PREFIX,
   useAppStore,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type {
-  GeoLibreLayer,
+  GeoIntLayer,
   LayerStyle,
   MapPreferences,
   MapProjection,
@@ -15,7 +16,7 @@ import type {
   PlanetaryBasemap,
   StoryChapterAnimation,
   StoryChapterLocation,
-} from "@geolibre/core";
+} from "@geoint/core";
 import bbox from "@turf/bbox";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 import maplibregl from "maplibre-gl";
@@ -54,7 +55,7 @@ const DEFAULT_PROJECTION: maplibregl.ProjectionSpecification = {
 const DEFAULT_MAX_PITCH = 85;
 /** Edge margin, in CSS pixels, kept free when fitting the camera to an extent. */
 const FIT_BOUNDS_PADDING = 40;
-const BLANK_BACKGROUND_LAYER_ID = "geolibre-blank-background";
+const BLANK_BACKGROUND_LAYER_ID = "geoint-blank-background";
 const BLANK_BACKGROUND_COLOR = "#ffffff";
 const LAYER_CONTROL_EXCLUDED_LAYERS = [
   BLANK_BACKGROUND_LAYER_ID,
@@ -81,7 +82,7 @@ const OPACITY_PAINT_PROPERTIES: Record<string, string[]> = {
   raster: ["raster-opacity"],
   symbol: ["icon-opacity", "text-opacity"],
 };
-const TERRAIN_SOURCE_ID = "geolibre-terrain-dem";
+const TERRAIN_SOURCE_ID = "geoint-terrain-dem";
 const TERRAIN_SOURCE: maplibregl.RasterDEMSourceSpecification = {
   type: "raster-dem",
   tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
@@ -103,7 +104,7 @@ const TERRAIN_SOURCE: maplibregl.RasterDEMSourceSpecification = {
  * A future secondary-pane terrain control would need the event scoped to its
  * originating controller.
  */
-export const TERRAIN_SETTINGS_EVENT = "geolibre:terrain-settings-open";
+export const TERRAIN_SETTINGS_EVENT = "geoint:terrain-settings-open";
 /** DOM class the LayerControl gives its container element. */
 const LAYER_CONTROL_SELECTOR = ".maplibregl-ctrl-layer-control";
 
@@ -131,13 +132,13 @@ export function restoreControlOrder(
  * the Controls menu), so the React layer closes the exaggeration dialog rather
  * than leaving it open with no terrain to affect.
  */
-export const TERRAIN_SETTINGS_CLOSE_EVENT = "geolibre:terrain-settings-close";
+export const TERRAIN_SETTINGS_CLOSE_EVENT = "geoint:terrain-settings-close";
 const EMPTY_HIGHLIGHT: FeatureCollection = {
   type: "FeatureCollection",
   features: [],
 };
 
-function isCustomControllableLayer(layer: GeoLibreLayer): boolean {
+function isCustomControllableLayer(layer: GeoIntLayer): boolean {
   return typeof layer.metadata.customLayerType === "string";
 }
 
@@ -148,7 +149,7 @@ function isCustomControllableLayer(layer: GeoLibreLayer): boolean {
  *
  * Scope is deliberately limited to the raster color adjustments, which map
  * one-to-one to {@link LayerStyle} fields. Vector paint is **not** round-tripped
- * here: GeoLibre renders vector layers through an expression-based style model
+ * here: GeoInt renders vector layers through an expression-based style model
  * (opacities are scaled by the layer opacity, and width/radius/colors become
  * `interpolate`/`case` expressions under proportional sizing, the meters width
  * unit, a data-driven `vectorStyleMode`, or simplestyle). The value the control
@@ -216,6 +217,7 @@ function createBlankMapStyle(): maplibregl.StyleSpecification {
 
 function resolveMapStyle(styleUrl: string | undefined): string | maplibregl.StyleSpecification {
   if (styleUrl === BLANK_BASEMAP) return createBlankMapStyle();
+  if (styleUrl === GOOGLE_SATELLITE_BASEMAP_SENTINEL) return createGoogleSatelliteMapStyle();
   const offline = getOfflineBasemapStyle(styleUrl);
   // Return a fresh copy (like the planetary path below builds a new object each
   // call): MapLibre normalises/mutates the style it's handed, and the registry
@@ -236,7 +238,7 @@ function resolveMapStyle(styleUrl: string | undefined): string | maplibregl.Styl
   if (planetary) return createPlanetaryMapStyle(planetary);
   // A planetary sentinel that no longer resolves (e.g. a project saved with a
   // basemap id that has since been renamed) must not be handed to MapLibre as a
-  // style URL — it would try to fetch the `geolibre://` sentinel and blank the
+  // style URL — it would try to fetch the `geoint://` sentinel and blank the
   // map. Fall back to the default basemap instead.
   if (styleUrl?.startsWith(PLANETARY_BASEMAP_SENTINEL_PREFIX)) {
     console.warn(`Unknown planetary basemap "${styleUrl}"; falling back to the default basemap.`);
@@ -283,6 +285,39 @@ function createPlanetaryMapStyle(basemap: PlanetaryBasemap): maplibregl.StyleSpe
   };
 }
 
+/**
+ * A single-source raster style for Google's satellite tiles. Google publishes
+ * no fetchable style JSON (unlike OpenFreeMap/Protomaps), only raw XYZ tiles
+ * across four load-balancing mirrors (mt0-mt3), so the style is built inline
+ * the same way `createPlanetaryMapStyle` builds one for planetary imagery.
+ */
+function createGoogleSatelliteMapStyle(): maplibregl.StyleSpecification {
+  return {
+    version: 8,
+    sources: {
+      "google-satellite": {
+        type: "raster",
+        tiles: [
+          "https://mt0.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+          "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+          "https://mt2.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+          "https://mt3.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+        ],
+        tileSize: 256,
+        maxzoom: 20,
+        attribution: "&copy; Google",
+      },
+    },
+    layers: [
+      {
+        id: "google-satellite",
+        type: "raster",
+        source: "google-satellite",
+      },
+    ],
+  };
+}
+
 interface LayerControlConfig {
   excludeLayers?: string[];
   customLayerAdapters?: CustomLayerAdapter[];
@@ -302,8 +337,8 @@ interface LayerControlInternalState {
   };
 }
 
-interface GeoLibreLayerLabelWindow extends Window {
-  __GEOLIBRE_LAYER_LABELS__?: Record<string, string>;
+interface GeoIntLayerLabelWindow extends Window {
+  __GEOINT_LAYER_LABELS__?: Record<string, string>;
 }
 
 export type BuiltInMapControl =
@@ -377,7 +412,7 @@ export class MapController {
   private layerControlSignature = "";
   // Debounce timer for refreshing the layer control on style changes, so a
   // plugin adding/removing native style layers (e.g. ones flagged
-  // `metadata["geolibre:internal"]`) updates the control's exclusion list.
+  // `metadata["geoint:internal"]`) updates the control's exclusion list.
   private layerControlStyleRefreshTimer: ReturnType<typeof setTimeout> | null = null;
   // True while pushing store paint back into the layer control's open style
   // editor, so onLayerStyleChange callbacks during that refresh are ignored
@@ -394,7 +429,7 @@ export class MapController {
   private basemapOpacity = 1;
   private mapPreferences: MapPreferences = DEFAULT_PROJECT_PREFERENCES.map;
   private basemapOriginalPaintValues = new Map<string, Map<string, unknown>>();
-  private syncedLayers: GeoLibreLayer[] = [];
+  private syncedLayers: GeoIntLayer[] = [];
   private layerIds: string[] = [];
   private styleReady = false;
   private controlVisibility: Record<BuiltInMapControl, boolean> = {
@@ -532,7 +567,7 @@ export class MapController {
    * even when the layer record carries no `geojson`, so the export renders the
    * same data as the live map (#936).
    *
-   * @param layerId GeoLibre store layer id.
+   * @param layerId GeoInt store layer id.
    * @returns The source's FeatureCollection, or null when it has none.
    */
   async getLayerGeoJson(layerId: string): Promise<FeatureCollection | null> {
@@ -573,10 +608,10 @@ export class MapController {
    * plugin builds the source directly on the map. Reading the live source back
    * lets the story-map HTML export inline those layers instead of silently
    * dropping them (#1272). Only http(s) URLs are returned; a source backed by
-   * an app-internal protocol (blob:, pmtiles:, geolibre:, …) cannot load in a
+   * an app-internal protocol (blob:, pmtiles:, geoint:, …) cannot load in a
    * standalone page.
    *
-   * @param layerId GeoLibre store layer id.
+   * @param layerId GeoInt store layer id.
    * @returns The serialized raster source spec, or null when the layer has no
    *   embeddable raster source.
    */
@@ -625,7 +660,7 @@ export class MapController {
    * playback never marks the project dirty or pushes undo history. Call
    * {@link restoreLayerStyles} when playback ends to reset opacities.
    *
-   * @param layerId GeoLibre store layer id to fade.
+   * @param layerId GeoInt store layer id to fade.
    * @param opacity Target opacity, clamped to the 0-1 range.
    * @param durationMs Optional transition duration in milliseconds. Pass 0 for
    *   an instant change (overriding MapLibre's default 300 ms paint
@@ -920,7 +955,7 @@ export class MapController {
    * Hands a basemap style URL to MapLibre.
    *
    * Everything except Mapbox resolves synchronously, so `setStyle` is handed the
-   * URL (or the inline style a GeoLibre sentinel expands to) directly. Mapbox
+   * URL (or the inline style a GeoInt sentinel expands to) directly. Mapbox
    * style descriptors are Mapbox-flavored and must be fetched and rewritten
    * before MapLibre will accept them (see ./mapbox-style), which makes that path
    * asynchronous: a generation counter drops the result of a swap the user has
@@ -1067,7 +1102,7 @@ export class MapController {
     };
   }
 
-  syncLayers(layers: GeoLibreLayer[]): void {
+  syncLayers(layers: GeoIntLayer[]): void {
     if (!this.isStyleReady() || !this.map) return;
     const map = this.map;
 
@@ -1107,7 +1142,7 @@ export class MapController {
 
   private styleLoadHandler: (() => void) | null = null;
 
-  waitAndSyncLayers(layers: GeoLibreLayer[]): void {
+  waitAndSyncLayers(layers: GeoIntLayer[]): void {
     if (!this.map) return;
 
     if (this.styleLoadHandler) {
@@ -1197,7 +1232,7 @@ export class MapController {
     }
   }
 
-  fitLayer(layer: GeoLibreLayer): void {
+  fitLayer(layer: GeoIntLayer): void {
     if (layer.type === "3d-tiles" && this.map) {
       const center = layer.metadata.center;
       if (
@@ -1279,7 +1314,7 @@ export class MapController {
 
   /** The layer's minimum render zoom (its tile source `minzoom`), if advertised
    * — the zoom below which a tile source shows no data. */
-  private getLayerMinRenderZoom(layer: GeoLibreLayer): number | null {
+  private getLayerMinRenderZoom(layer: GeoIntLayer): number | null {
     for (const value of [layer.source.minzoom, layer.metadata.minzoom]) {
       if (typeof value === "number" && Number.isFinite(value) && value > 0) {
         return value;
@@ -1366,13 +1401,13 @@ export class MapController {
       .addTo(map);
 
     const container = document.createElement("div");
-    container.className = "geolibre-placement-popup";
+    container.className = "geoint-placement-popup";
     const hintText = document.createElement("p");
-    hintText.className = "geolibre-placement-popup-hint";
+    hintText.className = "geoint-placement-popup-hint";
     hintText.textContent = options.hint;
     const doneButton = document.createElement("button");
     doneButton.type = "button";
-    doneButton.className = "geolibre-placement-popup-done";
+    doneButton.className = "geoint-placement-popup-done";
     doneButton.textContent = options.doneLabel;
     container.append(hintText, doneButton);
 
@@ -1380,7 +1415,7 @@ export class MapController {
       closeButton: false,
       closeOnClick: false,
       offset: 28,
-      className: "geolibre-placement-popup-root",
+      className: "geoint-placement-popup-root",
     })
       .setLngLat(lngLat)
       .setDOMContent(container)
@@ -1560,7 +1595,7 @@ export class MapController {
   }
 
   highlightFeature(
-    layer: GeoLibreLayer | undefined,
+    layer: GeoIntLayer | undefined,
     featureId: string | string[] | null,
     options: { fit?: boolean } = {},
   ): void {
@@ -1721,14 +1756,16 @@ export class MapController {
     this.layerControlSignature = this.createLayerControlSignature(layerControlConfig);
     this.layerControl = new LayerControl({
       // The layer control fetches this URL to introspect the basemap's layers.
-      // Both planetary and offline basemaps use a non-fetchable `geolibre://`
-      // sentinel (expanded to an inline style by resolveMapStyle), so hand the
-      // control the blank sentinel instead — like blank/raster basemaps it then
-      // skips the fetch (which would otherwise throw "Failed to fetch" on the
-      // sentinel URL) and shows a single background entry.
+      // Planetary, offline, and Google Satellite basemaps all use a
+      // non-fetchable `geoint://` sentinel (expanded to an inline style by
+      // resolveMapStyle), so hand the control the blank sentinel instead —
+      // like blank/raster basemaps it then skips the fetch (which would
+      // otherwise throw "Failed to fetch" on the sentinel URL) and shows a
+      // single background entry.
       basemapStyleUrl:
         getPlanetaryBasemapByStyleUrl(this.basemapStyleUrl) ||
-        isOfflineBasemapSentinel(this.basemapStyleUrl)
+        isOfflineBasemapSentinel(this.basemapStyleUrl) ||
+        this.basemapStyleUrl === GOOGLE_SATELLITE_BASEMAP_SENTINEL
           ? BLANK_BASEMAP
           : this.basemapStyleUrl,
       collapsed: true,
@@ -1765,7 +1802,7 @@ export class MapController {
     this.layerControl = null;
   }
 
-  private refreshLayerControl(layers: GeoLibreLayer[]): void {
+  private refreshLayerControl(layers: GeoIntLayer[]): void {
     if (!this.map || !this.layerControl || !this.controlVisibility["layer-control"]) {
       return;
     }
@@ -1815,7 +1852,7 @@ export class MapController {
 
   /**
    * Mirror a paint property edited via the layer control's per-layer style
-   * editor into the store. The per-type opacities that GeoLibre derives
+   * editor into the store. The per-type opacities that GeoInt derives
    * directly from the layer-level opacity (raster/line/text/icon) map to
    * {@link AppState.setLayerOpacity}; raster color adjustments map to
    * {@link LayerStyle} via {@link layerControlPaintToStyle}. Other properties
@@ -1846,7 +1883,7 @@ export class MapController {
     if (styleUpdate) store.setLayerStyle(layerId, styleUpdate);
   }
 
-  private createLayerControlConfig(layers: GeoLibreLayer[]): LayerControlConfig {
+  private createLayerControlConfig(layers: GeoIntLayer[]): LayerControlConfig {
     const nativeStyleLayerIds = layers.flatMap((layer) =>
       this.getCandidateStyleLayers(layer).map(({ id }) => id),
     );
@@ -1854,9 +1891,7 @@ export class MapController {
     // footprints, draw/highlight helpers) so they don't clutter the control.
     const internalStyleLayerIds = (this.map?.getStyle()?.layers ?? [])
       .filter((styleLayer) =>
-        Boolean(
-          (styleLayer.metadata as Record<string, unknown> | undefined)?.["geolibre:internal"],
-        ),
+        Boolean((styleLayer.metadata as Record<string, unknown> | undefined)?.["geoint:internal"]),
       )
       .map((styleLayer) => styleLayer.id)
       // Sort so a plugin reordering an already-hidden internal layer (which
@@ -1876,7 +1911,7 @@ export class MapController {
 
     return {
       excludeLayers,
-      customLayerAdapters: [this.createGeoLibreLayerAdapter(controllableLayers)],
+      customLayerAdapters: [this.createGeoIntLayerAdapter(controllableLayers)],
     };
   }
 
@@ -1929,7 +1964,7 @@ export class MapController {
     });
   }
 
-  private syncLayerControlLayerStates(layers: GeoLibreLayer[]): void {
+  private syncLayerControlLayerStates(layers: GeoIntLayer[]): void {
     if (!this.layerControl) return;
     const control = this.layerControl as unknown as LayerControlInternalState;
 
@@ -1981,11 +2016,11 @@ export class MapController {
     }
   }
 
-  private createGeoLibreLayerAdapter(layers: GeoLibreLayer[]): CustomLayerAdapter {
+  private createGeoIntLayerAdapter(layers: GeoIntLayer[]): CustomLayerAdapter {
     const layerById = new Map(layers.map((layer) => [layer.id, layer]));
 
     return {
-      type: "geolibre",
+      type: "geoint",
       getLayerIds: () => layers.map((layer) => layer.id),
       getLayerState: (layerId) => {
         const layer = layerById.get(layerId);
@@ -2040,13 +2075,13 @@ export class MapController {
     return layer ? this.getNativeLayerIds(layer) : [];
   }
 
-  private getNativeLayerIds(layer: GeoLibreLayer): string[] {
+  private getNativeLayerIds(layer: GeoIntLayer): string[] {
     return this.getCandidateStyleLayers(layer)
       .map(({ id }) => id)
       .filter((id) => this.map?.getLayer(id));
   }
 
-  private getLayerSymbolType(layer: GeoLibreLayer): string {
+  private getLayerSymbolType(layer: GeoIntLayer): string {
     const nativeLayer = this.getNativeLayerIds(layer)
       .map((id) => this.map?.getLayer(id))
       .find((item) => Boolean(item));
@@ -2059,14 +2094,14 @@ export class MapController {
     );
   }
 
-  private getLayerMetadataBounds(layer: GeoLibreLayer): [number, number, number, number] | null {
+  private getLayerMetadataBounds(layer: GeoIntLayer): [number, number, number, number] | null {
     return (
       this.normalizeLayerBounds(layer.source.bounds) ??
       this.normalizeLayerBounds(layer.metadata.bounds)
     );
   }
 
-  private getLayerSourceBounds(layer: GeoLibreLayer): [number, number, number, number] | null {
+  private getLayerSourceBounds(layer: GeoIntLayer): [number, number, number, number] | null {
     for (const id of this.getLayerSourceIds(layer)) {
       const source = this.map?.getSource(id) as
         | { bounds?: [number, number, number, number] }
@@ -2077,7 +2112,7 @@ export class MapController {
     return null;
   }
 
-  private getLayerSourceIds(layer: GeoLibreLayer): string[] {
+  private getLayerSourceIds(layer: GeoIntLayer): string[] {
     const ids = new Set<string>([sourceId(layer.id)]);
     const sourceIds = layer.metadata.sourceIds;
     if (Array.isArray(sourceIds)) {
@@ -2102,10 +2137,10 @@ export class MapController {
     return null;
   }
 
-  private getNamedStyleLayers(layer: GeoLibreLayer): Array<{
+  private getNamedStyleLayers(layer: GeoIntLayer): Array<{
     id: string;
     name: string;
-    layer: GeoLibreLayer;
+    layer: GeoIntLayer;
   }> {
     if (!this.map) return [];
 
@@ -2119,7 +2154,7 @@ export class MapController {
     }));
   }
 
-  private getBeforeStyleLayerId(layers: GeoLibreLayer[], layerIndex: number): string | undefined {
+  private getBeforeStyleLayerId(layers: GeoIntLayer[], layerIndex: number): string | undefined {
     if (!this.map) return undefined;
 
     for (const layer of layers.slice(layerIndex + 1)) {
@@ -2136,7 +2171,7 @@ export class MapController {
     return undefined;
   }
 
-  private getExternalBeforeStyleLayerId(layer: GeoLibreLayer | undefined): string | undefined {
+  private getExternalBeforeStyleLayerId(layer: GeoIntLayer | undefined): string | undefined {
     if (!this.map || !layer?.beforeId) return undefined;
     if (this.getCandidateStyleLayers(layer).some(({ id }) => id === layer.beforeId)) {
       return undefined;
@@ -2144,7 +2179,7 @@ export class MapController {
     return this.map.getLayer(layer.beforeId) ? layer.beforeId : undefined;
   }
 
-  private getCandidateStyleLayers(layer: GeoLibreLayer): Array<{
+  private getCandidateStyleLayers(layer: GeoIntLayer): Array<{
     id: string;
     suffix?: string;
   }> {
@@ -2198,11 +2233,11 @@ export class MapController {
     return [];
   }
 
-  private publishLayerDisplayNames(layers: GeoLibreLayer[]): void {
+  private publishLayerDisplayNames(layers: GeoIntLayer[]): void {
     if (typeof window === "undefined") return;
 
-    const labelWindow = window as GeoLibreLayerLabelWindow;
-    labelWindow.__GEOLIBRE_LAYER_LABELS__ = Object.fromEntries([
+    const labelWindow = window as GeoIntLayerLabelWindow;
+    labelWindow.__GEOINT_LAYER_LABELS__ = Object.fromEntries([
       ...layers
         .flatMap((layer) => this.getNamedStyleLayers(layer))
         .map(({ id, name }): [string, string] => [id, name]),
@@ -2228,7 +2263,7 @@ export class MapController {
       // always lists the basemap entry.
       ["__basemap__", this.backgroundLabel],
     ]);
-    window.dispatchEvent(new CustomEvent("geolibre-layer-labels-change"));
+    window.dispatchEvent(new CustomEvent("geoint-layer-labels-change"));
   }
 
   /**
@@ -2238,8 +2273,8 @@ export class MapController {
    */
   private clearLayerDisplayNames(): void {
     if (typeof window === "undefined") return;
-    (window as GeoLibreLayerLabelWindow).__GEOLIBRE_LAYER_LABELS__ = {};
-    window.dispatchEvent(new CustomEvent("geolibre-layer-labels-change"));
+    (window as GeoIntLayerLabelWindow).__GEOINT_LAYER_LABELS__ = {};
+    window.dispatchEvent(new CustomEvent("geoint-layer-labels-change"));
   }
 
   private addNavigationControl(): boolean {
@@ -2441,13 +2476,13 @@ export class MapController {
     }
   }
 
-  /** Whether GeoLibre's built-in 3D terrain is currently active. */
+  /** Whether GeoInt's built-in 3D terrain is currently active. */
   isTerrainEnabled(): boolean {
     return this.map?.getTerrain()?.source === TERRAIN_SOURCE_ID;
   }
 
   /**
-   * Enable or disable GeoLibre's built-in 3D terrain independently of whether
+   * Enable or disable GeoInt's built-in 3D terrain independently of whether
    * its map button is visible. Plugins such as Flight Simulator use this to
    * guarantee relief while active without changing the user's control layout.
    */
@@ -2687,7 +2722,7 @@ function constrainMapView(
  * in-app Identify behaviour so the scripting API reports consistent ids.
  */
 function featureIdForLayer(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   feature: maplibregl.MapGeoJSONFeature,
 ): string | null {
   if (feature.id != null) return String(feature.id);

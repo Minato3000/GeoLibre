@@ -9,7 +9,7 @@ import {
   normalizeHexColor,
   proportionalSizeRange,
   styleValue,
-  type GeoLibreLayer,
+  type GeoIntLayer,
   type LayerStyle,
   type LayerType,
   type LegendConfig,
@@ -17,7 +17,7 @@ import {
   type MarkerShape,
   type ProportionalSizeRange,
   type VectorStyleStop,
-} from "@geolibre/core";
+} from "@geoint/core";
 import type { LegendEntry, LegendMarker, LegendSwatch } from "./print-layout";
 
 /** Layer types styled as vectors (colored fills the legend can represent). */
@@ -52,7 +52,7 @@ const MAX_RAMP_SWATCHES = 6;
  * @param layers - All layers from the store, in render order (bottom first).
  * @returns Legend entries in top-of-stack-first order.
  */
-export function buildLegend(layers: GeoLibreLayer[]): LegendEntry[] {
+export function buildLegend(layers: GeoIntLayer[]): LegendEntry[] {
   const entries: LegendEntry[] = [];
   // Render order in the store is bottom-first; legends read top-first.
   for (const layer of [...layers].reverse()) {
@@ -72,7 +72,7 @@ export function buildLegend(layers: GeoLibreLayer[]): LegendEntry[] {
  * an empty array for types with no meaningful legend representation
  * ({@link NON_LEGEND_TYPES}); every legend-able layer yields at least one swatch.
  */
-export function legendSwatchesForLayer(layer: GeoLibreLayer): LegendSwatch[] {
+export function legendSwatchesForLayer(layer: GeoIntLayer): LegendSwatch[] {
   if (NON_LEGEND_TYPES.has(layer.type)) return [];
 
   if (isVectorStyledLayer(layer)) {
@@ -145,7 +145,7 @@ export function legendSwatchesForLayer(layer: GeoLibreLayer): LegendSwatch[] {
  * raster (mirrors layer-sync), so a missing or legacy tileType is treated as
  * vector here too. Shared with the on-map auto legend.
  */
-export function isVectorStyledLayer(layer: GeoLibreLayer): boolean {
+export function isVectorStyledLayer(layer: GeoIntLayer): boolean {
   return (
     VECTOR_TYPES.has(layer.type) ||
     (layer.type === "mbtiles" &&
@@ -157,7 +157,7 @@ export function isVectorStyledLayer(layer: GeoLibreLayer): boolean {
 /**
  * The primary legend swatch for a single-symbol point layer that renders a
  * marker icon, carrying the marker so the legend draws the actual shape / SVG
- * instead of a plain fill square. Mirrors `prepareMarker` (`@geolibre/map`):
+ * instead of a plain fill square. Mirrors `prepareMarker` (`@geoint/map`):
  * enabled only when `markerEnabled` is on, and a `"custom"` marker with no SVG
  * markup falls through (returns null) to the plain fill swatch. Returns null
  * for layers with no marker, so the caller keeps the existing fill swatch.
@@ -418,7 +418,7 @@ export function legendEditorRows(base: LegendEntry[], config: LegendConfig): Leg
  * charts that are not on the map. Shared with the on-map auto legend.
  */
 export function diagramSwatches(
-  layer: Pick<GeoLibreLayer, "type" | "geojson" | "style" | "metadata">,
+  layer: Pick<GeoIntLayer, "type" | "geojson" | "style" | "metadata">,
 ): { color: string; label: string }[] {
   if (
     !layer.geojson ||
@@ -440,7 +440,7 @@ export function diagramSwatches(
  * live map), plus the catch-all else rule when it has a valid color. Labels
  * fall back to the rule's filter text so unlabeled rules stay identifiable.
  */
-function ruleSwatches(layer: GeoLibreLayer): { color: string; label: string }[] {
+function ruleSwatches(layer: GeoIntLayer): { color: string; label: string }[] {
   const { rules, elseRule } = effectiveVectorRules(layer.style);
   const limited = rules.length > MAX_RAMP_SWATCHES ? sampleEvenly(rules, MAX_RAMP_SWATCHES) : rules;
   const swatches = limited.map((rule) => ({
@@ -467,7 +467,7 @@ function rampSwatches(
  * Whether the map would size this layer's symbols (circles / line strokes).
  * Polygon fills ignore proportional sizing, matching the on-map auto-legend.
  */
-function layerSupportsProportionalLegend(layer: GeoLibreLayer): boolean {
+function layerSupportsProportionalLegend(layer: GeoIntLayer): boolean {
   const geometryType =
     typeof layer.metadata?.geometryType === "string" ? layer.metadata.geometryType : null;
   if (geometryType === "point" || geometryType === "line") return true;

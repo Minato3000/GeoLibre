@@ -48,7 +48,7 @@ describe("listViewVectorLayers", () => {
         type: "fill",
         source: "geo-editor-selection-source",
       },
-      { id: "geolibre-highlight-fill", type: "fill", source: "user" },
+      { id: "geoint-highlight-fill", type: "fill", source: "user" },
       { id: "hillshade", type: "hillshade", source: "basemap" },
       { id: "no-source", type: "fill" },
     ],
@@ -71,7 +71,7 @@ describe("listViewVectorLayers", () => {
     assert.ok(!ids.includes("hillshade"));
     assert.ok(!ids.includes("gm_main_polygons"));
     assert.ok(!ids.includes("geo-editor-selection-fill-layer"));
-    assert.ok(!ids.includes("geolibre-highlight-fill"));
+    assert.ok(!ids.includes("geoint-highlight-fill"));
     assert.ok(!ids.includes("no-source"));
   });
 

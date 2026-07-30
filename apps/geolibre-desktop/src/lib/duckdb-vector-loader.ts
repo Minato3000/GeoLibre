@@ -34,11 +34,11 @@ export {
   type LargeVectorDataset,
 } from "./duckdb-vector-guard";
 
-const GEOMETRY_JSON_COLUMN = "__geolibre_geometry_geojson";
+const GEOMETRY_JSON_COLUMN = "__geoint_geometry_geojson";
 const EXPORT_GEOJSON_EXTENSION = "geojson";
 const EXPORT_GEOPARQUET_EXTENSION = "parquet";
 
-const FEATURE_COUNT_COLUMN = "__geolibre_feature_count";
+const FEATURE_COUNT_COLUMN = "__geoint_feature_count";
 
 let dbPromise: Promise<duckdb.AsyncDuckDB> | null = null;
 
@@ -212,7 +212,7 @@ export async function ensureSpatialExtension(
           // loading. Warn (not debug, which DevTools hides by default) so a
           // genuinely corrupt/mislabelled file surfaces its real cause here
           // instead of only as a later "stoi: no conversion" on DESCRIBE.
-          console.warn("[GeoLibre] spatial warm-up failed (ignored)", error);
+          console.warn("[GeoInt] spatial warm-up failed (ignored)", error);
         }
       }
 
@@ -279,7 +279,7 @@ async function createDatabase(): Promise<duckdb.AsyncDuckDB> {
 
 function exportBaseName(): string {
   const suffix = Math.random().toString(36).slice(2);
-  return `__geolibre_export_${Date.now()}_${suffix}`;
+  return `__geoint_export_${Date.now()}_${suffix}`;
 }
 
 export function rowsFromResult(result: { toArray: () => DuckDbRow[] }) {
@@ -418,7 +418,7 @@ async function readSourceCrs(
       // CRS in the `.prj` sidecar, so reproject from that before giving up
       // (issue #1148).
       if (prjCrs) return prjCrs;
-      console.warn("[GeoLibre] Could not read CRS metadata; reprojection skipped.", retryErr);
+      console.warn("[GeoInt] Could not read CRS metadata; reprojection skipped.", retryErr);
       return null;
     }
   }
@@ -491,7 +491,7 @@ async function hasValidBase64WkbValues(
   column: string,
 ): Promise<boolean> {
   const columnSql = quoteIdentifier(column);
-  const sampleColumn = quoteIdentifier("__geolibre_base64_wkb_sample");
+  const sampleColumn = quoteIdentifier("__geoint_base64_wkb_sample");
   const rows = rowsFromResult(
     await connection.query(
       `SELECT count(*) AS sample_count, count(TRY(ST_GeomFromWKB(from_base64(${sampleColumn})))) AS valid_count ` +
@@ -858,7 +858,7 @@ export async function reprojectFeatureCollectionToWgs84(
 
   const db = await getDatabase();
   const connection = await db.connect();
-  const sourceFile = `geolibre-reproject-${(reprojectionSeq += 1)}.geojson`;
+  const sourceFile = `geoint-reproject-${(reprojectionSeq += 1)}.geojson`;
   try {
     // Strip GDAL's synthetic OGC_FID before ST_Read re-reads the file: a
     // collection decoded from a prior ST_Read carries OGC_FID as a property, and

@@ -5,11 +5,11 @@ import {
   listKerchunkVariables,
   loadKerchunkReference,
   openLocalNetcdf,
-  type GeoLibreAppAPI,
+  type GeoIntAppAPI,
   type KerchunkRefs,
   type KerchunkVariable,
   type LocalNetcdfFile,
-} from "@geolibre/plugins";
+} from "@geoint/plugins";
 import {
   Button,
   Dialog,
@@ -20,7 +20,7 @@ import {
   Input,
   Label,
   Select,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { Boxes, FileUp } from "lucide-react";
 import { openLocalDataFileWithFallback } from "../../lib/tauri-io";
 import { SampleDataSelect } from "./add-data/shared";
@@ -41,7 +41,7 @@ type RenderableVariable = KerchunkVariable;
 
 interface AddNetcdfDialogProps {
   open: boolean;
-  appApi: GeoLibreAppAPI;
+  appApi: GeoIntAppAPI;
   onOpenChange: (open: boolean) => void;
 }
 

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { FeatureCollection, Polygon } from "geojson";
-import { DEFAULT_LAYER_STYLE } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE } from "@geoint/core";
 import {
   buildGeneratedGeometry,
   buildInvertedMask,

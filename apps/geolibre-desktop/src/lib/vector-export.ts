@@ -1,4 +1,4 @@
-import type { GeoLibreLayer } from "@geolibre/core";
+import type { GeoIntLayer } from "@geoint/core";
 import { csvCell as quoteCsvCell } from "./csv";
 import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
@@ -241,7 +241,7 @@ export async function exportVectorLayer(
  * GeoJSON source rather than in `layer.geojson`, so callers read the data back
  * from the map. Tiles-mode (DuckDB) vector layers are excluded.
  */
-export function geojsonVectorSourceId(layer: GeoLibreLayer | undefined): string | null {
+export function geojsonVectorSourceId(layer: GeoIntLayer | undefined): string | null {
   if (
     !layer ||
     layer.type !== "geojson" ||
@@ -262,7 +262,7 @@ export function geojsonVectorSourceId(layer: GeoLibreLayer | undefined): string 
  * data is available (e.g. tile or service layers).
  */
 export async function resolveLayerGeojson(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
   map: MapLibreMap | undefined,
 ): Promise<FeatureCollection | null> {
   if (layer.geojson) return layer.geojson;

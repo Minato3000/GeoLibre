@@ -18,7 +18,7 @@ import {
   overtureTilesForBBox,
   overtureZoomForBBox,
 } from "../packages/plugins/src/plugins/overture-query";
-import type { GeoLibreAppAPI } from "../packages/plugins/src/types";
+import type { GeoIntAppAPI } from "../packages/plugins/src/types";
 
 const flood: FeatureCollection<Polygon> = {
   type: "FeatureCollection",
@@ -288,13 +288,13 @@ describe("Overture plugin state coordination", () => {
 
   it("drops unknown state keys and rejects invalid or no-op patches", () => {
     const base = maplibreOvertureMapsPlugin.getProjectState?.() as OvertureMapsState | undefined;
-    const invalid = maplibreOvertureMapsPlugin.applyProjectState?.({} as GeoLibreAppAPI, {
+    const invalid = maplibreOvertureMapsPlugin.applyProjectState?.({} as GeoIntAppAPI, {
       themes: "buildings",
     });
-    const unknown = maplibreOvertureMapsPlugin.applyProjectState?.({} as GeoLibreAppAPI, {
+    const unknown = maplibreOvertureMapsPlugin.applyProjectState?.({} as GeoIntAppAPI, {
       themes: { future_theme: { expanded: true } },
     });
-    const unchanged = maplibreOvertureMapsPlugin.applyProjectState?.({} as GeoLibreAppAPI, {
+    const unchanged = maplibreOvertureMapsPlugin.applyProjectState?.({} as GeoIntAppAPI, {
       collapsed: false,
     });
 
@@ -337,7 +337,7 @@ describe("Overture plugin state coordination", () => {
   });
 
   it("does not persist an empty release or fetched release list while detached", () => {
-    const applied = maplibreOvertureMapsPlugin.applyProjectState?.({} as GeoLibreAppAPI, {
+    const applied = maplibreOvertureMapsPlugin.applyProjectState?.({} as GeoIntAppAPI, {
       collapsed: true,
     });
     const pending = maplibreOvertureMapsPlugin.getProjectState?.() as Record<string, unknown>;

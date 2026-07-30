@@ -1,4 +1,4 @@
-import type { MapViewState } from "@geolibre/core";
+import type { MapViewState } from "@geoint/core";
 import type { Viewer } from "cesium";
 
 // Camera conversion between MapLibre's `MapViewState` (Web-Mercator zoom + a

@@ -1,4 +1,4 @@
-import type { DeckVizFieldMapping, DeckVizFormat, DeckVizRole } from "@geolibre/plugins";
+import type { DeckVizFieldMapping, DeckVizFormat, DeckVizRole } from "@geoint/plugins";
 import type { FeatureCollection } from "geojson";
 import { parseDelimitedTextRows } from "./delimited-text";
 

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
-import { getExternalNativePaintBridge, pluginOwnsPaint, useAppStore } from "@geolibre/core";
+import { getExternalNativePaintBridge, pluginOwnsPaint, useAppStore } from "@geoint/core";
 import {
   __setComponentsModuleLoaderForTests,
   addZarrRasterLayer,
@@ -8,9 +8,9 @@ import {
   setZarrLayerSelector,
   type ComponentsModules,
 } from "../packages/plugins/src/plugins/maplibre-components.ts";
-import type { GeoLibreAppAPI } from "../packages/plugins/src/types";
+import type { GeoIntAppAPI } from "../packages/plugins/src/types";
 
-// `addZarrLayer` lets a plugin render a Zarr store through GeoLibre's own
+// `addZarrLayer` lets a plugin render a Zarr store through GeoInt's own
 // @carbonplan/zarr-layer instance instead of bundling a second copy and adding a
 // raw MapLibre custom layer whose paint the Style panel cannot reach
 // (opengeos/GeoLibre#1445). These tests drive the real code path with a stand-in
@@ -161,7 +161,7 @@ const app = {
   addMapControl: () => true,
   removeMapControl: () => {},
   getMap: () => null,
-} as unknown as GeoLibreAppAPI;
+} as unknown as GeoIntAppAPI;
 
 afterEach(() => {
   useAppStore.setState({ layers: [] });
@@ -178,7 +178,7 @@ describe("addZarrRasterLayer", () => {
       variable: "tmax",
       selector: { time: 3 },
       clim: [-30, 30],
-      // The public option takes a named GeoLibre ramp; the control needs the
+      // The public option takes a named GeoInt ramp; the control needs the
       // resolved hex stops.
       colormap: "viridis",
       opacity: 0.6,

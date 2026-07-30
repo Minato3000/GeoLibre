@@ -1,4 +1,4 @@
-import { DEFAULT_ROUTING_ENDPOINT, getRoutingConfig } from "@geolibre/core";
+import { DEFAULT_ROUTING_ENDPOINT, getRoutingConfig } from "@geoint/core";
 import {
   Button,
   Dialog,
@@ -6,7 +6,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import { useTranslation } from "react-i18next";
 
 interface RoutingConsentDialogProps {

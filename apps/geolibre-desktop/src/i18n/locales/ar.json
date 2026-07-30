@@ -28,8 +28,8 @@
   },
   "about": {
     "trigger": "حول",
-    "title": "حول GeoLibre",
-    "description": "GeoLibre منصة نظم معلومات جغرافية خفيفة مصممة للسحابة أصلًا.",
+    "title": "حول GeoInt",
+    "description": "GeoInt منصة نظم معلومات جغرافية خفيفة مصممة للسحابة أصلًا.",
     "version": "الإصدار",
     "checkForUpdates": "التحقق من التحديثات",
     "tryAgain": "إعادة المحاولة",
@@ -48,7 +48,7 @@
     "steps": {
       "download": "نزّل المثبّت المناسب لمنصتك من صفحة التنزيلات.",
       "install": "شغّل المثبّت. ستبقى مشاريعك المحلية وإعداداتك ومفاتيح API لديك محفوظة.",
-      "reopen": "أعد فتح GeoLibre لإتمام التحديث."
+      "reopen": "أعد فتح GeoInt لإتمام التحديث."
     },
     "severity": {
       "major": "إصدار رئيسي",
@@ -67,7 +67,7 @@
       "noTag": "لا يتضمّن الإصدار الأحدث وسم إصدار.",
       "network": "تعذّر الوصول إلى GitHub. تحقق من اتصالك وأعد المحاولة.",
       "viewDownloads": "عرض التنزيلات",
-      "viewDownloadsHint": "يفتح صفحة تنزيلات GeoLibre في المتصفح لديك لتتمكن من التحقق من أحدث إصدار يدويًا."
+      "viewDownloadsHint": "يفتح صفحة تنزيلات GeoInt في المتصفح لديك لتتمكن من التحقق من أحدث إصدار يدويًا."
     },
     "startup": {
       "title": "تحديث متوفر",
@@ -99,7 +99,7 @@
       "description_few": "يريد هذا المشروع تحميل {{count}} ملحقات خارجية من عناوين URL لم تثبّتها. تشغّل الملحقات تعليمات برمجية بوصول كامل إلى التطبيق.",
       "description_many": "يريد هذا المشروع تحميل {{count}} ملحقًا خارجيًا من عناوين URL لم تثبّتها. تشغّل الملحقات تعليمات برمجية بوصول كامل إلى التطبيق.",
       "description_other": "يريد هذا المشروع تحميل {{count}} ملحق خارجي من عناوين URL لم تثبّتها. تشغّل الملحقات تعليمات برمجية بوصول كامل إلى التطبيق.",
-      "warning": "لا تحمّل الملحقات إلا من مصادر تثق بها. تعمل الملحقات المحمّلة بالصلاحيات نفسها التي يعمل بها GeoLibre نفسه.",
+      "warning": "لا تحمّل الملحقات إلا من مصادر تثق بها. تعمل الملحقات المحمّلة بالصلاحيات نفسها التي يعمل بها GeoInt نفسه.",
       "trustButton": "الوثوق والتحميل",
       "dismissButton": "عدم التحميل"
     },
@@ -118,7 +118,7 @@
     "openHomepageAria": "فتح الصفحة الرئيسية لـ {{name}}",
     "byAuthor": "بواسطة {{author}}",
     "updateAvailable": "يتوفر تحديث",
-    "requiresVersion": "يتطلب GeoLibre {{version}}+",
+    "requiresVersion": "يتطلب GeoInt {{version}}+",
     "install": "تثبيت",
     "installAria": "تثبيت {{name}}",
     "removeConfirm": "إزالة؟",
@@ -129,10 +129,10 @@
     "updateAria": "تحديث {{name}}",
     "loading": "جارٍ التحميل…",
     "installed": "مثبّتة",
-    "settingsIntro": "يفحص GeoLibre دائمًا مجلد الإضافات ضمن بيانات التطبيق. ثبّت إضافة مُحزّمة (.zip) من ملف، أو أضف مجلدات محلية إضافية (على سطح المكتب فقط). تُحمَّل روابط البيان (بما في ذلك عمليات التثبيت من المتجر) عبر الشبكة؛ والتغييرات هنا تسري فورًا.",
+    "settingsIntro": "يفحص GeoInt دائمًا مجلد الإضافات ضمن بيانات التطبيق. ثبّت إضافة مُحزّمة (.zip) من ملف، أو أضف مجلدات محلية إضافية (على سطح المكتب فقط). تُحمَّل روابط البيان (بما في ذلك عمليات التثبيت من المتجر) عبر الشبكة؛ والتغييرات هنا تسري فورًا.",
     "installFromFile": "التثبيت من ملف",
     "chooseZip": "اختيار ملف ‎.zip…",
-    "installFromFileHintDesktop": "ينسخ أرشيف إضافة مُحزّمة إلى مجلد إضافات GeoLibre.",
+    "installFromFileHintDesktop": "ينسخ أرشيف إضافة مُحزّمة إلى مجلد إضافات GeoInt.",
     "installFromFileHintWeb": "يحمّل أرشيف إضافة مُحزّمة؛ يُخزَّن في متصفحك ويُعاد تحميله في زيارتك التالية.",
     "localDirectories": "المجلدات المحلية",
     "directoryAria": "مجلد الإضافات",
@@ -147,7 +147,7 @@
     "errorDirectoryPicker": "تعذّر فتح أداة اختيار المجلد.",
     "errorInstall": "تعذّر تثبيت الإضافة.",
     "errorUninstall": "تعذّر إلغاء تثبيت الإضافة.",
-    "description": "تصفّح إضافات GeoLibre الخارجية وثبّتها وحدّثها وأزلها. الإضافات مُدرَجة في <registryLink>سجل إضافات GeoLibre</registryLink>."
+    "description": "تصفّح إضافات GeoInt الخارجية وثبّتها وحدّثها وأزلها. الإضافات مُدرَجة في <registryLink>سجل إضافات GeoInt</registryLink>."
   },
   "viewState": {
     "panelTitle": "معلومات"
@@ -218,7 +218,7 @@
     "add": "إضافة",
     "ok": "موافق",
     "done": "تم",
-    "openWebApp": "فتح تطبيق GeoLibre على الويب"
+    "openWebApp": "فتح تطبيق GeoInt على الويب"
   },
   "addData": {
     "title": "إضافة بيانات",
@@ -261,7 +261,7 @@
       },
       "gdb": {
         "label": "إضافة طبقة File Geodatabase",
-        "description": "إضافة طبقة من قاعدة بيانات Esri File Geodatabase (مجلد .gdb). تُقرأ الطبقة عبر خادم GeoLibre المحلي ويعاد إسقاطها إلى WGS84."
+        "description": "إضافة طبقة من قاعدة بيانات Esri File Geodatabase (مجلد .gdb). تُقرأ الطبقة عبر خادم GeoInt المحلي ويعاد إسقاطها إلى WGS84."
       },
       "photos": {
         "label": "إضافة صور موسومة جغرافيًا",
@@ -501,8 +501,8 @@
       "layerPlaceholder": "اختر قاعدة بيانات جغرافية أولًا",
       "readingLayers": "جارٍ قراءة الطبقات...",
       "layerOption": "{{name}} ({{type}}، {{count}} من المعالم)",
-      "help": "لا تُعرض الجداول التي تحتوي سمات فقط. تُحمَّل فئة المعالم المحددة عبر خادم GeoLibre المحلي ويعاد إسقاطها إلى WGS84.",
-      "desktopOnly": "طبقات File Geodatabase متاحة فقط في GeoLibre Desktop. تقرأ هذه الميزة مجلد .gdb محليًا عبر خادم GeoLibre المحلي، وهو ما لا يستطيع تطبيق الويب الوصول إليه.",
+      "help": "لا تُعرض الجداول التي تحتوي سمات فقط. تُحمَّل فئة المعالم المحددة عبر خادم GeoInt المحلي ويعاد إسقاطها إلى WGS84.",
+      "desktopOnly": "طبقات File Geodatabase متاحة فقط في GeoInt Desktop. تقرأ هذه الميزة مجلد .gdb محليًا عبر خادم GeoInt المحلي، وهو ما لا يستطيع تطبيق الويب الوصول إليه.",
       "readError": "تعذّرت قراءة قاعدة File Geodatabase هذه.",
       "convertError": "تعذّر تحميل فئة المعالم هذه.",
       "errorNotGdb": "اختر مجلدًا ينتهي بـ .gdb (قاعدة بيانات Esri File Geodatabase).",
@@ -611,7 +611,7 @@
     },
     "postgres": {
       "defaultName": "طبقة PostgreSQL",
-      "errorDesktopOnly": "تتطلب طبقات PostgreSQL تطبيق GeoLibre Desktop.",
+      "errorDesktopOnly": "تتطلب طبقات PostgreSQL تطبيق GeoInt Desktop.",
       "errorConnectionString": "أدخل سلسلة اتصال PostgreSQL.",
       "statusCheckingBinary": "جارٍ التحقق من ملف Martin الثنائي...",
       "statusDownloaded": "تم تنزيل Martin. جارٍ تشغيل الخادم المحلي...",
@@ -630,7 +630,7 @@
       "errorConnectFirst": "اتصل بـ PostgreSQL أولًا.",
       "errorNoVectorLayers": "مصدر Martin المحدد لا يحتوي على طبقات متجهة.",
       "errorSelectSource": "حدد مصدر Martin لإضافته.",
-      "desktopOnlyNotice": "طبقات PostgreSQL متاحة فقط في GeoLibre Desktop. تشغّل هذه الميزة خادم بلاطات Martin محليًا، وهو ما لا يستطيع تطبيق الويب تشغيله.",
+      "desktopOnlyNotice": "طبقات PostgreSQL متاحة فقط في GeoInt Desktop. تشغّل هذه الميزة خادم بلاطات Martin محليًا، وهو ما لا يستطيع تطبيق الويب تشغيله.",
       "savedConnection": "اتصال محفوظ",
       "selectSavedConnection": "اختيار اتصال محفوظ",
       "connectionString": "سلسلة اتصال PostgreSQL",
@@ -655,7 +655,7 @@
       "editableTable": "الجدول",
       "tableReadOnly": "{{table}} (للقراءة فقط: بلا مفتاح أساسي)",
       "errorSelectTable": "حدد جدولًا لتحميله.",
-      "errorRuntimeMissing": "لا تتوفر لدى خادم المعالجة بيئة تشغيل PostGIS (حزمة psycopg). ثبّت إضافة 'postgis' الخاصة بـ geolibre-server لتحميل طبقات قابلة للتحرير."
+      "errorRuntimeMissing": "لا تتوفر لدى خادم المعالجة بيئة تشغيل PostGIS (حزمة psycopg). ثبّت إضافة 'postgis' الخاصة بـ geoint-server لتحميل طبقات قابلة للتحرير."
     },
     "video": {
       "defaultName": "طبقة فيديو",
@@ -1214,7 +1214,7 @@
     "step1Title": "1. الحصول على رمز API",
     "step1Description": "سجّل الدخول إلى share.geolibre.app، ثم أنشئ رمزًا من الإعدادات ← رموز API.",
     "getToken": "الحصول على رمز API",
-    "step2Title": "2. إضافة الرمز إلى GeoLibre",
+    "step2Title": "2. إضافة الرمز إلى GeoInt",
     "step2Description": "الصق الرمز في الإعدادات ← متغيرات البيئة على هذا الجهاز.",
     "configureToken": "ضبط الرمز المحلي",
     "liveAt": "مشروعك منشور الآن على:",
@@ -1236,7 +1236,7 @@
   },
   "gallery": {
     "title": "معرض المشاريع",
-    "description": "تصفح المشاريع العامة المشتركة على share.geolibre.app وافتح أحدها في GeoLibre.",
+    "description": "تصفح المشاريع العامة المشتركة على share.geolibre.app وافتح أحدها في GeoInt.",
     "searchPlaceholder": "تصفية المشاريع المحمّلة حسب العنوان أو المؤلف أو الوسم",
     "loading": "جارٍ تحميل المشاريع…",
     "loadingMore": "جارٍ تحميل المزيد…",
@@ -1326,7 +1326,7 @@
       "groupNavigation": "تجميع سهم الشمال وشريط المقياس",
       "footer": "نص التذييل",
       "date": "التاريخ",
-      "attribution": "تضمين إسناد GeoLibre",
+      "attribution": "تضمين إسناد GeoInt",
       "pageBorder": "حد الصفحة",
       "infoBlock": "كتلة المعلومات (خانة العنوان)",
       "colorbar": "شريط الألوان",
@@ -1721,7 +1721,7 @@
     "noticeDesc": "عند فتح بطاقة معرفية تُرسل إحداثيات المكان الذي نقرت عليه (وعنوان أي مقالة قريبة تفتحها) إلى واجهة برمجة التطبيقات العامة لويكيبيديا لجلب ملخص وصورة — أي أن إحداثياتك تغادر جهازك في هذه الطلبات."
   },
   "onboarding": {
-    "title": "مرحبًا بك في GeoLibre",
+    "title": "مرحبًا بك في GeoInt",
     "description": "اختر مستوى خبرتك لتخصيص الواجهة. يمكنك تغيير ذلك في أي وقت من الإعدادات ← الواجهة.",
     "level": {
       "beginner": {
@@ -1734,7 +1734,7 @@
       },
       "advanced": {
         "title": "متقدم",
-        "description": "إظهار كل ما يقدمه GeoLibre."
+        "description": "إظهار كل ما يقدمه GeoInt."
       }
     },
     "showEverything": "تخطٍّ — إظهار كل شيء"
@@ -1749,7 +1749,6 @@
       "appearance": "المظهر",
       "interface": "الواجهة",
       "geocoding": "الترميز الجغرافي",
-      "ai": "موفرو الذكاء الاصطناعي",
       "environment": "البيئة",
       "updates": "التحديثات"
     },
@@ -1759,7 +1758,6 @@
       "appearanceSettings": "إعدادات المظهر",
       "interfaceSettings": "إعدادات الواجهة",
       "geocoding": "الترميز الجغرافي",
-      "ai": "موفرو الذكاء الاصطناعي",
       "environmentVariables": "متغيرات البيئة",
       "updates": "إعدادات التحديث",
       "managePlugins": "إدارة الإضافات",
@@ -1768,9 +1766,9 @@
     },
     "updates": {
       "title": "تحديثات البرنامج",
-      "description": "تحكم في كيفية تحقق GeoLibre من الإصدارات الجديدة عند بدء تشغيل تطبيق سطح المكتب.",
+      "description": "تحكم في كيفية تحقق GeoInt من الإصدارات الجديدة عند بدء تشغيل تطبيق سطح المكتب.",
       "checkOnStartup": "التحقق من التحديثات عند بدء التشغيل",
-      "checkOnStartupHint": "عند التفعيل، يتحقق GeoLibre من وجود إصدار أحدث في كل مرة يبدأ فيها التطبيق. عطّل هذا الخيار للعمل دون اتصال بالإنترنت تمامًا.",
+      "checkOnStartupHint": "عند التفعيل، يتحقق GeoInt من وجود إصدار أحدث في كل مرة يبدأ فيها التطبيق. عطّل هذا الخيار للعمل دون اتصال بالإنترنت تمامًا.",
       "notificationLevel": "تلقي إشعارات عن",
       "notificationLevelHint": "اختر أنواع الإصدارات التي تؤدي إلى ظهور إشعار عند بدء التشغيل.",
       "level": {
@@ -1853,7 +1851,7 @@
       "lockedNote": "يتولى المسؤول لديك إدارة ملف تعريف الواجهة هذا ولا يمكن تغييره."
     },
     "env": {
-      "tokenTitle": "رمز API لخدمة Share.GeoLibre",
+      "tokenTitle": "رمز API لخدمة Share.GeoInt",
       "tokenDescription": "تستخدم قائمة مشروع > مشاركة هذا الرمز لرفع خرائطك إلى share.geolibre.app. افتح <tokenLink>share.geolibre.app/settings</tokenLink>، وأنشئ رمزًا من الإعدادات > رموز API، ثم الصقه في الحقل أدناه.",
       "tokenStorageNote": "يُخزن محليًا على هذا الجهاز ويُرسل فقط إلى share.geolibre.app لمصادقة عمليات الرفع. في نسخة الويب يتشارك مساحة تخزين المتصفح نفسها مع بيانات الموقع الأخرى، لذا ألغِه من share.geolibre.app إذا تعرض جهازك للاختراق.",
       "tokenPlaceholder": "glb_…",
@@ -1903,65 +1901,6 @@
       "emailHint": "تستخدمه خدمة Nominatim فقط، وهي توصي بتوفيره للمساعدة في التعرف على تطبيقك — ولا يُرسل إلا عند إدخاله.",
       "secretsWarning": "تُخزن المفاتيح كنص عادي في ملف المشروع وقد تنكشف عند مشاركة المشروع. كما تُرسل كمعلمات استعلام، لذا تظهر في عناوين URL لطلبات الترميز الجغرافي المرئية في أدوات مطوري المتصفح وفي سجلات أي وكيل.",
       "corsNote": "لا تسمح Google رسميًا بطلبات المتصفح إلى Geocoding API الخاصة بها، لذا قد تُحظر الطلبات ما لم تمر عبر وكيل من المصدر نفسه."
-    },
-    "ai": {
-      "title": "موفرو مساعد الذكاء الاصطناعي",
-      "description": "كوّن بيانات اعتماد مساعد الذكاء الاصطناعي. اختر موفرًا، واملأ الحقول التي يحتاجها، ثم احفظ. يكفي تكوين موفر واحد لبدء المحادثة.",
-      "providerLabel": "الموفر",
-      "providerHint": "اختر موفرًا لعرض الحقول التي يحتاجها بالضبط.",
-      "configuredMark": "(مكوّن)",
-      "optionalMark": "(اختياري)",
-      "statusReady": "تم تكوين {{provider}} وهو جاهز للاستخدام.",
-      "statusIncomplete": "املأ الحقول المطلوبة أدناه لتفعيل {{provider}}.",
-      "secretsNote": "تُحفظ بيانات الاعتماد محليًا على هذا الجهاز، لا في ملف المشروع الذي تشاركه، لذا تبقى بعد إعادة التشغيل. يمكن لأي شخص لديه وصول إلى هذا الجهاز قراءتها.",
-      "getCredentials": "من أين تحصل على بيانات اعتماد {{provider}}",
-      "showValue": "إظهار {{name}}",
-      "hideValue": "إخفاء {{name}}",
-      "osEnvNote": "يقرأ تطبيق سطح المكتب أيضًا مفاتيح API المطابقة من متغيرات بيئة النظام لديك. تُستخدم هذه المفاتيح تلقائيًا ولا تُحفظ أبدًا في ملف المشروع — اترك الحقل فارغًا لمواصلة استخدام قيمة البيئة.",
-      "osEnvField": "يُقرأ من متغير بيئة النظام {{name}}.",
-      "osEnvPlaceholder": "معيّن في بيئة النظام لديك",
-      "newProfile": "ملف تعريف جديد",
-      "cancel": "إلغاء",
-      "addProfile": "إضافة ملف تعريف",
-      "profileName": "اسم ملف التعريف",
-      "profileNamePlaceholder": "مثال: Gemini للعمل، Ollama محلي",
-      "profileCount_one": "{{count}} ملف تعريف",
-      "profileCount_zero": "{{count}} من ملفات التعريف",
-      "profileCount_two": "{{count}} من ملفات التعريف",
-      "profileCount_few": "{{count}} ملفات تعريف",
-      "profileCount_many": "{{count}} ملف تعريف",
-      "profileCount_other": "{{count}} ملف تعريف",
-      "noProfiles": "لا توجد ملفات تعريف بعد. أضف واحدًا أدناه لتهيئة مساعد الذكاء الاصطناعي.",
-      "setDefault": "تعيين كافتراضي",
-      "defaultProfile": "افتراضي",
-      "edit": "تحرير",
-      "deleteProfile": "حذف ملف التعريف",
-      "backToProfiles": "→ العودة إلى ملفات التعريف",
-      "saveProfile": "حفظ ملف التعريف",
-      "profileEditSaveHint": "احفظ تغييرات ملف التعريف أعلاه أو تجاهلها، ثم انقر على \"حفظ الإعدادات\" لتطبيق جميع التغييرات.",
-      "field": {
-        "apiKey": "مفتاح API",
-        "baseUrl": "عنوان URL الأساسي",
-        "model": "النموذج",
-        "region": "المنطقة",
-        "accessKeyId": "معرّف مفتاح الوصول",
-        "secretAccessKey": "مفتاح الوصول السري",
-        "sessionToken": "رمز الجلسة"
-      },
-      "placeholder": {
-        "geminiKey": "AIza…",
-        "anthropicKey": "sk-ant-…",
-        "openaiKey": "sk-…",
-        "ollamaBaseUrl": "http://localhost:11434",
-        "ollamaModel": "llama3.2",
-        "awsAccessKey": "AKIA…",
-        "awsSecretKey": "wJalrXUtnFEMI…",
-        "awsRegion": "us-east-1",
-        "awsSessionToken": "FwoGZXIvYXdz… (عند استخدام بيانات اعتماد مؤقتة)",
-        "customBaseUrl": "https://api.example.com/v1",
-        "customModel": "model-id",
-        "customApiKey": "sk-… (إذا كان مطلوبًا)"
-      }
     }
   },
   "toolbar": {
@@ -2071,7 +2010,7 @@
       "smartPaste": "لصق الإحداثيات",
       "smartPasteInputLabel": "سلسلة الإحداثيات",
       "smartPastePlaceholder": "مثال: 51.5074, -0.1278 أو 51°30'26\"N, 0°07'39\"W",
-      "smartPasteInfo": "اكتب أو الصق سلسلة إحداثيات كاملة بصيغة DD أو DMS أو DDM، ثم شغّل «معالجة المدخلات». يكتشف GeoLibre الصيغة ويملأ حقلي خط الطول ودائرة العرض أدناه. اضبط التكبير والميل والاتجاه كلًّا على حدة قبل الانتقال.",
+      "smartPasteInfo": "اكتب أو الصق سلسلة إحداثيات كاملة بصيغة DD أو DMS أو DDM، ثم شغّل «معالجة المدخلات». يكتشف GeoInt الصيغة ويملأ حقلي خط الطول ودائرة العرض أدناه. اضبط التكبير والميل والاتجاه كلًّا على حدة قبل الانتقال.",
       "smartPasteInfoLabel": "حول لصق الإحداثيات",
       "smartPasteInvalid": "تعذّرت قراءة هذه الإحداثيات. أدخل خط طول ودائرة عرض كاملين بصيغة DD أو DMS أو DDM، مثل 51.5074, -0.1278. لا يمكن تحليل سلسلة جزئية أو غير مكتملة.",
       "processInput": "معالجة المدخلات",
@@ -2200,8 +2139,8 @@
     },
     "conversion": {
       "vectorToVector": "متجه إلى متجه",
-      "zipInputBrowserError": "لا يمكن تحويل ملفات Shapefile المضغوطة إلا في تطبيق GeoLibre لسطح المكتب. في المتصفح، حدد ملف .shp غير المضغوط مع ملفاته .dbf و.shx و.prj.",
-      "browserOutputUnsupported": "في المتصفح، يمكن أن تكون المخرجات بصيغة GeoJSON أو CSV أو GeoParquet أو GeoPackage أو Shapefile (.zip). يتطلب إخراج \".{{extension}}\" تطبيق GeoLibre لسطح المكتب.",
+      "zipInputBrowserError": "لا يمكن تحويل ملفات Shapefile المضغوطة إلا في تطبيق GeoInt لسطح المكتب. في المتصفح، حدد ملف .shp غير المضغوط مع ملفاته .dbf و.shx و.prj.",
+      "browserOutputUnsupported": "في المتصفح، يمكن أن تكون المخرجات بصيغة GeoJSON أو CSV أو GeoParquet أو GeoPackage أو Shapefile (.zip). يتطلب إخراج \".{{extension}}\" تطبيق GeoInt لسطح المكتب.",
       "outputExtensionRequired": "أضف امتداد ملف إلى اسم المخرجات لاختيار الصيغة.",
       "readingWithDuckDb": "جارٍ قراءة {{name}} باستخدام DuckDB-WASM",
       "readFeatures": "تمت قراءة {{features}} من المعالم من {{name}}",
@@ -2215,7 +2154,7 @@
       "vectorToPmtiles": "متجه إلى PMTiles",
       "rasterToCog": "بيانات نقطية إلى COG",
       "rasterToPmtiles": "راستر إلى PMTiles",
-      "needsDesktop": "يتطلب هذا التحويل تطبيق سطح المكتب GeoLibre أو خدمة مساعدة قيد التشغيل.",
+      "needsDesktop": "يتطلب هذا التحويل تطبيق سطح المكتب GeoInt أو خدمة مساعدة قيد التشغيل.",
       "runsInBrowserDuckDb": "يجري التحويل في متصفحك باستخدام DuckDB-WASM.",
       "runsInBrowserWriters": "يجري التحويل في متصفحك باستخدام DuckDB-WASM والكتّاب المضمّنين.",
       "runsInBrowserWasm": "يجري التحويل في متصفحك باستخدام geolibre-wasm. لا حاجة إلى خدمة مساعدة.",
@@ -2370,7 +2309,7 @@
       "noOutput": "لا يوجد ناتج بعد.",
       "errorConnect": "تعذّر الاتصال بالخدمة المساعدة.",
       "errorPoll": "تعذّر الاستعلام عن المهمة.",
-      "errorStartSidecar": "تعذّر تشغيل الخدمة المساعدة لـ GeoLibre.",
+      "errorStartSidecar": "تعذّر تشغيل الخدمة المساعدة لـ GeoInt.",
       "errorStartTool": "تعذّر بدء أداة الراستر."
     },
     "mapControl": {
@@ -2474,7 +2413,7 @@
       "terrain": "التضاريس",
       "remoteSensing": "الاستشعار عن بُعد",
       "projection": "الإسقاط",
-      "geolibre": "GeoLibre",
+      "geoint": "GeoInt",
       "subGroupGeometry": "الهندسة",
       "subGroupOverlay": "التراكب",
       "subGroupJoin": "الربط",
@@ -2536,7 +2475,7 @@
       "webServices": "خدمات الويب",
       "commandPalette": "لوحة الأوامر",
       "openProjectFromUrl": "فتح مشروع من عنوان URL",
-      "openProjectFromUrlDesc": "تحميل مشروع `.geolibre.json` وإضافته إلى المشاريع الأخيرة.",
+      "openProjectFromUrlDesc": "تحميل مشروع `.geoint.json` وإضافته إلى المشاريع الأخيرة.",
       "projectUrl": "عنوان URL للمشروع",
       "opening": "جارٍ الفتح...",
       "open": "فتح",
@@ -2551,7 +2490,7 @@
       "embedVectorReferenceButton": "حفظ مراجع الملفات",
       "embedVectorSkipButton": "حفظ دون البيانات",
       "saveProjectFileName": "اسم الملف",
-      "saveProjectFileNamePlaceholder": "my-project.geolibre.json",
+      "saveProjectFileNamePlaceholder": "my-project.geoint.json",
       "exportHtmlAsTitle": "تصدير كملف HTML تفاعلي",
       "exportHtmlAsDesc": "أدخل اسم الملف. ستُنزَّل صفحة HTML إلى مجلد التنزيلات في متصفحك عند النقر على «حفظ».",
       "exportHtmlFileName": "اسم الملف",
@@ -2592,21 +2531,21 @@
       "maplibre-gl-annotations": "التعليقات التوضيحية",
       "maplibre-gl-streetview": "عرض الشارع",
       "maplibre-gl-time-slider": "شريط تمرير الزمن",
-      "geolibre-timelapse": "التسلسل الزمني",
+      "geoint-timelapse": "التسلسل الزمني",
       "maplibre-gl-esri-wayback": "الصور التاريخية",
       "maplibre-gl-openaerialmap": "OpenAerialMap",
-      "geolibre-stac-catalogs": "كتالوجات STAC",
+      "geoint-stac-catalogs": "كتالوجات STAC",
       "maplibre-gl-source-coop": "Source Cooperative",
       "maplibre-gl-natural-earth": "Natural Earth",
       "maplibre-gl-swipe": "مقارنة الطبقات بالسحب",
-      "geolibre-elevation-profile": "مقطع الارتفاع",
+      "geoint-elevation-profile": "مقطع الارتفاع",
       "maplibre-gl-basemap-control": "خرائط الأساس",
       "maplibre-layer-control": "التحكم في الطبقات",
       "maplibre-gl-huggingface": "Hugging Face",
       "carto-light": "خريطة أساس Carto Light",
-      "geolibre-flight-simulator": "محاكي الطيران",
-      "geolibre-route-animation": "تحريك المسار",
-      "geolibre-sun": "محاكاة الشمس",
+      "geoint-flight-simulator": "محاكي الطيران",
+      "geoint-route-animation": "تحريك المسار",
+      "geoint-sun": "محاكاة الشمس",
       "maplibre-atmosphere-effects": "التأثيرات الجوية",
       "maplibre-deckgl-viz": "طبقة Deck.gl",
       "maplibre-gl-clouds": "السحب",
@@ -2802,7 +2741,7 @@
     "summary": "تم تحديد {{selected}} من {{total}} معلم ({{matched}} مطابق).",
     "evaluationErrors": "تعذّر تقييم {{count}} معلم ولم تتم مطابقتها.",
     "unevaluableDisjoint": "تم استبعاد {{count}} معلم لتعذّر تقييم أشكالها الهندسية.",
-    "tooManyPairs": "تتطلب هذه المقارنة {{pairs}} اختبار زوج معالم (الحد {{limit}}). استخدم المعالجة ← GeoLibre ← متجه ← التحديد بالموقع مع محرك الخدمة المساعدة بدلًا من ذلك.",
+    "tooManyPairs": "تتطلب هذه المقارنة {{pairs}} اختبار زوج معالم (الحد {{limit}}). استخدم المعالجة ← GeoInt ← متجه ← التحديد بالموقع مع محرك الخدمة المساعدة بدلًا من ذلك.",
     "exportedLayerName": "{{name}} (تحديد)"
   },
   "loadEditorFeatures": {
@@ -3033,7 +2972,7 @@
     "webMapAdded_many": "تمت إضافة {{count}} طبقةً من خريطة الويب هذه.",
     "webMapAdded_other": "تمت إضافة {{count}} طبقة من خريطة الويب هذه.",
     "webMapAddedPartial": "الطبقات المضافة: {{added}} من {{total}} من خريطة الويب هذه؛ وتعذّر الوصول إلى البقية.",
-    "webMapEmpty": "لا تحتوي خريطة الويب هذه على طبقات يستطيع GeoLibre عرضها.",
+    "webMapEmpty": "لا تحتوي خريطة الويب هذه على طبقات يستطيع GeoInt عرضها.",
     "add": "إضافة",
     "adding": "جارٍ الإضافة…",
     "remove": "إزالة",
@@ -3115,7 +3054,7 @@
     "downloadTitle": "تنزيل هذا الملف",
     "copyUrlTitle": "نسخ عنوان URL لهذا الملف",
     "openProductTitle": "فتح صفحة هذا المنتج في source.coop",
-    "unsupportedTitle": "يتعذّر على GeoLibre عرض هذه الصيغة — نزّلها بدلًا من ذلك",
+    "unsupportedTitle": "يتعذّر على GeoInt عرض هذه الصيغة — نزّلها بدلًا من ذلك",
     "addError": "تعذّرت إضافة هذا الملف: {{message}}",
     "largeFileWarning": "حجم هذا الملف {{size}}. يُبَث من المصدر، لذا تُقرأ الأجزاء الظاهرة فقط.",
     "streamHint": "حجم هذا الملف {{size}}. تنسخه الإضافة إلى الذاكرة؛ أما البث فيقرأ الأجزاء الظاهرة فقط.",
@@ -3164,7 +3103,7 @@
     "downloadTitle": "تنزيل هذا الملف",
     "copyUrlTitle": "نسخ عنوان URL لهذا الملف",
     "openDatasetTitle": "فتح صفحة مجموعة البيانات هذه على huggingface.co",
-    "unsupportedTitle": "يتعذّر على GeoLibre عرض هذه الصيغة — نزّلها بدلًا من ذلك",
+    "unsupportedTitle": "يتعذّر على GeoInt عرض هذه الصيغة — نزّلها بدلًا من ذلك",
     "addError": "تعذّرت إضافة هذا الملف: {{message}}",
     "notRasterIndex": "لا يفهرس ملف JSON هذا أي بيانات راستر، لذا لا يوجد ما يُوضع على الخريطة. الصيغ المدعومة هي MosaicJSON ومجموعات STAC.",
     "largeFileWarning": "حجم هذا الملف {{size}}. يُبَث من المصدر، لذا تُقرأ الأجزاء الظاهرة فقط.",
@@ -3216,7 +3155,7 @@
     "selectedFiles_many": "تم تحديد {{count}} ملفًا ({{size}}).",
     "selectedFiles_other": "تم تحديد {{count}} ملف ({{size}}).",
     "commitMessageLabel": "رسالة الإيداع (اختياري)",
-    "commitMessagePlaceholder": "رُفع باستخدام GeoLibre",
+    "commitMessagePlaceholder": "رُفع باستخدام GeoInt",
     "upload": "رفع",
     "uploadPreparing": "جارٍ التحضير للرفع…",
     "uploadHashing": "جارٍ حساب بصمة {{name}} ({{index}}/{{total}})…",
@@ -3289,7 +3228,7 @@
     "runHint": "تشغيل (Ctrl/Cmd+Enter)",
     "completions": "الإكمالات",
     "placeholder": "اكتب Python هنا · Ctrl/Cmd+Enter للتشغيل · Tab للإكمال التلقائي · ↑/↓ للسجل",
-    "intro": "وحدة تحكم Python جاهزة. استخدم الكائن `geolibre` لبرمجة الخريطة، مثل geolibre.get_center(). يقوم Tab بالإكمال التلقائي، ويستدعي ↑/↓ الأوامر السابقة، ويضيف `await geolibre.load_package(\"numpy\")` الحزم.",
+    "intro": "وحدة تحكم Python جاهزة. استخدم الكائن `geoint` لبرمجة الخريطة، مثل geoint.get_center(). يقوم Tab بالإكمال التلقائي، ويستدعي ↑/↓ الأوامر السابقة، ويضيف `await geoint.load_package(\"numpy\")` الحزم.",
     "loadFailed": "فشل تحميل بيئة تشغيل Python.",
     "showEditor": "إظهار المحرر",
     "hideEditor": "إخفاء المحرر",
@@ -3414,21 +3353,7 @@
     "stop": "إيقاف",
     "placeholder": "اسأل عن بياناتك، مثل \"أظهر الدول التي يزيد عدد سكانها على 50 مليونًا\" · Ctrl/Cmd+Enter للإرسال",
     "intro": "تحدث مع بياناتك. يمكنني تشغيل Spatial SQL، وإضافة الطبقات أو إزالتها، وإعادة تنسيقها، وتحريك الخريطة — وكل تغيير قابل للتراجع. جرّب \"لوّن الدول حسب عدد السكان بتدرج لوني أحمر\".",
-    "setupTitle": "إعداد مساعد الذكاء الاصطناعي",
-    "setupStatus": "يحتاج المساعد إلى موفر ذكاء اصطناعي ليتولى التفكير. أضف بيانات اعتماد لأي موفر واحد أدناه، وستتحول اللوحة إلى وضع الدردشة فور الحفظ.",
-    "setupProviders": "إضافة بيانات اعتماد لأي موفر واحد",
-    "setupOpenSettings": "فتح الإعدادات ← موفرو الذكاء الاصطناعي",
-    "thinking": "جارٍ العمل…",
-    "toolError": "فشل",
-    "provider": "موفر LLM",
-    "profile": "ملف تعريف الذكاء الاصطناعي",
-    "deploymentProxy": "وكيل النشر",
-    "model": "النموذج",
-    "codeApprovalTitle": "هل تريد تشغيل التعليمات البرمجية للمساعد؟",
-    "codeApprovalBody": "يريد المساعد تشغيل تعليمات برمجية بلغة {{language}} داخل التطبيق. راجعها أولًا — إذ يمكنها تغيير الخريطة والوصول إلى بيانات التطبيق.",
-    "codeApprovalAlways": "السماح بالتعليمات البرمجية للمساعد لبقية هذه الجلسة",
-    "codeApprovalRun": "تشغيل",
-    "codeApprovalDecline": "إلغاء"
+    "thinking": "جارٍ العمل…"
   },
   "storymap": {
     "title": "الخريطة القصصية",
@@ -3648,7 +3573,7 @@
       },
       "filterBySource": "التصفية حسب المصدر",
       "allSources": "جميع المصادر",
-      "geolibreTools": "أدوات GeoLibre",
+      "geointTools": "أدوات GeoInt",
       "whiteboxTools": "أدوات Whitebox",
       "toolbox": "صندوق أدوات Whitebox",
       "checkingRuntime": "جارٍ التحقق من بيئة التشغيل.",
@@ -3682,8 +3607,8 @@
       "errorConnect": "تعذّر الاتصال بالخدمة المساعدة.",
       "errorPoll": "تعذّر الاستعلام عن المهمة.",
       "errorStartTool": "تعذّر بدء أداة Whitebox.",
-      "errorStartSidecar": "تعذّر تشغيل الخدمة المساعدة لـ GeoLibre.",
-      "errorStopSidecar": "تعذّر إيقاف الخدمة المساعدة لـ GeoLibre.",
+      "errorStartSidecar": "تعذّر تشغيل الخدمة المساعدة لـ GeoInt.",
+      "errorStopSidecar": "تعذّر إيقاف الخدمة المساعدة لـ GeoInt.",
       "noToolsFound": "لم يُعثر على أدوات.",
       "noParameters": "لا تحتوي هذه الأداة على معاملات.",
       "noOutput": "لا يوجد ناتج بعد.",
@@ -3703,9 +3628,9 @@
       "runLocallyButton": "التشغيل محليًا (WASM)",
       "troubleshootingTitle": "هل ما زلت تريد استخدام الخادم؟",
       "stepStartServerDesktop": "انقر \"تشغيل الخادم\" في لوحة قائمة الأدوات لتشغيله، ثم انتظر بضع ثوانٍ حتى يصبح متصلًا.",
-      "stepStartServerBrowser": "لا يمكن تشغيل الخادم إلا من تطبيق GeoLibre لسطح المكتب. في المتصفح، أبقِ \"التشغيل محليًا (WASM)\" مفعّلًا بدلًا من ذلك.",
+      "stepStartServerBrowser": "لا يمكن تشغيل الخادم إلا من تطبيق GeoInt لسطح المكتب. في المتصفح، أبقِ \"التشغيل محليًا (WASM)\" مفعّلًا بدلًا من ذلك.",
       "stepCheckPort": "تأكد من أن جدار الحماية أو برنامج مكافحة الفيروسات أو سياسة الشبكة لا تحظر المنفذ المحلي {{port}}.",
-      "stepRestart": "إذا توقف الخادم بشكل غير متوقع، فأعد تشغيل تطبيق GeoLibre لسطح المكتب وأعد فتح مربع الحوار هذا."
+      "stepRestart": "إذا توقف الخادم بشكل غير متوقع، فأعد تشغيل تطبيق GeoInt لسطح المكتب وأعد فتح مربع الحوار هذا."
     },
     "vectorTools": {
       "title": "أدوات المتجهات",
@@ -3739,13 +3664,13 @@
     "segment": "تجزئة",
     "status": {
       "checking": "جارٍ التحقق من خدمة التجزئة بالذكاء الاصطناعي…",
-      "unavailableDesktop": "خدمة التجزئة بالذكاء الاصطناعي لا تعمل بعد. شغّل خادم GeoLibre مع تفعيل segment-geospatial لاستخدامها.",
-      "unavailableWeb": "التجزئة بالذكاء الاصطناعي غير متاحة في المتصفح. استخدم تطبيق GeoLibre لسطح المكتب لتشغيلها."
+      "unavailableDesktop": "خدمة التجزئة بالذكاء الاصطناعي لا تعمل بعد. شغّل خادم GeoInt مع تفعيل segment-geospatial لاستخدامها.",
+      "unavailableWeb": "التجزئة بالذكاء الاصطناعي غير متاحة في المتصفح. استخدم تطبيق GeoInt لسطح المكتب لتشغيلها."
     },
     "error": {
       "chooseImage": "اختر صورة (GeoTIFF) لتجزئتها.",
       "enterPrompt": "أدخل موجّهًا نصيًا، مثل «أشجار» أو «مبانٍ».",
-      "startServer": "تعذر تشغيل خادم GeoLibre المساعد.",
+      "startServer": "تعذر تشغيل خادم GeoInt المساعد.",
       "failed": "فشلت التجزئة."
     },
     "noObjects": "لم يُعثر على أي كائنات.",
@@ -3756,7 +3681,7 @@
       "title": "تعذر تشغيل خادم التجزئة بالذكاء الاصطناعي.",
       "intro": "تعمل التجزئة بالذكاء الاصطناعي في خادم مساعد محلي ({{sidecarUrl}}) يستضيف نموذج SAM3 من segment-geospatial. وهو يشغّل Python في الخلفية بمعزل عن التطبيق، وليس جزءًا من نسخة المتصفح.",
       "troubleshootingTitle": "كيفية تشغيل الخادم",
-      "stepInstall": "تأكد من تثبيت خادم GeoLibre مع تفعيل الواجهة الخلفية segment-geospatial، حتى يكون نموذج التجزئة متاحًا.",
+      "stepInstall": "تأكد من تثبيت خادم GeoInt مع تفعيل الواجهة الخلفية segment-geospatial، حتى يكون نموذج التجزئة متاحًا.",
       "stepStartServerDesktop": "انقر \"تشغيل الخادم\" أعلاه لتشغيله، ثم انتظر بضع ثوانٍ حتى يصبح النموذج متصلًا."
     }
   },
@@ -4017,7 +3942,7 @@
     "import": "استيراد…",
     "export": "تصدير…",
     "importFilterName": "مكتبة أنماط / QML / SLD",
-    "exportFilterName": "مكتبة أنماط GeoLibre",
+    "exportFilterName": "مكتبة أنماط GeoInt",
     "applied": "تم تطبيق «{{name}}» على {{layer}}.",
     "appliedRampHint": "تم تطبيق «{{name}}». بدّل الطبقة إلى تنسيق متدرج أو مصنّف لرؤية التدرج.",
     "saved": "تم حفظ «{{name}}» في المكتبة.",
@@ -4864,10 +4789,10 @@
   },
   "errorBoundary": {
     "title": "حدث خطأ ما",
-    "description": "واجه GeoLibre خطأً غير متوقع ولم يتمكن من المتابعة. قد يكون عملك غير محفوظ — حاول الاسترداد قبل إعادة التحميل.",
+    "description": "واجه GeoInt خطأً غير متوقع ولم يتمكن من المتابعة. قد يكون عملك غير محفوظ — حاول الاسترداد قبل إعادة التحميل.",
     "tryAgain": "إعادة المحاولة",
     "reload": "إعادة تحميل التطبيق",
-    "sectionFailed": "تعذّر عرض {{label}}. بقية أجزاء GeoLibre لا تزال متاحة."
+    "sectionFailed": "تعذّر عرض {{label}}. بقية أجزاء GeoInt لا تزال متاحة."
   },
   "commandPalette": {
     "title": "لوحة الأوامر",
@@ -4937,7 +4862,7 @@
     "emptyNetworkError": "لم تُسجَّل أي بيانات تشخيصية لأخطاء الشبكة."
   },
   "shell": {
-    "workspaceTitle": "مساحة عمل خرائط GeoLibre",
+    "workspaceTitle": "مساحة عمل خرائط GeoInt",
     "section": {
       "toolbar": "شريط الأدوات",
       "sharedLeftSidebar": "الشريط الجانبي الأيسر المشترك",
@@ -5081,6 +5006,6 @@
     "added": "تمت إضافة {{asset}} إلى الخريطة.",
     "addUnsupported": "يمكن إضافة أصول GeoTIFF/COG وGeoJSON فقط إلى الخريطة",
     "addFailed": "تعذّرت إضافة الأصل",
-    "cogUnsupported": "لا يستطيع مضيف GeoLibre هذا عرض أصول GeoTIFF البعيدة"
+    "cogUnsupported": "لا يستطيع مضيف GeoInt هذا عرض أصول GeoTIFF البعيدة"
   }
 }

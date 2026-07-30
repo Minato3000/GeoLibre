@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type LayerStyle } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type LayerStyle } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import { buildMapboxStyle, type ExportableLayer } from "../packages/map/src/mapbox-style-export";
 import { applyMapboxStyleImport, parseMapboxStyle } from "../packages/map/src/mapbox-style-import";
@@ -214,7 +214,7 @@ describe("parseMapboxStyle round-trips exported symbology", () => {
   });
 
   it("still reads a legacy interpolate color as a graduated renderer", () => {
-    // GeoLibre exported graduated layers as a continuous `interpolate` before
+    // GeoInt exported graduated layers as a continuous `interpolate` before
     // the renderer became discrete; those projects must keep their classes.
     const external = {
       version: 8,
@@ -631,7 +631,7 @@ describe("parseMapboxStyle imports hand-written styles", () => {
       ],
     };
     const result = parseMapboxStyle(external);
-    // A first stop of zoom 5 (not 0) is not a GeoLibre meters width.
+    // A first stop of zoom 5 (not 0) is not a GeoInt meters width.
     assert.equal(result.style.strokeWidthUnit, undefined);
     assert.equal(result.style.strokeWidth, undefined);
     assert.ok(result.warnings.some((w) => /line width/.test(w)));

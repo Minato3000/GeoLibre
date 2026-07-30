@@ -16,7 +16,7 @@ import {
   useAppStore,
   type LayerStyle,
   type StyleLibraryEntry,
-} from "@geolibre/core";
+} from "@geoint/core";
 
 function entry(patch: Partial<StyleLibraryEntry> = {}): StyleLibraryEntry {
   return {
@@ -278,7 +278,7 @@ describe("style library bundles", () => {
     assert.throws(() => parseStyleLibrary("not json"));
     assert.throws(() => parseStyleLibrary('{"type":"something-else"}'));
     assert.throws(() =>
-      parseStyleLibrary('{"type":"geolibre-style-library","version":1,"entries":[]}'),
+      parseStyleLibrary('{"type":"geoint-style-library","version":1,"entries":[]}'),
     );
   });
 
@@ -287,7 +287,7 @@ describe("style library bundles", () => {
       () =>
         parseStyleLibrary(
           JSON.stringify({
-            type: "geolibre-style-library",
+            type: "geoint-style-library",
             version: 2,
             entries: [entry()],
           }),

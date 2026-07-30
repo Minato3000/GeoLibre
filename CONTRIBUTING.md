@@ -1,6 +1,6 @@
-# Contributing to GeoLibre
+# Contributing to GeoInt
 
-Thanks for your interest in improving GeoLibre. The full contributing guide,
+Thanks for your interest in improving GeoInt. The full contributing guide,
 including development setup, the repository layout, the quality gate, and the
 pull request workflow, lives in the documentation:
 
@@ -12,8 +12,8 @@ Fork the repository, then clone your fork. Replace `YOUR_GITHUB_USERNAME` with
 your GitHub username:
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/GeoLibre.git
-cd GeoLibre
+git clone https://github.com/YOUR_GITHUB_USERNAME/GeoInt.git
+cd GeoInt
 npm install
 npm run dev          # web build at http://localhost:5173
 ```

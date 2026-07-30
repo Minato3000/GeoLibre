@@ -6,7 +6,7 @@ import { layerControlPaintToStyle } from "../packages/map/src/map-controller";
 // directly. layerControlPaintToStyle maps the raster color adjustments back to
 // the store's LayerStyle so the floating editor and the right-hand Style
 // sidebar stay in sync (issue #912). Vector paint is intentionally not mapped:
-// GeoLibre renders vector layers through an expression-based style model, so
+// GeoInt renders vector layers through an expression-based style model, so
 // the rendered values the control reports would not round-trip losslessly.
 describe("layerControlPaintToStyle", () => {
   it("maps the raster color adjustments (the #912 case)", () => {

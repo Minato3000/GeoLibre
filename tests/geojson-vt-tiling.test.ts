@@ -4,8 +4,8 @@ import {
   DEFAULT_LAYER_STYLE,
   LARGE_VECTOR_FEATURE_THRESHOLD,
   shouldUseTiledRendering,
-  type GeoLibreLayer,
-} from "@geolibre/core";
+  type GeoIntLayer,
+} from "@geoint/core";
 import { config } from "maplibre-gl";
 import { syncLayer } from "../packages/map/src/layer-sync";
 import {
@@ -51,8 +51,8 @@ let layerIdCounter = 0;
 function largeLayer(
   count: number,
   id: string = `big-${layerIdCounter++}`,
-  style: Partial<GeoLibreLayer["style"]> = {},
-): GeoLibreLayer {
+  style: Partial<GeoIntLayer["style"]> = {},
+): GeoIntLayer {
   return {
     id,
     name: id,

@@ -3,7 +3,7 @@
  * QGIS-style diagram symbology). Everything here is DOM-free so the desktop
  * app, the deck.gl overlay, and the node test suite share one implementation:
  * anchor placement, value extraction, and size scaling. The canvas drawing and
- * deck.gl layer construction live in `@geolibre/plugins`.
+ * deck.gl layer construction live in `@geoint/plugins`.
  */
 import type { Feature, FeatureCollection, Geometry, Position } from "geojson";
 import { styleValue, type LayerStyle } from "./types";

@@ -1,4 +1,4 @@
-import { hasPathTraversal, type GeoLibreLayer } from "@geolibre/core";
+import { hasPathTraversal, type GeoIntLayer } from "@geoint/core";
 import type { FeatureCollection } from "geojson";
 import {
   isAbsoluteLocalPath,
@@ -36,7 +36,7 @@ export interface LayerWatchConfig {
  * @param layer - A store layer.
  * @returns Whether the layer's features can be reloaded from `sourcePath`.
  */
-export function isLocalFileLayer(layer: GeoLibreLayer): boolean {
+export function isLocalFileLayer(layer: GeoIntLayer): boolean {
   return (
     layer.type === "geojson" &&
     typeof layer.sourcePath === "string" &&
@@ -56,7 +56,7 @@ export function isLocalFileLayer(layer: GeoLibreLayer): boolean {
  * @param layer - A store layer.
  * @returns The normalized watch config.
  */
-export function getLayerWatchConfig(layer: GeoLibreLayer): LayerWatchConfig {
+export function getLayerWatchConfig(layer: GeoIntLayer): LayerWatchConfig {
   const watch = layer.metadata.watch;
   if (watch === true) return { enabled: true };
   if (watch && typeof watch === "object" && !Array.isArray(watch)) {
@@ -72,12 +72,9 @@ export function getLayerWatchConfig(layer: GeoLibreLayer): LayerWatchConfig {
  *
  * @param layer - The layer whose metadata to patch.
  * @param enabled - Whether watch mode should be on.
- * @returns A `Partial<GeoLibreLayer>` suitable for `updateLayer`.
+ * @returns A `Partial<GeoIntLayer>` suitable for `updateLayer`.
  */
-export function setLayerWatchConfig(
-  layer: GeoLibreLayer,
-  enabled: boolean,
-): Partial<GeoLibreLayer> {
+export function setLayerWatchConfig(layer: GeoIntLayer, enabled: boolean): Partial<GeoIntLayer> {
   const { watch: _watch, ...restMetadata } = layer.metadata;
   return {
     metadata: enabled ? { ...restMetadata, watch: { enabled: true } } : restMetadata,
@@ -109,7 +106,7 @@ export function setLayerWatchConfig(
  *   or if a multi-layer file no longer has an entry matching the layer's name.
  */
 export async function reloadLocalFileLayer(
-  layer: GeoLibreLayer,
+  layer: GeoIntLayer,
 ): Promise<{ geojson: FeatureCollection; featureCount: number }> {
   const path = layer.sourcePath;
   if (typeof path !== "string" || !path) {

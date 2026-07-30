@@ -1,7 +1,7 @@
 """Jupyter Server extension: relay map commands from ANY kernel to the app.
 
-The kernel-side ``geolibre`` client (``notebook_client.py``) drives the live
-GeoLibre map. Its original transport was ``display(Javascript(...))`` posting to
+The kernel-side ``geoint`` client (``notebook_client.py``) drives the live
+GeoInt map. Its original transport was ``display(Javascript(...))`` posting to
 ``window.parent``, which only works when the notebook is rendered *inside* the
 app's Notebook-panel ``<iframe>``. Connect an external Jupyter frontend to the
 same server — VS Code's Jupyter extension, ``jupyter console``, nbclient — and
@@ -11,22 +11,22 @@ silently did nothing (issue #1442).
 This extension adds a transport that does not depend on how the notebook is
 being *displayed*, only on which server the kernel belongs to:
 
-``POST {base_url}geolibre/relay/command``
+``POST {base_url}geoint/relay/command``
     Send one scripting command (the kernel side). Responds with
     ``{"delivered": n}`` — the number of connected app windows it reached, so the
     client can warn instead of failing silently.
-``GET {base_url}geolibre/relay/socket`` (WebSocket)
+``GET {base_url}geoint/relay/socket`` (WebSocket)
     Subscribe to commands (the app side). Every posted command is broadcast to
     all open sockets.
-``GET {base_url}geolibre/relay/status``
+``GET {base_url}geoint/relay/status``
     ``{"listeners": n}`` — whether any app window is currently subscribed.
 
 Kernels find the relay through two environment variables exported here at
 extension load; kernels the server spawns inherit them, which is what lets an
 externally driven kernel reach the map with no extra setup:
 
-- ``GEOLIBRE_RELAY_URL`` — the ``…/geolibre/relay`` base URL
-- ``GEOLIBRE_RELAY_TOKEN`` — the server's auth token (may be empty)
+- ``GEOINT_RELAY_URL`` — the ``…/geoint/relay`` base URL
+- ``GEOINT_RELAY_TOKEN`` — the server's auth token (may be empty)
 
 Security: the server binds loopback and every endpoint here requires the same
 per-launch token as the rest of the Jupyter API, so a command can only be
@@ -60,15 +60,15 @@ __all__ = [
 ]
 
 #: URL segment the relay endpoints live under, relative to the server's base_url.
-RELAY_PATH = "geolibre/relay"
+RELAY_PATH = "geoint/relay"
 
 #: Environment variables kernels read to find the relay (see module docstring).
-ENV_RELAY_URL = "GEOLIBRE_RELAY_URL"
-ENV_RELAY_TOKEN = "GEOLIBRE_RELAY_TOKEN"
+ENV_RELAY_URL = "GEOINT_RELAY_URL"
+ENV_RELAY_TOKEN = "GEOINT_RELAY_TOKEN"
 
 #: Message envelope the scripting bridge speaks, shared with the postMessage
 #: transport (``useNotebookBridge``) so the app dispatches both identically.
-COMMAND_TYPE = "geolibre:command"
+COMMAND_TYPE = "geoint:command"
 
 # Origins allowed to open the relay WebSocket: the Tauri webview (tauri:// on
 # macOS/Linux, https://tauri.localhost on Windows) and any loopback dev origin.
@@ -80,7 +80,7 @@ _ALLOWED_ORIGIN_SCHEMES = frozenset({"http", "https", "tauri"})
 # Open app-side sockets. Module level (not per-handler) because every handler
 # instance is created per request: the POST handler needs the set the WebSocket
 # handlers registered themselves in.
-_listeners: set[GeoLibreRelaySocket] = set()
+_listeners: set[GeoIntRelaySocket] = set()
 
 
 def is_allowed_origin(origin: str | None) -> bool:
@@ -92,7 +92,7 @@ def is_allowed_origin(origin: str | None) -> bool:
             policy and is already token-gated).
 
     Returns:
-        True when the origin is one of the GeoLibre app origins (Tauri webview or
+        True when the origin is one of the GeoInt app origins (Tauri webview or
         loopback), or when no origin was sent.
     """
     if not origin:
@@ -133,7 +133,7 @@ def normalize_command(payload: Any) -> dict[str, Any]:
 
 
 def relay_base_url(host: str, port: int, base_url: str) -> str:
-    """Build the ``…/geolibre/relay`` URL kernels post commands to.
+    """Build the ``…/geoint/relay`` URL kernels post commands to.
 
     Args:
         host: The server's bind address; a wildcard or empty value becomes
@@ -164,11 +164,11 @@ def _broadcast(message: dict[str, Any]) -> int:
     return delivered
 
 
-class GeoLibreRelaySocket(WebSocketMixin, websocket.WebSocketHandler, JupyterHandler):
+class GeoIntRelaySocket(WebSocketMixin, websocket.WebSocketHandler, JupyterHandler):
     """The app side: subscribes to every command posted to the relay."""
 
     def check_origin(self, origin: str | None = None) -> bool:
-        """Allow the GeoLibre app's origins (see :func:`is_allowed_origin`)."""
+        """Allow the GeoInt app's origins (see :func:`is_allowed_origin`)."""
         return is_allowed_origin(origin or self.request.headers.get("Origin"))
 
     async def pre_get(self) -> None:
@@ -184,7 +184,7 @@ class GeoLibreRelaySocket(WebSocketMixin, websocket.WebSocketHandler, JupyterHan
     def open(self, *args: Any, **kwargs: Any) -> None:
         """Register this app window as a command listener."""
         _listeners.add(self)
-        self.write_message(json.dumps({"type": "geolibre:relay-ready"}))
+        self.write_message(json.dumps({"type": "geoint:relay-ready"}))
 
     def on_message(self, message: str) -> None:
         """Ignore app→relay traffic: commands are fire-and-forget today."""
@@ -194,7 +194,7 @@ class GeoLibreRelaySocket(WebSocketMixin, websocket.WebSocketHandler, JupyterHan
         _listeners.discard(self)
 
 
-class GeoLibreRelayCommandHandler(APIHandler):
+class GeoIntRelayCommandHandler(APIHandler):
     """The kernel side: posts one command to every connected app window."""
 
     @web.authenticated
@@ -207,7 +207,7 @@ class GeoLibreRelayCommandHandler(APIHandler):
         self.finish(json.dumps({"delivered": _broadcast(message)}))
 
 
-class GeoLibreRelayStatusHandler(APIHandler):
+class GeoIntRelayStatusHandler(APIHandler):
     """Report whether any app window is listening, without sending a command."""
 
     @web.authenticated
@@ -233,18 +233,18 @@ def _load_jupyter_server_extension(serverapp: Any) -> None:
     web_app.add_handlers(
         ".*$",
         [
-            (url_path_join(prefix, "socket"), GeoLibreRelaySocket),
-            (url_path_join(prefix, "command"), GeoLibreRelayCommandHandler),
-            (url_path_join(prefix, "status"), GeoLibreRelayStatusHandler),
+            (url_path_join(prefix, "socket"), GeoIntRelaySocket),
+            (url_path_join(prefix, "command"), GeoIntRelayCommandHandler),
+            (url_path_join(prefix, "status"), GeoIntRelayStatusHandler),
         ],
     )
 
     # Kernels inherit the server process environment at spawn time, so exporting
-    # here (startup, before any kernel exists) is what makes `import geolibre`
+    # here (startup, before any kernel exists) is what makes `import geoint`
     # work from an externally driven kernel with no configuration.
     os.environ[ENV_RELAY_URL] = relay_base_url(serverapp.ip, serverapp.port, base_url)
     os.environ[ENV_RELAY_TOKEN] = _server_token(serverapp)
-    serverapp.log.info("GeoLibre map-command relay listening at %s", prefix)
+    serverapp.log.info("GeoInt map-command relay listening at %s", prefix)
 
 
 def _server_token(serverapp: Any) -> str:

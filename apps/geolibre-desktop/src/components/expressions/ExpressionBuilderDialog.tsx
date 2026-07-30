@@ -7,7 +7,7 @@ import {
   isStyleSpecColor,
   substituteExpressionVariables,
   validateMapExpression,
-} from "@geolibre/core";
+} from "@geoint/core";
 import {
   Button,
   Dialog,
@@ -18,7 +18,7 @@ import {
   Input,
   Label,
   ScrollArea,
-} from "@geolibre/ui";
+} from "@geoint/ui";
 import type { Feature } from "geojson";
 import type { ParseKeys } from "i18next";
 import { ChevronLeft, ChevronRight, Eraser } from "lucide-react";

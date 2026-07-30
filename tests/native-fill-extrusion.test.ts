@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer } from "@geoint/core";
 import { externalExtrusionLayerId, syncLayer } from "../packages/map/src/layer-sync";
 
 // Control-managed layers (`customLayerType`) take layer-sync's ordering-only
@@ -64,7 +64,7 @@ function makeMapStub(fillLayerId: string, baseFilter?: unknown) {
   return { map, calls, present };
 }
 
-function overtureLayer(id: string, patch: Partial<GeoLibreLayer> = {}): GeoLibreLayer {
+function overtureLayer(id: string, patch: Partial<GeoIntLayer> = {}): GeoIntLayer {
   return {
     id,
     name: "Overture Building",
@@ -97,7 +97,7 @@ describe("3D extrusion on control-managed native fill layers", () => {
     const added = calls.find(
       (c) =>
         c.method === "addLayer" &&
-        (c.args[0] as { id: string }).id === `${nativeId}-geolibre-extrusion`,
+        (c.args[0] as { id: string }).id === `${nativeId}-geoint-extrusion`,
     );
     assert.ok(added, "expected a synthetic fill-extrusion layer to be added");
     const spec = added.args[0] as Record<string, unknown>;

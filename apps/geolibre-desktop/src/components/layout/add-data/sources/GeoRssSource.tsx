@@ -1,4 +1,4 @@
-import { Button, Input, Label, Select } from "@geolibre/ui";
+import { Button, Input, Label, Select } from "@geoint/ui";
 import { FileUp } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";

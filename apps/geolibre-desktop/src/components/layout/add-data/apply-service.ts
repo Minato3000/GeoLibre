@@ -4,7 +4,7 @@
  * sources and the Browser panel both build on:
  *
  * - **Pure layer builders** (`buildXyzLayer` / `buildWmsLayer` / `buildWmtsLayer`
- *   / `buildWfsGeoJsonLayer`) construct a {@link GeoLibreLayer} from resolved
+ *   / `buildWfsGeoJsonLayer`) construct a {@link GeoIntLayer} from resolved
  *   parameters. They have no React, network, or MapLibre dependencies, so the
  *   dialog sources call them from their submit handlers and they unit-test in
  *   isolation.
@@ -19,11 +19,11 @@
  *   importable under Node for tests.
  */
 
-import type { GeoLibreLayer } from "@geolibre/core";
-import type { MapController } from "@geolibre/map";
+import type { GeoIntLayer } from "@geoint/core";
+import type { MapController } from "@geoint/map";
 // Type-only: erased at compile time, so importing it does not pull maplibre-gl
 // (which `xyz-url` imports at runtime) into the pure builder surface.
-import type { ArcGISLayerType, ArcGISSourceType } from "@geolibre/plugins";
+import type { ArcGISLayerType, ArcGISSourceType } from "@geoint/plugins";
 import type { FeatureCollection } from "geojson";
 import type { RefObject } from "react";
 import { OGC_FEATURES_SOURCE_KIND } from "../../../lib/ogc-api-features";
@@ -71,7 +71,7 @@ export interface XyzLayerParams {
  * @param params - The layer name, resolved tile URL, tile size, and shortUrl flag.
  * @returns The constructed XYZ layer.
  */
-export function buildXyzLayer(params: XyzLayerParams): GeoLibreLayer {
+export function buildXyzLayer(params: XyzLayerParams): GeoIntLayer {
   const { name, tileUrl, tileSize, shortUrl } = params;
   return createBaseLayer(
     name,
@@ -127,7 +127,7 @@ export interface WmsLayerParams {
  * @param params - The layer name and WMS request parameters.
  * @returns The constructed WMS layer.
  */
-export function buildWmsLayer(params: WmsLayerParams): GeoLibreLayer {
+export function buildWmsLayer(params: WmsLayerParams): GeoIntLayer {
   const endpoint = stripOgcOperationParams(params.endpoint.trim(), "WMS");
   const version = normalizeWmsVersion(params.version);
   const layers = params.layers.trim();
@@ -196,7 +196,7 @@ export interface WmtsLayerParams {
  * @param params - The layer name, tile URL template, and tile size.
  * @returns The constructed WMTS layer.
  */
-export function buildWmtsLayer(params: WmtsLayerParams): GeoLibreLayer {
+export function buildWmtsLayer(params: WmtsLayerParams): GeoIntLayer {
   const url = params.url.trim();
   const attribution = attributionForTileUrl(url);
   return createBaseLayer(
@@ -270,7 +270,7 @@ export interface WfsLayerParams {
  * @param params - The layer name, feature URL, fetched data, and WFS metadata.
  * @returns The constructed GeoJSON layer.
  */
-export function buildWfsGeoJsonLayer(params: WfsLayerParams): GeoLibreLayer {
+export function buildWfsGeoJsonLayer(params: WfsLayerParams): GeoIntLayer {
   return {
     ...createBaseLayer(
       params.name,
@@ -324,7 +324,7 @@ export interface OgcFeaturesLayerParams {
  * @param params - The layer name, items URL, fetched data, and request metadata.
  * @returns The constructed GeoJSON layer.
  */
-export function buildOgcFeaturesLayer(params: OgcFeaturesLayerParams): GeoLibreLayer {
+export function buildOgcFeaturesLayer(params: OgcFeaturesLayerParams): GeoIntLayer {
   return {
     ...createBaseLayer(
       params.name,
@@ -384,7 +384,7 @@ export function arcgisFieldsToOptions(entry: ServiceLibraryEntry): ArcGISOptions
 
 export interface ApplyServiceDeps {
   /** Store action to add the built layer. */
-  addLayer: (layer: GeoLibreLayer, beforeLayerId?: string | null) => void;
+  addLayer: (layer: GeoIntLayer, beforeLayerId?: string | null) => void;
   /** Map controller ref, used for the ArcGIS plugin path and to fit new layers. */
   mapControllerRef: RefObject<MapController | null>;
   /** Insert-before layer id, or null/undefined for the top of the stack. */
@@ -455,7 +455,7 @@ export async function applyServiceEntry(
     case "arcgis": {
       const options = arcgisFieldsToOptions(entry);
       const { createAppAPI } = await import("../../../hooks/usePlugins");
-      const { addArcGISLayer } = await import("@geolibre/plugins");
+      const { addArcGISLayer } = await import("@geoint/plugins");
       await addArcGISLayer(createAppAPI(mapControllerRef), {
         beforeLayerId,
         itemId: options.itemId,

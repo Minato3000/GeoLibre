@@ -1,4 +1,4 @@
-import { Button, Input, Label, Select } from "@geolibre/ui";
+import { Button, Input, Label, Select } from "@geoint/ui";
 import { FileUp, Layers } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -168,7 +168,7 @@ export function CadSource() {
     } catch (err) {
       if (isUnsupportedGeometryError(err)) {
         // Keep the raw cause in DevTools while showing the friendly message.
-        console.warn("[GeoLibre] CAD layer geometry could not be decoded", err);
+        console.warn("[GeoInt] CAD layer geometry could not be decoded", err);
         throw new Error(t("addData.cad.errorUnsupportedGeometry"));
       }
       throw err;

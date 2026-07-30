@@ -1,6 +1,6 @@
 // tiles.geolibre.app
 //
-// A CORS-adding, edge-caching tile service for GeoLibre's planetary basemaps.
+// A CORS-adding, edge-caching tile service for GeoInt's planetary basemaps.
 // It does two jobs, both keyed to a tight allowlist so it is never an open proxy:
 //
 //   1. `/opm/<dataset>/<z>/<x>/<y>.png` — a plain reverse proxy for the
@@ -55,7 +55,7 @@ const DATASETS: Record<string, string> = {
 const TILE_PATH = /^\/opm\/([a-z0-9-]+)\/(\d{1,2})\/(\d{1,7})\/(\d{1,7})\.png$/;
 
 // OpenAerialMap metadata search proxy. The OAM `/meta` API only sends CORS
-// headers for the OAM web app origin, so a browser fetch from GeoLibre is
+// headers for the OAM web app origin, so a browser fetch from GeoInt is
 // blocked; this route fetches it server-side (no CORS applies server-to-server)
 // and re-emits the JSON with `Access-Control-Allow-Origin: *` — the same thing
 // leafmap.oam_search gets for free by calling the API from Python. The upstream
@@ -82,7 +82,7 @@ const OAM_MAX_LIMIT = 100;
 // re-emits the JSON with `Access-Control-Allow-Origin: *`, exactly as the OAM
 // route above does. Only product *metadata* passes through here — the data
 // itself lives on `data.source.coop`, which is already CORS- and range-enabled,
-// so GeoLibre reads PMTiles/GeoParquet bytes direct and they never touch the
+// so GeoInt reads PMTiles/GeoParquet bytes direct and they never touch the
 // Worker.
 //
 // Two upstreams are exposed under one prefix, both fixed:
@@ -292,7 +292,7 @@ const NEGATIVE_CACHE_CONTROL = "public, max-age=300";
  * Whether an `Origin` header may use the OpenAerialMap search proxy. Allowed:
  *
  *   - the production web app on `*.geolibre.app` (any subdomain, plus the apex)
- *   - Cloudflare Pages deploy previews (project `geolibre-preview`) and
+ *   - Cloudflare Pages deploy previews (project `geoint-preview`) and
  *     `*.workers.dev` preview deployments
  *   - local dev on `localhost` / `127.0.0.1`
  *
@@ -319,7 +319,7 @@ function isAllowedOamOrigin(origin: string | null): boolean {
     if (hostname === "geolibre.app" || hostname.endsWith(".geolibre.app")) {
       return true;
     }
-    if (hostname.endsWith(".geolibre-preview.pages.dev")) return true;
+    if (hostname.endsWith(".geoint-preview.pages.dev")) return true;
     if (hostname.endsWith(".workers.dev")) return true;
   }
   if (
@@ -350,7 +350,7 @@ function sourceCoopUpstream(pathname: string): string | null {
  * Proxies one Source Cooperative metadata read with CORS added.
  *
  * Origin-gated like `/oam/meta`: it is a wildcard-CORS proxy to a fixed
- * upstream, so restricting it to GeoLibre's own origins stops a third-party
+ * upstream, so restricting it to GeoInt's own origins stops a third-party
  * site driving Source Cooperative traffic through the Worker. The desktop app
  * fetches source.coop over native HTTP and never reaches this route.
  *
@@ -498,7 +498,7 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === "/" || url.pathname === "") {
       return new Response(
-        "GeoLibre tile + service proxy.\n" +
+        "GeoInt tile + service proxy.\n" +
           "  Passthrough: /opm/<dataset>/<z>/<x>/<y>.png\n" +
           `    Datasets: ${Object.keys(DATASETS).join(", ")}\n` +
           "  Reprojected WMS: /wms/<dataset>/<z>/<x>/<y>.png\n" +
@@ -519,7 +519,7 @@ export default {
     // fixed upstream and re-emit the JSON with CORS (see OAM_META_PATH above).
     if (url.pathname === OAM_META_PATH) {
       // Abuse guard: this is a wildcard-CORS proxy to a fixed upstream, so
-      // restrict it to GeoLibre's own origins (see isAllowedOamOrigin) — every
+      // restrict it to GeoInt's own origins (see isAllowedOamOrigin) — every
       // cross-origin `fetch()` from the app carries an Origin header. This stops
       // a third-party site from driving arbitrary OAM queries through the
       // Worker. It is not a rate limiter — per-client throttling belongs in a

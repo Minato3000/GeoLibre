@@ -8,10 +8,10 @@
 // `3d-tiles` layer with a distinct source kind so the main Layers panel manages
 // its visibility/opacity/removal, which this overlay reflects.
 
-import { DEFAULT_LAYER_STYLE, type GeoLibreLayer, useAppStore } from "@geolibre/core";
+import { DEFAULT_LAYER_STYLE, type GeoIntLayer, useAppStore } from "@geoint/core";
 import type { Layer } from "@deck.gl/core";
 import type { MapboxOverlay } from "@deck.gl/mapbox";
-import type { GeoLibreAppAPI, GeoLibreDeckGL } from "../types";
+import type { GeoIntAppAPI, GeoIntDeckGL } from "../types";
 import {
   acquireMercatorProjectionLock,
   releaseMercatorProjectionLock,
@@ -64,8 +64,8 @@ const I3S_SCENE_SERVER_RE = /\/SceneServer(\/|$|\?|#)/i;
 
 let i3sOverlay: MapboxOverlay | null = null;
 let i3sOverlayMounted = false;
-let i3sDeckGL: GeoLibreDeckGL | null = null;
-let i3sApp: GeoLibreAppAPI | null = null;
+let i3sDeckGL: GeoIntDeckGL | null = null;
+let i3sApp: GeoIntAppAPI | null = null;
 let i3sBoundMap: unknown;
 let i3sStoreUnsubscribe: (() => void) | null = null;
 let i3sEnsureInFlight: Promise<void> | null = null;
@@ -111,7 +111,7 @@ export function arcgisI3sSceneLayerName(url: string): string | null {
 }
 
 /** Whether a store layer is an ArcGIS I3S tileset layer. */
-export function isArcgisI3sTilesLayer(layer: GeoLibreLayer): boolean {
+export function isArcgisI3sTilesLayer(layer: GeoIntLayer): boolean {
   return layer.type === "3d-tiles" && layer.metadata.sourceKind === ARCGIS_I3S_SOURCE_KIND;
 }
 
@@ -119,12 +119,12 @@ export function isArcgisI3sTilesLayer(layer: GeoLibreLayer): boolean {
  * Add an ArcGIS I3S scene layer to the store and ensure the deck.gl overlay is
  * mounted. Managed thereafter from the main Layers panel.
  *
- * @param app The GeoLibre app API.
+ * @param app The GeoInt app API.
  * @param options Scene Layer URL, display name, opacity, visibility, flyTo.
  * @returns The new store layer id.
  */
 export function addArcgisI3sTilesLayer(
-  app: GeoLibreAppAPI,
+  app: GeoIntAppAPI,
   options: {
     url: string;
     name: string;
@@ -173,20 +173,20 @@ const i3sFlyToRequested = new Set<string>();
  * Re-mount the overlay for any ArcGIS I3S layers present in the store, e.g.
  * after a project is reopened.
  */
-export function restoreArcgisI3sTilesLayers(app: GeoLibreAppAPI): void {
+export function restoreArcgisI3sTilesLayers(app: GeoIntAppAPI): void {
   if (useAppStore.getState().layers.some(isArcgisI3sTilesLayer)) {
     void ensureArcgisI3sTilesOverlay(app);
   }
 }
 
-function ensureArcgisI3sTilesOverlay(app: GeoLibreAppAPI): Promise<void> {
+function ensureArcgisI3sTilesOverlay(app: GeoIntAppAPI): Promise<void> {
   if (i3sEnsureInFlight) return i3sEnsureInFlight;
   // Both call sites are fire-and-forget, so log any failure here rather than
   // leaving it as an unhandled rejection with no clue why the layer never
   // rendered.
   i3sEnsureInFlight = runEnsureArcgisI3sTilesOverlay(app)
     .catch((error) => {
-      console.error("[GeoLibre] Failed to initialize the ArcGIS I3S overlay", error);
+      console.error("[GeoInt] Failed to initialize the ArcGIS I3S overlay", error);
     })
     .finally(() => {
       i3sEnsureInFlight = null;
@@ -194,7 +194,7 @@ function ensureArcgisI3sTilesOverlay(app: GeoLibreAppAPI): Promise<void> {
   return i3sEnsureInFlight;
 }
 
-async function runEnsureArcgisI3sTilesOverlay(app: GeoLibreAppAPI): Promise<void> {
+async function runEnsureArcgisI3sTilesOverlay(app: GeoIntAppAPI): Promise<void> {
   i3sApp = app;
   if (!app.getDeckGL) return;
   i3sDeckGL ??= await app.getDeckGL();
@@ -210,10 +210,7 @@ async function runEnsureArcgisI3sTilesOverlay(app: GeoLibreAppAPI): Promise<void
     try {
       app.removeMapControl(i3sOverlay);
     } catch (error) {
-      console.warn(
-        "[GeoLibre] Failed to detach the ArcGIS I3S overlay from the previous map",
-        error,
-      );
+      console.warn("[GeoInt] Failed to detach the ArcGIS I3S overlay from the previous map", error);
     }
   }
   i3sBoundMap = map;
@@ -270,7 +267,7 @@ function renderArcgisI3sTilesLayers(): void {
       try {
         i3sApp.removeMapControl(i3sOverlay);
       } catch (error) {
-        console.warn("[GeoLibre] Failed to remove the empty ArcGIS I3S overlay", error);
+        console.warn("[GeoInt] Failed to remove the empty ArcGIS I3S overlay", error);
       }
       i3sOverlayMounted = false;
     }
@@ -318,7 +315,7 @@ function scheduleI3sMountRetry(): void {
   if (i3sMountRetries >= I3S_MAX_MOUNT_RETRIES) {
     i3sMountGaveUp = true;
     console.warn(
-      "[GeoLibre] Gave up mounting the ArcGIS I3S overlay after repeated addMapControl failures.",
+      "[GeoInt] Gave up mounting the ArcGIS I3S overlay after repeated addMapControl failures.",
     );
     return;
   }
@@ -330,7 +327,7 @@ function scheduleI3sMountRetry(): void {
   });
 }
 
-function i3sLayerSignature(layers: GeoLibreLayer[]): string {
+function i3sLayerSignature(layers: GeoIntLayer[]): string {
   return layers
     .map(
       (layer) =>
@@ -346,8 +343,8 @@ function i3sLayerSignature(layers: GeoLibreLayer[]): string {
 // live map/overlay. Defaults are evaluated per call, so production callers pick
 // up the lazily-populated module globals.
 export function buildArcgisI3sTilesDeckLayer(
-  layer: GeoLibreLayer,
-  deps: { deckGL: GeoLibreDeckGL | null; loader: unknown } = {
+  layer: GeoIntLayer,
+  deps: { deckGL: GeoIntDeckGL | null; loader: unknown } = {
     deckGL: i3sDeckGL,
     loader: i3sLoader,
   },
@@ -389,7 +386,7 @@ export function buildArcgisI3sTilesDeckLayer(
     // @loaders.gl Tileset3D calls this as (tile, message, url) — note the deck.gl
     // typings mislabel the order as (tile, url, message).
     onTileError: (_tile: unknown, message: string, tileUrl: string) =>
-      console.error(`[GeoLibre] ArcGIS I3S tile failed to load: ${message} (${tileUrl})`),
+      console.error(`[GeoInt] ArcGIS I3S tile failed to load: ${message} (${tileUrl})`),
   });
 }
 
@@ -436,7 +433,7 @@ function warnOnUnsupportedI3sSceneLayerType(url: string, tileset: unknown): void
   const layerType = header?.tileset?.layerType ?? header?.layerType;
   if (typeof layerType === "string" && !SUPPORTED_I3S_LAYER_TYPES.has(layerType)) {
     console.warn(
-      `[GeoLibre] ArcGIS I3S scene layer type "${layerType}" is not supported ` +
+      `[GeoInt] ArcGIS I3S scene layer type "${layerType}" is not supported ` +
         "(only 3DObject and IntegratedMesh mesh layers render); this layer may " +
         `not display: ${url}`,
     );
@@ -502,7 +499,7 @@ function flyToI3sTileset(layerId: string, tileset: unknown): void {
   });
 }
 
-function forceI3sMercatorProjection(app: GeoLibreAppAPI): void {
+function forceI3sMercatorProjection(app: GeoIntAppAPI): void {
   acquireMercatorProjectionLock(I3S_PROJECTION_LOCK_KEY, app, app.getMap?.());
 }
 

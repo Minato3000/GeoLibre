@@ -6,11 +6,11 @@ import {
   getToolbarMenusSnapshot,
   registerToolbarMenu,
 } from "../packages/plugins/src/toolbar-menu-registry";
-import type { GeoLibreAppAPI, GeoLibrePlugin } from "../packages/plugins/src/types";
+import type { GeoIntAppAPI, GeoIntPlugin } from "../packages/plugins/src/types";
 
-const app = {} as GeoLibreAppAPI;
+const app = {} as GeoIntAppAPI;
 
-function testPlugin(patch: Partial<GeoLibrePlugin> = {}): GeoLibrePlugin {
+function testPlugin(patch: Partial<GeoIntPlugin> = {}): GeoIntPlugin {
   return {
     id: "url-loader",
     name: "URL Loader",
@@ -80,7 +80,7 @@ describe("PluginManager URL parameters", () => {
 
   it("activates an installed-but-inactive plugin that owns a present parameter", async () => {
     const calls: string[] = [];
-    const activateApps: GeoLibreAppAPI[] = [];
+    const activateApps: GeoIntAppAPI[] = [];
     const manager = new PluginManager();
 
     manager.register(
@@ -621,7 +621,7 @@ describe("PluginManager toolbar menu scoping", () => {
         seen.push(ownerPluginId);
         return () => undefined;
       },
-    } as unknown as GeoLibreAppAPI;
+    } as unknown as GeoIntAppAPI;
 
     manager.register(
       testPlugin({
@@ -647,7 +647,7 @@ describe("PluginManager toolbar menu scoping", () => {
     // registerToolbarMenu (not a mock) through activate and assert the snapshot
     // carries the owner. Breaks if the registry ever drops the owner argument.
     const manager = new PluginManager();
-    const realApp = { registerToolbarMenu } as unknown as GeoLibreAppAPI;
+    const realApp = { registerToolbarMenu } as unknown as GeoIntAppAPI;
 
     manager.register(
       testPlugin({
@@ -676,7 +676,7 @@ describe("PluginManager toolbar menu scoping", () => {
         seen.push(ownerPluginId);
         return () => undefined;
       },
-    } as unknown as GeoLibreAppAPI;
+    } as unknown as GeoIntAppAPI;
 
     let register: (() => void) | undefined;
     manager.register(
@@ -710,7 +710,7 @@ describe("PluginManager toolbar menu scoping", () => {
         seen.push(ownerPluginId);
         return () => undefined;
       },
-    } as unknown as GeoLibreAppAPI;
+    } as unknown as GeoIntAppAPI;
 
     manager.register(
       testPlugin({
@@ -777,7 +777,7 @@ describe("PluginManager panel auto-expand on restore", () => {
     const manager = new PluginManager();
     const control = fakeControl();
     const addMapControl = () => true;
-    const mockApp = { addMapControl } as unknown as GeoLibreAppAPI;
+    const mockApp = { addMapControl } as unknown as GeoIntAppAPI;
     manager.register(panelPlugin("basemaps", control));
 
     manager.restoreProjectState(
@@ -802,7 +802,7 @@ describe("PluginManager panel auto-expand on restore", () => {
     const manager = new PluginManager();
     const control = fakeControl();
     const addMapControl = () => true;
-    const mockApp = { addMapControl } as unknown as GeoLibreAppAPI;
+    const mockApp = { addMapControl } as unknown as GeoIntAppAPI;
     // The Time Slider dock: its `collapsed` flag round-trips through the saved
     // project, so the restore sweep must not force it shut. Its collapsed style
     // is `display: none`, so collapsing it here hid the dock outright (#1346).
@@ -833,7 +833,7 @@ describe("PluginManager panel auto-expand on restore", () => {
     const manager = new PluginManager();
     const control = fakeControl();
     const addMapControl = () => true;
-    const mockApp = { addMapControl } as unknown as GeoLibreAppAPI;
+    const mockApp = { addMapControl } as unknown as GeoIntAppAPI;
 
     // A plugin mounted behind a dynamic import: it adds its control (and
     // auto-expands) only after activate()'s promise has begun resolving, so the
@@ -875,7 +875,7 @@ describe("PluginManager panel auto-expand on restore", () => {
     const control = fakeControl();
     let currentPosition = "top-right";
     const addMapControl = () => true;
-    const mockApp = { addMapControl } as unknown as GeoLibreAppAPI;
+    const mockApp = { addMapControl } as unknown as GeoIntAppAPI;
 
     // A plugin whose saved position differs from the live one: restore calls
     // setMapControlPosition, which re-adds (and re-expands) the control. That
@@ -923,7 +923,7 @@ describe("PluginManager panel auto-expand on restore", () => {
     // Start collapsed so the assertion only passes if activate() really expands.
     control.collapsed = true;
     const addMapControl = () => true;
-    const mockApp = { addMapControl } as unknown as GeoLibreAppAPI;
+    const mockApp = { addMapControl } as unknown as GeoIntAppAPI;
     manager.register(panelPlugin("basemaps", control));
 
     manager.activate("basemaps", mockApp);
@@ -1031,7 +1031,7 @@ describe("PluginManager plugin coordination", () => {
     const coordinatingApp = {
       ...app,
       activatePlugin: async (id: string) => Boolean(await manager.activate(id, coordinatingApp)),
-    } as GeoLibreAppAPI;
+    } as GeoIntAppAPI;
     manager.register(
       testPlugin({
         id: "first",
@@ -1066,8 +1066,8 @@ describe("PluginManager plugin coordination", () => {
         manager.deactivate(id, coordinatingApp);
         return !manager.isActive(id);
       },
-    } as GeoLibreAppAPI;
-    let closer: GeoLibreAppAPI | null = null;
+    } as GeoIntAppAPI;
+    let closer: GeoIntAppAPI | null = null;
     manager.register(
       testPlugin({
         id: "closer",

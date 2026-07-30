@@ -1,4 +1,4 @@
-# GeoLibre Roadmap
+# GeoInt Roadmap
 
 ## v0.1: Map viewer and GeoJSON
 
@@ -10,7 +10,7 @@
 
 ## v0.2: Project persistence
 
-- [x] `.geolibre.json` save/open
+- [x] `.geoint.json` save/open
 - [x] In-session recent project tracking
 - [x] Feature highlight from attribute table
 - [x] Optional zoom to selected feature
@@ -36,7 +36,7 @@
 - [x] MapLibre Components plugin with FlatGeobuf, PMTiles, Zarr, LiDAR, and Gaussian splat panels
 - [x] Desktop MBTiles metadata and tile reads through Tauri commands
 - [x] Plugin control position controls in the Plugins menu
-- [x] Layer control integration for GeoLibre-managed layers
+- [x] Layer control integration for GeoInt-managed layers
 
 ## v0.6: Project access, web embeds, and expanded integrations
 
@@ -121,7 +121,7 @@
 - [x] Plugin marketplace MVP: curated registry plus browse and install UI
 - [x] Plugin update (in-place re-fetch) and uninstall with confirmation
 - [x] Project menu Share action that uploads to share.geolibre.app using a personal API token
-- [x] Python package (`geolibre`) for Jupyter notebooks: embeds the full app as an [anywidget](https://anywidget.dev) with a leafmap-style API (`add_geojson`, `add_tile_layer`, `add_cog`) and two-way `.geolibre.json` project sync
+- [x] Python package (`geoint`) for Jupyter notebooks: embeds the full app as an [anywidget](https://anywidget.dev) with a leafmap-style API (`add_geojson`, `add_tile_layer`, `add_cog`) and two-way `.geoint.json` project sync
 - [x] Performance tuning and test suite
 - [x] Cross-platform installers
 - [x] Documentation and tutorials
@@ -190,7 +190,7 @@
 - [x] User-editable legend for the print layout
 - [x] Field statistics summary panel in the attribute table
 - [x] AI Segmentation toolbox via [segment-geospatial](https://github.com/opengeos/segment-geospatial) (SamGeo) and Meta's SAM 3, proxied through the sidecar to a separate `samgeo-api` model server
-- [x] Natural-language GIS assistant (Strands agent) that turns plain-English requests into auditable, undoable GeoLibre operations
+- [x] Natural-language GIS assistant (Strands agent) that turns plain-English requests into auditable, undoable GeoInt operations
 - [x] Python automation API and an in-app Python Console
 - [x] Python package: local raster, marker/cluster, and choropleth APIs; `split_map`, `add_legend`, and `add_colorbar` helpers; typed read-back of selected/drawn features; and `to_html` export
 - [x] Homebrew Cask packaging for macOS
@@ -202,7 +202,7 @@
 
 ## v1.4: Jupyter beside the map, spectral indices, georeferencing, and field collection
 
-- [x] Resizable, collapsible Notebook panel docked beside the map: the web build embeds a self-hosted JupyterLite site (in-browser Pyodide kernel) and the desktop build launches a uv-managed JupyterLab server, both seeded with a runnable Welcome tour. Notebook cells drive the live map through the shared scripting bridge via an auto-loaded `geolibre` client, and the JupyterLite theme follows the app theme — see [Notebook Panel](notebook.md)
+- [x] Resizable, collapsible Notebook panel docked beside the map: the web build embeds a self-hosted JupyterLite site (in-browser Pyodide kernel) and the desktop build launches a uv-managed JupyterLab server, both seeded with a runnable Welcome tour. Notebook cells drive the live map through the shared scripting bridge via an auto-loaded `geoint` client, and the JupyterLite theme follows the app theme — see [Notebook Panel](notebook.md)
 - [x] Spectral Index toolbox under Processing → Raster (NDVI, GNDVI, NDWI, NDMI, NDBI, NBR, EVI, and SAVI) with Sentinel-2, Landsat 8-9, NAIP, and custom band layouts and a reflectance-scale knob, evaluated client-side via geotiff.js or on the rasterio sidecar through the existing raster calculator
 - [x] Raster Georeferencer (Processing → Georeferencing): pin a non-georeferenced image to the map with ground control points, using a least-squares affine fit and per-GCP and RMS residuals, added as a corner-pinned overlay that persists in the project and works offline
 - [x] Field Collection tool (Controls menu) for capturing point, line, and polygon observations with a per-layer custom form (text/number/date/choice fields and an optional inline photo), placed by device GPS or by tapping the map, with a floating quick-open control; captures are written to a tagged GeoJSON layer that flows into the attribute table, export, and offline use
@@ -211,7 +211,7 @@
 ## v1.5: Dashboards, in-browser Whitebox, map navigation history, and signed macOS installers
 
 - [x] Dashboard panel of chart widgets that summarizes the loaded layers at a glance, with configurable charts and a collapsible layout that docks alongside the map
-- [x] Whitebox toolbox now runs entirely in the browser through a WebAssembly runtime with raster I/O, so its tools (and GeoLibre's own WASM raster tools, now surfaced in the same toolbox) work with no Python sidecar
+- [x] Whitebox toolbox now runs entirely in the browser through a WebAssembly runtime with raster I/O, so its tools (and GeoInt's own WASM raster tools, now surfaced in the same toolbox) work with no Python sidecar
 - [x] Print layout composer gained an explicit map-scale input, a title block with editable title and footer, page-size controls, and a custom print extent, with more reliable preview rendering for production-quality PNG and PDF map exports
 - [x] Time Slider can bind existing vector layers already on the map to the timeline, animating their time-series attributes without re-importing the data
 - [x] New View menu with viewport history navigation (step back and forward through previous map extents), a reset pitch and bearing control with a rotation indicator, a distinct north arrow in place of the ambiguous compass, a lock indicator when map bounds are restricted, and a refined default set of top-right map controls
@@ -225,7 +225,7 @@
 - [x] Spinning Globe panel under Atmospheric Effects and customizable atmosphere halo and deep-space colors for the globe view
 - [x] Notebook panel can split the workspace 50/50 with the map and auto-collapse the Style panel for more room, and the attribute table gains a column explorer for finding and toggling fields in wide tables
 - [x] USGS LiDAR plugin replaces the previous LiDAR Viewer for browsing and loading USGS 3DEP point-cloud data, imported KML and KMZ layers honor their embedded symbology, and vector strokes can be sized in scale-proportional meters
-- [x] macOS desktop installers are now signed with an Apple Developer ID certificate and notarized by Apple, so they open without a Gatekeeper workaround, with a generator for submitting GeoLibre to the official Homebrew cask (see [Downloads](downloads.md))
+- [x] macOS desktop installers are now signed with an Apple Developer ID certificate and notarized by Apple, so they open without a Gatekeeper workaround, with a generator for submitting GeoInt to the official Homebrew cask (see [Downloads](downloads.md))
 
 ## v1.6: Multi-map layouts, advanced symbology and labeling, and plugin zip install
 
@@ -243,7 +243,7 @@
 - [x] Interactive sidecar help banners for the Whitebox toolbox and AI Segmentation that guide you when the Python sidecar is not running or fails to start
 - [x] Guided update workflow with a startup update check, update preferences, and clearer status colors
 - [x] Time Slider defaults an unspecified end date to the current date
-- [x] Windows Package Manager (winget) packaging as `OpenGeos.GeoLibre`, so the app can be installed and updated through winget
+- [x] Windows Package Manager (winget) packaging as `OpenGeos.GeoInt`, so the app can be installed and updated through winget
 - [x] [Microsoft Store](https://apps.microsoft.com/detail/9nwt67rv531x) listing, so Windows users can install the signed, auto-updating build directly from the Store (see [Downloads](downloads.md))
 
 ## v1.7: Plugin UI host API, color ramp previews, and category-browsed Whitebox tools
@@ -251,7 +251,7 @@
 - [x] Plugin UI host API that lets plugins register first-class right-sidebar panels, toolbar menus, and floating panels that dock beside the built-in Style panel instead of emulating an overlay, with external plugin toolbar menus now placed after the Help menu (see [Plugin API](plugin-api.md))
 - [x] Color ramp gradient swatches in both the vector Style panel and the raster Color ramp picker, so you can see each colormap's gradient inline (on the trigger and beside every option) while choosing rather than picking from a plain list of names
 - [x] Richer vector labeling with ArcGIS-style controls (anchor, X/Y offset, rotation, wrap width, and letter case), a Duplicate labels option, and unique/concatenate modes that collapse points stacked at the same coordinate into a single deduplicated label
-- [x] Whitebox toolbox is now browsable by category directly in the Processing menu, with nested subcategory submenus, GeoLibre's own WASM tools grouped under their own subheading, an offline-bundled tool catalog for restricted environments, and tools that open the dialog preselected and scrolled into view
+- [x] Whitebox toolbox is now browsable by category directly in the Processing menu, with nested subcategory submenus, GeoInt's own WASM tools grouped under their own subheading, an offline-bundled tool catalog for restricted environments, and tools that open the dialog preselected and scrolled into view
 - [x] On-canvas collaboration session-status badge and roster (a pulsing live dot, connected-participant count, and an expandable client list that announces joins and leaves), plus a clear "Go to map and collaborate" button so the host has a non-destructive way back to the map
 - [x] Welcome wizard is suppressed for embeds: project deep links (`?url=`) skip onboarding automatically, and a new `?welcome=0` parameter lets any embed opt out
 
@@ -303,7 +303,7 @@
 
 - [x] Switch any map pane to a **CesiumJS 3D globe** view that stays camera-synced with the 2D maps and mirrors the layer stack, adding a true photorealistic globe alongside the flat workspace (requires a Cesium Ion token)
 - [x] Planetary mapping with the OpenPlanetaryMap basemap set (Mars and the Moon) plus USGS Astrogeology basemaps for Mercury, Venus, the Galilean moons, Titan, Pluto, and Charon reprojected to Web Mercator, a per-project ellipsoid whose radius drives distance/area/scale, and a planet switcher in the Layers panel, plus an expanded EOX Maps catalog and dark-mode-aware basemap theming
-- [x] Import and export vector layer symbology as OGC SLD, QGIS QML, and Mapbox GL style JSON, so styles round-trip between GeoLibre, QGIS, and the Mapbox/MapLibre ecosystem
+- [x] Import and export vector layer symbology as OGC SLD, QGIS QML, and Mapbox GL style JSON, so styles round-trip between GeoInt, QGIS, and the Mapbox/MapLibre ecosystem
 - [x] Edit vector layers and write the changes back to their source, covering GeoPackage and GeoJSON files as well as PostGIS database tables
 - [x] New Weather menu with live cloud and precipitation radar overlays (RainViewer), a Clouds overlay in the Controls menu, and a Google Earth-style sun position simulation for realistic lighting
 - [x] Richer KML/KMZ support: render GroundOverlay images as map overlays (animated through the Time Slider when time-tagged) and display embedded Collada (.dae) 3D models
@@ -375,21 +375,21 @@
 
 - [x] A new **STAC catalogs browser** plugin that discovers public SpatioTemporal Asset Catalogs from STAC Index, connects to both static catalogs and STAC APIs, searches a collection's items, and adds any visualizable asset — COGs, GeoJSON, and the rest — straight to the map, so working with STAC no longer means leaving the app to hand-copy asset URLs
 - [x] A new **Earthdata GIS browser** under Plugins > Web Services that searches NASA's EOSDIS ArcGIS portal and renders its imagery, map, and feature services, and its published web maps, as first-class layers, with the mosaic pixel-size limits that used to return blank tiles handled for you
-- [x] A new **Hugging Face** panel that browses the Hub: search datasets or name an account, walk a repo's folders, and add its vector and raster files to the map through the readers that already handle each format — and go the other way, creating a dataset repo and uploading layers to it from inside GeoLibre
+- [x] A new **Hugging Face** panel that browses the Hub: search datasets or name an account, walk a repo's folders, and add its vector and raster files to the map through the readers that already handle each format — and go the other way, creating a dataset repo and uploading layers to it from inside GeoInt
 - [x] A **flight simulator**: a continuous, interactive free-flight camera you steer over terrain and 3D layers with the keyboard, instead of declaring a destination and watching a scripted `flyTo`
 - [x] The **Time Slider now animates tiled data**: vector tiles, PMTiles, and MBTiles can be bound to the timeline and animated over their full extent, with the timestamp field detected from a live tile sample rather than requiring a local copy of the data
 - [x] The Time Slider also drives a layer's **own internal time dimension** through a generic temporal adapter, so a data cube such as a Zarr store joins the shared timeline instead of carrying its own bespoke time control, and the binding is saved with the project
 - [x] **Zarr gets a real Add Data path**: an Add Zarr Layer dialog for remote stores or a folder on disk, variable and dimension pickers that offer the store's actual coordinate values rather than raw indices, and a Selector field that now applies to a layer already on the map
 - [x] **OGC API - Features** collections can be added as vector layers, the JSON-native successor to WFS, from whatever URL you have in hand — a landing page, `/collections`, or a full items URL
-- [x] A versioned **`postMessage` API for host pages** that frame GeoLibre: load a project, move the camera, highlight features, and open a processing tool at runtime, with `ready`, `projectLoaded`, `selectionChanged`, `viewChanged`, `toolCompleted`, and `serverFileWritten` events coming back out. Off unless the deployment names its trusted origins. See [Embedding & Sharing](user-guide/embedding.md#talking-to-the-map-at-runtime)
+- [x] A versioned **`postMessage` API for host pages** that frame GeoInt: load a project, move the camera, highlight features, and open a processing tool at runtime, with `ready`, `projectLoaded`, `selectionChanged`, `viewChanged`, `toolCompleted`, and `serverFileWritten` events coming back out. Off unless the deployment names its trusted origins. See [Embedding & Sharing](user-guide/embedding.md#talking-to-the-map-at-runtime)
 - [x] **Jupyter clients outside the app can drive the map**: attaching VS Code's Jupyter extension, `jupyter console`, or nbclient to the desktop app's Jupyter server now makes `fly_to`, `add_geojson`, and the rest work, because the transport follows the kernel's server rather than how the notebook happens to be displayed
 - [x] A new **H3 hexagonal grid plugin** that renders the H3 grid over the current view at a chosen resolution, identifies a cell to inspect its index, parent, children, neighbors, and center, and exports the grid or the selection as GeoJSON or CSV — plus typing an **H3 cell index** into the place-search box, as a hexadecimal string or a 64-bit integer, to frame and outline that cell
 - [x] **Object detection on geotagged photos**: run the in-browser ONNX/YOLO models over an imported photo layer, not just map imagery
 - [x] The AI assistant gains a **model picker in the panel itself**, refreshed model lists for every provider, credentials that survive a provider change, and arrow-key recall of previous prompts
 - [x] **Indicator (KPI) tiles in the Dashboard panel**: a big-number widget with count, sum, mean, min, max, or median aggregation and custom prefix and suffix, alongside the existing chart widgets
 - [x] **Editing GeoLens datasets in place**: a dataset added as GeoJSON can be redrawn with the GeoEditor or retyped in the attribute table, and the plugin's Edits section shows what changed and writes it back to the GeoLens dataset — added, moved, and deleted features become per-feature `POST`/`PUT`/`PATCH`/`DELETE` calls, with the row ids GeoLens assigns stamped back onto the layer. Private GeoLens rasters also render now, with the API key attached to exactly their tile URLs and nothing else
-- [x] Plugins can call `addZarrLayer` to use the Zarr renderer GeoLibre already ships instead of bundling their own, keep their own paint properties on custom layers so the Style panel's sliders actually do something, and expose layer groups of their own
-- [x] GeoLibre is on **[Google Play](https://play.google.com/store/apps/details?id=org.geolibre.app)**, so Android users can install the signed, auto-updating build in one tap instead of sideloading an APK (see [Downloads](downloads.md#android-installation))
+- [x] Plugins can call `addZarrLayer` to use the Zarr renderer GeoInt already ships instead of bundling their own, keep their own paint properties on custom layers so the Style panel's sliders actually do something, and expose layer groups of their own
+- [x] GeoInt is on **[Google Play](https://play.google.com/store/apps/details?id=org.geolibre.app)**, so Android users can install the signed, auto-updating build in one tap instead of sideloading an APK (see [Downloads](downloads.md#android-installation))
 - [x] Linux **AppImage releases now carry update information and a `.zsync`**, so AppImageUpdate, AppImageLauncher, AppManager, and AM can update the app and transfer only the blocks that changed instead of the whole download
 - [x] All 15 non-English locales are back at 100% coverage, Georgian included
 
@@ -414,7 +414,7 @@ code.
   `registry.json` hosted on `geolibre.app`, or generated from a GitHub
   repository of submissions). No live backend is required for the MVP.
 - Each entry carries `id`, `name`, `version`, `description`, `author`,
-  `homepage`, `manifestUrl`, `categories`, `minGeoLibreVersion`, and optional
+  `homepage`, `manifestUrl`, `categories`, `minGeoIntVersion`, and optional
   `screenshots`.
 - The index is fetched over HTTPS and cached; entries point at the same
   `plugin.json` manifests the existing loader already understands.
@@ -441,7 +441,7 @@ code.
 
 - Compare the installed `version` against the registry entry, surface an update
   available state, and offer a one-click update that re-fetches the bundle.
-- Honor `minGeoLibreVersion` so incompatible plugins are flagged, not installed.
+- Honor `minGeoIntVersion` so incompatible plugins are flagged, not installed.
 
 ### Trust and security
 
@@ -473,13 +473,13 @@ build, works in both:
 - `apps/geolibre-desktop/src/lib/plugin-registry.ts` fetches and normalizes a
   registry (`{ "plugins": [...] }`), resolving each entry's `manifestUrl`
   against the registry location. The registry URL is
-  `VITE_GEOLIBRE_PLUGIN_REGISTRY_URL` or, by default, the hosted registry at
+  `VITE_GEOINT_PLUGIN_REGISTRY_URL` or, by default, the hosted registry at
   `https://plugins.geolibre.app/plugin-registry.json`.
 - `apps/geolibre-desktop/src/components/layout/ManagePluginsDialog.tsx` is a
   standalone dialog (Settings menu > Manage Plugins) with All / Installed / Not
   installed / Upgradeable / Settings sections: search, install, a confirm step
   before uninstall, an Update action when a newer version is published,
-  `minGeoLibreVersion` compatibility checks, and inline error handling. The
+  `minGeoIntVersion` compatibility checks, and inline error handling. The
   Settings section manages additional local directories and manual manifest
   URLs. All actions apply immediately (live).
 - Installing records the entry's manifest URL in the plugin manifest URL list,

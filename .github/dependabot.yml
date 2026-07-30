@@ -40,7 +40,7 @@ updates:
           - minor
           - patch
 
-  # Python — the `geolibre` Jupyter anywidget package.
+  # Python — the `geoint` Jupyter anywidget package.
   - package-ecosystem: pip
     directory: "/python"
     schedule:

@@ -163,7 +163,7 @@ export function ensureGpkgFeatureCountSync(
         // Leave this table to GDAL's normal error path; other tables still get
         // fixed. Warn so a malformed GeoPackage is diagnosable rather than silent.
         console.warn(
-          `[GeoLibre] Could not repair gpkg_ogr_contents for table "${tableName}":`,
+          `[GeoInt] Could not repair gpkg_ogr_contents for table "${tableName}":`,
           error,
         );
       }
@@ -215,7 +215,7 @@ export async function ensureGpkgFeatureCount(
     const SQL = await loadSqlJs();
     return ensureGpkgFeatureCountSync(SQL, bytes);
   } catch (error) {
-    console.warn("[GeoLibre] Could not ensure gpkg_ogr_contents; reading file as-is.", error);
+    console.warn("[GeoInt] Could not ensure gpkg_ogr_contents; reading file as-is.", error);
     return bytes;
   }
 }

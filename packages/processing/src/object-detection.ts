@@ -11,7 +11,7 @@
  * Keeping inference in the browser means detection works in the web build with
  * no sidecar, mirroring how the client raster tools (`raster-client.ts`) run on
  * `geotiff.js` alone. The heavy `onnxruntime-web` module is imported lazily so
- * this file (and the rest of `@geolibre/processing`) loads without pulling the
+ * this file (and the rest of `@geoint/processing`) loads without pulling the
  * WASM runtime until a detection is actually requested.
  *
  * Supported model outputs: the standard Ultralytics exports for YOLOv8/v11

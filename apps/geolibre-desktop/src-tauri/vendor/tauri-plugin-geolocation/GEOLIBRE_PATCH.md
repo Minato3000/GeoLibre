@@ -1,10 +1,10 @@
-# GeoLibre vendor patch
+# GeoInt vendor patch
 
 This directory is based on `tauri-plugin-geolocation` 2.3.2 from crates.io.
-GeoLibre vendors it because the upstream Android bridge does not expose the
+GeoInt vendors it because the upstream Android bridge does not expose the
 number of GNSS satellites used in a location fix.
 
-The GeoLibre-specific delta is intentionally limited to:
+The GeoInt-specific delta is intentionally limited to:
 
 - `android/src/main/java/Geolocation.kt`: observe `GnssStatusCompat` and notify
   one-shot callers when a satellite count becomes available.

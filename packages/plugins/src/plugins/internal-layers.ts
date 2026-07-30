@@ -17,7 +17,7 @@ export const INTERNAL_HELPER_LAYER_PATTERNS = [
   "gl-draw-*",
   "gm_*",
   "inspect-highlight-*",
-  "geolibre-highlight-*",
+  "geoint-highlight-*",
   "measure-*",
   "vantor-*",
 ] as const;

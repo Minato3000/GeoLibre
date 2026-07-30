@@ -41,12 +41,12 @@ import {
   stepFlight,
   turnRateDegPerSec,
 } from "../packages/plugins/src/plugins/flight-simulator-physics";
-import type { GeoLibreAppAPI } from "../packages/plugins/src/types";
+import type { GeoIntAppAPI } from "../packages/plugins/src/types";
 
 // The engine only attaches when a map exists, so a map-less app exercises every
 // store path (panel visibility, settings, project state) without a DOM, a
 // MapLibre instance, or a `window` — mirroring the route-animation tests.
-const mapLessApp = { getMap: () => null } as unknown as GeoLibreAppAPI;
+const mapLessApp = { getMap: () => null } as unknown as GeoIntAppAPI;
 
 /** Reset the singleton store between cases. */
 function resetStore(): void {
@@ -750,7 +750,7 @@ describe("flight simulator engine", () => {
     withStubWindow(({ pump }) => {
       resetStore();
       const map = stubMap();
-      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoLibreAppAPI);
+      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoIntAppAPI);
       assert.equal(startFlying(), true);
       assert.equal(isFlying(), true);
       assert.equal(getFlightHudSnapshot().flying, true, "HUD must report flying at takeoff");
@@ -773,7 +773,7 @@ describe("flight simulator engine", () => {
     withStubWindow(() => {
       resetStore();
       const map = stubMap();
-      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoLibreAppAPI);
+      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoIntAppAPI);
       startFlying();
 
       // Every interaction handler is suspended — `keyboard` above all, since
@@ -804,7 +804,7 @@ describe("flight simulator engine", () => {
           terrainEnabled = enabled;
           return true;
         },
-      } as unknown as GeoLibreAppAPI;
+      } as unknown as GeoIntAppAPI;
       openFlightSimulatorPanel(app);
 
       startFlying();
@@ -828,7 +828,7 @@ describe("flight simulator engine", () => {
           terrainChanges.push(enabled);
           return true;
         },
-      } as unknown as GeoLibreAppAPI;
+      } as unknown as GeoIntAppAPI;
       openFlightSimulatorPanel(app);
 
       startFlying();
@@ -842,7 +842,7 @@ describe("flight simulator engine", () => {
     withStubWindow(({ pump }) => {
       resetStore();
       const map = stubMap();
-      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoLibreAppAPI);
+      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoIntAppAPI);
       startFlying();
       pump();
       stopFlying();
@@ -857,7 +857,7 @@ describe("flight simulator engine", () => {
     withStubWindow(({ pump }) => {
       resetStore();
       const map = stubMap();
-      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoLibreAppAPI);
+      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoIntAppAPI);
       startFlying();
       for (let i = 0; i < 3; i += 1) pump();
       // Every jump but the final exit one carries the token; without it the
@@ -876,7 +876,7 @@ describe("flight simulator engine", () => {
     withStubWindow(({ pump }) => {
       resetStore();
       const map = stubMap();
-      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoLibreAppAPI);
+      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoIntAppAPI);
       startFlying();
       for (let i = 0; i < 10; i += 1) pump();
       const pitches = map.state.jumps
@@ -896,7 +896,7 @@ describe("flight simulator engine", () => {
     withStubWindow(({ pump, hold, release }) => {
       resetStore();
       const map = stubMap();
-      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoLibreAppAPI);
+      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoIntAppAPI);
       startFlying();
       pump();
       const cruise = getFlightHudSnapshot().throttle;
@@ -929,7 +929,7 @@ describe("flight simulator engine", () => {
     withStubWindow(({ pump, hold, release }) => {
       resetStore();
       const map = stubMap();
-      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoLibreAppAPI);
+      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoIntAppAPI);
       startFlying();
       pump();
       const cruise = getFlightHudSnapshot().throttle;
@@ -957,7 +957,7 @@ describe("flight simulator engine", () => {
     withStubWindow(({ pump, hold, release }) => {
       resetStore();
       const map = stubMap();
-      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoLibreAppAPI);
+      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoIntAppAPI);
       startFlying();
       pump();
 
@@ -983,7 +983,7 @@ describe("flight simulator engine", () => {
     withStubWindow(({ pump }) => {
       resetStore();
       const map = stubMap();
-      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoLibreAppAPI);
+      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoIntAppAPI);
       startFlying();
       // Arm only after takeoff, so the stop lands on a HUD publish from inside
       // tick() — where the rAF handle has already been nulled, making stop()'s
@@ -1016,7 +1016,7 @@ describe("flight simulator engine", () => {
     withStubWindow(({ pump }) => {
       resetStore();
       const map = stubMap();
-      const app = { getMap: () => map } as unknown as GeoLibreAppAPI;
+      const app = { getMap: () => map } as unknown as GeoIntAppAPI;
       openFlightSimulatorPanel(app);
       startFlying();
       pump();
@@ -1025,7 +1025,7 @@ describe("flight simulator engine", () => {
       assert.equal(isFlying(), true, "an unchanged map must not interrupt the flight");
       // A missing map means the old instance has been removed while the host
       // rebuilds it, so the engine must release that stale instance.
-      reattachFlightSimulator({ getMap: () => null } as unknown as GeoLibreAppAPI);
+      reattachFlightSimulator({ getMap: () => null } as unknown as GeoIntAppAPI);
       assert.equal(isFlying(), false, "a missing map must tear down the old engine");
 
       // Reattach the original engine so the replacement-map case also starts
@@ -1034,7 +1034,7 @@ describe("flight simulator engine", () => {
       assert.equal(startFlying(), true);
       assert.equal(isFlying(), true);
       // A genuinely new map still rebinds (and ends the old flight with it).
-      reattachFlightSimulator({ getMap: () => stubMap() } as unknown as GeoLibreAppAPI);
+      reattachFlightSimulator({ getMap: () => stubMap() } as unknown as GeoIntAppAPI);
       assert.equal(isFlying(), false, "a new map instance must rebind the engine");
       resetStore();
     });
@@ -1044,7 +1044,7 @@ describe("flight simulator engine", () => {
     withStubWindow(() => {
       resetStore();
       const map = stubMap();
-      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoLibreAppAPI);
+      openFlightSimulatorPanel({ getMap: () => map } as unknown as GeoIntAppAPI);
       startFlying();
       const hud = getFlightHudSnapshot();
       // Terrain is a flat 1000 m plateau in the stub.
