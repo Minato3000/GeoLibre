@@ -462,6 +462,12 @@ export const MENU_ITEM_CATALOG: readonly MenuItemCatalogEntry[] = [
     tier: "advanced",
   },
   {
+    id: "processing.changeDetection",
+    menuId: "processing",
+    labelKey: "toolbar.command.changeDetection",
+    tier: "advanced",
+  },
+  {
     id: "processing.segmentEverything",
     menuId: "processing",
     labelKey: "toolbar.command.segmentEverything",

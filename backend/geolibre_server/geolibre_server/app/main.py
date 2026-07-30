@@ -25,6 +25,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
+from .change_detection import router as change_detection_router
 from .conversion import router as conversion_router
 from .ml import router as ml_router
 from .ml import stop_child_server
@@ -117,6 +118,7 @@ app.include_router(postgis_router)
 app.include_router(sql_router)
 app.include_router(ml_router)
 app.include_router(mosaics_router)
+app.include_router(change_detection_router)
 
 
 class RunRequest(BaseModel):

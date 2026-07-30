@@ -1947,6 +1947,7 @@
       "planetaryComputer": "Planetary Computer",
       "earthEngine": "Earth Engine",
       "segmentation": "AI Segmentation",
+      "changeDetection": "Change Detection",
       "objectDetection": "Object Detection",
       "segmentEverything": "Segment Everything",
       "toggleControl": "Toggle {{name}} Control",
@@ -3552,6 +3553,35 @@
       "troubleshootingTitle": "How to get the server running",
       "stepInstall": "Make sure the GeoInt server is installed with the segment-geospatial backend enabled, so the segmentation model is available.",
       "stepStartServerDesktop": "Click \"Start server\" above to launch it, then wait a few seconds for the model to come online."
+    }
+  },
+  "changeDetection": {
+    "title": "Change Detection",
+    "description": "Compare a \"before\" and \"after\" image and get back changed-area polygons plus a change overlay, run by an external model server.",
+    "sourceLabel": "Compare",
+    "sourceMosaic": "Two Mosaic Timeline dates",
+    "sourceImages": "Two local images",
+    "locationLabel": "Location",
+    "locationPlaceholder": "Choose a location…",
+    "beforeLabel": "Before",
+    "afterLabel": "After",
+    "modelLabel": "Model",
+    "thresholdLabel": "Threshold",
+    "run": "Detect change",
+    "done": "Change detection finished.",
+    "layerName": "Change detection ({{model}})",
+    "status": {
+      "checking": "Checking the change-detection service…",
+      "unavailable": "Change detection is not available.",
+      "ready": "Ready — {{gpu}} ({{device}})."
+    },
+    "error": {
+      "failed": "Change detection failed."
+    },
+    "stats": {
+      "changedPct": "Changed area: {{pct}}%",
+      "polygonCount": "{{count}} changed-area polygon(s)",
+      "inferenceMs": "Inference: {{ms}} ms"
     }
   },
   "objectDetection": {

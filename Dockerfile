@@ -60,11 +60,14 @@ RUN apt-get update \
 # rio-cogeo (rasterio) publish linux/arm64 wheels, so Vector->GeoParquet,
 # CSV->GeoParquet and Raster->COG work on both architectures. Pillow decodes
 # the source PNGs and smbprotocol (the `smbclient` module) fetches them from
-# the NAS for the mosaic feature (app/mosaics.py) — both build/install on
-# every arch.
+# the NAS for the mosaic feature (app/mosaics.py). httpx (the `ml` extra) is
+# the pure-Python client both the AI Segmentation (`/ml`) and Change Detection
+# (`/changedetect`) reverse proxies use to reach their external model
+# servers — all build/install on every arch.
 COPY backend/geolibre_server /opt/geolibre_server
 RUN pip install --no-cache-dir /opt/geolibre_server \
-  && pip install --no-cache-dir "duckdb>=1.1.0" "rio-cogeo>=5.0.0" "Pillow>=10.0" "smbprotocol>=1.10.0"
+  && pip install --no-cache-dir \
+    "duckdb>=1.1.0" "rio-cogeo>=5.0.0" "Pillow>=10.0" "smbprotocol>=1.10.0" "httpx>=0.27"
 
 # freestiler (PMTiles) and whitebox-workflows publish no linux/arm64 wheels, so
 # they are installed on amd64 only. On arm64 those tools report unavailable

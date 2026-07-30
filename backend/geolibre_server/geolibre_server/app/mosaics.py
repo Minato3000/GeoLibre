@@ -117,6 +117,23 @@ def _require_db() -> None:
         )
 
 
+def get_mosaic_path(mosaic_id: int) -> str:
+    """Return a mosaic's raw NAS/local path (UNC), without fetching it.
+
+    Used by the change-detection proxy to resolve a chosen mosaic to the path
+    the external inference host reads directly (it has its own NAS access),
+    so the browser never supplies a filesystem path itself.
+    """
+    _require_db()
+    with _connect() as conn:
+        row = conn.execute(
+            "SELECT mosaic_path FROM mosaics WHERE mosaic_id = ?", (mosaic_id,)
+        ).fetchone()
+    if row is None:
+        raise HTTPException(status_code=404, detail=f"No mosaic with id {mosaic_id}")
+    return row[0]
+
+
 @router.get("/status")
 def mosaics_status() -> dict[str, Any]:
     """Report mosaic-feature availability so the panel can disable itself gracefully."""

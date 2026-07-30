@@ -47,6 +47,7 @@ export function ProcessingMenu({
   const setModelBuilderOpen = useAppStore((s) => s.setModelBuilderOpen);
   const setRasterToolOpen = useAppStore((s) => s.setRasterToolOpen);
   const setSegmentationOpen = useAppStore((s) => s.setSegmentationOpen);
+  const setChangeDetectionOpen = useAppStore((s) => s.setChangeDetectionOpen);
   const setObjectDetectionOpen = useAppStore((s) => s.setObjectDetectionOpen);
   const setSegmentEverythingOpen = useAppStore((s) => s.setSegmentEverythingOpen);
   const setSqlWorkspaceOpen = useAppStore((s) => s.setSqlWorkspaceOpen);
@@ -474,6 +475,11 @@ export function ProcessingMenu({
               {!mobile && show("processing.segmentation") && (
                 <DropdownMenuItem onSelect={() => setSegmentationOpen(true)}>
                   {t("toolbar.command.segmentation")}
+                </DropdownMenuItem>
+              )}
+              {!mobile && show("processing.changeDetection") && (
+                <DropdownMenuItem onSelect={() => setChangeDetectionOpen(true)}>
+                  {t("toolbar.command.changeDetection")}
                 </DropdownMenuItem>
               )}
               {/* Detection runs client-side (onnxruntime-web), not via the sidecar,

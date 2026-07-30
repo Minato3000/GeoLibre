@@ -29,6 +29,10 @@ services:
       GEOINT_MOSAIC_SMB_USER: ${GEOINT_MOSAIC_SMB_USER:-}
       GEOINT_MOSAIC_SMB_PASSWORD: ${GEOINT_MOSAIC_SMB_PASSWORD:-}
       GEOINT_MOSAIC_SMB_DOMAIN: ${GEOINT_MOSAIC_SMB_DOMAIN:-}
+      # Change detection feature (app/change_detection.py): base URL of the
+      # already-running external Change Detection API (GPU host). Leaving it
+      # unset disables the feature entirely (the dialog reports it unavailable).
+      GEOINT_CHANGE_DETECTION_URL: ${GEOINT_CHANGE_DETECTION_URL:-}
     volumes:
       # Mounted at the conversion sidecar's confined root (GEOINT_CONVERSION_ROOTS=/data).
       - ./data:/data

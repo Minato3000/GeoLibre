@@ -1088,6 +1088,234 @@ export async function runSedonaSql(
   return (await res.json()) as SedonaSqlResult;
 }
 
+// --- Change detection --------------------------------------------------------
+
+export interface ChangeDetectionStatus {
+  available: boolean;
+  message: string;
+  url?: string;
+  device?: string;
+  gpu?: string;
+  models_loaded?: string[];
+}
+
+export interface ChangeDetectionModelInfo {
+  name: string;
+  loaded: boolean;
+  checkpoint_val_f1?: number;
+  deep_supervision?: boolean;
+}
+
+export interface ChangeDetectionResult {
+  status: string;
+  model: string;
+  pre_date?: string;
+  post_date?: string;
+  image_size?: [number, number];
+  inference_ms?: number;
+  changed_area_pct?: number;
+  area_changed?: number;
+  total_area?: number;
+  polygon_count?: number;
+  /** Base64-encoded PNGs at the model's working resolution (not georeferenced pixel-for-pixel). */
+  pre_base64?: string;
+  post_base64?: string;
+  mask_base64?: string;
+  overlay_base64?: string;
+  heatmap_base64?: string;
+  /** Changed-area polygons, already WGS84 (CRS84). */
+  geojson?: FeatureCollection;
+  file_id?: string;
+}
+
+export interface ChangeDetectionParams {
+  threshold?: number;
+  imgSize?: number;
+  windowOverlap?: number;
+}
+
+/** Return change-detection backend availability (never throws). */
+export async function fetchChangeDetectionStatus(
+  baseUrl = DEFAULT_SIDECAR_URL,
+): Promise<ChangeDetectionStatus> {
+  let res: Response;
+  try {
+    res = await sidecarFetch(`${baseUrl}/changedetect/status`);
+  } catch (error) {
+    throw sidecarConnectionError(baseUrl, error);
+  }
+  if (!res.ok) {
+    throw new Error(`Change detection status failed: HTTP ${res.status}`);
+  }
+  return (await res.json()) as ChangeDetectionStatus;
+}
+
+/** List the backend's change-detection models (loaded + available). */
+export async function fetchChangeDetectionModels(
+  baseUrl = DEFAULT_SIDECAR_URL,
+): Promise<ChangeDetectionModelInfo[]> {
+  let res: Response;
+  try {
+    res = await sidecarFetch(`${baseUrl}/changedetect/models`);
+  } catch (error) {
+    throw sidecarConnectionError(baseUrl, error);
+  }
+  if (!res.ok) {
+    throw new Error(await responseErrorMessage(res, "Could not load change-detection models"));
+  }
+  return (await res.json()) as ChangeDetectionModelInfo[];
+}
+
+/**
+ * Compare two Mosaic Timeline mosaics. Zero image bytes cross this sidecar —
+ * it only resolves each mosaic id to its NAS path server-side; the external
+ * change-detection host reads the NAS directly.
+ */
+export async function runChangeDetectionMosaicPair(
+  modelName: string,
+  preMosaicId: number,
+  postMosaicId: number,
+  params: ChangeDetectionParams = {},
+  baseUrl = DEFAULT_SIDECAR_URL,
+): Promise<ChangeDetectionResult> {
+  let res: Response;
+  try {
+    res = await sidecarFetch(
+      `${baseUrl}/changedetect/predict_paths/${encodeURIComponent(modelName)}`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          pre_mosaic_id: preMosaicId,
+          post_mosaic_id: postMosaicId,
+          threshold: params.threshold ?? 0.5,
+          img_size: params.imgSize ?? null,
+          window_overlap: params.windowOverlap ?? 16,
+        }),
+      },
+    );
+  } catch (error) {
+    throw sidecarConnectionError(baseUrl, error);
+  }
+  if (!res.ok) {
+    throw new Error(await responseErrorMessage(res, "Could not run change detection"));
+  }
+  return (await res.json()) as ChangeDetectionResult;
+}
+
+/**
+ * Compare any two images by uploading their bytes. Callers obtain the image
+ * as a Blob (a locally opened file, or bytes fetched from a fetchable map
+ * layer URL such as a COG).
+ */
+export async function runChangeDetectionImages(
+  modelName: string,
+  pre: Blob,
+  preFilename: string,
+  post: Blob,
+  postFilename: string,
+  params: ChangeDetectionParams = {},
+  baseUrl = DEFAULT_SIDECAR_URL,
+): Promise<ChangeDetectionResult> {
+  const form = new FormData();
+  form.append("pre", pre, preFilename);
+  form.append("post", post, postFilename);
+  form.append("threshold", String(params.threshold ?? 0.5));
+  if (params.imgSize != null) form.append("img_size", String(params.imgSize));
+  form.append("window_overlap", String(params.windowOverlap ?? 16));
+
+  let res: Response;
+  try {
+    res = await sidecarFetch(`${baseUrl}/changedetect/predict/${encodeURIComponent(modelName)}`, {
+      method: "POST",
+      body: form,
+    });
+  } catch (error) {
+    throw sidecarConnectionError(baseUrl, error);
+  }
+  if (!res.ok) {
+    throw new Error(await responseErrorMessage(res, "Could not run change detection"));
+  }
+  return (await res.json()) as ChangeDetectionResult;
+}
+
+// --- Mosaic Timeline lookups (for the Change Detection dialog) --------------
+//
+// Duplicates two of mosaic-timeline.ts's own read-only GET calls rather than
+// importing from packages/plugins (this package has no dependency on it, and
+// mosaic-timeline.ts's own working implementation is left untouched).
+
+export interface MosaicLocation {
+  location_id: number;
+  location_name: string;
+  center_lat: number;
+  center_lon: number;
+  radius_m: number;
+  mosaic_count: number;
+}
+
+export interface MosaicDateEntry {
+  mosaic_id: number;
+  mosaic_no: number;
+  acquisition_date: string;
+}
+
+export interface MosaicBbox {
+  west: number;
+  south: number;
+  east: number;
+  north: number;
+}
+
+export async function fetchMosaicLocations(
+  baseUrl = DEFAULT_SIDECAR_URL,
+): Promise<MosaicLocation[]> {
+  let res: Response;
+  try {
+    res = await sidecarFetch(`${baseUrl}/mosaics/locations`);
+  } catch (error) {
+    throw sidecarConnectionError(baseUrl, error);
+  }
+  if (!res.ok) {
+    throw new Error(await responseErrorMessage(res, "Could not load mosaic locations"));
+  }
+  const data = (await res.json()) as { locations: MosaicLocation[] };
+  return data.locations;
+}
+
+export async function fetchMosaicDates(
+  locationId: number,
+  baseUrl = DEFAULT_SIDECAR_URL,
+): Promise<MosaicDateEntry[]> {
+  let res: Response;
+  try {
+    res = await sidecarFetch(`${baseUrl}/mosaics/dates?location_id=${locationId}`);
+  } catch (error) {
+    throw sidecarConnectionError(baseUrl, error);
+  }
+  if (!res.ok) {
+    throw new Error(await responseErrorMessage(res, "Could not load mosaic dates"));
+  }
+  const data = (await res.json()) as { mosaics: MosaicDateEntry[] };
+  return data.mosaics;
+}
+
+export async function fetchMosaicBbox(
+  mosaicId: number,
+  baseUrl = DEFAULT_SIDECAR_URL,
+): Promise<MosaicBbox> {
+  let res: Response;
+  try {
+    res = await sidecarFetch(`${baseUrl}/mosaics/bbox/${mosaicId}`);
+  } catch (error) {
+    throw sidecarConnectionError(baseUrl, error);
+  }
+  if (!res.ok) {
+    throw new Error(await responseErrorMessage(res, "Could not load mosaic bounds"));
+  }
+  return (await res.json()) as MosaicBbox;
+}
+
 async function responseErrorMessage(response: Response, fallback: string): Promise<string> {
   try {
     const data = (await response.json()) as { detail?: unknown };

@@ -1,4 +1,4 @@
-import { useAppStore } from "@geoint/core";
+import { useAppStore, type ChangeDetectionPrefill } from "@geoint/core";
 import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
 import type { GeoIntAppAPI, GeoIntPlugin } from "../types";
 
@@ -88,6 +88,7 @@ interface MosaicTimelineLabels {
   play: string;
   pause: string;
   fpsLabel: string;
+  changeDetection: string;
   sizeLabel: string;
   allSizes: (count: number) => string;
   sizeOption: (width: number, height: number, count: number) => string;
@@ -113,6 +114,7 @@ const labels: MosaicTimelineLabels = {
   play: "Play",
   pause: "Pause",
   fpsLabel: "FPS",
+  changeDetection: "Detect Change",
   sizeLabel: "Image size",
   allSizes: (count) => `All sizes (${count})`,
   sizeOption: (width, height, count) => `${width}×${height} (${count})`,
@@ -359,6 +361,10 @@ const style = {
   playButton:
     "padding:5px 10px;border-radius:5px;border:1px solid hsl(var(--primary));" +
     "background:hsl(var(--primary));color:hsl(var(--primary-foreground));cursor:pointer;font-size:11px;",
+  secondaryButton:
+    "padding:5px 10px;border-radius:5px;border:1px solid hsl(var(--border));" +
+    "background:hsl(var(--background));color:hsl(var(--foreground));cursor:pointer;font-size:11px;" +
+    "width:100%;",
   slider: "flex:1 1 auto;accent-color:hsl(var(--primary));",
   dateLabel: "font-size:11px;min-width:82px;text-align:right;color:hsl(var(--foreground));",
   select:
@@ -427,7 +433,11 @@ function buildPanel(container: HTMLElement): () => void {
     fpsSelect.append(option);
   }
   fpsRow.append(fpsCaption, fpsSelect);
-  timelineSection.append(timelineCaption, playRow, fpsRow, dateLabel);
+  const changeDetectionButton = el("button", labels.changeDetection);
+  changeDetectionButton.type = "button";
+  changeDetectionButton.style.cssText = style.secondaryButton;
+  changeDetectionButton.disabled = true;
+  timelineSection.append(timelineCaption, playRow, fpsRow, dateLabel, changeDetectionButton);
 
   root.append(status, locationSection, sizeSection, timelineSection);
   container.append(root);
@@ -510,6 +520,24 @@ function buildPanel(container: HTMLElement): () => void {
     playTimer = setInterval(advancePlayback, 1000 / fps);
   });
 
+  // Compares the frame currently shown (the slider's position) against the
+  // one right before it, so clicking needs no extra picking -- the dialog's
+  // own Mosaic Timeline mode still lets the user change either date.
+  changeDetectionButton.addEventListener("click", () => {
+    const locationId = activeLocationId;
+    if (locationId === null || activeDates.length < 2) return;
+    const currentIndex = Number(slider.value);
+    const post = activeDates[currentIndex];
+    const pre = activeDates[currentIndex - 1] ?? activeDates[0];
+    if (!post || !pre || pre.mosaic_id === post.mosaic_id) return;
+    const prefill: ChangeDetectionPrefill = {
+      locationId,
+      preMosaicId: pre.mosaic_id,
+      postMosaicId: post.mosaic_id,
+    };
+    useAppStore.getState().setChangeDetectionOpen(true, prefill);
+  });
+
   const renderLocationRows = (filter: string): void => {
     const query = filter.trim().toLowerCase();
     const matches = query
@@ -572,6 +600,7 @@ function buildPanel(container: HTMLElement): () => void {
     slider.max = String(Math.max(0, activeDates.length - 1));
     slider.disabled = activeDates.length === 0;
     playButton.disabled = activeDates.length === 0;
+    changeDetectionButton.disabled = activeDates.length < 2;
     if (!activeDates.length) {
       dateLabel.textContent = labels.noDatesForLocation;
       return;
@@ -598,6 +627,7 @@ function buildPanel(container: HTMLElement): () => void {
     const token = ++locationToken;
     slider.disabled = true;
     playButton.disabled = true;
+    changeDetectionButton.disabled = true;
     sizeSelect.disabled = true;
     slider.value = "0";
     slider.max = "0";
@@ -625,6 +655,7 @@ function buildPanel(container: HTMLElement): () => void {
       slider.max = String(activeDates.length - 1);
       slider.disabled = false;
       playButton.disabled = false;
+      changeDetectionButton.disabled = activeDates.length < 2;
       const lastIndex = activeDates.length - 1;
       slider.value = String(lastIndex);
       dateLabel.textContent = activeDates[lastIndex]?.acquisition_date ?? "";

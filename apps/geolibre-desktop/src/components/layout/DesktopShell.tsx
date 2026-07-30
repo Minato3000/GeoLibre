@@ -360,6 +360,19 @@ const SegmentationDialog = lazy(() =>
     }),
 );
 
+const ChangeDetectionDialog = lazy(() =>
+  import("../processing/ChangeDetectionDialog")
+    .then((module) => ({
+      default: module.ChangeDetectionDialog,
+    }))
+    .catch((error) => {
+      console.error("Failed to load ChangeDetectionDialog", error);
+      const Fallback = (() =>
+        null) as unknown as typeof import("../processing/ChangeDetectionDialog").ChangeDetectionDialog;
+      return { default: Fallback };
+    }),
+);
+
 const ObjectDetectionDialog = lazy(() =>
   import("../processing/ObjectDetectionDialog")
     .then((module) => ({
@@ -2327,6 +2340,9 @@ export function DesktopShell({
       </Suspense>
       <Suspense fallback={null}>
         <SegmentationDialog mapControllerRef={mapControllerRef} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <ChangeDetectionDialog mapControllerRef={mapControllerRef} />
       </Suspense>
       <StoryMapPanel mapControllerRef={mapControllerRef} />
       <StoryMapPresenter mapControllerRef={mapControllerRef} />
